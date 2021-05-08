@@ -1,6 +1,6 @@
 MACRO(InstallNicaFemto)
 set(NICAFEMTO_SUBDIR_BUILD ON)
-set(NICAFEMTO_HASH 58c75ce1d7fa3465baa089bc9513e961d8cf19eb) 
+set(NICAFEMTO_HASH 544f40b78539576cf7d7085c563f618b64199f75) 
 if(NOT EXISTS "${CMAKE_SOURCE_DIR}/external/nicafemto/CMakeLists.txt")
     execute_process(COMMAND git clone -b master https://git.jinr.ru/nica/nicafemto.git ${CMAKE_SOURCE_DIR}/external/nicafemto)
     execute_process(COMMAND git reset --hard  ${NICAFEMTO_HASH} WORKING_DIRECTORY  ${CMAKE_SOURCE_DIR}/external/nicafemto)

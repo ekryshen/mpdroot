@@ -22,11 +22,7 @@
 #include "NicaTrackPtCut.h"
 #include "NicaTrackTpcToFCut.h"
 
-MpdBasicTrackCut::MpdBasicTrackCut()
-    : fToFMonitor(nullptr),
-      fKinMonitor(nullptr),
-      fDCAMonitor(nullptr),
-      fTpcMonitor(nullptr) {
+MpdBasicTrackCut::MpdBasicTrackCut() : fToFMonitor(nullptr), fKinMonitor(nullptr), fDCAMonitor(nullptr), fTpcMonitor(nullptr) {
   AddCut(NicaTrackDCACut());
   AddCut(NicaTrackEtaCut());
   AddCut(NicaTrackPtCut());
@@ -42,43 +38,35 @@ MpdDcaMonitor* MpdBasicTrackCut::GetDCAMonitor() const { return fDCAMonitor; }
 
 MpdTpcMonitor* MpdBasicTrackCut::GetTpcMonitor() const { return fTpcMonitor; }
 
-NicaTrackDCACut* MpdBasicTrackCut::GetDCACut() const {
-  return (NicaTrackDCACut*)CutAt(0);
-}
+NicaTrackDCACut* MpdBasicTrackCut::GetDCACut() const { return (NicaTrackDCACut*) CutAt(0); }
 
-void MpdBasicTrackCut::CreateMonitors(TString opt) {
-  if (NicaStd::FindParam(opt, "dca") && fDCAMonitor == nullptr) {
+NicaTrackEtaCut* MpdBasicTrackCut::GetEtaCut() const { return (NicaTrackEtaCut*) CutAt(1); }
+
+NicaTrackPtCut* MpdBasicTrackCut::GetPtCut() const { return (NicaTrackPtCut*) CutAt(2); }
+
+NicaTrackChargeCut* MpdBasicTrackCut::GetChargeCut() const { return (NicaTrackChargeCut*) CutAt(3); }
+
+NicaTrackTpcToFCut* MpdBasicTrackCut::GetTpcTofCut() const { return (NicaTrackTpcToFCut*) CutAt(4); }
+
+MpdBasicTrackCut::~MpdBasicTrackCut() {}
+
+void MpdBasicTrackCut::AddAllCutMonitorRequests(Option_t* opt) {
+  TString option = opt;
+  if (option == "all") option = "dca+tof+tpc+kin";
+  if (NicaStd::FindParam(option, "dca") && fDCAMonitor == nullptr) {
     fDCAMonitor = new MpdDcaMonitor();
     AddRawCutMonitor(fDCAMonitor);
   }
-  if (NicaStd::FindParam(opt, "tof") && fToFMonitor == nullptr) {
+  if (NicaStd::FindParam(option, "tof") && fToFMonitor == nullptr) {
     fToFMonitor = new MpdTofMonitor();
     AddRawCutMonitor(fToFMonitor);
   }
-  if (NicaStd::FindParam(opt, "tpc") && fTpcMonitor == nullptr) {
+  if (NicaStd::FindParam(option, "tpc") && fTpcMonitor == nullptr) {
     fTpcMonitor = new MpdTpcMonitor();
     AddRawCutMonitor(fTpcMonitor);
   }
-  if (NicaStd::FindParam(opt, "kin") && fKinMonitor == nullptr) {
+  if (NicaStd::FindParam(option, "kin") && fKinMonitor == nullptr) {
     fKinMonitor = new MpdKinMonitor();
     AddRawCutMonitor(fKinMonitor);
   }
 }
-
-NicaTrackEtaCut* MpdBasicTrackCut::GetEtaCut() const {
-  return (NicaTrackEtaCut*)CutAt(1);
-}
-
-NicaTrackPtCut* MpdBasicTrackCut::GetPtCut() const {
-  return (NicaTrackPtCut*)CutAt(2);
-}
-
-NicaTrackChargeCut* MpdBasicTrackCut::GetChargeCut() const {
-  return (NicaTrackChargeCut*)CutAt(3);
-}
-
-NicaTrackTpcToFCut* MpdBasicTrackCut::GetTpcTofCut() const {
-  return (NicaTrackTpcToFCut*)CutAt(4);
-}
-
-MpdBasicTrackCut::~MpdBasicTrackCut() {}
