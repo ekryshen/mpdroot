@@ -9,22 +9,8 @@
 #include "NicaMpdEventTpcPads.h"
 #include "NicaMpdTrackTpcPads.h"
 
-NicaMpdEventTpcPads::NicaMpdEventTpcPads() :NicaMpdEvent("NicaMpdTrackTpcPads"){
-
-}
+NicaMpdEventTpcPads::NicaMpdEventTpcPads() : NicaMpdEvent("NicaMpdTrackTpcPads") {}
 
 NicaMpdEventTpcPads::~NicaMpdEventTpcPads() {
-	// TODO Auto-generated destructor stub
-}
-
-void NicaMpdEventTpcPads::ShallowCopyTracks(NicaEvent* event) {
-	fTracks->Clear();
-	fTotalTracksNo = event->GetTotalTrackNo();
-	fTracks->ExpandCreateFast(fTotalTracksNo);
-	NicaMpdEventTpcPads *Event = (NicaMpdEventTpcPads*)event;
-	for(int i=0;i<fTotalTracksNo;i++){
-		NicaMpdTrackTpcPads *from = (NicaMpdTrackTpcPads*)Event->fTracks->UncheckedAt(i);
-		NicaMpdTrackTpcPads *to = (NicaMpdTrackTpcPads*)fTracks->UncheckedAt(i);
-		*to = *from;
-	}
+  // TODO Auto-generated destructor stub
 }

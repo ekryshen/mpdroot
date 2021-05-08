@@ -32,8 +32,6 @@
 
 NicaMpdMiniDstEvent::NicaMpdMiniDstEvent(eMode mode) : NicaExpEventHelix("NicaMpdMiniDstTrack"), fMode(mode) {}
 
-void NicaMpdMiniDstEvent::ShallowCopyEvent(NicaEvent* event) { NicaExpEventHelix::ShallowCopyEvent(event); }
-
 NicaMpdMiniDstEvent::NicaMpdMiniDstEvent(TString trackname) : NicaExpEventHelix(trackname), fMode(kGlobalTrack) {}
 
 void NicaMpdMiniDstEvent::CreateSource() { fSource = new NicaMpdMiniDstEventInterface(); }

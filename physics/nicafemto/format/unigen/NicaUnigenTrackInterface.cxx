@@ -8,10 +8,6 @@
  */
 #include "NicaUnigenTrackInterface.h"
 
-NicaUnigenTrackInterface::NicaUnigenTrackInterface(){
-}
+NicaUnigenTrackInterface::NicaUnigenTrackInterface() {}
 
-NicaUnigenTrackInterface::~NicaUnigenTrackInterface() {
-	// TODO Auto-generated destructor stub
-}
-
+NicaUnigenTrackInterface::~NicaUnigenTrackInterface() {}

@@ -86,8 +86,6 @@ TString NicaMpdEvent::GetFormatName() const {
   }
 }
 
-void NicaMpdEvent::ShallowCopyEvent(NicaEvent* event) { NicaExpEventHelix::ShallowCopyEvent(event); }
-
 void NicaMpdEvent::OnlyPrimary() {
   fMode = kPrimaryTracks;
   if (fSource) { ((NicaMpdEventInterface*) fSource)->OnlyPrimary(); }

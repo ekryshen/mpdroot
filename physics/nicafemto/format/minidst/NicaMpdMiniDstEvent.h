@@ -17,7 +17,6 @@ public:
 
 protected:
   eMode fMode;
-  virtual void ShallowCopyEvent(NicaEvent* event);
   NicaMpdMiniDstEvent(TString trackname);
 
 public:
