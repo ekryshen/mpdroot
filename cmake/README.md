@@ -7,3 +7,5 @@ Steering classes for the `cmake` software that manages the build processes of th
 * *scripts* folder stores the functions that are checking the system requirements;
 * *cuda* contains cmake modules to find the CUDA Toolkit (http://www.nvidia.com/object/cuda_home_new.html) enabling parallel computations on the NVIDIA GPUs;
 * *checks* to test the cxx11 compatibility.
+
+* *modules_new* testing of latest FairSoft-master-legacy and FairRoot-dev
