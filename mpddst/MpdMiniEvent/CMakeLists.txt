@@ -39,7 +39,7 @@ MpdMiniFHCalHit.cxx
 )
 
 Set(HEADERS)
-Set(LINKDEF LinkDef.h)
+Set(LINKDEF MpdMiniEventLinkDef.h)
 Set(LIBRARY_NAME MpdMiniEvent)
 Set(DEPENDENCIES Core Base)
 

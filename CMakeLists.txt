@@ -77,6 +77,9 @@ EndIf(NOT CMAKE_BUILD_TYPE)
 
 #Check the compiler and set the compile and link flags
 Check_Compiler()
+#custom flags for build type if you so desire
+#set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g ") # -Wall -Wextra  -std=c++17
+#tune for local cpu: -march=native/rocketlake/znver2 -mtune=znver2
 
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
@@ -185,34 +188,36 @@ SET(FAIRROOT_LIBRARY_PROPERTIES ${FAIRROOT_LIBRARY_PROPERTIES}
 
 Generate_Version_Info()
 
-# Check if the compiler support specific C++11 features
-# Up to now this is only a check since the code does not use
-# any of the features of the new standard
-include(CheckCXX11Features)
-IF(HAS_CXX11_SHAREDPOINTER)
-  Add_Definitions(-DHAS_SHAREDPOINTER)
-ENDIF(HAS_CXX11_SHAREDPOINTER)
-
 # Recurse into the given subdirectories. This does not actually
 # cause another cmake executable to run. The same process will walk through
 # the project's entire directory structure.
-add_subdirectory (mcstack)
 add_subdirectory (passive)
-add_subdirectory (generators/unigen_format)
-add_subdirectory (generators)
-add_subdirectory (shield_pack)
 add_subdirectory (mpdbase)
 add_subdirectory (mpdfield)
-add_subdirectory (tpc)
-add_subdirectory (tof)
+add_subdirectory (kalman) #MpdBase MpdField
+add_subdirectory (shield_pack)
+add_subdirectory (generators/unigen_format)
+add_subdirectory (generators) # MpdMcDst
+add_subdirectory (mcstack) # MpdGen
+add_subdirectory (mpdpid) # MpdMCStack MpdBase
+add_subdirectory (lhetrack) # MpdBase Kalman Sts Tof
+add_subdirectory (mpddst) # MpdBase LHETrack MpdPid
+
+add_subdirectory (tof) # MpdMCStack Kalman
+add_subdirectory (tpc) # Tof
 add_subdirectory (etof)
-add_subdirectory (emc)
 add_subdirectory (zdc)
+add_subdirectory (clustering)
+add_subdirectory (emc) # Cluster
 add_subdirectory (ffd)
 add_subdirectory (sts)
 add_subdirectory (cpc)
 add_subdirectory (bmd)
+add_subdirectory (mcord)
+add_subdirectory (physics) #MpdBase MpdMCStack Kalman MpdPid LHETrack
+add_subdirectory (eventdisplay) #Emc
 
+#add_subdirectory (macro)
 #add_subdirectory (strawendcap)
 #add_subdirectory (strawECT)
 #add_subdirectory (bbc)
@@ -222,16 +227,6 @@ add_subdirectory (bmd)
 #add_subdirectory (ndet)
 #add_subdirectory (tgem)
 #add_subdirectory (dch)
-
-add_subdirectory (lhetrack)
-add_subdirectory (kalman)
-add_subdirectory (clustering)
-add_subdirectory (mpdpid)
-add_subdirectory (mpddst)
-add_subdirectory (physics)
-add_subdirectory (macro)
-add_subdirectory (eventdisplay)
-add_subdirectory (mcord)
 
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/macro/mpd_scheduler/CMakeLists.txt")

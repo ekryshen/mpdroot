@@ -32,7 +32,7 @@ MpdMcArrays.cxx
 )
 
 Set(HEADERS)
-Set(LINKDEF LinkDef.h)
+Set(LINKDEF MpdMcDstLinkDef.h)
 Set(LIBRARY_NAME MpdMcDst)
 Set(DEPENDENCIES Core Base)
 

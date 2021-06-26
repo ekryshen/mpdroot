@@ -21,6 +21,6 @@ add_custom_command(
     POST_BUILD
     COMMAND parse TABNUC.DAT
     DEPENDS parse TABNUC.DAT ATAB.DAT
-    COMMENT "Parsing TABNUC.DAT and ATAB.DAT for HADGEN"
+    COMMENT "" #Parsing TABNUC.DAT and ATAB.DAT for HADGEN
     VERBATIM
 )

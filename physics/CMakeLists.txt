@@ -41,7 +41,7 @@ set(SRCS
 )
 
 Set(HEADERS)
-Set(LINKDEF LinkDef.h)
+Set(LINKDEF MpdPhysicsLinkDef.h)
 Set(LIBRARY_NAME MpdPhysics)
 Set(DEPENDENCIES Core Base MpdDst)
 
