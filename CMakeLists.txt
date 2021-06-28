@@ -55,6 +55,7 @@ ENDIF (NOT ALIBUILD)
 set(CMAKE_MODULE_PATH "${FAIRROOTPATH}/share/fairbase/cmake/modules" ${CMAKE_MODULE_PATH})
 set(CMAKE_MODULE_PATH "${FAIRROOTPATH}/share/fairbase/cmake/modules_old" ${CMAKE_MODULE_PATH})
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules" ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/KFParticle/Vc/cmake" ${CMAKE_MODULE_PATH})
 
 Set(CheckSrcDir "${FAIRROOTPATH}/share/fairbase/cmake/checks")
 
@@ -227,8 +228,10 @@ add_subdirectory (eventdisplay) #Emc
 #add_subdirectory (ndet)
 #add_subdirectory (tgem)
 #add_subdirectory (dch)
-
-
+            
+add_subdirectory (KFParticle/Vc)
+add_subdirectory (KFParticle)
+            
 if(EXISTS "${CMAKE_SOURCE_DIR}/macro/mpd_scheduler/CMakeLists.txt")
  add_subdirectory (macro/mpd_scheduler)
 endif()
