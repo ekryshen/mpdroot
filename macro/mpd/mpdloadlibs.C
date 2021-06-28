@@ -60,7 +60,7 @@ void mpdloadlibs()
   gSystem->Load("libMpdFemtoMakerUser.so");  // femtoscopy
   gSystem->Load("libMpdFemtoAlternative");
   
-  gSystem->Load("libMpdKfParticle.so");  // KF particle finder
+  // gSystem->Load("libMpdKfParticle.so");  // KF particle finder
 }
 
 // check whether file exists
