@@ -9,9 +9,6 @@ and
 
 [Getting started](http://mpd.jinr.ru/mpdroot-start-guide/)
 
-## Installation
-http://mpd.jinr.ru/howto-install/
-
 ### Install Prerequisites
 for RedHat-based OS (eg, CentOS, Scientific Linux):
 ```   
@@ -38,9 +35,7 @@ export INSTALLATION_PATH=/opt
 cd $INSTALLATION_PATH  
 git clone https://github.com/FairRootGroup/FairSoft.git fairsoft  
 cd fairsoft  
-git checkout jun19p1
-wget http://nc13.jinr.ru/data/fairsoft_jun19p1gcc10pg.patch  
-patch -p1 -i fairsoft_jun19p1gcc10pg.patch  
+git checkout jun19_patches
 ./configure.sh
 
  1) GCC (on Linux)  
@@ -60,9 +55,7 @@ export SIMPATH=$INSTALLATION_PATH/fairsoft/install
 export PATH=$SIMPATH/bin:$PATH
 git clone https://github.com/FairRootGroup/FairRoot.git fairroot
 cd fairroot 
-git checkout v18.2.0
-wget http://nc13.jinr.ru/data/fairroot_18_20.patch
-patch -p1 -i fairroot_18_20.patch
+git checkout v18.2_patches
 mkdir build
 cd build
 cmake -DCMAKE_INSTALL_PREFIX="$INSTALLATION_PATH/fairroot/install" ..
