@@ -1,7 +1,9 @@
-
 # <b>The MpdRoot Framework </b>
 The main framework for the MPD experiment at NICA.  
 http://mpd.jinr.ru/  
+
+<img src="eventdisplay/evepic.png" width="600">
+
 Based on:  
 [FairSoft](https://github.com/FairRootGroup/FairSoft) 
 and 
