@@ -1117,7 +1117,7 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
 		
 	if (Generator == "NSIG") {
 		fMethod = kFALSE;
-		delete fParElPosMom; delete fParElNegMom; delete fParElNegMom; delete fParMuNegMom;
+		delete fParElPosMom; delete fParElNegMom; delete fParMuPosMom; delete fParMuNegMom;
 		delete fParPiPosMom; delete fParPiNegMom; delete fParKaPosMom; delete fParKaNegMom;
 		delete fParPrPosMom; delete fParPrNegMom; delete fParDeMom; delete fParTrMom;
 		delete fParHe3Mom; delete fParHe4Mom;
@@ -1227,7 +1227,8 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
 			fParPrNegMom->SetParameters(546.003,0.664169,0.32501,0.154779,-0.0269533); fPartYield[MpdPidUtils::kProton].push_back(fParPrNegMom);
 			fPartYieldMap.insert( pair<MpdPidUtils::ePartType,vecTF1ptrs>(MpdPidUtils::kProton,fPartYield[MpdPidUtils::kProton] ));
 		}
-	} else if ( Generator == "PHQMD" ) { /// Mass Production, fTracking = 2, 15M min bias events @ 8.8 GeV
+	}
+	if ( Generator == "PHQMD" ) { /// Mass Production, fTracking = 2, 15M min bias events @ 8.8 GeV
 		fParPiPosMom->SetParameters(245004.,6.43066,0.285935,0.191311,0.0632783); fPartYield[MpdPidUtils::kPion].push_back(fParPiPosMom);
 		fParPiNegMom->SetParameters(63866.2,29.1281,0.284521,0.203969,0.0623634); fPartYield[MpdPidUtils::kPion].push_back(fParPiNegMom);
 		fPartYieldMap.insert( pair<MpdPidUtils::ePartType,vecTF1ptrs>(MpdPidUtils::kPion,fPartYield[MpdPidUtils::kPion] ));
@@ -1245,7 +1246,8 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
 		fPartYieldMap.insert( pair<MpdPidUtils::ePartType,vecTF1ptrs>(MpdPidUtils::kHe3,fPartYield[MpdPidUtils::kHe3] ));
 		fParHe4Mom->SetParameters(14.4574,12.1212,0.0348463,0.0324572,33.2308); fPartYield[MpdPidUtils::kHe4].push_back(fParHe4Mom);
 		fPartYieldMap.insert( pair<MpdPidUtils::ePartType,vecTF1ptrs>(MpdPidUtils::kHe4,fPartYield[MpdPidUtils::kHe4] ));
-	} else if ( Generator == "PHSD" ) {
+	}
+	if ( Generator == "PHSD" ) {
 		if ( fTrackingState == MpdPidUtils::kHP ) {
 			if ( fEnergy < 7.0 ) { /// not ready, QGSM 5 gev
 				fParElPosMom->SetParameters(17.6,-0.12,0.078,0.167,0.00); fPartYield[MpdPidUtils::kElectron].push_back(fParElPosMom);
@@ -1325,7 +1327,8 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
 				fPartYieldMap.insert( pair<MpdPidUtils::ePartType,vecTF1ptrs>(MpdPidUtils::kProton,fPartYield[MpdPidUtils::kProton] ));
 			}
 		}
-	} else if ( Generator == "PHSD_CENT" ) { /// PHSD central events, b < 3 fm, fEnergy = 11.0, 20/03/2019, 5482 events
+	}
+	if ( Generator == "PHSD_CENT" ) { /// PHSD central events, b < 3 fm, fEnergy = 11.0, 20/03/2019, 5482 events
 		fParPiPosMom->SetParameters(2628.47,0.846834,0.203337,0.357357,0.147232); fPartYield[MpdPidUtils::kPion].push_back(fParPiPosMom);
 		fParPiNegMom->SetParameters(1997.0,1.41096,0.196863,0.341347,0.18051); fPartYield[MpdPidUtils::kPion].push_back(fParPiNegMom);
 		fPartYieldMap.insert( pair<MpdPidUtils::ePartType,vecTF1ptrs>(MpdPidUtils::kPion,fPartYield[MpdPidUtils::kPion] ));
@@ -1335,7 +1338,8 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
 		fParPrPosMom->SetParameters(1705.66,0.663284,0.425112,0.220086,0.457981); fPartYield[MpdPidUtils::kProton].push_back(fParPrPosMom);
 		fParPrNegMom->SetParameters(191.997,6.39986,0.276029,0.244932,0.722006); fPartYield[MpdPidUtils::kProton].push_back(fParPrNegMom);
 		fPartYieldMap.insert( pair<MpdPidUtils::ePartType,vecTF1ptrs>(MpdPidUtils::kProton,fPartYield[MpdPidUtils::kProton] ));
-	} else if ( Generator == "PHSD_CSR" ) {
+	}
+	if ( Generator == "PHSD_CSR" ) {
 		if ( fEnergy < 5.0 ) { /// PHSD csr central events, b < 3 fm, fEnergy = 4.0 GeV, 10/10/2019, ~50k events
 			fParPiPosMom->SetParameters(326.591,37.4694,0.0395906,0.145417,1.08328); fPartYield[MpdPidUtils::kPion].push_back(fParPiPosMom);
 			fParPiNegMom->SetParameters(7834.26,1.46868,0.178981,0.0634056,0.520443); fPartYield[MpdPidUtils::kPion].push_back(fParPiNegMom);
@@ -1387,7 +1391,8 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
 			fParPrNegMom->SetParameters(545.455,5.15299,0.289769,0.250636,0.750215); fPartYield[MpdPidUtils::kProton].push_back(fParPrNegMom);
 			fPartYieldMap.insert( pair<MpdPidUtils::ePartType,vecTF1ptrs>(MpdPidUtils::kProton,fPartYield[MpdPidUtils::kProton] ));
 		}
-	} else if ( Generator == "PHSD_NOCSR" ) {
+	}
+	if ( Generator == "PHSD_NOCSR" ) {
 		if ( fEnergy < 5.0 ) { /// PHSD no csr central events, b < 3 fm, fEnergy = 4 GeV, 10/10/2019, ~50k events
 			fParPiPosMom->SetParameters(396.282,32.7313,0.0382901,0.141021,1.12647); fPartYield[MpdPidUtils::kPion].push_back(fParPiPosMom);
 			fParPiNegMom->SetParameters(3579.74,3.98371,0.11532,0.0306925,1.30859); fPartYield[MpdPidUtils::kPion].push_back(fParPiNegMom);
@@ -1439,7 +1444,8 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
 			fParPrNegMom->SetParameters(575.422,4.48476,0.290547,0.246113,0.770269); fPartYield[MpdPidUtils::kProton].push_back(fParPrNegMom);
 			fPartYieldMap.insert( pair<MpdPidUtils::ePartType,vecTF1ptrs>(MpdPidUtils::kProton,fPartYield[MpdPidUtils::kProton] ));
 		}
-	} else if ( (Generator == "LAQGSM") || (Generator == "QGSM") ) {
+	}
+	if ( (Generator == "LAQGSM") || (Generator == "QGSM") ) {
 		if ( fTrackingState == MpdPidUtils::kHP ) {
 			if ( fEnergy < 7.0 ) { /// not ready, QGSM 5 gev
 				fParElPosMom->SetParameters(17.6,-0.12,0.078,0.167,0.00); fPartYield[MpdPidUtils::kElectron].push_back(fParElPosMom);
@@ -1529,7 +1535,8 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
 				fPartYieldMap.insert( pair<MpdPidUtils::ePartType,vecTF1ptrs>(MpdPidUtils::kDeuteron,fPartYield[MpdPidUtils::kDeuteron] ));
 			}
 		}
-	} else if (Generator == "URQMD") {
+	}
+	if ( Generator == "URQMD" ) {
 		if ( fTrackingState == MpdPidUtils::kHP ) {
 			if ( fEnergy < 7.0 ) { /// not ready, QGSM 5 gev
 				fParPiPosMom->SetParameters(307.0,0.035,0.175,0.127,0.139); fPartYield[MpdPidUtils::kPion].push_back(fParPiPosMom);
@@ -1585,7 +1592,8 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
 				fPartYieldMap.insert( pair<MpdPidUtils::ePartType,vecTF1ptrs>(MpdPidUtils::kProton,fPartYield[MpdPidUtils::kProton] ));
 			}
 		}
-	} else { /// Generator == "DEFAULT", average 9 gev
+	}
+	if ( Generator == "DEFAULT" ) { /// Generator == "DEFAULT", average 9 gev
 		fParPiPosMom->SetParameters(503.,0.035,0.203,0.668,0.139); fPartYield[MpdPidUtils::kPion].push_back(fParPiPosMom);
 		fParPiNegMom->SetParameters(533.4,0.035,0.203,0.668,0.139); fPartYield[MpdPidUtils::kPion].push_back(fParPiNegMom);
 		fPartYieldMap.insert( pair<MpdPidUtils::ePartType,vecTF1ptrs>(MpdPidUtils::kPion,fPartYield[MpdPidUtils::kPion] ));
