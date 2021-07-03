@@ -2275,7 +2275,7 @@ Bool_t MpdTpcKalmanFilter::Refit(MpdKalmanTrack *track, Double_t mass, Int_t cha
   }
 
   //if (!ok) continue;
-  //TMatrixDSym *cov = track->Weight2Cov();
+  /* TMatrixDSym *cov = */track->Weight2Cov();
 
   // Update track
   track->SetParam(*track->GetParamNew());

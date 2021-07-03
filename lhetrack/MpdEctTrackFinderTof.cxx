@@ -1771,7 +1771,7 @@ void MpdEctTrackFinderTof::GoToBeamLine()
       track->SetWeight(*cov);
     }
     if (!ok) continue;
-    //TMatrixDSym *cov = track->Weight2Cov();
+    /* TMatrixDSym *cov = */ track->Weight2Cov();
 
     // Update track
     track->SetParam(*track->GetParamNew());
