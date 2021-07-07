@@ -137,7 +137,7 @@ private:
   /** Accounts for the length of the polarization vector **/
   Double32_t fWeight;
 
-  ClassDef(MpdMCTrack,4);
+  ClassDef(MpdMCTrack,5);
 
 };
 
