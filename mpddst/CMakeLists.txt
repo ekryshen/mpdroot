@@ -40,6 +40,7 @@ link_directories(${LINK_DIRECTORIES})
 set(SRCS
  MpdFillDstTask.cxx
  MpdMiniDstFillTask.cxx
+ MpdMiniDstFileSource.cxx
  MpdDstCompressTask.cxx
 )
 

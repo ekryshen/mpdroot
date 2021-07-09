@@ -6,6 +6,7 @@
 
 #pragma link C++ class MpdFillDstTask+;
 #pragma link C++ class MpdMiniDstFillTask+;
+#pragma link C++ class MpdMiniDstFileSource+;
 #pragma link C++ class MpdDstCompressTask+;
 
 #endif
