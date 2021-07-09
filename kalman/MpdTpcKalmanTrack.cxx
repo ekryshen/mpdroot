@@ -28,7 +28,7 @@ using namespace std;
 //__________________________________________________________________________
 MpdTpcKalmanTrack::MpdTpcKalmanTrack() 
   : MpdKalmanTrack(),
-    fTrHits(0x0)
+    fTrHits(new TClonesArray("MpdKalmanHit"))
 {
   /// Default constructor
 }

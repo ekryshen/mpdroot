@@ -34,12 +34,12 @@ MpdKalmanTrack::MpdKalmanTrack()
     fChi2Vertex(0.),
     fLength(0.),
     fLengAtHit(0.),
-    fParam(0x0),
-    fParamNew(0x0),
-    fParamAtHit(0x0),
-    fCovar(0x0),
+    fParam(new TMatrixD(5,1)),
+    fParamNew(new TMatrixD(5,1)),
+    fParamAtHit(new TMatrixD(5,1)),
+    fCovar(new TMatrixDSym(5)),
     fWeight(0x0),
-    fWeightAtHit(0x0),
+    fWeightAtHit(new TMatrixDSym(5)),
     fHits(0x0),
     fFlag(kOk)
 {
