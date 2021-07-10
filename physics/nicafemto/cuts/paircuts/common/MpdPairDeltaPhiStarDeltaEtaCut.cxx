@@ -39,7 +39,7 @@ Bool_t MpdPairDeltaPhiStarDeltaEtaCut::Pass(NicaTwoTrack* pair) {
   Double_t eta2     = pair->GetTrack2()->GetMomentum().Eta();
   SetValue(eta1 - eta2, 1);
   // B*R
-  const Double_t scale = -0.149896229 * MagField * fR;
+  const Double_t scale = -0.149896229 * MagField * fR * 2.0;
   Double_t afsi0b      = scale * chg1 / ptv1;
   Double_t afsi1b      = scale * chg2 / ptv2;
   Double_t dps         = phi2 - phi1 + TMath::ASin(afsi1b) - TMath::ASin(afsi0b);
