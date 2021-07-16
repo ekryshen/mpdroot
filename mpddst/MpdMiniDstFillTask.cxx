@@ -242,17 +242,17 @@ void MpdMiniDstFillTask::Exec(Option_t* option) {
 
 Bool_t MpdMiniDstFillTask::isGoodEvent() {
 
-    Bool_t isGoodAmount = kFALSE;
-    Bool_t isGoodOrder = kTRUE;
+    // Bool_t isGoodAmount = kFALSE;
+    // Bool_t isGoodOrder = kTRUE;
 
     TClonesArray* glTracks = (TClonesArray*) fEvents->GetGlobalTracks();
     Int_t nGlobalTracks = glTracks->GetEntriesFast();
     Int_t nKalmanTracks = fTpcTracks->GetEntriesFast();
 
-    if (nGlobalTracks == nKalmanTracks) {
-        isGoodAmount = kTRUE;
-    }
-
+    if (nGlobalTracks != nKalmanTracks) 
+        return kFALSE;
+    // isGoodAmount = kTRUE;
+    
     // Loop over kalman (aka TPC) tracks
     for (Int_t iKTrack = 0; iKTrack < nKalmanTracks; iKTrack++) {
         // Retrieve kalman track
@@ -260,12 +260,10 @@ Bool_t MpdMiniDstFillTask::isGoodEvent() {
         if (!kTrack) continue;
         // Retrieve global track
         MpdTrack* gTrack = (MpdTrack*) glTracks->UncheckedAt(iKTrack);
-        if (kTrack->GetTrackID() != gTrack->GetID() || !gTrack) {
-            isGoodOrder = kFALSE;
-        }
+        if (!glTracks || kTrack->GetTrackID() != gTrack->GetID()) continue;
     } // for (Int_t iKTracks=0; iKTracks<nKalmanTracks; iKTracks++)
 
-    return (isGoodAmount && isGoodOrder);
+    return kTRUE;
 }
 
 //_________________

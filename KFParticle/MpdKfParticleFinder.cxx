@@ -282,7 +282,8 @@ void MpdKfParticleFinder::ProcessDst() {
 
             if (mini->isPrimary())
                 pvTrackIds.push_back(iMiniTrack);
-        } else {
+        } 
+    else {
         MpdVertex* recoVp = (MpdVertex*) fPrimaryVertices->UncheckedAt(0);
         Int_t* indcs = recoVp->GetIndices()->GetArray();
         Int_t size = recoVp->GetIndices()->GetSize();
@@ -578,7 +579,7 @@ vector <Double_t> MpdKfParticleFinder::DoErrorPropagationToXYZPxPyPz(TMatrixDSym
 
     // Getting corresponding track parameters ...
     Int_t q = track->Charge();
-    Int_t pt = track->Pt();
+    Double_t pt = track->Pt();
 
     Double_t Phi = (*params)(2, 0);
     Double_t Lambda = (*params)(3, 0);
