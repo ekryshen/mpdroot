@@ -193,6 +193,18 @@ private:
 
 private:
     void ReadList(TString);
+
+    Bool_t checkBranchStatus(TString dst) {
+        // Checking branch status ...
+        TChain* ch = new TChain(isMini ? "MiniDst" : "mpdsim");
+        
+        ch->Add(dst.Data());
+        Bool_t status = ch->GetBranchStatus(isMini ? "Track" : "TpcKalmanTrack");
+
+        delete ch;
+        return status;
+    }
+
     void Mini2Kalman(TClonesArray*);
 
     void ProcessDst();

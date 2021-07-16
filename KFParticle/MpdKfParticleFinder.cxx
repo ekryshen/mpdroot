@@ -52,9 +52,12 @@ fCuts(nullptr), fPdgDB(nullptr), fInput("") {
         fInput = dstName;
 
         if (dstName.Contains("MiniDst")) {
-            fSource = new MpdMiniDstFileSource(fInput);
             isMini = kTRUE;
-        } else
+            if (checkBranchStatus(fInput))
+                fSource = new MpdMiniDstFileSource(fInput);
+        } 
+        else
+            if (checkBranchStatus(fInput))
             fFileSource = new FairFileSource(fInput);
     } else
         Fatal("MpdKfParticleFinder::MpdKfParticleFinder(TString dstName)", "Provided input seems to be incorrect!");
@@ -97,6 +100,11 @@ void MpdKfParticleFinder::ReadList(TString dstName) {
 
     auto it = fInputs.begin();
     isMini = ((*it).Contains("MiniDst") ? kTRUE : kFALSE);
+
+    // Checking branch status ...
+    for (auto it0 = fInputs.begin(); it0 != fInputs.end(); it0++)
+        if (!checkBranchStatus(*it0))
+            fInputs.erase(it0--);
 }
 
 InitStatus MpdKfParticleFinder::Init() {
@@ -164,9 +172,9 @@ InitStatus MpdKfParticleFinder::Init() {
             cout << "PDG# " << pdgDecay.first << " isActive# " << pdgDecay.second << endl;
 
     // Right now KFPerformance does not support miniDst!
-    if (isMini) 
+    if (isMini)
         isPerformance = kFALSE;
-    
+
     if (isPerformance) {
         // Involving performance tools ...
         fPerformance = new KFTopoPerformance();
@@ -282,8 +290,7 @@ void MpdKfParticleFinder::ProcessDst() {
 
             if (mini->isPrimary())
                 pvTrackIds.push_back(iMiniTrack);
-        } 
-    else {
+        } else {
         MpdVertex* recoVp = (MpdVertex*) fPrimaryVertices->UncheckedAt(0);
         Int_t* indcs = recoVp->GetIndices()->GetArray();
         Int_t size = recoVp->GetIndices()->GetSize();
