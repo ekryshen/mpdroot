@@ -1,0 +1,11 @@
+# Allowed line format:
+# 0. Empty and commented lines
+# 1. <path ending with />  @owner_1 @owner_2     @owner_N
+#    Ending a path in a `/` will specify the code owners for every file nested in that directory, on any level
+
+# Project owner
+/ @roleg 
+
+# for testing purposes only
+/scripts/ @roleg @hnatics 
+/config/  @busa @hnatics
