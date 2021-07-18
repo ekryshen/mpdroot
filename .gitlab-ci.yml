@@ -4,6 +4,7 @@ stages:
  - test_runMC
  - test_run_reco
  - deploy
+ - codeOwners
  
 before_script:
  - export SIMPATH=/cvmfs/nica.jinr.ru/$OS_TYPE/fairsoft/mpd
@@ -197,3 +198,16 @@ deploy:centos7:
     - docker
     - no-cvmfs
   <<: *deploy
+
+codeOwners:
+    stage: codeOwners
+    only:
+        refs:
+            - merge_requests
+        variables:
+            - $CI_MERGE_REQUEST_PROJECT_PATH == "nica/mpdroot" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"
+    script:
+        - chmod +x scripts/inform_codeowners.sh
+        # these packages must be put into base docker image later on to avoid potential errors related to installation
+        - apk update && apk add bash && apk add curl
+        - scripts/inform_codeowners.sh
