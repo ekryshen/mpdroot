@@ -201,6 +201,8 @@ deploy:centos7:
 
 codeOwners:
     stage: codeOwners
+    before_script:
+        - echo "Skipping global before_script."
     only:
         refs:
             - merge_requests
