@@ -1,6 +1,6 @@
 # <b>The MpdRoot Framework </b>
 The main framework for the MPD experiment at NICA.  
-http://mpd.jinr.ru/  
+http://mpdroot.jinr.ru/  
 
 <img src="eventdisplay/evepic.png" width="600">
 
