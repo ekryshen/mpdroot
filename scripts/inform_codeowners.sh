@@ -140,16 +140,37 @@ function generate_comment() {
   comment="$comment_start $comment $comment_end"
   echo $comment
 
+  description_warning=$(cat << EOF
+
+<pre>
+DO NOT REMOVE THIS BOXED MESSAGE
+
+Code in this merge request is subject to review by Code Owners.
+The list of reviewers is posted in the comments section.
+After all of the code is approved, please put a brief notice about it at the beginning of this message.
+
+<i><b>NOTE: Merging this code without getting it approved by Code Owners will result in suspending your developer rights!!!</b></i>
+</pre>
+<br>
+EOF
+)
+
+
  # if codeowners label not set, then set it
  # if codeowners label already set, check for comment match
-  MRInfo=$(curl -s -X GET -H "PRIVATE-TOKEN: $COMMENT_TOKEN" "$MERGE_REQUEST_URL" | grep labels.*\\[.*CodeOwners.*\\])
+  MRInfo=$(curl -s -X GET -H "PRIVATE-TOKEN: " "$MERGE_REQUEST_URL" | grep labels.*\\[.*CodeOwners.*\\])
 
   if [[ -z $MRInfo ]]; then
     curl -s -o /dev/null -S -f -X PUT -H "PRIVATE-TOKEN: $COMMENT_TOKEN" "$MERGE_REQUEST_URL?add_labels=CodeOwners"
     post_comment="true"
-    echo "Codeowners label set in Gitlab."
+    echo "Codeowners label added."
+    description_existing=$(curl -s -S -f -X GET -H "PRIVATE-TOKEN: " "$MERGE_REQUEST_URL" | sed 's/"description"/\n&/g' \
+                           | sed 's/"created_at"/\n&/g' | grep \"description\" |  cut -d '"' -f 4- | rev | cut -d '"' -f 6- | rev)
+    description_new="$description_warning $description_existing"
+    curl -s -o /dev/null -S -f -X PUT -d "description=$description_new" -H "PRIVATE-TOKEN: $COMMENT_TOKEN" "$MERGE_REQUEST_URL"
+    echo "Warning message placed on top of the MR description."
   else
-  last_comment_match=$(curl -s -X GET -H "PRIVATE-TOKEN: $COMMENT_TOKEN" "$MERGE_REQUEST_URL/notes" | sed 's/{"id/\n&/g' \
+  last_comment_match=$(curl -s -X GET -H "PRIVATE-TOKEN: " "$MERGE_REQUEST_URL/notes" | sed 's/{"id/\n&/g' \
                          | grep "\"body\":\"$comment_start" | grep "@" | grep "$comment_end\",\"" | head -1 | grep $comment)
    if [[ -z $last_comment_match ]]; then
     post_comment="true"
