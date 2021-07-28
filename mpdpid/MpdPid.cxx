@@ -694,7 +694,7 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
 		it = fdEdxBBMap.find(MpdPidUtils::kKaon);
 		it->second[0]->SetParameters( fCoef*(-665.977),-4.10879,0.393422,1.01384,4.12062,fCoef*(-665.977),-4.10879,0.393422,1.01384,4.12062 );
 		it = fdEdxBBMap.find(MpdPidUtils::kProton);
-		it->second[0]->SetParameters( fCoef*(-6140.11),0.8323,2.03597,1.34309,0.746625,fCoef*(-6140.11),0.8323,2.03597,1.34309,0.746625 );
+		it->second[0]->SetParameters( fCoef*(-6140.11),0.8323,2.03597,1.34309,0.746625,fCoef*(-16259.2),3.08434,9.53496,-0.128409,2.79948 );
 		it = fdEdxBBMap.find(MpdPidUtils::kDeuteron);
 		it->second[0]->SetParameters( fCoef*(112.e+04),fCoef*(-4466.666e+03) );
 		it->second[1]->SetParameters( fCoef*(215507.),fCoef*(-474223.) );
