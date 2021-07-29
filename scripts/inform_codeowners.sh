@@ -165,7 +165,7 @@ EOF
     post_comment="true"
     echo "Codeowners label added."
     description_existing=$(curl -s -S -f -X GET -H "PRIVATE-TOKEN: " "$MERGE_REQUEST_URL" | sed 's/"description"/\n&/g' \
-                           | sed 's/"created_at"/\n&/g' | grep \"description\" |  cut -d '"' -f 4- | rev | cut -d '"' -f 6- | rev)
+                           | sed 's/"created_at"/\n&/g' | grep \"description\" |  cut -d '"' -f 4- | rev | cut -d '"' -f 6- | rev | sed 's/\\n/<br \/>/g' )
     description_new="$description_warning $description_existing"
     curl -s -o /dev/null -S -f -X PUT -d "description=$description_new" -H "PRIVATE-TOKEN: $COMMENT_TOKEN" "$MERGE_REQUEST_URL"
     echo "Warning message placed on top of the MR description."
