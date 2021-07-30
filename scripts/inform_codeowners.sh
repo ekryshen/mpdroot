@@ -170,7 +170,7 @@ EOF
     curl -s -o /dev/null -S -f -X PUT -d "description=$description_new" -H "PRIVATE-TOKEN: $COMMENT_TOKEN" "$MERGE_REQUEST_URL"
     echo "Warning message placed on top of the MR description."
   else
-  last_comment_match=$(curl -s -X GET -H "PRIVATE-TOKEN: " "$MERGE_REQUEST_URL/notes" | sed 's/{"id/\n&/g' \
+  last_comment_match=$(curl -s -X GET -H "PRIVATE-TOKEN: $COMMENT_TOKEN" "$MERGE_REQUEST_URL/notes" | sed 's/{"id/\n&/g' \
                          | grep "\"body\":\"$comment_start" | grep "@" | grep "$comment_end\",\"" | head -1 | grep $comment)
    if [[ -z $last_comment_match ]]; then
     post_comment="true"
