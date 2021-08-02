@@ -209,7 +209,7 @@ codeOwners:
         variables:
             - $CI_MERGE_REQUEST_PROJECT_PATH == "nica/mpdroot" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"
     script:
-        - chmod +x scripts/inform_codeowners.sh
-        # these packages must be put into base docker image later on to avoid potential errors related to installation
+        # stable and tested versions of these packages must be put into base docker image later on
+        # this is to avoid potential errors in the future related to their installation
         - apk update && apk add bash && apk add curl
-        - scripts/inform_codeowners.sh
+        - chmod +x scripts/inform_codeowners.sh && scripts/inform_codeowners.sh
