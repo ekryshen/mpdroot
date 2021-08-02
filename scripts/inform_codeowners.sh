@@ -7,13 +7,13 @@
 ######################################################################
 ##################### Added functionality ############################
 ###                                                                ###
-### 1. Comment informing owners about their duty to review is now  ###
-###    posted not only once at the beginning,                      ###
-###    but everytime the list of code owners is changed.           ###
+### 1. The monitoring of code review process is managed by bot.    ###
+###    The bot not only sets the CodeOwners label and posts        ###
+###    initial comment, but also monitors code ownership changes,  ###
+###    and places warning message box into description             ###
 ###								   ###
-### 2. List of changed files in a merge request parsed from        ###
-###    Gitlab API instead of Git                                   ###
-###    (faster and no git related issues)                          ###
+### 2. No git commands are used, everything is grabbed from        ###
+###    Gitlab API, which removes git dependency and is faster      ###
 ###                                                                ###
 ######################################################################
 
