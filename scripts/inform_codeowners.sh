@@ -125,7 +125,7 @@ function generate_codeowners_list () {
 }
 
 # generate current comment about the duty to review the code
-# if CodeOwners label not set then set it and post current comment about the duty to review
+# if CodeOwners label not set, then set it, post warning message into description and post comment in comments section about the duty to review
 # if CodeOwners label set, then look for the last comment regarding the duty to review. Post the current comment if it differs from the last one
 function generate_comment() {
 
@@ -156,7 +156,7 @@ EOF
 )
 
 
- # if codeowners label not set, then set it
+ # if codeowners label not set, then set it and place warning message box into description
  # if codeowners label already set, check for comment match
   MRInfo=$(curl -s -X GET -H "PRIVATE-TOKEN: " "$MERGE_REQUEST_URL" | grep labels.*\\[.*CodeOwners.*\\])
 
