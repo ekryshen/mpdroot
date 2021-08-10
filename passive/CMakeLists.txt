@@ -1,8 +1,8 @@
  ################################################################################
  #    Copyright (C) 2014 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    #
  #                                                                              #
- #              This software is distributed under the terms of the             # 
- #         GNU Lesser General Public Licence version 3 (LGPL) version 3,        #  
+ #              This software is distributed under the terms of the             #
+ #         GNU Lesser General Public Licence version 3 (LGPL) version 3,        #
  #                  copied verbatim in the file "LICENSE"                       #
  ################################################################################
 # Create a library called "libPassive" which includes the source files given in
@@ -21,20 +21,22 @@ Set(LINK_DIRECTORIES
  ${ROOT_LIBRARY_DIR}
  ${FAIRROOT_LIBRARY_DIR}
 )
- 
+
 Link_Directories(${LINK_DIRECTORIES})
 
 Set(SRCS
-  FairCave.cxx            
-  FairGeoCave.cxx        
-  FairGeoMagnet.cxx      
-  FairGeoPassivePar.cxx  
-  FairGeoPipe.cxx        
-  FairGeoTarget.cxx      
-  FairMagnet.cxx         
+  FairCave.cxx
+  FairGeoCave.cxx
+  FairGeoMagnet.cxx
+  FairGeoPassivePar.cxx
+  FairGeoPipe.cxx
+  FairGeoTarget.cxx
+  FairGeoCradle.cxx
+  FairMagnet.cxx
   FairPassiveContFact.cxx
-  FairPipe.cxx           
-  FairTarget.cxx 
+  FairPipe.cxx
+  FairTarget.cxx
+  FairCradle.cxx
 )
 
 Set(HEADERS )
