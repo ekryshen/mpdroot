@@ -1,21 +1,21 @@
 #!/bin/bash
 
-# Codeowners for Gitlab
+# Codeowners for Gitlab v1.0
 # Original version taken from GSI Darmstadt, first commit F.Uhlig
 # Adapted and modified for MPDRoot @JINR Dubna by Slavomir Hnatic
 
-######################################################################
-##################### Added functionality ############################
-###                                                                ###
-### 1. The monitoring of code review process is managed by bot.    ###
-###    The bot not only sets the CodeOwners label and posts        ###
-###    initial comment, but also monitors code ownership changes,  ###
-###    and places warning message box into description             ###
-###								   ###
-### 2. No git commands are used, everything is grabbed from        ###
-###    Gitlab API, which removes git dependency and is faster      ###
-###                                                                ###
-######################################################################
+#######################################################################
+##################### Added functionality #############################
+###                                                                 ###
+### 1. The monitoring of code review process is managed by the bot. ###
+###    The bot not only sets the CodeOwners label and posts         ###
+###    initial comment, but also monitors code ownership changes,   ###
+###    and places warning message box into description              ###
+###								    ###
+### 2. No git commands are used, required information is grabbed    ###
+###    from Gitlab API, which removes git dependency and is faster  ###
+###                                                                 ###
+#######################################################################
 
 
 main() {
@@ -164,6 +164,9 @@ EOF
     curl -s -o /dev/null -S -f -X PUT -H "PRIVATE-TOKEN: $COMMENT_TOKEN" "$MERGE_REQUEST_URL?add_labels=CodeOwners"
     post_comment="true"
     echo "Codeowners label added."
+    # minor issue with no real effect - existing description is grabbed from Gitlab API, where it is stored in Unicode format
+    # there can be some formatting discrepancy when reposting it in Gitlab UI, as Gitlab UI is using markdown format
+    # i corrected only basic discrepancies and did not write full unicode --> markdown converter, as it is too much work/code and not really needed
     description_existing=$(curl -s -S -f -X GET -H "PRIVATE-TOKEN: " "$MERGE_REQUEST_URL" | sed 's/"description"/\n&/g' \
                            | sed 's/"created_at"/\n&/g' | grep \"description\" |  cut -d '"' -f 4- | rev | cut -d '"' -f 6- | rev | sed 's/\\n/<br \/>/g' )
     description_new="$description_warning $description_existing"
@@ -184,7 +187,6 @@ EOF
   if [[ -n $post_comment ]]; then
     curl -s -o /dev/null -S -f -X POST -d "body=$comment" -H "PRIVATE-TOKEN: $COMMENT_TOKEN" "$MERGE_REQUEST_URL/notes"
   fi
-
 }
 
 main "$@"
