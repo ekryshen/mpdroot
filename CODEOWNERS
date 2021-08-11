@@ -17,7 +17,7 @@
 # Detectors
 #----------------------------------------------------------------------------------
 # TPC
-/tpc/                          @zinchenk  @abychov
+/tpc/                          @zinchenk  @abychkov
 
 # FFD
 /ffd/                          @nlashmanov
