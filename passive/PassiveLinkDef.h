@@ -1,8 +1,8 @@
 /********************************************************************************
  *    Copyright (C) 2014 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    *
  *                                                                              *
- *              This software is distributed under the terms of the             * 
- *         GNU Lesser General Public Licence version 3 (LGPL) version 3,        *  
+ *              This software is distributed under the terms of the             *
+ *         GNU Lesser General Public Licence version 3 (LGPL) version 3,        *
  *                  copied verbatim in the file "LICENSE"                       *
  ********************************************************************************/
 // $Id: PassiveLinkDef.h,v 1.1.1.1 2005/06/23 07:14:26 dbertini Exp $
@@ -17,6 +17,7 @@
 #pragma link C++ class  FairTarget+;
 #pragma link C++ class  FairPipe+;
 #pragma link C++ class  FairCave+;
+#pragma link C++ class  FairCradle+;
 
 #pragma link C++ class FairGeoCave;
 #pragma link C++ class FairGeoPipe;
@@ -24,6 +25,7 @@
 #pragma link C++ class FairGeoMagnet;
 #pragma link C++ class FairGeoPassivePar;
 #pragma link C++ class FairPassiveContFact;
+#pragma link C++ class FairGeoCradle;
 
 #endif
 

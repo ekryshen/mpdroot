@@ -16,6 +16,10 @@ void geometry_stage1(FairRunSim *fRun) {
   Magnet->SetGeometryFileName("magnet_v5.root");
   fRun->AddModule(Magnet);
 
+  FairModule *Cradle = new FairMagnet("CRADLE");
+  Cradle->SetGeometryFileName("cradle_v1.root");
+  fRun->AddModule(Cradle);
+
   FairDetector *Ffd = new MpdFfd("FFD", kTRUE);
   Ffd->SetGeometryFileName("FFD_v8.root");
   fRun->AddModule(Ffd);
