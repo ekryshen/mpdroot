@@ -211,5 +211,5 @@ codeOwners:
     script:
         # stable and tested versions of these packages must be put into base docker image later on
         # this is to avoid potential errors in the future related to their installation
-        - apk update && apk add bash && apk add curl
+        - apk update && apk add bash curl
         - chmod +x scripts/inform_codeowners.sh && scripts/inform_codeowners.sh
