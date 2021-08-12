@@ -76,7 +76,7 @@ Bool_t MpdPHSDGenerator::ReadEvent(FairPrimaryGenerator *primGen)
     if (ipdg==0) {printf("-W- MpdPHSDGenerator: particle with pdg=0\n"); continue;}
 
     // read polarizarion -- extention of standart PHSD output
-    if (fHPol==kTRUE && (TMath::Abs(ipdg/100) == 31 || TMath::Abs(ipdg/100) == 32))
+    if (fHPol==kTRUE && (TMath::Abs(ipdg/100) == 31 || TMath::Abs(ipdg/100) == 32) || TMath::Abs(ipdg/100) == 33) 
     {
       res=sscanf(fbuffer,"%*d %*d %*e %*e %*e %*e %*d %*d %*d %e %e %e",&pol[0],&pol[1],&pol[2]);
       if (res!=3)  {printf("-E- MpdPHSDGenerator: no Hyperon polarization info %d \n",res); exit(1);}
@@ -108,8 +108,8 @@ Bool_t MpdPHSDGenerator::ReadEvent(FairPrimaryGenerator *primGen)
     /* add track to simulation */
     primGen->AddTrack(ipdg, px, py, pz, 0., 0., 0.);
     
-    // add polarization for light hyperons (pdg == 31** and 32**)
-    if (fHPol==kTRUE && (TMath::Abs(ipdg/100) == 31 || TMath::Abs(ipdg/100) == 32))
+    // add polarization for hyperons (pdg == 31** and 32** and 33**)
+    if (fHPol==kTRUE && (TMath::Abs(ipdg/100) == 31 || TMath::Abs(ipdg/100) == 32 || TMath::Abs(ipdg/100) == 33))
     {
       Int_t nTr = gMC->GetStack()->GetNtrack();
       TParticle *part = ((MpdStack*)gMC->GetStack())->GetParticle(nTr-1);
