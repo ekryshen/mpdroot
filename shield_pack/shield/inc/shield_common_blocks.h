@@ -33,7 +33,7 @@ struct Oln_t {
 struct T0jpr0_t {
     float TMAX0;
     int JPART0;
-} t0jpr0;
+} extern t0jpr0;
 #endif
 
 #ifndef isoset
