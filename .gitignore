@@ -34,6 +34,8 @@ Testing/
 # build directory & data directory
 
 build/
+build*/
+external/
 examples/advanced/Tutorial3/macro/data/*
 !examples/advanced/Tutorial3/macro/data/dummy.txt
 examples/MQ/serialization/data_io/*
