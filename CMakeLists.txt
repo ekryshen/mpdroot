@@ -223,7 +223,6 @@ add_subdirectory (eventdisplay) #Emc
 #add_subdirectory (macro)
 #add_subdirectory (strawendcap)
 #add_subdirectory (bbc)
-#add_subdirectory (sft)
 #add_subdirectory (stt)
 #add_subdirectory (fsa)
 #add_subdirectory (ndet)
