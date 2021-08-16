@@ -12,6 +12,7 @@
 #include "NicaLink.h"
 #include "NicaTrackClones.h"
 #include "NicaV0Track.h"
+#include "TObjString.h"
 #include <FairLogger.h>
 
 #include <TList.h>
