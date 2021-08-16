@@ -224,7 +224,6 @@ add_subdirectory (eventdisplay) #Emc
 #add_subdirectory (strawendcap)
 #add_subdirectory (bbc)
 #add_subdirectory (stt)
-#add_subdirectory (fsa)
 #add_subdirectory (dch)
 
 
