@@ -77,8 +77,9 @@ SSH (for developers)
 git clone -b dev --recursive git@git.jinr.ru:nica/mpdroot.git 
 ```  
 
-    cd mpdroot  
-    mkdir build  
+    cd mpdroot 
+    mkdir build
+    cp config/SetEnv.sh.in SetEnv.sh
 By default, in the SetEnv.sh file SIMPATH points to /opt/fairsoft/mpd/new, and   
 FAIRROOTPATH – /opt/fairroot/mpd/new directories.  If you installed FairSoft or FairRoot to another directory,  
 please, change SIMPATH and FAIRROOTPATH variables in the file to correct install paths.  

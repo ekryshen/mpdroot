@@ -13,10 +13,10 @@ different systems
 configure mpdroot
    
        > cd  "MpdRoot_top_directory"
+       > cp config/SetEnv.sh.in SetEnv.sh
        > . ./SetEnv.sh
        > cd  MyBuild
        > cmake "MpdRoot_top_directory"
-
 
 build the framework
 
