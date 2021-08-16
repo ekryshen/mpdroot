@@ -1,6 +1,6 @@
 # The name of our project is "MPDROOT".  CMakeLists files in this project can
-# refer to the root source directory of the project as ${MPDROOT_SOURCE_DIR} 
-# or as ${CMAKE_SOURCE_DIR} and to the root binary directory of the project as 
+# refer to the root source directory of the project as ${MPDROOT_SOURCE_DIR}
+# or as ${CMAKE_SOURCE_DIR} and to the root binary directory of the project as
 # ${MPDROOT_BINARY_DIR} or ${CMAKE_BINARY_DIR}.
 
 # Check if cmake has the required version
@@ -21,7 +21,7 @@ foreach(p
 endforeach()
 
 # Set name of our project to "MPDROOT". Has to be done
-# after check of cmake version                        
+# after check of cmake version
 project(MPDROOT)
 
 #In case you need Fortran
@@ -146,8 +146,8 @@ If(${ROOT_LIBRARY_DIR} MATCHES /lib/root)
   set(BOOST_ROOT ${SIMPATH})
   set(GSL_DIR ${SIMPATH})
 Else(${ROOT_LIBRARY_DIR} MATCHES /lib/root)
-  set(BOOST_ROOT ${SIMPATH}/basics/boost)
-  set(GSL_DIR ${SIMPATH}/basics/gsl)
+  set(BOOST_ROOT ${SIMPATH})
+#  set(GSL_DIR ${SIMPATH}/lib/root)
 EndIf(${ROOT_LIBRARY_DIR} MATCHES /lib/root)
 ENDIF (NOT ALIBUILD)
 Message("-- Looking for Boost ...")
@@ -170,6 +170,9 @@ find_package(GSL REQUIRED)
 # set a variable which should be used in all CMakeLists.txt
 # Defines all basic include directories from fairbase
 SetBasicVariables()
+set(BASE_INCLUDE_DIRECTORIES ${BASE_INCLUDE_DIRECTORIES} ${SIMPATH}/include/root ${SIMPATH}/include/vmc)
+include_directories(${SIMPATH}/include/root  ${SIMPATH}/include/vmc)
+
 find_package(FairLogger)
 SET(PATH ${EXECUTABLE_OUTPUT_PATH} ${PATH})
 set(MPDROOT TRUE)
