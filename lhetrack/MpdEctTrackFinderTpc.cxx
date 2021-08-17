@@ -15,7 +15,6 @@
 #include "MpdEctKalmanTrack.h"
 #include "MpdStrawendcapGeoPar.h"
 #include "MpdStrawendcapPoint.h"
-#include "MpdDchPoint.h"
 #include "MpdTpcKalmanTrack.h"
 
 #include "FairGeoNode.h"
@@ -308,7 +307,7 @@ void MpdEctTrackFinderTpc::MakeKalmanHits()
     return;
   } else if (fDetType == 2) {
     // DCH
-    MakeKalmanHitsDch(); // DCH
+    // JANO DCH removed 2021.08.17 - MakeKalmanHitsDch(); // DCH
     return;
   }
 
@@ -436,76 +435,6 @@ void MpdEctTrackFinderTpc::MakeKalmanHits()
   for (Int_t i = 0; i < nKH; ++i) {
     lay = ((MpdKalmanHit*) fKHits->UncheckedAt(i))->GetLayer();
     fhLays->Fill(lay+0.1);
-    if (fLayPointers[lay] < 0) fLayPointers[lay] = i;
-  }
-}
-
-//__________________________________________________________________________
-void MpdEctTrackFinderTpc::MakeKalmanHitsDch()
-{
-  /// Create Kalman hits from DCH points.
-
-  fhLays->Reset();
-  Int_t nHits = fEctHits->GetEntriesFast(), layMax = 0, lay = 0, nKH = 0, itube = 0;
-  if (nHits == 0) return;
-  static const Double_t errR = 0.01, errRphi = 0.01; // 100um in R, 100um in R-Phi
-  //static const Double_t errR = 0.01, errRphi = 0.02; // 100um in R, 200um in R-Phi
-  Double_t firstHit[100][1000] = {{0},{0}};
-  Int_t indxTube[100][1000];
-  for (Int_t i = 0; i < 100; ++i) {
-    for (Int_t j = 0; j < 1000; ++j) indxTube[i][j] = -1;
-  }
-
-  for (Int_t ih = 0; ih < nHits; ++ih) {
-    MpdDchPoint *h = (MpdDchPoint*) fEctHits->UncheckedAt(ih);
-    if (h->GetZ() < 0) continue; // !!! exclude one side for now
-    lay = h->GetDetectorID();
-
-    Double_t cosSin[2] = {TMath::Cos(h->GetPhi()), TMath::Sin(h->GetPhi())}; // phi - wire direction
-    Double_t u = -h->GetX() * cosSin[1] + h->GetY() * cosSin[0];
-
-    // Add error                                            
-    Double_t dRphi = 0, dR = 0;
-    gRandom->Rannor(dRphi,dR);
-    Double_t meas[2] = {u+dRphi*errRphi, 0};
-    Double_t err[2] = {errRphi, errR};
-    //MpdKalmanHit *hit = 
-    new ((*fKHits)[nKH]) MpdKalmanHit(h->GetDetectorID()*1000000, 1, 
-      MpdKalmanHit::kFixedZ, meas, err, cosSin, 9., h->GetZ(), ih);
-    // Add second measurement - just for test at the moment
-    //!!!
-    //hit->SetNofDim(2);
-    //!!!
-    //lay = hit.GetLayer();
-    layMax = TMath::Max (lay, layMax);
-    //fhLays->Fill(lay+0.1);
-
-    // Check if multiple hits per tube
-    if (0 && indxTube[lay][itube] >= 0) {
-      // Multiple hits
-      if (TMath::Abs(u) < firstHit[lay][itube]) {
-	// Closer to anode wire - remove previous hit
-	firstHit[lay][itube] = TMath::Abs(u);
-	fKHits->RemoveAt(indxTube[lay][itube]);
-	indxTube[lay][itube] = nKH;
-      } else fKHits->RemoveAt(nKH); // remove last hit
-    } else {
-      firstHit[lay][itube] = TMath::Abs(u);
-      indxTube[lay][itube] = nKH;
-      fhLays->Fill(lay+0.1);
-    }
-    ++nKH;
-  }
-  fKHits->Compress();
-  fKHits->Sort(); // in descending order in abs(Z)
-  cout << " Max layer = " << layMax << " " << fKHits->GetEntriesFast() << " " 
-       << ((MpdKalmanHit*)fKHits->First())->GetDist() << endl;
-
-  fLayPointers = new Int_t [layMax+1];
-  for (Int_t i = 0; i <= layMax; ++i) fLayPointers[i] = -1;
-  nKH = fKHits->GetEntriesFast();
-  for (Int_t i = 0; i < nKH; ++i) {
-    lay = ((MpdKalmanHit*) fKHits->UncheckedAt(i))->GetLayer();
     if (fLayPointers[lay] < 0) fLayPointers[lay] = i;
   }
 }
