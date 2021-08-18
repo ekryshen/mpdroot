@@ -55,4 +55,4 @@ html/
 .*.swp
 
 # VS Code directory
-.vscode
+.vscode/*

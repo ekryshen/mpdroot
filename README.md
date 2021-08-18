@@ -96,3 +96,12 @@ export FAIRROOTPATH=/opt/fairroot/install
     . config.sh  
 ```   
 Make sure you use the config file in each new terminal.
+
+If you are using Visual Studio Code as your IDE, you can use
+provided configuration files. In the main directory run the
+command
+```
+     cp -r config/vscode.in/ .vscode
+```
+and edit paths inside files .vscode/launch.json and
+.vscode/settings.json depending on your configuration.

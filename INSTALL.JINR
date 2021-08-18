@@ -23,3 +23,10 @@ build the framework
        > .  ./config.sh
        > make
        > make install
+
+Settings for Visual Studio Code IDE
+
+      > cp -r config/vscode.in/ .vscode
+      
+edit paths inside files .vscode/launch.json and
+.vscode/settings.json
