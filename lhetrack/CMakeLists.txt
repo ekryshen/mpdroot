@@ -12,9 +12,6 @@ set(INCLUDE_DIRECTORIES
  ${CMAKE_SOURCE_DIR}/etof
  ${CMAKE_SOURCE_DIR}/strawendcap
  ${CMAKE_SOURCE_DIR}/sts
- ${CMAKE_SOURCE_DIR}/tgem
- ${CMAKE_SOURCE_DIR}/cpc
- ${CMAKE_SOURCE_DIR}/dch
  ${CMAKE_SOURCE_DIR}/lhetrack
 )
 
@@ -63,7 +60,6 @@ MpdTrackFinderIts5spd.cxx
 MpdVertexZfinder.cxx
 MpdTpcDedxTask.cxx
 #MpdKfV0Fitter.cxx
-MpdEctTrackFinderCpc.cxx
 MpdEctTrackFinderTof.cxx
 MpdMotherFitterPart.cxx
 #MpdMotherFitterTrac.cxx
@@ -103,7 +99,6 @@ MpdTrackFinderIts5spd.h
 MpdVertexZfinder.h
 MpdTpcDedxTask.h
 #MpdKfV0Fitter.h
-MpdEctTrackFinderCpc.h
 MpdEctTrackFinderTof.h
 MpdMotherFitterPart.h
 #MpdMotherFitterTrac.h

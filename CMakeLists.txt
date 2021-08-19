@@ -214,7 +214,7 @@ add_subdirectory (clustering)
 add_subdirectory (emc) # Cluster
 add_subdirectory (ffd)
 add_subdirectory (sts)
-add_subdirectory (cpc)
+# add_subdirectory (cpc)
 add_subdirectory (bmd)
 add_subdirectory (mcord)
 add_subdirectory (physics) #MpdBase MpdMCStack Kalman MpdPid LHETrack
