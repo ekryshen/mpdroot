@@ -56,3 +56,12 @@ html/
 
 # VS Code directory
 .vscode/*
+
+# Files generated running root runMC.C and root reco.C for test purposes
+macro/mpd/evetest.root
+macro/mpd/file.txt
+macro/mpd/log.txt
+macro/mpd/log_match.txt
+macro/mpd/match.dat
+macro/mpd/mpddst.MiniDst.root
+macro/mpd/mpddst.root
