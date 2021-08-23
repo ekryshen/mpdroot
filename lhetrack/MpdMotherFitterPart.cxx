@@ -592,6 +592,7 @@ void MpdMotherFitterPart::ComputeAandB(const TMatrixD &xk0, const MpdParticle &p
   Double_t phDca = TMath::ATan2 (part.GetXY(1)-my, part.GetXY(0)-mx);
   Double_t phXk = TMath::ATan2 (y0-my, x0-mx);
   Double_t gam = phDca - phXk;
+  gam = TMath::ASin(TMath::Sin(gam)); //AZ-230821
   Double_t ph0 = part.GetMeas(2) - gam; // phi at xk0
 
   // Center of shifted circle
