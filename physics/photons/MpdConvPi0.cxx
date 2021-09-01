@@ -15,233 +15,206 @@
 ClassImp(MpdConvPi0)
 
 
-MpdConvPi0::MpdConvPi0(std::string input, std::string config){
-
-  mParamConfig=config ;
-  //Create TChain
-  mChain = new TChain("mpdsim") ; 
-  std::ifstream ifs (input);
-  std::string fname;
-  if (ifs.is_open()) {
-  	while(ifs >> fname){
-      cout << "Adding to chain: "<< fname << endl ;	
-  	  mChain->AddFile(fname.data()) ;	
-  	}
-  }
-  else {
-    std::cout << "Error opening file " << input << endl ;
-  }
-
-  ifs.close() ;
-
+MpdConvPi0::MpdConvPi0(const char *name, const char *outputName):
+MpdAnalysisTask(name,outputName)
+{
+  mParamConfig=outputName ;
 }
 
-void MpdConvPi0::init(){
+
+void MpdConvPi0::UserInit(){
 
   mParams.ReadFromFile(mParamConfig) ;
   mParams.Print() ;
 
-  // Setup branches
-  mChain->SetBranchAddress("MCEventHeader.", &mMCHeader);
-  mChain->SetBranchAddress("MCTrack", &mMCTracks);
-  mChain->SetBranchAddress("MPDEvent.", &mMPDEvent);
+  // // Setup branches
+  // mChain->SetBranchAddress("MCEventHeader.", &mMCHeader);
+  // mChain->SetBranchAddress("MCTrack", &mMCTracks);
+  // mChain->SetBranchAddress("MPDEvent.", &mMPDEvent);
 
-  mEMCClusters  = new TObjArray() ;
-  mChain->SetBranchAddress("EmcCluster",&mEMCClusters);
-  mChain->SetBranchAddress("Vertex",&mVertexes);
+  // mEMCClusters  = new TObjArray() ;
+  // mChain->SetBranchAddress("EmcCluster",&mEMCClusters);
+  // mChain->SetBranchAddress("Vertex",&mVertexes);
 
-  mChain->SetBranchAddress("TpcKalmanTrack",&mKalmanTracks);
+  // mChain->SetBranchAddress("TpcKalmanTrack",&mKalmanTracks);
 
   //Prepare histograms etc.
-  mHistoList.SetOwner(kTRUE);
+  fOutputList = new TList() ;
+  fOutputList->SetOwner(kTRUE);
+
+  TH1::AddDirectory(kFALSE);   //sets a global switch disabling the reference to histos in gROOT and their overwriting
 
   //General QA
   mhEvents = new TH1F("hEvents","Number of events",10,0.,10.) ;
-  mHistoList.Add(mhEvents) ;
+  fOutputList->Add(mhEvents) ;
   mhVertex = new TH1F("hVertex","Event vertex distribution",50,-100.,100.) ;
-  mHistoList.Add(mhVertex) ;
+  fOutputList->Add(mhVertex) ;
   mhCentrality=new TH1F("hCentrality","Centrality distribution",100,0.,100.) ;
-  mHistoList.Add(mhCentrality) ;
+  fOutputList->Add(mhCentrality) ;
 
   //V0selection
   const int nPtbin = 100;
   const float pTmin=0.;
   const float pTmax=5.;
   mhCutEff = new TH2F("hCutEff","track cut efficiency",21,0.,21.,nPtbin,pTmin,pTmax) ;
-  mHistoList.Add(mhCutEff) ;
+  fOutputList->Add(mhCutEff) ;
   mhNhits   = new TH1F("hNhits","Number of hits per track",100,0.,100.) ;
-  mHistoList.Add(mhNhits) ;
+  fOutputList->Add(mhNhits) ;
   mhTracks = new TH2F("hTracks","track occupancy pt vs eta",nPtbin,pTmin,pTmax,100,-1.5,1.5) ;
-  mHistoList.Add(mhTracks) ;
+  fOutputList->Add(mhTracks) ;
   mhProbEl  = new TH2F("hProbEl","Electron probability",100,0.,1.,nPtbin,pTmin,pTmax) ;
-  mHistoList.Add(mhProbEl) ;
+  fOutputList->Add(mhProbEl) ;
   mhdEdx = new TH2F("hdEdx","dEdx",100,-10,10.,nPtbin,pTmin,pTmax) ;
-  mHistoList.Add(mhdEdx) ;
+  fOutputList->Add(mhdEdx) ;
   mhConvMap = new TH3F("hConvMap","Conversion map (r,phi,z)",100,0.,280.,100,0.,TMath::Pi(),100,-200.,200.) ;
-  mHistoList.Add(mhConvMap) ;
+  fOutputList->Add(mhConvMap) ;
   mhAlpha = new TH2F("hAlpha","#alpha distribution",100,0.,1.,nPtbin,pTmin,pTmax) ;
-  mHistoList.Add(mhAlpha) ;
+  fOutputList->Add(mhAlpha) ;
   mhChi2  = new TH2F("hChi2","#chi^{2}",100,0.,50.,nPtbin,pTmin,pTmax) ;
-  mHistoList.Add(mhChi2) ;
+  fOutputList->Add(mhChi2) ;
   mhDist  = new TH2F("hDist","track DCA",100,0.,10.,nPtbin,pTmin,pTmax) ;
-  mHistoList.Add(mhDist) ;
+  fOutputList->Add(mhDist) ;
   hmMassEE= new TH2F("mEE","m_{ee}",100,0.,0.3,nPtbin,pTmin,pTmax) ;
-  mHistoList.Add(hmMassEE) ;
+  fOutputList->Add(hmMassEE) ;
   mhCosPsi= new TH2F("cosPsi","cos(#psi)",100,0.,TMath::Pi(),nPtbin,pTmin,pTmax) ;
-  mHistoList.Add(mhCosPsi) ;
+  fOutputList->Add(mhCosPsi) ;
   mhArmPo = new TH2F("Armenteros","Armenteros",100,-1,1,100,0,0.3); 
-  mHistoList.Add(mhArmPo) ;
+  fOutputList->Add(mhArmPo) ;
   mhConvSp  = new TH2F("ConvSp","Conv Sp",nPtbin,pTmin,pTmax,100,-1.5,1.5); 
-  mHistoList.Add(mhConvSp) ;
+  fOutputList->Add(mhConvSp) ;
   mhAsym = new TH2F("Asymetry","Asymetry",200,0,1,nPtbin,pTmin,pTmax); 
-  mHistoList.Add(mhAsym) ;
+  fOutputList->Add(mhAsym) ;
   if(isMC){
     mhProbElTrue  = new TH2F("hProbElTrue","Electron probability, true electrons",100,0.,1.,nPtbin,pTmin,pTmax) ;
-    mHistoList.Add(mhProbElTrue) ;
+    fOutputList->Add(mhProbElTrue) ;
     mhdEdxTrue = new TH2F("hdEdxTrue","dEdx",100,-10,10.,nPtbin,pTmin,pTmax) ;
-    mHistoList.Add(mhdEdxTrue) ;
+    fOutputList->Add(mhdEdxTrue) ;
     mhConvMapTrue = new TH3F("hConvMapTrue","Conversion map (r,phi,z)",100,0.,280.,100,0.,TMath::Pi(),100,-200.,200.) ;
-    mHistoList.Add(mhConvMapTrue) ;
+    fOutputList->Add(mhConvMapTrue) ;
     mhAlphaTrue = new TH2F("hAlphaTrue","#alpha distribution",100,0.,1.,nPtbin,pTmin,pTmax) ;
-    mHistoList.Add(mhAlphaTrue) ;
+    fOutputList->Add(mhAlphaTrue) ;
     mhChi2True  = new TH2F("hChi2True","#chi^{2}",100,0.,50.,nPtbin,pTmin,pTmax) ;
-    mHistoList.Add(mhChi2True) ;
+    fOutputList->Add(mhChi2True) ;
     mhDistTrue  = new TH2F("hDistTrue","track DCA",100,0.,10.,nPtbin,pTmin,pTmax) ;
-    mHistoList.Add(mhDistTrue) ;
+    fOutputList->Add(mhDistTrue) ;
     hmMassEETrue= new TH2F("mEETrue","m_{ee}",100,0.,0.3,nPtbin,pTmin,pTmax) ;
-    mHistoList.Add(hmMassEETrue) ;	
+    fOutputList->Add(hmMassEETrue) ;	
     mhCosPsiTrue= new TH2F("cosPsiTrue","cos(#psi)",100,0.,TMath::Pi(),nPtbin,pTmin,pTmax) ;
-    mHistoList.Add(mhCosPsiTrue) ;	
+    fOutputList->Add(mhCosPsiTrue) ;	
     mhArmPoTrue = new TH2F("ArmenterosTrue","Armenteros",100,-1,1,100,0,0.3); 
-    mHistoList.Add(mhArmPoTrue) ;
+    fOutputList->Add(mhArmPoTrue) ;
     mhAsymTrue  = new TH2F("AsymetryTrue","Asymetry",200,0,1,nPtbin,pTmin,pTmax); 
-    mHistoList.Add(mhAsymTrue) ;
+    fOutputList->Add(mhAsymTrue) ;
     mhConvSpTrue  = new TH2F("ConvSpTrue","Conv Sp",nPtbin,pTmin,pTmax,100,-1.5,1.5); 
-    mHistoList.Add(mhConvSpTrue) ;
+    fOutputList->Add(mhConvSpTrue) ;
   }
 
   //Cluster selection
   mhCluCutEff = new TH2F("hCluCutEff","cluster cut efficiency",10,0.,10.,nPtbin,pTmin,pTmax) ;
-  mHistoList.Add(mhCluCutEff) ;
+  fOutputList->Add(mhCluCutEff) ;
   // Inv mass histos
   const int nMbins= 200;
   const float mMax= 1.; 
   for(int cen=0; cen<mHistoCentBins; cen++){
     mhRealCalo[cen] = new TH2F(Form("hRealCalo_cen%d",cen),Form("Real inv mass, calorimeter"),nMbins,0.,mMax,nPtbin,pTmin,pTmax) ;
-    mHistoList.Add(mhRealCalo[cen]) ;
+    fOutputList->Add(mhRealCalo[cen]) ;
     mhMixedCalo[cen] = new TH2F(Form("hMixedCalo_cen%d",cen),Form("Mixed inv mass, calorimeter"),nMbins,0.,mMax,nPtbin,pTmin,pTmax) ;
-    mHistoList.Add(mhMixedCalo[cen]) ;
+    fOutputList->Add(mhMixedCalo[cen]) ;
     mhRealHybrid[cen] = new TH2F(Form("hRealHybrid_cen%d",cen),Form("Real inv mass, hybrid"),nMbins,0.,mMax,nPtbin,pTmin,pTmax) ;
-    mHistoList.Add(mhRealHybrid[cen]) ;
+    fOutputList->Add(mhRealHybrid[cen]) ;
     mhMixedHybrid[cen] = new TH2F(Form("hMixedHybrid_cen%d",cen),Form("Mixed inv mass, hybrid"),nMbins,0.,mMax,nPtbin,pTmin,pTmax) ;
-    mHistoList.Add(mhMixedHybrid[cen]) ;
+    fOutputList->Add(mhMixedHybrid[cen]) ;
     mhRealConv[cen] = new TH2F(Form("hRealConv_cen%d",cen),Form("Real inv mass, conversion"),nMbins,0.,mMax,nPtbin,pTmin,pTmax) ;
-    mHistoList.Add(mhRealConv[cen]) ;
+    fOutputList->Add(mhRealConv[cen]) ;
     mhMixedConv[cen] = new TH2F(Form("hMixedConversion_cen%d",cen),Form("Mixed inv mass, conversion"),nMbins,0.,mMax,nPtbin,pTmin,pTmax) ;
-    mHistoList.Add(mhMixedConv[cen]) ;
+    fOutputList->Add(mhMixedConv[cen]) ;
     if(isMC){
       mhRealCaloTrue[cen] = new TH2F(Form("hRealCaloTrue_cen%d",cen),Form("Real inv mass, calorimeter"),nMbins,0.,mMax,nPtbin,pTmin,pTmax) ;
-      mHistoList.Add(mhRealCaloTrue[cen]) ;
+      fOutputList->Add(mhRealCaloTrue[cen]) ;
       mhRealHybridTrue[cen] = new TH2F(Form("hRealHybridTrue_cen%d",cen),Form("Real inv mass, hybrid"),nMbins,0.,mMax,nPtbin,pTmin,pTmax) ;
-      mHistoList.Add(mhRealHybridTrue[cen]) ;
+      fOutputList->Add(mhRealHybridTrue[cen]) ;
       mhRealConvTrue[cen] = new TH2F(Form("hRealConvTrue_cen%d",cen),Form("Real inv mass, conversion"),nMbins,0.,mMax,nPtbin,pTmin,pTmax) ;
-      mHistoList.Add(mhRealConvTrue[cen]) ;
+      fOutputList->Add(mhRealConvTrue[cen]) ;
 
       mhRealCaloTrueEl[cen] = new TH2F(Form("hRealCaloTrueEl_cen%d",cen),Form("Real inv mass, calorimeter"),nMbins,0.,mMax,nPtbin,pTmin,pTmax) ;
-      mHistoList.Add(mhRealCaloTrueEl[cen]) ;
+      fOutputList->Add(mhRealCaloTrueEl[cen]) ;
       mhRealHybridTrueEl[cen] = new TH2F(Form("hRealHybridTrueEl_cen%d",cen),Form("Real inv mass, hybrid"),nMbins,0.,mMax,nPtbin,pTmin,pTmax) ;
-      mHistoList.Add(mhRealHybridTrueEl[cen]) ;
+      fOutputList->Add(mhRealHybridTrueEl[cen]) ;
       mhRealConvTrueEl[cen] = new TH2F(Form("hRealConvTrueEl_cen%d",cen),Form("Real inv mass, conversion"),nMbins,0.,mMax,nPtbin,pTmin,pTmax) ;
-      mHistoList.Add(mhRealConvTrueEl[cen]) ;
+      fOutputList->Add(mhRealConvTrueEl[cen]) ;
 
       mhRealCaloTrueAll[cen] = new TH2F(Form("hRealCaloTrueAll_cen%d",cen),Form("Real inv mass, calorimeter"),nMbins,0.,mMax,nPtbin,pTmin,pTmax) ;
-      mHistoList.Add(mhRealCaloTrueAll[cen]) ;
+      fOutputList->Add(mhRealCaloTrueAll[cen]) ;
       mhRealHybridTrueAll[cen] = new TH2F(Form("hRealHybridTrueAll_cen%d",cen),Form("Real inv mass, hybrid"),nMbins,0.,mMax,nPtbin,pTmin,pTmax) ;
-      mHistoList.Add(mhRealHybridTrueAll[cen]) ;
+      fOutputList->Add(mhRealHybridTrueAll[cen]) ;
       mhRealConvTrueAll[cen] = new TH2F(Form("hRealConvTrueAll_cen%d",cen),Form("Real inv mass, conversion"),nMbins,0.,mMax,nPtbin,pTmin,pTmax) ;
-      mHistoList.Add(mhRealConvTrueAll[cen]) ;
+      fOutputList->Add(mhRealConvTrueAll[cen]) ;
     }
   } 
   if(isMC){
     //spectra of primary pi0.eta,...
     for(int cen=0; cen<mHistoCentBins; cen++){
       hPrimPi0[cen] = new TH2F(Form("PrimaryPi0_cen%d",cen),"Centrality",nPtbin,pTmin,pTmax,100,-2.,2.) ;
-      mHistoList.Add(hPrimPi0[cen]) ;
+      fOutputList->Add(hPrimPi0[cen]) ;
     }
 
   }
 
 }
 //--------------------------------------
-void MpdConvPi0::processData(){
+void MpdConvPi0::ProcessEvent(MpdAnalysisEvent &event){
 
-  int n = mChain->GetEntries();
-  cout << "Processing " << n << " events " << endl ;
+  if(!isInitialized){
+    mKF = MpdKalmanFilter::Instance() ;
+    mKHit.SetType(MpdKalmanHit::kFixedR);
+    mPID = new MpdPid(mParams.mPIDsigM, mParams.mPIDsigE, mParams.mPIDenergy, mParams.mPIDkoeff, mParams.mPIDgenerator, mParams.mPIDtracking, mParams.mPIDparticles);
+    isInitialized = true ;
+  }
 
-  for(int iEvent=0; iEvent<n; iEvent++){
-    mChain->GetEvent(iEvent) ;
-    if(!isInitialized){
-      //Read geometry field etc
-      mChain->GetFile()->Get("FairGeoParSet");
-      mAna = new FairRunAna();
-      //To propagate tracks
-      mKF = MpdKalmanFilter::Instance() ;
-      mKF->Init();
-      mKHit.SetType(MpdKalmanHit::kFixedR);
 
-      mPID = new MpdPid(mParams.mPIDsigM, mParams.mPIDsigE, mParams.mPIDenergy, mParams.mPIDkoeff, mParams.mPIDgenerator, mParams.mPIDtracking, mParams.mPIDparticles);
+  if(!selectEvent(event)){ ///
+    return;
+  }
 
-      isInitialized = true ;
-    }
-
-    if(!selectEvent()){ ///
-      continue;
-    }
-
-    if(isMC){
-      for(int i=0; i<mMCTracks->GetEntriesFast();i++){
-        MpdMCTrack* pr= (static_cast<MpdMCTrack*>(mMCTracks->At(i))) ;
-        if(pr->GetPdgCode()==111){
-          if(pr->GetStartX()*pr->GetStartX()+pr->GetStartY()*pr->GetStartY()<1.){
-           TVector3 momentum;
-           pr->GetMomentum(momentum); 
-           hPrimPi0[mCenBin]->Fill(momentum.Pt(), momentum.Y()) ;
-          }
+  mEMCClusters = event.fEMCCluster;
+  mKalmanTracks = event.fTPCKalmanTrack;
+  if(isMC){
+    mMCTracks = event.fMCTrack ;
+    for(int i=0; i<mMCTracks->GetEntriesFast();i++){
+      MpdMCTrack* pr= (static_cast<MpdMCTrack*>(mMCTracks->At(i))) ;
+      if(pr->GetPdgCode()==111){
+        if(pr->GetStartX()*pr->GetStartX()+pr->GetStartY()*pr->GetStartY()<1.){
+          TVector3 momentum;
+          pr->GetMomentum(momentum); 
+          hPrimPi0[mCenBin]->Fill(momentum.Pt(), momentum.Y()) ;
         }
       }
     }
-
-    selectConversion();
-
-    selectClusters(); 
-
-    processHistograms() ;
   }
+  
+  selectConversion(event);
+
+  selectClusters(event); 
+
+  processHistograms(event) ;
+  
 }
 
-void MpdConvPi0::endAnalysis(){
-  //write collected histos to file
-
-  cout << "Writing output to file " << mOutFile << endl ;
-  TFile fout(mOutFile.data(),"recreate") ;
-  TIter next(&mHistoList);
-  TH1 * obj ;
-  while ((obj = (TH1*)next())){
-   obj->Write();
-  }
-  
-  // fout.WriteObjectAny(&mStorage, "std::vector<V0>", "V0s");
-  
-  fout.Close() ;
-
+void MpdConvPi0::Finish(){
+  //Post-scan processing not needed
+ 
 }
 
 //--------------------------------------
-bool MpdConvPi0::selectEvent(){
+bool MpdConvPi0::selectEvent(MpdAnalysisEvent &event){
 
   mhEvents->Fill(0.5) ;
+  //first test if event filled?
+  if(!event.fVertex){ //if even vertex not filled, skip event
+    return false ;
+  }
   // Vertex z coordinate
-  MpdVertex *vertex = (MpdVertex*) mVertexes->First();
+  MpdVertex *vertex = (MpdVertex*) event.fVertex->First();
   vertex->Position(mPrimaryVertex);
   mhVertex->Fill(mPrimaryVertex.Z()) ;
   if(fabs(mPrimaryVertex.Z())>mParams.mZvtxCut){
@@ -267,14 +240,12 @@ bool MpdConvPi0::selectEvent(){
   return true ;
 }
 //--------------------------------------
-void MpdConvPi0::selectConversion(){
+void MpdConvPi0::selectConversion(MpdAnalysisEvent &event){
 
  //Select V0 in this event
   mV0.clear() ;
 
-  mMpdGlobalTracks = mMPDEvent->GetGlobalTracks();
-
-
+  mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
   int ntr = mMpdGlobalTracks->GetEntriesFast() ; 
   MpdPhoton v ;
   for (long int i = 0; i < ntr-1; i++){ 
@@ -299,7 +270,7 @@ void MpdConvPi0::selectConversion(){
   }
 }
 //--------------------------------------
-void MpdConvPi0::selectClusters(){
+void MpdConvPi0::selectClusters(MpdAnalysisEvent &event){
   //Select EMC clusters in event
   const Float_t par0[2] = {-7.02851e-005, -7.76476e-002};
   const Float_t par1[2] = {-4.45930e-005, -1.01164e-002};
@@ -362,7 +333,7 @@ void MpdConvPi0::selectClusters(){
 
 }
 
-void MpdConvPi0::processHistograms(){
+void MpdConvPi0::processHistograms(MpdAnalysisEvent &event){
   //Fill Real, Mixed distributions and update mixed array
 
   //Real
@@ -771,7 +742,7 @@ bool MpdConvPi0::TestHybrid(MpdPhoton &c, MpdPhoton &v0) const {
   dz=999.;
   MpdKalmanHit hEnd;
   hEnd.SetType(MpdKalmanHit::kFixedR);
-  double rClu = MpdEmcGeoUtils::GetInstance()->Rperp(zEMC) ;
+  double rClu = 170; //MpdEmcGeoUtils::GetInstance()->Rperp(zEMC) ;
   hEnd.SetPos(rClu);
   MpdKalmanFilter* pKF = MpdKalmanFilter::Instance("KF", "KF");
 

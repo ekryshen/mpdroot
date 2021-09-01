@@ -6,6 +6,7 @@ set(INCLUDE_DIRECTORIES
  ${CMAKE_SOURCE_DIR}/lhetrack
  ${CMAKE_SOURCE_DIR}/emc/emcKI
  ${CMAKE_SOURCE_DIR}/mcstack
+ ${CMAKE_SOURCE_DIR}/physics
  ${CMAKE_SOURCE_DIR}/physics/photons
 )
 
