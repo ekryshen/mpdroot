@@ -215,7 +215,8 @@ class MpdFemtoTrack {
   }
   /// dE/dx of the track in (keV/cm)
   double dEdxInKeV() const {
-    return (double) mDedx * 1e-3;
+//    return (double) mDedx * 1e-3;
+    return (double) mDedx;
   }
   /// dE/dx of the track in (keV/cm)
   double DedxInKeV() const {
