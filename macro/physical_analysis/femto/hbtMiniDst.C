@@ -36,6 +36,7 @@ void hbtMiniDst(const char* inFileList = "",
   miniDstReader->SetStatus("*", 0);
   miniDstReader->SetStatus("Event", 1);
   miniDstReader->SetStatus("Track", 1);
+  miniDstReader->SetStatus("McTrack", 1);
   miniDstReader->SetStatus("BTofPidTraits", 1);
 
   if ( !miniDstReader->chain() ) {
@@ -68,8 +69,8 @@ void hbtMiniDst(const char* inFileList = "",
 
   // Create and set event cut
   MpdFemtoBasicEventCut *eventCut = new MpdFemtoBasicEventCut();
-  eventCut->setVertZPos( -75., 75. );
-  eventCut->setEventMult( 0, 100 );
+  //eventCut->setVertZPos( -75., 75. );
+  //eventCut->setEventMult( 0, 100 );
   hbtAnalysis->setEventCut( eventCut );
 
   // Create and set track cut for pion selection using TPC+TOF method
