@@ -1,6 +1,6 @@
 # <b>The MpdRoot Framework </b>
 The main framework for the MPD experiment at NICA.  
-http://mpd.jinr.ru/  
+http://mpdroot.jinr.ru/  
 
 <img src="eventdisplay/evepic.png" width="600">
 
@@ -9,7 +9,7 @@ Based on:
 and 
 [FairRoot](https://github.com/FairRootGroup/FairRoot)
 
-[Getting started](http://mpd.jinr.ru/mpdroot-start-guide/)
+[Getting started](http://mpdroot.jinr.ru/mpdroot-start-guide/)
 
 ### Install Prerequisites
 for RedHat-based OS (eg, CentOS, Scientific Linux):
