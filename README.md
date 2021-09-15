@@ -35,9 +35,8 @@ After cloning FairSoft make sure to check fairsoft/DEPENDENCIES
 ```
 export INSTALLATION_PATH=/opt  
 cd $INSTALLATION_PATH  
-git clone https://github.com/FairRootGroup/FairSoft.git fairsoft  
+git clone -b apr21_patches https://github.com/FairRootGroup/FairSoft.git fairsoft  
 cd fairsoft  
-git checkout jun19_patches
 ./configure.sh
 
  1) GCC (on Linux)  
@@ -55,9 +54,8 @@ export INSTALLATION_PATH=/opt
 cd $INSTALLATION_PATH  
 export SIMPATH=$INSTALLATION_PATH/fairsoft/install
 export PATH=$SIMPATH/bin:$PATH
-git clone https://github.com/FairRootGroup/FairRoot.git fairroot
+git clone -b v18.6_patches https://github.com/FairRootGroup/FairRoot.git fairroot
 cd fairroot 
-git checkout v18.2_patches
 mkdir build
 cd build
 cmake -DCMAKE_INSTALL_PREFIX="$INSTALLATION_PATH/fairroot/install" ..
