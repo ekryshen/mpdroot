@@ -15,6 +15,7 @@
 #include "MpdHelix.h"
 #include "FairMCEventHeader.h"
 #include "MpdKalmanFilter.h"
+#include "MpdAnalysisTask.h"
 #include "MpdParticle.h"
 #include "MpdPhoton.h"
 #include "MpdPhotonAnalysisParams.h"
@@ -40,33 +41,33 @@
   };
 
 
-class MpdConvPi0 {
+class MpdConvPi0 : public MpdAnalysisTask {
 
   public : 
   MpdConvPi0() {}
-  MpdConvPi0(std::string inputlist, std::string configfile="") ;
+  MpdConvPi0(const char *name, const char *outputName="taskName") ;
   ~MpdConvPi0() {}  //TODO: normal descructor with cleaning off histos
 
-  void init();
-  void processData() ;
-  void endAnalysis() ;
+  void UserInit();
+  void ProcessEvent(MpdAnalysisEvent &event) ;
+  void Finish() ;
 
   void setOutFile(std::string filename = "histos.root"){mOutFile=filename ;}
 
 
  protected:
 
-  bool selectEvent() ; 	
+  bool selectEvent(MpdAnalysisEvent &event) ; 	
 
-  void selectConversion() ;
+  void selectConversion(MpdAnalysisEvent &event) ;
 
   bool selectTrack(MpdTrack *tr) ;
 
   bool createSelectV0(MpdTrack *tr1, MpdTpcKalmanTrack *ktr1,  MpdTrack *tr2, MpdTpcKalmanTrack *ktr2, MpdPhoton &v );
 
-  void selectClusters(); 
+  void selectClusters(MpdAnalysisEvent &event); 
 
-  void processHistograms() ;
+  void processHistograms(MpdAnalysisEvent &event) ;
 
   int centrality(int tpcMultiplicity) const ;
  
@@ -112,13 +113,8 @@ private:
 
    std::string mOutFile = "histos.root" ;
 
-   TChain * mChain               = nullptr ;   /// input chain   
-   FairRunAna * mAna             = nullptr ;
    MpdKalmanFilter* mKF          = nullptr ;
    MpdPid *mPID                  = nullptr ;
-   TClonesArray * mVertexes      = nullptr ;
-   MpdEvent * mMPDEvent          = nullptr ;
-   FairMCEventHeader * mMCHeader = nullptr ;
    TClonesArray * mMCTracks      = nullptr ;
    TObjArray * mEMCClusters      = nullptr ;
    TClonesArray * mKalmanTracks  = nullptr ;

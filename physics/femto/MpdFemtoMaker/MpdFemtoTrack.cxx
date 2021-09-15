@@ -227,9 +227,10 @@ void MpdFemtoTrack::setDedxFromKeV(const double& dEdx) {
   if (dEdx < 0) {
     mDedx = 0;
   } else {
-    mDedx = ((dEdx * 1e3) > std::numeric_limits<unsigned short>::max() ?
-	     std::numeric_limits<unsigned short>::max() :
-	     (unsigned short) (dEdx * 1e3));
+      mDedx = dEdx;
+//    mDedx = ((dEdx * 1e3) > std::numeric_limits<unsigned short>::max() ?
+//	     std::numeric_limits<unsigned short>::max() :
+//	     (unsigned short) (dEdx * 1e3));
   }
 }
 

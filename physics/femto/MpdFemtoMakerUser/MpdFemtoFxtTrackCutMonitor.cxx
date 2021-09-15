@@ -62,7 +62,7 @@ monMass(ParticleMass) {
 			       76, 0., 1.9, 100, -10., 10.);
   mPvsDedx = new TH2F((s + n + "mPvsDedx").c_str(),
 		      "dE/dx vs. momentum;p (GeV/c);dE/dx (keV/cm)",
-		      76, 0.0, 1.9, 100, 0., 10.);
+		      76, 0.0, 1.9, 100, 0., 15000.);
   mRapidity = new TH1F((s + n + "mRapidity").c_str(), "Rapidity;y;Entries",
 		       56, -1.2, 1.2);
   mPseudoRapidity = new TH1F((s + n + "mPseudoRapidity").c_str(), "Pseudorapidity;#eta;Entries",
@@ -267,7 +267,6 @@ void MpdFemtoFxtTrackCutMonitor::fill(const MpdFemtoTrack* track) {
 			      track->invBeta() -
 			      TMath::Sqrt(M_PROTON * M_PROTON +
 					  track->p().Mag2()) / track->ptot());
-
 }
 
 //_________________

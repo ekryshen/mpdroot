@@ -37,10 +37,12 @@ link_directories(${LINK_DIRECTORIES})
 
 # List of source files
 set(SRCS
- MpdRoInvMassTask.cxx
+ MpdAnalysisEvent.cxx
+ MpdAnalysisTask.cxx
+ MpdAnalysisManager.cxx
 )
 
-Set(HEADERS)
+Set(HEADERS MpdAnalysisEvent.h MpdAnalysisTask.h MpdAnalysisManager.h)
 Set(LINKDEF MpdPhysicsLinkDef.h)
 Set(LIBRARY_NAME MpdPhysics)
 Set(DEPENDENCIES Core Base MpdDst)
