@@ -141,6 +141,7 @@ run_reco:ubuntu:
   stage: deploy
   before_script:
     - echo "Skipping global before_script"
+    - cp -R -u -p config/SetEnv.sh.in SetEnv.sh
   script:
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add /dev/stdin > /dev/null
