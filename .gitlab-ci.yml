@@ -7,7 +7,7 @@ stages:
  - codeOwners
  
 before_script:
- - cp -R -u -p /config/SetEnv.sh.in SetEnv.sh
+ - cp -R -u -p config/SetEnv.sh.in SetEnv.sh
  - export SIMPATH=/cvmfs/nica.jinr.ru/$OS_TYPE/fairsoft/mpd
  - export FAIRROOTPATH=/cvmfs/nica.jinr.ru/$OS_TYPE/fairroot/mpd
  - sed -i "s/\/opt\/fairsoft\/install/\/cvmfs\/nica.jinr.ru\/$OS_TYPE\/fairsoft\/mpd/g" SetEnv.sh
