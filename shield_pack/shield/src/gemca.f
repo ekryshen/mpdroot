@@ -1900,6 +1900,11 @@ C****************************************************************
 C* ROT card interpretation                                      *
 C****************************************************************
 C
+        IMPLICIT REAL*8 (A-H,R-Z)
+        CHARACTER*80 JREAD(1000)
+        DIMENSION RTMP(30)
+        DIMENSION JTMP(30)
+        INTEGER f017In
 	PRINT *,'SUBROUTINE GBROT is not ready yet - sorry'
 	STOP'EXIT from GBROT: ROT card is not ready,use other!'
 C

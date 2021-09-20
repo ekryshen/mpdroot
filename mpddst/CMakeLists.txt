@@ -41,6 +41,18 @@ set(SRCS
  MpdFillDstTask.cxx
  MpdMiniDstFillTask.cxx
  MpdDstCompressTask.cxx
+ MpdMiniEvent/MpdMiniBECalCluster.cxx
+ MpdMiniEvent/MpdMiniBTofHit.cxx
+ MpdMiniEvent/MpdMiniBTofPidTraits.cxx
+ MpdMiniEvent/MpdMiniDstReader.cxx
+ MpdMiniEvent/MpdMiniEvent.cxx
+ MpdMiniEvent/MpdMiniFHCalHit.cxx
+ MpdMiniEvent/MpdMiniHelix.cxx
+ MpdMiniEvent/MpdMiniMcEvent.cxx
+ MpdMiniEvent/MpdMiniMcTrack.cxx
+ MpdMiniEvent/MpdMiniPhysicalHelix.cxx
+ MpdMiniEvent/MpdMiniTrack.cxx
+ MpdMiniEvent/MpdMiniTrackCovMatrix.cxx
 )
 
 Set(HEADERS)

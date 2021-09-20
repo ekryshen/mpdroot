@@ -58,6 +58,12 @@ MpdTpcClusterFinderAZ.cxx
 MpdTPCpid.cxx
 MpdTpcClusterFinderMlem.cxx
 MpdTpcEDepParams.cxx
+${CMAKE_SOURCE_DIR}/mpddst/mcDst/MpdMcEvent.cxx
+${CMAKE_SOURCE_DIR}/mpddst/mcDst/MpdMcParticle.cxx
+${CMAKE_SOURCE_DIR}/mpddst/mcDst/MpdMcDst.cxx
+${CMAKE_SOURCE_DIR}/mpddst/mcDst/MpdMcDstReader.cxx
+${CMAKE_SOURCE_DIR}/mpddst/mcDst/MpdMcPIDConverter.cxx
+${CMAKE_SOURCE_DIR}/mpddst/mcDst/MpdMcRun.cxx
 )
 
 Set(HEADERS)

@@ -11,6 +11,7 @@
 #include "MpdZdcTstSim.h"
 #include "MpdZdcPoint.h"
 #include "TpcPoint.h"
+#include <TFile.h>
 
 #include "FairRootManager.h"
 #include "MpdMCTrack.h"

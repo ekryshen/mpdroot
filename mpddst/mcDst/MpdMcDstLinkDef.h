@@ -5,7 +5,7 @@
 #pragma link off all functions;
 
 // McDst
-#pragma link C++ class McRun++;
+#pragma link C++ class McRun;
 #pragma link C++ class McEvent++;
 #pragma link C++ class McParticle++;
 #pragma link C++ class McPIDConverter++;
