@@ -35,9 +35,8 @@ After cloning FairSoft make sure to check fairsoft/DEPENDENCIES
 ```
 export INSTALLATION_PATH=/opt  
 cd $INSTALLATION_PATH  
-git clone https://github.com/FairRootGroup/FairSoft.git fairsoft  
+git clone -b apr21_patches https://github.com/FairRootGroup/FairSoft.git fairsoft  
 cd fairsoft  
-git checkout jun19_patches
 ./configure.sh
 
  1) GCC (on Linux)  
@@ -55,9 +54,8 @@ export INSTALLATION_PATH=/opt
 cd $INSTALLATION_PATH  
 export SIMPATH=$INSTALLATION_PATH/fairsoft/install
 export PATH=$SIMPATH/bin:$PATH
-git clone https://github.com/FairRootGroup/FairRoot.git fairroot
+git clone -b v18.6_patches https://github.com/FairRootGroup/FairRoot.git fairroot
 cd fairroot 
-git checkout v18.2_patches
 mkdir build
 cd build
 cmake -DCMAKE_INSTALL_PREFIX="$INSTALLATION_PATH/fairroot/install" ..
@@ -77,8 +75,9 @@ SSH (for developers)
 git clone -b dev --recursive git@git.jinr.ru:nica/mpdroot.git 
 ```  
 
-    cd mpdroot  
-    mkdir build  
+    cd mpdroot 
+    mkdir build
+    cp config/SetEnv.sh.in SetEnv.sh
 By default, in the SetEnv.sh file SIMPATH points to /opt/fairsoft/mpd/new, and   
 FAIRROOTPATH – /opt/fairroot/mpd/new directories.  If you installed FairSoft or FairRoot to another directory,  
 please, change SIMPATH and FAIRROOTPATH variables in the file to correct install paths.  
@@ -95,3 +94,12 @@ export FAIRROOTPATH=/opt/fairroot/install
     . config.sh  
 ```   
 Make sure you use the config file in each new terminal.
+
+If you are using Visual Studio Code as your IDE, you can use
+provided configuration files. In the main directory run the
+command
+```
+     cp -r config/vscode.in/ .vscode
+```
+and edit paths inside files .vscode/launch.json and
+.vscode/settings.json depending on your configuration.

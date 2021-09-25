@@ -1,3 +1,0 @@
-#add_test(runNDet ${ROOTSYS}/bin/root -b -l  ${PROJECT_SOURCE_DIR}/macro/ndet/runMC_ndet.C)
-#SET_TESTS_PROPERTIES (runNDet PROPERTIES TIMEOUT "480")
-#SET_TESTS_PROPERTIES (runNDet PROPERTIES PASS_REGULAR_EXPRESSION "Test Passed;All ok")

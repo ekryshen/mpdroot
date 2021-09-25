@@ -63,8 +63,6 @@ class MpdEctTrackFinderTpc :public FairTask
   void GetTrackSeeds(Int_t iPass); // build track seeds 
   void DoTracking(Int_t iPass); // run tracking 
   void MakeKalmanHits(); // create Kalman hits   
-  void MakeKalmanHitsTgem(); // create Kalman hits for TGEM  
-  void MakeKalmanHitsDch(); // create Kalman hits for DCH  
   void PassWall(MpdEctKalmanTrack *track, Double_t thick); ///< pass TPC end-plate
   Int_t RunKalmanFilter(MpdEctKalmanTrack *track, Int_t layBeg); ///< run Kalman filter       
   void SelectTracks(Int_t iPass); ///< do track selection and compute shared hit multiplicities

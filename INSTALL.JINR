@@ -13,13 +13,20 @@ different systems
 configure mpdroot
    
        > cd  "MpdRoot_top_directory"
+       > cp config/SetEnv.sh.in SetEnv.sh
        > . ./SetEnv.sh
        > cd  MyBuild
        > cmake "MpdRoot_top_directory"
-
 
 build the framework
 
        > .  ./config.sh
        > make
        > make install
+
+Settings for Visual Studio Code IDE
+
+      > cp -r config/vscode.in/ .vscode
+      
+edit paths inside files .vscode/launch.json and
+.vscode/settings.json

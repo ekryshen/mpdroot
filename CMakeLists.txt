@@ -1,6 +1,6 @@
 # The name of our project is "MPDROOT".  CMakeLists files in this project can
-# refer to the root source directory of the project as ${MPDROOT_SOURCE_DIR} 
-# or as ${CMAKE_SOURCE_DIR} and to the root binary directory of the project as 
+# refer to the root source directory of the project as ${MPDROOT_SOURCE_DIR}
+# or as ${CMAKE_SOURCE_DIR} and to the root binary directory of the project as
 # ${MPDROOT_BINARY_DIR} or ${CMAKE_BINARY_DIR}.
 
 # Check if cmake has the required version
@@ -21,7 +21,7 @@ foreach(p
 endforeach()
 
 # Set name of our project to "MPDROOT". Has to be done
-# after check of cmake version                        
+# after check of cmake version
 project(MPDROOT)
 
 #In case you need Fortran
@@ -167,7 +167,7 @@ If(${ROOT_LIBRARY_DIR} MATCHES /lib/root)
   set(GSL_DIR ${SIMPATH})
 Else(${ROOT_LIBRARY_DIR} MATCHES /lib/root)
   set(BOOST_ROOT ${SIMPATH})
-  set(GSL_DIR ${SIMPATH}/basics/gsl)
+#  set(GSL_DIR ${SIMPATH}/lib/root)
 EndIf(${ROOT_LIBRARY_DIR} MATCHES /lib/root)
 ENDIF (NOT ALIBUILD)
 Message("-- Looking for Boost ...")
@@ -233,7 +233,6 @@ add_subdirectory (clustering)
 add_subdirectory (emc) # Cluster
 add_subdirectory (ffd)
 add_subdirectory (sts)
-add_subdirectory (cpc)
 add_subdirectory (bmd)
 add_subdirectory (mcord)
 add_subdirectory (physics) #MpdBase MpdMCStack Kalman MpdPid LHETrack
@@ -241,15 +240,7 @@ add_subdirectory (eventdisplay) #Emc
 
 #add_subdirectory (macro)
 #add_subdirectory (strawendcap)
-#add_subdirectory (strawECT)
 #add_subdirectory (bbc)
-#add_subdirectory (sft)
-#add_subdirectory (stt)
-#add_subdirectory (fsa)
-#add_subdirectory (ndet)
-#add_subdirectory (tgem)
-#add_subdirectory (dch)
-
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/macro/mpd_scheduler/CMakeLists.txt")
  add_subdirectory (macro/mpd_scheduler)
