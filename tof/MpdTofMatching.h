@@ -151,7 +151,6 @@ class MpdTofMatching : public FairTask
         TClonesArray 		*aMcTracks = nullptr;		//! <--- MC input
         TClonesArray 		*aTofHits = nullptr;		//! <--- input TOF hits        
         TClonesArray 		*aTPCkfTracks = nullptr;	//! <--- input KF TPC tracks
-        TClonesArray 		*aECTkfTracks = nullptr;	//! <--- input KF Ect Tracks
         TClonesArray 		*aTofMatchings = nullptr;	//! ---> output
      
         MpdKalmanFilter 	*pKF = nullptr;  		//!
