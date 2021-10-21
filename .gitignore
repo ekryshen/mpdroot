@@ -64,3 +64,6 @@ macro/mpd/log_match.txt
 macro/mpd/match.dat
 macro/mpd/mpddst.MiniDst.root
 macro/mpd/mpddst.root
+
+doxygen/html/*
+doxygen/latex/*

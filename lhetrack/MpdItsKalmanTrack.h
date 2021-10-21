@@ -28,7 +28,6 @@ class MpdItsKalmanTrack : public MpdKalmanTrack
   MpdItsKalmanTrack (const MpdItsKalmanTrack& track); ///< copy constructor
   MpdItsKalmanTrack& operator=(const MpdItsKalmanTrack& track); // assignment operator
   MpdItsKalmanTrack (const MpdTpcKalmanTrack& track); ///< constructor from TPC track
-  MpdItsKalmanTrack (const MpdEctKalmanTrack& track); ///< constructor from ECT track
   
   MpdItsKalmanTrack (const MpdVector& track1, TVector3& vec); ///< constructor from CellTrack track /// MpdVector&MpdCellTrack&
  

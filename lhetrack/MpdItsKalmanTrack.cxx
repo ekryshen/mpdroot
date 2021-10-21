@@ -10,7 +10,6 @@
 
 #include "MpdItsKalmanTrack.h"
 #include "MpdTpcKalmanTrack.h"
-#include "MpdEctKalmanTrack.h"
 #include "MpdKalmanFilter.h"
 #include "MpdKalmanGeoScheme.h"
 #include "MpdKalmanHit.h"
@@ -134,23 +133,6 @@ MpdItsKalmanTrack & MpdItsKalmanTrack::operator=(const MpdItsKalmanTrack& track)
 
 //__________________________________________________________________________
 MpdItsKalmanTrack::MpdItsKalmanTrack (const MpdTpcKalmanTrack& track)
-  : MpdKalmanTrack(track),
-    fTrHits(new TClonesArray("MpdKalmanHit")),
-    fNofIts(0),
-    fChi2Its(0.0)
-{
-  /// constructor from TPC track
-
-  TClonesArray* hits = track.GetTrHits();
-  Int_t nHits = hits->GetEntriesFast();
-  for (Int_t i = 0; i < nHits; ++i) {
-    MpdKalmanHit *hit = (MpdKalmanHit*) (hits->UncheckedAt(i));
-    new ((*fTrHits)[i]) MpdKalmanHit(*hit);
-  }
-}
-
-//__________________________________________________________________________
-MpdItsKalmanTrack::MpdItsKalmanTrack (const MpdEctKalmanTrack& track)
   : MpdKalmanTrack(track),
     fTrHits(new TClonesArray("MpdKalmanHit")),
     fNofIts(0),

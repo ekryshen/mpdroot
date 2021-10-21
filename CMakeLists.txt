@@ -239,7 +239,6 @@ add_subdirectory (physics) #MpdBase MpdMCStack Kalman MpdPid LHETrack
 add_subdirectory (eventdisplay) #Emc
 
 #add_subdirectory (macro)
-#add_subdirectory (strawendcap)
 #add_subdirectory (bbc)
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/macro/mpd_scheduler/CMakeLists.txt")

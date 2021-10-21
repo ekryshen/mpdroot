@@ -20,7 +20,6 @@
 #include "FairRunAna.h"
 #include "FairLogger.h" 
 
-#include "MpdEctKalmanTrack.h"
 #include "MpdTofPoint.h" 
 #include "MpdTof.h"
 #include "MpdKalmanFilter.h"
@@ -458,7 +457,6 @@ InitStatus	  MpdTofMatching::Init()
    	aMcTracks = 	(TClonesArray*) FairRootManager::Instance()->GetObject("MCTrack");  	
 	aTofHits  = 	(TClonesArray*) FairRootManager::Instance()->GetObject("TOFHit");
 	aTPCkfTracks  = (TClonesArray*) FairRootManager::Instance()->GetObject("TpcKalmanTrack"); 
-	aECTkfTracks  = (TClonesArray*) FairRootManager::Instance()->GetObject("EctTrack"); 
 	
 	if(aMcPoints && aMcTracks) fIsMcRun = true;
 	
@@ -497,23 +495,14 @@ void 		MpdTofMatching::Exec(Option_t *option)
 	Int_t nTofHits = aTofHits->GetEntriesFast();  	
 	Int_t nKFTracks = aTPCkfTracks->GetEntries();
 	
-	Int_t nECTtracks = (aECTkfTracks) ?  aECTkfTracks->GetEntriesFast() : 0; 
 	LOG(DEBUG2)<<"[MpdTofMatching::Exec] points= "<<nTofPoints<<", hits= "<<nTofHits<<", mc tracks= "<<nMCTracks<<", kf tracks= "<<nKFTracks;
 	// ---------------------------------------------------------------------------------------->>> Select (! propagated to Etof) & sort by Pt  the KfTpcTracks
 	std::set<Int_t> sEndcapTracks;
-	if(aECTkfTracks != nullptr)
-	{
-		for(Int_t i = 0; i < nECTtracks; i++) // cycle by ECT KF tracks
-		{
-			auto track = (MpdEctKalmanTrack*) aECTkfTracks->UncheckedAt(i);
-			if(track->IsFromTpc()) sEndcapTracks.insert(track->GetTpcIndex());
-		}	
-	}
 	// ----------------------------------------------------------------------------------------
 	TmPt	mPt;	
         for(Int_t index = 0; index < nKFTracks; index++) 	// cycle by TPC KF tracks
 	{   			
-		if(aECTkfTracks != nullptr && sEndcapTracks.find(index) != sEndcapTracks.end()) continue; // postpone for matching with ETof
+		if(sEndcapTracks.find(index) != sEndcapTracks.end()) continue; // postpone for matching with ETof
 
 		auto pKfTrack = (MpdTpcKalmanTrack*) aTPCkfTracks->UncheckedAt(index);		
 		mPt.insert(make_pair(pKfTrack, index));
