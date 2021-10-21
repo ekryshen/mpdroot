@@ -50,6 +50,7 @@ check_permissions:
     paths:
       - build
   script:
+    - test $OS_TYPE = "centos7" && source scl_source enable devtoolset-7
     - mkdir build
     - cd build
     - cmake "$CI_PROJECT_DIR"
@@ -84,6 +85,7 @@ build:ubuntu:
     paths:
       - macro/mpd/evetest.root
   script:
+    - test $OS_TYPE = "centos7" && source scl_source enable devtoolset-7
     - source build/config.sh
     - root -b -q -l '$CI_PROJECT_DIR/macro/mpd/runMC.C("auau.09gev.mbias.98k.ftn14","$VMCWORKDIR/macro/mpd/evetest.root",0,2)' | tee output.txt
     - (if grep -q "Macro finished successfully." output.txt; then $(exit 0); else $(exit -1); fi);
@@ -112,6 +114,7 @@ runMC:ubuntu:
     - docker
     - cvmfs
   script:
+    - test $OS_TYPE = "centos7" && source scl_source enable devtoolset-7
     - source build/config.sh
     - root -b -q -l "$CI_PROJECT_DIR/macro/mpd/reco.C" | tee output.txt
     - (if grep -q "Macro finished successfully." output.txt; then $(exit 0); else $(exit -1); fi);
@@ -152,6 +155,7 @@ run_reco:ubuntu:
     - mkdir build
     - cd build
     - | 
+      source scl_source enable devtoolset-7
       sed -i "s/\/opt\/fairsoft\/install/\/cvmfs\/nica.jinr.ru\/$CI_ENVIRONMENT_NAME\/fairsoft\/jun19p1/g" ../SetEnv.sh
       sed -i "s/\/opt\/fairroot\/install/\/cvmfs\/nica.jinr.ru\/$CI_ENVIRONMENT_NAME\/fairroot\/v18.2.0/g" ../SetEnv.sh
       source ../SetEnv.sh
