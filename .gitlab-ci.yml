@@ -7,10 +7,10 @@ stages:
  - codeOwners
  
 before_script:
- - export SIMPATH=/cvmfs/nica.jinr.ru/$OS_TYPE/fairsoft/mpd
- - export FAIRROOTPATH=/cvmfs/nica.jinr.ru/$OS_TYPE/fairroot/mpd
- - sed -i "s/\/opt\/fairsoft\/install/\/cvmfs\/nica.jinr.ru\/$OS_TYPE\/fairsoft\/mpd/g" SetEnv.sh
- - sed -i "s/\/opt\/fairroot\/install/\/cvmfs\/nica.jinr.ru\/$OS_TYPE\/fairroot\/mpd/g" SetEnv.sh
+ - export SIMPATH=/cvmfs/nica.jinr.ru/$OS_TYPE/fairsoft/apr21_patches
+ - export FAIRROOTPATH=/cvmfs/nica.jinr.ru/$OS_TYPE/fairroot/v18.6_patches
+ - sed -i "s/\/opt\/fairsoft\/install/\/cvmfs\/nica.jinr.ru\/$OS_TYPE\/fairsoft\/apr21_patches/g" SetEnv.sh
+ - sed -i "s/\/opt\/fairroot\/install/\/cvmfs\/nica.jinr.ru\/$OS_TYPE\/fairroot\/v18.6_patches/g" SetEnv.sh
  - source ./SetEnv.sh
  
 variables:
@@ -58,7 +58,7 @@ check_permissions:
   <<: *only-default
   
 build:centos:
-  image: git.jinr.ru:5005/nica/docker-images/centos7/base:latest
+  image: git.jinr.ru:5005/nica/docker-images/centos7/base:apr21_v18.6
   variables:
     OS_TYPE: "centos7"
   tags:
@@ -67,9 +67,9 @@ build:centos:
   <<: *build
 
 build:ubuntu:
-  image: git.jinr.ru:5005/nica/docker-images/ubuntu/base:latest
+  image: git.jinr.ru:5005/nica/docker-images/ubuntu/base:apr21_v18.6
   variables:
-    OS_TYPE: "ubuntu"
+    OS_TYPE: "ubuntu2004"
   tags: 
     - docker
     - cvmfs
@@ -91,7 +91,7 @@ build:ubuntu:
   <<: *only-default
   
 runMC:centos:
-  image: git.jinr.ru:5005/nica/docker-images/centos7/base:latest
+  image: git.jinr.ru:5005/nica/docker-images/centos7/base:apr21_v18.6
   variables:
     OS_TYPE: "centos7"
   dependencies:
@@ -99,9 +99,9 @@ runMC:centos:
   <<: *runMC
 
 runMC:ubuntu:
-  image: git.jinr.ru:5005/nica/docker-images/ubuntu/base:latest
+  image: git.jinr.ru:5005/nica/docker-images/ubuntu/base:apr21_v18.6
   variables:
-    OS_TYPE: "ubuntu"
+    OS_TYPE: "ubuntu2004"
   dependencies:
     - build:ubuntu
   <<: *runMC
@@ -119,7 +119,7 @@ runMC:ubuntu:
   <<: *only-default
   
 run_reco:centos:
-  image: git.jinr.ru:5005/nica/docker-images/centos7/base:latest
+  image: git.jinr.ru:5005/nica/docker-images/centos7/base:apr21_v18.6
   variables:
     OS_TYPE: "centos7"
   dependencies:
@@ -128,9 +128,9 @@ run_reco:centos:
   <<: *run_reco
   
 run_reco:ubuntu:
-  image: git.jinr.ru:5005/nica/docker-images/ubuntu/base:latest
+  image: git.jinr.ru:5005/nica/docker-images/ubuntu/base:apr21_v18.6
   variables:
-    OS_TYPE: "ubuntu"
+    OS_TYPE: "ubuntu2004"
   dependencies:
     - build:ubuntu
     - runMC:ubuntu
@@ -152,26 +152,13 @@ run_reco:ubuntu:
     - mkdir build
     - cd build
     - | 
-      if [ $CI_ENVIRONMENT_NAME = "sl6" ]; then
-        scl enable python27 sclo-git212 - << \EOF
-        sed -i "s/\/opt\/fairsoft\/install/\/cvmfs\/nica.jinr.ru\/sl6\/fairtest\/fairsoft\/install/g" ../SetEnv.sh
-        sed -i "s/\/opt\/fairroot\/install/\/cvmfs\/nica.jinr.ru\/sl6\/fairtest\/fairroot\/install/g" ../SetEnv.sh
-        source /cvmfs/nica.jinr.ru/sl6/fairtest/AIO_export.sh
-        source ../SetEnv.sh
-        echo "/cvmfs/nica.jinr.ru/$CI_ENVIRONMENT_NAME/mpdroot/$CI_COMMIT_REF_NAME"
-        cmake -DCMAKE_INSTALL_PREFIX=/cvmfs/nica.jinr.ru/$CI_ENVIRONMENT_NAME/mpdroot/$CI_COMMIT_REF_NAME ..
-        make -j 5
-        make install
-      EOF
-      else
-        sed -i "s/\/opt\/fairsoft\/install/\/cvmfs\/nica.jinr.ru\/$CI_ENVIRONMENT_NAME\/fairsoft\/jun19p1/g" ../SetEnv.sh
-        sed -i "s/\/opt\/fairroot\/install/\/cvmfs\/nica.jinr.ru\/$CI_ENVIRONMENT_NAME\/fairroot\/v18.2.0/g" ../SetEnv.sh
-        source ../SetEnv.sh
-        echo "/cvmfs/nica.jinr.ru/$CI_ENVIRONMENT_NAME/mpdroot/$CI_COMMIT_REF_NAME"
-        cmake -DCMAKE_INSTALL_PREFIX=/cvmfs/nica.jinr.ru/$CI_ENVIRONMENT_NAME/mpdroot/$CI_COMMIT_REF_NAME ..
-        make -j 5
-        make install
-      fi;
+      sed -i "s/\/opt\/fairsoft\/install/\/cvmfs\/nica.jinr.ru\/$CI_ENVIRONMENT_NAME\/fairsoft\/jun19p1/g" ../SetEnv.sh
+      sed -i "s/\/opt\/fairroot\/install/\/cvmfs\/nica.jinr.ru\/$CI_ENVIRONMENT_NAME\/fairroot\/v18.2.0/g" ../SetEnv.sh
+      source ../SetEnv.sh
+      echo "/cvmfs/nica.jinr.ru/$CI_ENVIRONMENT_NAME/mpdroot/$CI_COMMIT_REF_NAME"
+      cmake -DCMAKE_INSTALL_PREFIX=/cvmfs/nica.jinr.ru/$CI_ENVIRONMENT_NAME/mpdroot/$CI_COMMIT_REF_NAME ..
+      make -j 5
+      make install
     - ssh $STRATUM_0 "sudo cvmfs_server transaction nica.jinr.ru"
     - rsync --filter='-p .cvmfscatalog' --filter='-p .cvmfsautocatalog' -a /cvmfs/nica.jinr.ru/$CI_ENVIRONMENT_NAME/mpdroot/$CI_COMMIT_REF_NAME $STRATUM_0:/cvmfs/nica.jinr.ru/$CI_ENVIRONMENT_NAME/mpdroot/
     - ssh $STRATUM_0 "sudo cvmfs_server publish nica.jinr.ru"
@@ -180,15 +167,6 @@ run_reco:ubuntu:
     - tags
     - dev
   allow_failure: false
-  
-deploy:sl6:
-  image: git.jinr.ru:5005/nica/docker-images/sl6/fair-mpd:latest
-  environment:
-    name: sl6
-  tags:
-    - docker
-    - no-cvmfs
-  <<: *deploy
   
 deploy:centos7:
   image: git.jinr.ru:5005/nica/docker-images/centos7/fair:latest
