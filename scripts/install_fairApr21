@@ -29,7 +29,7 @@ init_dir=$(pwd)
 mkdir fair && cd fair
 
 # FairSoft build and install
-git clone -b apr21_patches https://github.com/FairRootGroup/FairSoft
+git clone -b apr21p1 https://github.com/FairRootGroup/FairSoft
 cd FairSoft && mkdir build && cd build
 cmake -DCMAKE_INSTALL_PREFIX=$fair_dir/FairSoft -DGEANT4MT=OFF ..
 make -j $cpu_threads
@@ -45,7 +45,7 @@ export SIMPATH=$fair_dir/FairSoft
 
 # FairRoot build and install
 cd $init_dir/fair
-git clone -b v18.6_patches https://github.com/FairRootGroup/FairRoot.git
+git clone -b v18.6.4 https://github.com/FairRootGroup/FairRoot.git
 cd FairRoot && mkdir build && cd build
 cmake -DCMAKE_INSTALL_PREFIX=$fair_dir/FairRoot ..
 make -j $cpu_threads
