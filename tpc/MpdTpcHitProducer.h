@@ -29,6 +29,7 @@ public:
   void SetModular(Int_t modular) { fModular = modular; } ///< use simple or modular r/out chamber geometry 
   void SetReal(Int_t real) { fReal = real; } ///< if !=0 apply realistic effects 
   void SetPersistance(Bool_t choice = kTRUE) { fPersistance = choice; } ///< set persistance flag
+  void SetInput(TClonesArray *mcPoints) { fPointArray = mcPoints; } // to run on the fly
 
 private:
   virtual void SetParContainers();
