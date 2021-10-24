@@ -55,6 +55,8 @@ public:
     void SetDistribute(Bool_t opt = kFALSE) { fDistribute = opt; }
     void SetResponse(Bool_t opt = kFALSE) { fResponse = opt; }
     void SetOnlyPrimary(Bool_t opt = kFALSE) { fOnlyPrimary = opt; }
+    void SetNoiseThr(Double_t thresh) { fNoiseThreshold = thresh; }
+    void SetOverflow(Double_t overfl) { fOverflow = overfl; }
 
     virtual InitStatus Init();
     virtual void Exec(Option_t* opt);
@@ -91,6 +93,7 @@ private:
     Float_t fGain;                        // coefficient for avalanches calculating
     Float_t zCathode;                     // length of TPC
     Float_t fNoiseThreshold;              // threshold for signal separation
+    Float_t fOverflow;                    // ADC overflow value
     const Int_t *fNumOfPadsInRow;         // array of pads quantity in every TPC rows
     UInt_t nSectors;                      // number of TPC sectors
     UInt_t fNTimeBins;                    // number of time samples in TPC

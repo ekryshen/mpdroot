@@ -4,9 +4,10 @@
 
 #include "FairTask.h"
 
-#include "TH1.h"
-#include "TF1.h"
 #include "TClonesArray.h"
+#include "TF1.h"
+#include "TH1.h"
+#include "TH2.h"
 
 class MpdVertexZfinder :public FairTask
 {
@@ -44,10 +45,12 @@ class MpdVertexZfinder :public FairTask
 
  private:
 
-  TH1F *fhZ;                    // histogram of Z-positions
-  const TH1F *fhLays;           // histogram of layer occupancy
   const TClonesArray *fKHits;   // array of Kalman hits
+  const TH1F *fhLays;           // histogram of layer occupancy
+  TH1F *fhZ;                    // histogram of Z-positions
+  TH2F *fhZDip;                 // histogram Z - Dip angle
   TF1 *fUnc;                    // fitting function
+  TH2F *fhPhLay;                // histogram of phase space occupancy
 
  private:
   // Some constants

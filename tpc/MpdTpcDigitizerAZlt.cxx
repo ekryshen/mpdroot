@@ -68,6 +68,8 @@ MpdTpcDigitizerAZlt::MpdTpcDigitizerAZlt()
   fSector(nullptr), 
   fHisto(nullptr),
   fPRF(nullptr),
+  fNoiseThreshold(3.0),
+  fOverflow(1023.1),
   fNumOfPadsInRow(nullptr),
   fIsHistogramsInitialized(kFALSE),
   fMakeQA(kFALSE),
@@ -178,7 +180,7 @@ InitStatus MpdTpcDigitizerAZlt::Init()
   
   //AZ fNoiseThreshold = 1000.0; // electrons    
   //AZ-040720 fNoiseThreshold = 30.0; // ADC counts
-  fNoiseThreshold = 3.0; // ADC counts
+  //(AZ-moved to constructor) fNoiseThreshold = 3.0; // ADC counts
   //AZ fGain = 5000.0; //electrons
   fGain = 1000.0; //electrons
   if (fResponse) {
@@ -583,7 +585,8 @@ void MpdTpcDigitizerAZlt::SignalShaping()
         // const Double_t ScaleFactor = 0.083916084; //Move above loop == 75./(550.*1.25*1.3); // 19-MAR-2020 Movchan 
         // S.Movchan denies: if( iRow >= 26) ScaleFactor *=(1.2/1.8);
         ampl *= ScaleFactor;
-        if( ampl > 1023.1) ampl = 1023.1;                                     
+        //AZ if( ampl > 1023.1) ampl = 1023.1;
+        if( ampl > fOverflow) ampl = fOverflow;
 	//
 	fDigits4dArray[iRow][iPad][i].signal = ampl;
       }

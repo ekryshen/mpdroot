@@ -1022,7 +1022,8 @@ void MpdTpcKalmanFilter::MakeKalmanHits()
     //(Int_t detID, Int_t nDim, HitType hitType, Double_t *meas, Double_t *err, Double_t *cosSin, Double_t signal, Double_t dist, Int_t index)
     Double_t meas[2] = {rPhi, z};
     Double_t err[2] = {hit->GetDx(), hit->GetDz()};
-    Double_t cossin[2] = {1., 0.};
+    //AZ-140921 Double_t cossin[2] = {1., 0.};
+    Double_t cossin[2] = {hit->GetX(), hit->GetY()};
     MpdKalmanHit *hitK = new ((*fKHits)[nKh++]) 
       MpdKalmanHit(lay*1000000+nKh-1, 2, MpdKalmanHit::kFixedR, meas, err, cossin, hit->GetEnergyLoss()/hit->GetStep(), hit->GetR(), j);
     hitK->SetLength(hit->GetLength());
@@ -1066,7 +1067,8 @@ void MpdTpcKalmanFilter::MakeKalmanHitsModul()
     //Double_t meas[2] = {-hit->GetLocalX()-dX*err[0], hit->GetLocalZ()+dZ*err[1]};
     Double_t meas[2] = {hit->GetLocalX(), hit->GetLocalZ()};
     if (fUseMCHit) { meas[0] += dX * err[0]; meas[1] += dZ * err[1]; }
-    Double_t cossin[2] = {1., 0.};
+    //AZ-140921 Double_t cossin[2] = {1., 0.};
+    Double_t cossin[2] = {hit->GetX(), hit->GetY()};
     Int_t padID = hit->GetDetectorID();
     //TpcPadID padIDobj = TpcPadID::numberToPadID(padID);
     //padID = padIDobj.sector();

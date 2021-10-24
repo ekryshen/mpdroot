@@ -27,6 +27,7 @@
 #include <TMath.h>
 #include <TMatrixD.h>
 #include <TMatrixFSym.h>
+#include <TPad.h>
 #include <TRandom.h>
 #include <TFile.h>
 #include <iostream>
@@ -74,7 +75,8 @@ InitStatus MpdKfPrimaryVertexFinder::Init()
 
   fHist[0] = new TH1D("hXv","Xv",40,-2.05,1.95);
   fHist[1] = new TH1D("hYv","Yv",40,-2.05,1.95);
-  fHist[2] = new TH1D("hZv","Zv",1000,-100.1,99.9);
+  //AZ fHist[2] = new TH1D("hZv","Zv",1000,-100.1,99.9);
+  fHist[2] = new TH1D("hZv","Zv",1000,-150.0,150.0);
 
   fTracks = 0x0;
   fTracks = (TClonesArray *) FairRootManager::Instance()->GetObject("TpcTrackRefit");
@@ -141,12 +143,13 @@ void MpdKfPrimaryVertexFinder::EvalVertex()
   /// Primary vertex position evaluator
 
   Int_t nTracks = fTracks->GetEntriesFast();
-  Double_t dMax = 0., dMin = 0.1, xyzM[3], xyzF[3] = {0,0,0}, xyz[3] = {0};
+  Double_t dMax = 0., dMin = 0.09, xyzM[3], xyzF[3] = {0,0,0}, xyz[3] = {0};
   TAxis *axis[3];
   for (Int_t i = 0; i < 3; ++i) {
     axis[i] = fHist[i]->GetXaxis();
     axis[i]->SetRange(10,0); // reset axes ranges
     //AZ xyz[i] = fXYZ[i];
+    fXYZ[i] = 0; //AZ-140921
   }
   fCovar = 0.;
 
@@ -156,6 +159,7 @@ void MpdKfPrimaryVertexFinder::EvalVertex()
     for (Int_t i = 0; i < 3; ++i) fHist[i]->Reset();
     for (Int_t itr = 0; itr < nTracks; ++itr) {
       MpdKalmanTrack *track = (MpdKalmanTrack*) fTracks->UncheckedAt(itr);
+      if (track->GetUniqueID() == 0 && track->GetNofHits() < 10) continue; //AZ-150921
       MpdKalmanTrack tr = *track;
       //if (iter > 0) {
       // Find new PCA
@@ -181,10 +185,13 @@ void MpdKfPrimaryVertexFinder::EvalVertex()
       // Take mean value
       xyzM[i] = fHist[i]->GetMean();
       //AZ fHist[i]->SetAxisRange(xyzM[i]-2.,xyzM[i]+2.);
-      fHist[i]->SetAxisRange(xyzM[i]-5.,xyzM[i]+5.);
+      //AZ-170921 fHist[i]->SetAxisRange(xyzM[i]-5.,xyzM[i]+5.);
+      fHist[i]->SetAxisRange(xyzM[i]-10.,xyzM[i]+10.);
       xyzM[i] = fHist[i]->GetMean(); // restricted mean
-      if (fHist[i]->GetMaximum() > 0) xyzM[i] = fHist[i]->GetBinCenter(fHist[i]->GetMaximumBin()); // peak 
-      Double_t rms = TMath::Min (fHist[i]->GetRMS(), fHist[i]->GetMeanError() * 3);
+      //AZ-150921 if (fHist[i]->GetMaximum() > 0) xyzM[i] = fHist[i]->GetBinCenter(fHist[i]->GetMaximumBin()); // peak 
+      if (fHist[i]->GetMaximum() > 1) xyzM[i] = fHist[i]->GetBinCenter(fHist[i]->GetMaximumBin()); // peak 
+      //AZ Double_t rms = fHist[i]->Integral() > 1.1 ? TMath::Min (fHist[i]->GetRMS(), fHist[i]->GetMeanError() * 3) : 5.0;
+      Double_t rms = fHist[i]->Integral() > 1.1 ? TMath::Min (fHist[i]->GetRMS(), fHist[i]->GetMeanError() * 1) : 5.0;
       /*
       fUnc->SetParameters(fHist[i]->GetMaximum(),xyzM[i],rms/2);
       fUnc->SetParLimits(0,fHist[i]->GetMaximum()*0.8,fHist[i]->GetMaximum()*9);
@@ -203,7 +210,8 @@ void MpdKfPrimaryVertexFinder::EvalVertex()
 	xyz[i] = xyzM[i];
 	fCovar(i,i) = rms*rms;
       }
-      cout << " Hist " << i << " " << fHist[i]->GetMaximum() << " " << xyzM[i] << " " << xyzF[i] << " " << rms << " " << sigma << endl;
+      cout << " Hist " << i << " " << fHist[i]->GetMaximum() << " " << xyzM[i] << " " << fXYZ[i] << " "
+	   << xyzF[i] << " " << rms << " " << sigma << endl;
       if (i == 2) continue;
       Double_t d = TMath::Abs (xyz[i]-fXYZ[i]);
       if (d > dMax) dMax = d;
@@ -225,7 +233,8 @@ void MpdKfPrimaryVertexFinder::EvalVertex()
 
   // Use beam tolerances
   Double_t sigx = 9, sigy = 9, sigxy = 0.02; // sigma 200 um
-  while (sigx > 3*sigxy || sigy > 3*sigxy) 
+  //AZ-150921 ??? while (sigx > 3*sigxy || sigy > 3*sigxy) 
+  while (TMath::Abs(sigx) > 3 || TMath::Abs(sigy) > 3) 
     gRandom->Rannor(sigx,sigy);
   fXYZ[0] = sigx * sigxy; // position
   fCovar(0,0) = sigxy*sigxy;
@@ -290,7 +299,8 @@ void MpdKfPrimaryVertexFinder::FindVertex()
       //if (mcTr->GetMotherId() >= 0) continue; // secondary
       //Double_t th = TMath::PiOver2() - track->GetParam(3);
       //if (TMath::Abs(TMath::Log(TMath::Tan(th/2))) > 1.) continue; // eta-cut
-      //if (1./TMath::Abs(track->GetParam(4)) < 0.2) continue; // pt-cut
+      //if (1./TMath::Abs(track->GetParam(4)) < 0.3) continue; // pt-cut
+      if (track->GetUniqueID() == 0 && track->GetNofHits() < 10) continue; //AZ-150921: exclude short TPC tracks
       ++nPrim;
 
       MpdKalmanTrack track1 = *track;
@@ -299,6 +309,7 @@ void MpdKfPrimaryVertexFinder::FindVertex()
       track1.ReSetWeight();
       TMatrixD g = *track1.GetWeight(); // track weight matrix
       if (ipass == 0 && track->GetUniqueID()) g *= 0.04; //AZ-050121 - downweight ITS track
+      else if (ipass == 0) g *= 0.1; //AZ-140921 - downweight TPC track
       //track1.GetWeight()->Print();
 
       if (track->GetNode() == "") {
