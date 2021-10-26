@@ -28,6 +28,9 @@ Makefile
 cmake_install.cmake
 install_manifest.txt
 
+# Config files
+SetEnv.sh
+
 # CTest
 Testing/
 

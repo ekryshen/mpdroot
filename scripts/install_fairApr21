@@ -1,7 +1,7 @@
 #! /bin/bash
 #
 # script to install FairSoft/FairRoot apr21 version
-# the script creates directory "fair" where all sources/compilation are located
+# the script creates directory "fair_build" where all sources/compilation are located
 #
 # takes two input parameters:
 # 1. directory, where FairSoft/FairRoot will be installed
@@ -9,9 +9,7 @@
 #
 # Example: ./install_fairApr21 ~/fairApr21 8
 #
-# IMPORTANT: -directory where FairSoft/FairRoot will be installed
-#             must exist before execution of the script
-#            -directory where script is executed cannot contain "fair" folder
+# IMPORTANT: -directory where script is executed cannot contain "fair_build" folder
 #            -the script was tested to work under following conditions:
 #             input parameter of target install directory located in $HOMEDIR,
 #             the script was executed from $HOMEDIR.
@@ -26,7 +24,8 @@ cpu_threads=$2
 init_dir=$(pwd)
 
 # create and enter working directory for build
-mkdir fair && cd fair
+work_dir=fair_build
+mkdir $work_dir && cd $work_dir
 
 # FairSoft build and install
 git clone -b apr21p1 https://github.com/FairRootGroup/FairSoft
@@ -44,7 +43,7 @@ ln -s libpythia6.so libPythia6.so
 export SIMPATH=$fair_dir/FairSoft
 
 # FairRoot build and install
-cd $init_dir/fair
+cd $init_dir/$work_dir
 git clone -b v18.6.4 https://github.com/FairRootGroup/FairRoot.git
 cd FairRoot && mkdir build && cd build
 cmake -DCMAKE_INSTALL_PREFIX=$fair_dir/FairRoot ..
