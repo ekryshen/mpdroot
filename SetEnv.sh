@@ -2,12 +2,15 @@
 
 SIMMACHINE=$(uname -n)
 
-# change SIMPATH if you installed FairSoft not to the '/opt/fairsoft/install' directory
-export SIMPATH=$SIMPATH
-#export SIMPATH=/opt/fairsoft/install
-# change FAIRROOTPATH if you installed FairRoot not to the '/opt/fairroot/install' directory
-#export FAIRROOTPATH=/opt/fairroot/install
-export FAIRROOTPATH=$FAIRROOTPATH
+if [ -z "$SIMPATH" ] || [ "$1" == "-f" ] || [ "$1" == "--force" ]; then
+ # ATTENTION: change SIMPATH if you installed FairSoft not to the '/opt/fairsoft/install' directory
+ export SIMPATH=/opt/fairsoft/install
+fi
+if [ -z "$FAIRROOTPATH" ] || [ "$1" == "-f" ] || [ "$1" == "--force" ]; then
+ # ATTENTION: change FAIRROOTPATH if you installed FairRoot not to the '/opt/fairroot/install' directory
+ export FAIRROOTPATH=/opt/fairroot/install
+fi
+
 
 export ROOTSYS=$SIMPATH
 	
