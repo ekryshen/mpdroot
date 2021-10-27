@@ -45,6 +45,9 @@ Again 8 is the number of cpu_threads used in compilation.
 Once the script succeeds, your installation will be located in mpdroot directory.  
 If the script fails, please email the output to hnatics@jinr.ru   
 
+The above installation procedure was tested to work with the following OS (as of October 27th 2021):  
+CentOS 7, Fedora 34, Fedora 35 beta, Ubuntu 20.04, Linux Mint 20.2  
+
 #### NOTE: When using MPDRoot SetEnv.sh and config.sh must be invoked in each new terminal by
 ```
 source ~/mpdroot/SetEnv.sh && source ~/mpdroot/build/config.sh
