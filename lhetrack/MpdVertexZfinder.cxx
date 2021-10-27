@@ -141,6 +141,10 @@ Double_t MpdVertexZfinder::FindZ(const Int_t *layPointers, Int_t &flag)
   Int_t layBeg = ((MpdKalmanHit*)fKHits->Last())->GetLayer() + 6, layEnd = layBeg + 2;
   //if (fhLays->GetBinContent(layBeg+1,0) < 100) layEnd = layBeg + 6; //AZ-140921
   layEnd = ((MpdKalmanHit*)fKHits->First())->GetLayer() - dLays * iDir; //AZ-160921
+  if (layBeg >= layEnd) { //AZ-251021
+    layBeg = ((MpdKalmanHit*)fKHits->Last())->GetLayer();
+    layEnd = ((MpdKalmanHit*)fKHits->First())->GetLayer();
+  }
 
   // Exclude some hit phase space regions (originating from loopers)
   // to regularize the task for low-multiplicity events
