@@ -18,7 +18,7 @@ Look for your OS in the link below to install required dependencies
 Additionally development package for fftw3 library is required to install MpdRoot
 (fftw3-devel for RedHat based OS, fftw3-dev for Debian based OS)
 
-NOTE: If you are new user we strongly suggest you install FairSoft and FairRoot by copying the scripts/install_fairApr21 to your $HOMEDIR
+NOTE: If you are new user we strongly suggest you install FairSoft and FairRoot by copying the [scripts/install_fairApr21](https://git.jinr.ru/nica/mpdroot/-/raw/dev/scripts/install_fairApr21?inline=false) to your $HOMEDIR
 and run:  
 ```
 chmod +x install_fairApr21
@@ -29,7 +29,7 @@ chmod +x install_fairApr21
 (you can of course, replace these by your own values)  
 - cloned FairSoft/FairRoot repositories and their builds will be located in fair_build directory  
 
-Proceed with installation of MpdRoot by copying scripts/install_mpdroot to your $HOMEDIR and run:  
+Proceed with installation of MpdRoot by copying [scripts/install_mpdroot](https://git.jinr.ru/nica/mpdroot/-/raw/dev/scripts/install_mpdroot?inline=false) to your $HOMEDIR and run:  
 ```
 chmod +x install_mpdroot
 ./install_mpdroot --developer 8
@@ -46,7 +46,7 @@ Once the script succeeds, your installation will be located in mpdroot directory
 If the script fails, please email the output to hnatics@jinr.ru   
 
 The above installation procedure was tested to work with the following OS (as of October 27th 2021):  
-CentOS 7, Fedora 34, Fedora 35 beta, Ubuntu 20.04, Linux Mint 20.2  
+CentOS 7, Fedora 34, Fedora 35 beta, Ubuntu 20.04, Linux Mint 20.2, Pop!_OS 21.04  
 
 #### NOTE: When using MPDRoot SetEnv.sh and config.sh must be invoked in each new terminal by
 ```
