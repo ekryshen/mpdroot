@@ -18,32 +18,31 @@
 
 NicaMiniDstSource::NicaMiniDstSource() : NicaMiniDstSource("data.root") {}
 
-NicaMiniDstSource::NicaMiniDstSource(TString inFile)
-    : fNFiles(1),
-      fFileName(nullptr),
-      fChain(nullptr),
-      fEvent(nullptr),
-      fTracks(nullptr),
-      fTofInfo(nullptr),
-      fEmcInfo(nullptr),
-      fMcEvent(nullptr),
-      fMcTracks(nullptr) {
-  fFileName = new TString[1];
-  fFileName[0] = inFile;
+NicaMiniDstSource::NicaMiniDstSource(TString inFile) :
+  fChain(nullptr),
+  fEvent(nullptr),
+  fTracks(nullptr),
+  fTofInfo(nullptr),
+  fEmcInfo(nullptr),
+  fMcEvent(nullptr),
+  fMcTracks(nullptr),
+  fMaxEventsNo(0) {
+  fFileName.push_back(inFile);
 }
 
 Bool_t NicaMiniDstSource::Init() {
-  FairRootManager *mngr = FairRootManager::Instance();
-  fChain = new TChain("MiniDst");
+  FairRootManager* mngr = FairRootManager::Instance();
+  fChain                = new TChain("MiniDst");
   if (fFileName[0].EndsWith(".root")) {
-    LOG(DEBUG3) << "NicaMiniDstSource: opening root file(s)" << fFileName;
-    for (int j = 0; j < fNFiles; j++) {
+    LOG(DEBUG3) << "NicaMiniDstSource: opening root file(s)" << fFileName[0];
+    for (unsigned int j = 0; j < fFileName.size(); j++) {
       fChain->Add(fFileName[j], 0);
     }
   } else {  // this is long list
-    for (int j = 0; j < fNFiles; j++) {
+    for (unsigned int j = 0; j < fFileName.size(); j++) {
       std::ifstream list;
       list.open(fFileName[j]);
+      int no = 1;
       do {
         TString temp;
         list >> temp;
@@ -52,7 +51,7 @@ Bool_t NicaMiniDstSource::Init() {
         } else {
           break;
         }
-        LOG(DEBUG3) << "Adding file " << temp << " to chain";
+        LOG(DEBUG3) << "Adding file no.\t" << no++ << "\t" << temp << " to chain";
       } while (!list.eof());
       list.close();
     }
@@ -64,11 +63,11 @@ Bool_t NicaMiniDstSource::Init() {
   //    fChain->SetBranchStatus("")
   fChain->SetBranchStatus("McEvent", 1);
   fChain->SetBranchStatus("McTrack", 1);
-  fEvent = new TClonesArray("MpdMiniEvent");
-  fMcEvent = new TClonesArray("MpdMiniMcEvent");
-  fTracks = new TClonesArray("MpdMiniTrack");
-  fTofInfo = new TClonesArray("MpdMiniBTofPidTraits");
-  fEmcInfo = new TClonesArray("MpdMiniBECalCluster");
+  fEvent    = new TClonesArray("MpdMiniEvent");
+  fMcEvent  = new TClonesArray("MpdMiniMcEvent");
+  fTracks   = new TClonesArray("MpdMiniTrack");
+  fTofInfo  = new TClonesArray("MpdMiniBTofPidTraits");
+  fEmcInfo  = new TClonesArray("MpdMiniBECalCluster");
   fMcTracks = new TClonesArray("MpdMiniMcTrack");
 
   fChain->SetBranchAddress("Event", &fEvent);
@@ -76,6 +75,7 @@ Bool_t NicaMiniDstSource::Init() {
   fChain->SetBranchAddress("BTofPidTraits", &fTofInfo);
   fChain->SetBranchAddress("McEvent", &fMcEvent);
   fChain->SetBranchAddress("McTrack", &fMcTracks);
+  fMaxEventsNo = fChain->GetEntries();
 
   mngr->SetInChain(fChain, -1);
   mngr->Register("Event", "DST", fEvent, kFALSE);
@@ -93,28 +93,14 @@ Int_t NicaMiniDstSource::ReadEvent(UInt_t unsignedInt) {
 
 void NicaMiniDstSource::Close() {}
 
-Int_t NicaMiniDstSource::CheckMaxEventNo(Int_t int1) {
-  return fChain->GetEntriesFast();
+Int_t NicaMiniDstSource::CheckMaxEventNo(Int_t int1) { return fMaxEventsNo; }
+
+NicaMiniDstSource::NicaMiniDstSource(const NicaMiniDstSource& other) {
+  fFileName    = other.fFileName;
+  fMaxEventsNo = other.fMaxEventsNo;
+  if (!other.fChain) { Init(); }
 }
 
-NicaMiniDstSource::NicaMiniDstSource(const NicaMiniDstSource &other) {
-  fFileName = other.fFileName;
-  if (!other.fChain) {
-    Init();
-  }
-}
+NicaMiniDstSource::~NicaMiniDstSource() {}
 
-NicaMiniDstSource::~NicaMiniDstSource() {
-  if (fFileName) delete[] fFileName;
-}
-
-void NicaMiniDstSource::AddFile(TString file) {
-  TString *temp = fFileName;
-  fFileName = new TString[fNFiles + 1];
-  for (int i = 0; i < fNFiles; i++) {
-    fFileName[i] = temp[i];
-  }
-  delete[] temp;
-  fFileName[fNFiles] = file;
-  fNFiles = fNFiles + 1;
-}
+void NicaMiniDstSource::AddFile(TString file) { fFileName.push_back(file); }

@@ -8,7 +8,7 @@
  */
 #include "NicaMpdMcEvent.h"
 
-#include "FairRootManager.h"
+#include "NicaDataManager.h"
 #include "NicaMpdMcEventInterface.h"
 #include <iostream>
 
@@ -61,7 +61,7 @@ NicaMpdMcEvent::~NicaMpdMcEvent() {}
 TString NicaMpdMcEvent::GetFormatName() const { return "NicaMpdMcEvent"; }
 
 Bool_t NicaMpdMcEvent::ExistInTree() const {
-  FairRootManager* manager = FairRootManager::Instance();
+  NicaRootManager* manager = NicaDataManager::Instance()->GetManager();
   Int_t header             = manager->CheckBranch("MCEventHeader.") + manager->CheckBranch("EventHeader.");
   if (header > 1) header = 1;
   Int_t tracks = manager->CheckBranch("MCTrack");

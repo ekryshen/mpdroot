@@ -7,12 +7,12 @@
  *		Warsaw University of Technology, Faculty of Physics
  */
 #include "NicaMpdMiniDstEventV0.h"
+
 #include "NicaCout.h"
+#include "NicaDataManager.h"
 #include "NicaMpdMiniDstEventV0Interface.h"
 #include "NicaMpdMiniDstTrack.h"
 #include "NicaV0CandidateHelix.h"
-
-#include <FairRootManager.h>
 
 
 NicaMpdMiniDstEventV0::NicaMpdMiniDstEventV0(TString trackname) : NicaMpdMiniDstEvent(trackname) {}
@@ -47,7 +47,7 @@ void NicaMpdMiniDstEventV0::Update() {
 
 Bool_t NicaMpdMiniDstEventV0::ExistInTree() const {
   if (NicaMpdMiniDstEvent::ExistInTree() == kFALSE) return kFALSE;
-  FairRootManager* manager = FairRootManager::Instance();
+  NicaRootManager* manager = NicaDataManager::Instance()->GetManager();
   manager->Print();
   if (manager->GetObject("NicaV0Tracks") != nullptr) { return kTRUE; }
   return kFALSE;

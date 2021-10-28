@@ -59,7 +59,7 @@ paircuts/common/tpc_cylinder/MpdPairTpcSimpleCut.cxx
 paircuts/common/tpc_cylinder/MpdPairTpcSeparationSimpleCut.cxx
 paircuts/common/tpc_cylinder/MpdPairTpcEntrySimpleCut.cxx
 paircuts/common/tpc_cylinder/MpdCylinderTpcPairCut.cxx
-
+paircuts/common/MpdPairDeltaPhistarMinCut.cxx
 
 paircuts/full/tpc_modular/MpdModularTpcPairCut.cxx
 paircuts/full/tpc_modular/MpdPairSharedPadsCut.cxx

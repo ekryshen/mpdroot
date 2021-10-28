@@ -10,7 +10,6 @@
 #include "NicaMpdMiniDstEvent.h"
 
 #include <FairLogger.h>
-#include <FairRootManager.h>
 #include <RtypesCore.h>
 #include <TClonesArray.h>
 #include <TLorentzVector.h>
@@ -21,6 +20,7 @@
 #include "MpdMiniBTofPidTraits.h"
 #include "MpdMiniEvent.h"
 #include "MpdMiniTrack.h"
+#include "NicaDataManager.h"
 #include "NicaHelix.h"
 #include "NicaLink.h"
 #include "NicaMpdMiniDstEventInterface.h"
@@ -42,7 +42,8 @@ void NicaMpdMiniDstEvent::Update() {
   MpdMiniEvent* event                     = (MpdMiniEvent*) interface->GetMiniEvent();
   TVector3 vec                            = event->primaryVertex();
   fVertex->SetXYZT(vec.X(), vec.Y(), vec.Z(), 0);
-  vec = event->primaryVertexError();
+  fEventId = event->eventId();
+  vec      = event->primaryVertexError();
   fVertexError->SetXYZT(vec.X(), vec.Y(), vec.Z(), 0);
   fTotalTracksNo = interface->GetTotalTrackNo();
   fRunInfoId     = event->runId();
@@ -62,6 +63,7 @@ void NicaMpdMiniDstEvent::Update() {
   }
   TClonesArray* tof_info = interface->fTofInfo->GetArray();
   // fill tof info
+  fNTofTracks = tof_info->GetEntriesFast();
   for (int i = 0; i < tof_info->GetEntriesFast(); i++) {
     MpdMiniBTofPidTraits* tof = (MpdMiniBTofPidTraits*) tof_info->UncheckedAt(i);
     if (tof->trackIndex() < 0) continue;
@@ -83,7 +85,7 @@ void NicaMpdMiniDstEvent::Update() {
 }
 
 Bool_t NicaMpdMiniDstEvent::ExistInTree() const {
-  FairRootManager* manager = FairRootManager::Instance();
+  NicaRootManager* manager = NicaDataManager::Instance()->GetManager();
   manager->Print();
   if (manager->CheckBranch("Event")) { return kTRUE; }
   LOG(WARNING) << ClassName() << " format not found ! no Event branch";

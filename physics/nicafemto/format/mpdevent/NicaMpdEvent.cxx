@@ -7,8 +7,9 @@
  *		Warsaw University of Technology, Faculty of Physics
  */
 #include "NicaMpdEvent.h"
-#include "FairRootManager.h"
+
 #include "MpdTrack.h"
+#include "NicaDataManager.h"
 #include "NicaMpdEventInterface.h"
 #include "NicaMpdTrack.h"
 
@@ -97,7 +98,7 @@ void NicaMpdEvent::OnlyGlobal() {
 }
 
 Bool_t NicaMpdEvent::ExistInTree() const {
-  FairRootManager* manager = FairRootManager::Instance();
+  NicaRootManager* manager = NicaDataManager::Instance()->GetManager();
   if (manager->CheckBranch("MPDEvent.")) { return kTRUE; }
   return kFALSE;
 }

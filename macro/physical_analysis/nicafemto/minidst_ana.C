@@ -24,8 +24,8 @@
 #include "NicaTrackTpcToFCut.h"
 #endif
 
-NicaFemtoBasicAna *PrepPionAna() {
-  NicaFemtoBasicAna *ana = new NicaFemtoBasicAna();
+NicaFemtoBasicAna* PrepPionAna() {
+  NicaFemtoBasicAna* ana = new NicaFemtoBasicAna();
   ana->SetFormat(new NicaMpdMiniDstFullEvent());
   ana->SetPdg(211);
   NicaFemtoWeightGeneratorLednicky weight;
@@ -40,9 +40,7 @@ NicaFemtoBasicAna *PrepPionAna() {
   lcms.SetSourceModel(gaus);
   ana->SetFreezoutGenerator(lcms);
   // analysis in LCMS frame kt bins 0.2-0.4 and 0.4-0.6
-  NicaFemtoCorrFuncKt kt(
-      NicaFemto1DCF("cf", 100, 0, .15, ENicaFemtoKinematics::kLCMS),
-      {0.2, 0.4, 0.6});
+  NicaFemtoCorrFuncKt kt(NicaFemto1DCF("cf", 100, 0, .15, ENicaFemtoKinematics::kLCMS), {0.2, 0.4, 0.6});
   ana->SetCorrFctn(kt);
   ana->SetOption(NicaTwoTrackAna::BackgroundOptionMixed());
   ana->SetMixSize(5);
@@ -54,9 +52,9 @@ NicaFemtoBasicAna *PrepPionAna() {
  * that initialize needed cuts and property monitors
  * @param ana
  */
-void prepTrackCuts(NicaFemtoBasicAna *ana) {
+void prepTrackCuts(NicaFemtoBasicAna* ana) {
   MpdBasicTrackCut cut;
-  cut.CreateMonitors("dca+tpc+tof+kin");  // create all available cut monitors
+  cut.MakeCutMonitors("dca+tpc+tof+kin");  // create all available cut monitors
   cut.GetTpcMonitor()->SetAxisDeDx(200, 0, 1E+5);
   cut.GetTpcMonitor()->SetAxisP(100, 0, 2);
   cut.GetChargeCut()->SetMinAndMax(1);
@@ -78,17 +76,17 @@ void prepTrackCuts(NicaFemtoBasicAna *ana) {
 
 void minidst_ana(TString inFile, TString outFile = "hbt.root") {
   // prepare fairroot framework
-  FairRunAna *run = new FairRunAna();
+  FairRunAna* run = new FairRunAna();
   run->SetOutputFile(outFile);
 
-  FairLogger *log = FairLogger::GetLogger();
+  FairLogger* log = FairLogger::GetLogger();
   log->SetColoredLog(kTRUE);
 
-  NicaMiniDstSource *source = new NicaMiniDstSource(inFile);
+  NicaMiniDstSource* source = new NicaMiniDstSource(inFile);
 
   run->SetSource(source);
   // prepare analysis
-  NicaFemtoBasicAna *ana = PrepPionAna();
+  NicaFemtoBasicAna* ana = PrepPionAna();
 
   prepTrackCuts(ana);
   // run->AddTask(new MpdPIDOnTheFly());

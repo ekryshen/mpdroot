@@ -36,6 +36,7 @@
 #pragma link C++ class MpdCylinderTpcPairCut + ;
 #pragma link C++ class MpdPairTcpSeparationSimpleNegCut + ;
 #pragma link C++ class MpdPairDeltaPhiStarDeltaEtaCut + ;
+#pragma link C++ class MpdPairDeltaPhistarMinCut + ;
 
 #pragma link C++ class MpdPadsFormat::MpdAlicePairQuality + ;
 #pragma link C++ class MpdPadsFormat::MpdDeltaEtaDeltaPhiStarAdvancedCut + ;

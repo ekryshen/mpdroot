@@ -9,6 +9,7 @@
 #include "NicaMpdV0Matcher.h"
 #include "MpdMiniMcTrack.h"
 #include "MpdMiniTrack.h"
+#include "NicaDataManager.h"
 #include "NicaLink.h"
 #include "NicaTrackClones.h"
 #include "NicaV0Track.h"
@@ -24,7 +25,7 @@ NicaMpdV0Matcher::NicaMpdV0Matcher() :
   fV0Tracks(nullptr), fV0Links(nullptr), fMcTracks(nullptr), fReTracks(nullptr), fWrite(kFALSE), fLastPrimary(-1) {}
 
 InitStatus NicaMpdV0Matcher::Init() {
-  FairRootManager* mngr = FairRootManager::Instance();
+  NicaRootManager* mngr = NicaDataManager::Instance()->GetManager();
   mngr->UpdateBranches();
   if (mngr->GetObject("NicaV0Matches") != nullptr) {
     LOG(warning) << "NicaV0Matches present in tree";

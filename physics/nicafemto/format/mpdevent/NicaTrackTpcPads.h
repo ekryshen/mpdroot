@@ -97,6 +97,18 @@ public:
    * or event vertex to calculate nominal pads
    */
   void Calculate(const NicaHelix& helix, TLorentzVector* vector);
+  /**
+   *
+   * @param layer
+   * @return position at given layer no
+   */
+  TVector3 PosAtLayer(Int_t layer) const;
+  /**
+   *
+   * @param layer
+   * @return momentum at layer no
+   */
+  TVector3 MomAtLayer(Int_t layer) const;
   virtual ~NicaTrackTpcPads();
   NicaTrackTpcPads(const NicaTrackTpcPads& other);
   NicaTrackTpcPads& operator=(const NicaTrackTpcPads& other);

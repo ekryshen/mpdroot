@@ -9,13 +9,13 @@
 
 #include "NicaMpdMiniDstMcEvent.h"
 
-#include <FairRootManager.h>
 #include <TClonesArray.h>
 #include <TLorentzVector.h>
 #include <TObjArray.h>
 
 #include "MpdMiniMcEvent.h"
 #include "MpdMiniMcTrack.h"
+#include "NicaDataManager.h"
 #include "NicaEvent.h"
 #include "NicaLink.h"
 #include "NicaMCTrack.h"
@@ -39,6 +39,7 @@ void NicaMpdMiniDstMcEvent::Update() {
   fTracks->ExpandCreateFast(tracks->GetEntriesFast());
   fTotalTracksNo = fTracks->GetEntriesFast();
   fVertex->SetXYZT(event->primaryVertexX(), event->primaryVertexY(), event->primaryVertexZ(), 0);
+  fEventId = event->eventId();
   SetPhi(event->reactionPlaneAngle(), 0);
   fB = (event->impactParameter());
   for (int i = 0; i < tracks->GetEntriesFast(); i++) {
@@ -60,7 +61,7 @@ void NicaMpdMiniDstMcEvent::Clear(Option_t* opt) { fTracks->Clear(opt); }
 void NicaMpdMiniDstMcEvent::Print() { NicaMCEvent::Print(); }
 
 Bool_t NicaMpdMiniDstMcEvent::ExistInTree() const {
-  FairRootManager* manager = FairRootManager::Instance();
+  NicaRootManager* manager = NicaDataManager::Instance()->GetManager();
   Int_t header             = manager->CheckBranch("McEvent");
   if (header > 1) header = 1;
   Int_t tracks = manager->CheckBranch("McTrack");
@@ -71,4 +72,4 @@ Bool_t NicaMpdMiniDstMcEvent::ExistInTree() const {
 
 TString NicaMpdMiniDstMcEvent::GetFormatName() const { return "MpdMiniDstMcEvent"; }
 
-NicaMpdMiniDstMcEvent::~NicaMpdMiniDstMcEvent() { delete fTracks; }
+NicaMpdMiniDstMcEvent::~NicaMpdMiniDstMcEvent() {}

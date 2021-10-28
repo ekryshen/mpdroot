@@ -76,3 +76,7 @@ NicaTrackTpcPads& NicaTrackTpcPads::operator=(const NicaTrackTpcPads& other) {
   fPadsNo[1] = other.fPadsNo[1];
   return *this;
 }
+
+TVector3 NicaTrackTpcPads::PosAtLayer(Int_t layer) const { return fNominalHelix.EvalPos(fPaths[layer]); }
+
+TVector3 NicaTrackTpcPads::MomAtLayer(Int_t layer) const { return fNominalHelix.EvalMom(fPaths[layer]); }

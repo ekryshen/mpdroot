@@ -23,7 +23,6 @@
 #include "NicaMiniDstSource.h"
 #include "NicaMpdMiniDstEvent.h"
 #include "NicaMpdMiniDstFullEvent.h"
-#include "NicaMpdV0Finder.h"
 #include "NicaTrackAna.h"
 #include "NicaTrackBasicMCCut.h"
 #include "NicaTrackChargeCut.h"
@@ -159,8 +158,8 @@ void v0_lambda(TString inFile, TString outFile = "v0.root") {
   ana->SetSource(source);
   ana->SetOutputFile(outFile);
   // two v0 findes with and without TOF
-  NicaMpdV0Finder* v0_1 = new NicaMpdV0Finder();
-  NicaMpdV0Finder* v0_2 = new NicaMpdV0Finder();
+  NicaV0BasicFinder* v0_1 = new NicaV0BasicFinder();
+  NicaV0BasicFinder* v0_2 = new NicaV0BasicFinder();
   SetPos(v0_1, kFALSE);
   SetPos(v0_2, kTRUE);
   SetNeg(v0_1, kFALSE);

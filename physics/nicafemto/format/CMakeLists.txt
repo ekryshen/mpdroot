@@ -22,12 +22,14 @@ ${CMAKE_SOURCE_DIR}/mpddst
 ${CMAKE_SOURCE_DIR}/mpddst/mcDst
 ${CMAKE_SOURCE_DIR}/mpddst/MpdMiniEvent
 ${CMAKE_SOURCE_DIR}/generators/unigen_format
+${CMAKE_SOURCE_DIR}/physics/nicafemto/format
 ${NICAFEMTO_FEATURES}
 ${NICAFEMTO_MPDHELPERS}
 ${CMAKE_SOURCE_DIR}/external/nicafemto/nicagenerators
 ${CMAKE_SOURCE_DIR}/external/nicafemto/nicagenerators/readers
 ${CMAKE_SOURCE_DIR}/external/nicafemto/nicagenerators/writers
 ${CMAKE_SOURCE_DIR}/external/nicafemto/analysis/v0s
+${CMAKE_SOURCE_DIR}/external/nicafemto/analysis/qa
 ${NICAFEMTO_DATA}
 ${NICAFEMTO_MPDFORMAT}
 )
@@ -85,12 +87,13 @@ hbtformat/NicaMpdHbtTrack.cxx
 minidstv0/NicaMiniDstFullV0Event.cxx
 minidstv0/NicaMpdMiniDstEventV0.cxx
 minidstv0/NicaMpdMiniDstEventV0Interface.cxx
+MpdQACoreManager.cxx
 )
 
 Set(HEADERS )
 Set(LINKDEF NicaMpdInterfaceLinkDef.h)
 Set(LIBRARY_NAME NicaMpdFormat)
-Set(DEPENDENCIES NicaFeatures NicaGen NicaDataFormat MpdDst MpdBase tpc MpdMCStack NicaMpdHelper UniGenFormat)
+Set(DEPENDENCIES NicaFeatures NicaGen NicaDataFormat MpdDst MpdBase tpc MpdMCStack NicaMpdHelper UniGenFormat NicaQA)
 
 GENERATE_LIBRARY()
 

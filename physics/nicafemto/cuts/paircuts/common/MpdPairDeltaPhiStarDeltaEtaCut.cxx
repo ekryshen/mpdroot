@@ -44,7 +44,7 @@ Bool_t MpdPairDeltaPhiStarDeltaEtaCut::Pass(NicaTwoTrack* pair) {
   Double_t afsi1b      = scale * chg2 / ptv2;
   Double_t dps         = phi2 - phi1 + TMath::ASin(afsi1b) - TMath::ASin(afsi0b);
   dps                  = TVector2::Phi_mpi_pi(dps);
-  SetValue(dps, 0);
+  SetValue(-dps, 0);
   if (TMath::Abs(afsi0b) >= 0 || TMath::Abs(afsi1b) >= 0) { return ForcedUpdate(kTRUE); }
   if (InLimits(0) && InLimits(1)) return ForcedUpdate(kFALSE);
   return ForcedUpdate(kTRUE);
@@ -56,9 +56,9 @@ NicaPackage* MpdPairDeltaPhiStarDeltaEtaCut::Report() const {
   return report;
 }
 
-void MpdPairDeltaPhiStarDeltaEtaCut::SetDeltaEtaCut(Double_t min, Double_t max) { SetMinMax(min, max, 0); }
+void MpdPairDeltaPhiStarDeltaEtaCut::SetDeltaEtaCut(Double_t min, Double_t max) { SetMinMax(min, max, 1); }
 
-void MpdPairDeltaPhiStarDeltaEtaCut::SetDeltaPhiStarCut(Double_t min, Double_t max) { SetMinMax(min, max, 1); }
+void MpdPairDeltaPhiStarDeltaEtaCut::SetDeltaPhiStarCut(Double_t min, Double_t max) { SetMinMax(min, max, 0); }
 
 Bool_t MpdPairDeltaPhiStarDeltaEtaCut::Init(Int_t task_id) {
   Bool_t fine = FormatInhertis("NicaExpEvent", task_id, ENicaFormatDepth::kBuffered);

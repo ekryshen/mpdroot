@@ -12,13 +12,14 @@
 #include <FairSource.h>
 #include <TString.h>
 
+#include <vector>
+
 
 class TChain;
 class TClonesArray;
 
 class NicaMiniDstSource : public FairSource {
-  Int_t fNFiles;
-  TString* fFileName;
+  std::vector<TString> fFileName;
   TChain* fChain;
   TClonesArray* fEvent;
   TClonesArray* fTracks;
@@ -26,6 +27,7 @@ class NicaMiniDstSource : public FairSource {
   TClonesArray* fEmcInfo;
   TClonesArray* fMcEvent;
   TClonesArray* fMcTracks;
+  Int_t fMaxEventsNo;
 
 public:
   NicaMiniDstSource();

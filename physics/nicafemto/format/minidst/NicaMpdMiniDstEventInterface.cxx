@@ -9,12 +9,12 @@
 
 #include "NicaMpdMiniDstEventInterface.h"
 
-#include <FairRootManager.h>
 #include <TClonesArray.h>
 #include <TObject.h>
 
 #include "MpdMiniBTofPidTraits.h"
 #include "MpdMiniTrack.h"
+#include "NicaDataManager.h"
 #include "NicaMpdMiniDstTrack.h"
 #include "NicaTrackInterface.h"
 #include "NicaV0CandidateHelix.h"
@@ -86,7 +86,7 @@ TLorentzVector NicaMpdMiniDstEventInterface::GetVertex() const {
 }
 
 void NicaMpdMiniDstEventInterface::ConnectToTree() {
-  FairRootManager* manager = FairRootManager::Instance();
+  NicaRootManager* manager = NicaDataManager::Instance()->GetManager();
   if (CanDeleteEvent()) {
     fEvent->DeleteClones();
     fTracks->DeleteClones();

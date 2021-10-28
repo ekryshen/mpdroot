@@ -9,13 +9,13 @@
 
 #include "NicaUnigenEvent.h"
 
-#include <FairRootManager.h>
 #include <RtypesCore.h>
 #include <TClonesArray.h>
 #include <TDatabasePDG.h>
 #include <TLorentzVector.h>
 #include <TParticlePDG.h>
 
+#include "NicaDataManager.h"
 #include "NicaEventInterface.h"
 #include "NicaLink.h"
 #include "NicaMCTrack.h"
@@ -68,7 +68,7 @@ NicaUnigenEvent::~NicaUnigenEvent() {}
 TString NicaUnigenEvent::GetFormatName() const { return "UnigenFormat"; }
 
 Bool_t NicaUnigenEvent::ExistInTree() const {
-  FairRootManager* manager = FairRootManager::Instance();
+  NicaRootManager* manager = NicaDataManager::Instance()->GetManager();
   if (manager->CheckBranch("UEvent.")) { return kTRUE; }
   return kFALSE;
 }

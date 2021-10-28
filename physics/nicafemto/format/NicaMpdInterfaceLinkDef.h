@@ -57,5 +57,7 @@
 #pragma link C++ class NicaMpdMiniDstEventV0 + ;
 #pragma link C++ class NicaMpdMiniDstEventV0Interface + ;
 
+#pragma link C++ class MpdQACoreManager + ;
+
 
 #endif /* INTERFACES_MPDROOT_NICAMPDINTERFACELINKDEF_H_ */
