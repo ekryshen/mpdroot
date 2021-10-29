@@ -1,0 +1,3 @@
+add_subdirectory(femto/fsiTools)
+add_subdirectory(femto/MpdFemtoMaker)
+add_subdirectory(femto/MpdFemtoMakerUser)

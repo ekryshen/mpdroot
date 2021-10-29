@@ -21,12 +21,12 @@ ${CMAKE_SOURCE_DIR}/mpdbase
 ${CMAKE_SOURCE_DIR}/mpddst
 ${CMAKE_SOURCE_DIR}/mpddst/mcDst
 ${CMAKE_SOURCE_DIR}/mpddst/MpdMiniEvent
-${CMAKE_SOURCE_DIR}/physics/nicafemto/format/minidst
-${CMAKE_SOURCE_DIR}/physics/nicafemto/format/combined
-${CMAKE_SOURCE_DIR}/physics/nicafemto/format/minidstV0
-${CMAKE_SOURCE_DIR}/physics/nicafemto/nica_helpers
+${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/format/minidst
+${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/format/combined
+${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/format/minidstV0
+${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/nica_helpers
 
-${CMAKE_SOURCE_DIR}/physics/nicafemto/tasks
+${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/tasks
 ${CMAKE_SOURCE_DIR}/external/nicafemto/analysis/v0s
 ${NICAFEMTO_FEATURES}
 ${NICAFEMTO_DATA}
