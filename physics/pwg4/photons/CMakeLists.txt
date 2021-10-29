@@ -6,8 +6,8 @@ set(INCLUDE_DIRECTORIES
  ${CMAKE_SOURCE_DIR}/lhetrack
  ${CMAKE_SOURCE_DIR}/emc/emcKI
  ${CMAKE_SOURCE_DIR}/mcstack
- ${CMAKE_SOURCE_DIR}/physics
- ${CMAKE_SOURCE_DIR}/physics/photons
+ ${CMAKE_SOURCE_DIR}/physics/pwg4
+ ${CMAKE_SOURCE_DIR}/physics/pwg4/photons
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
@@ -26,7 +26,6 @@ set(LINK_DIRECTORIES
 link_directories(${LINK_DIRECTORIES})
 
 set(SRCS
-  MpdPhoton.h
   MpdConvPi0.cxx  
   MpdPhotonAnalysisParams.cxx 
 )
@@ -34,7 +33,7 @@ set(SRCS
 Set(HEADERS)
 
 
-Set(LINKDEF PhotonsLinkDef.h)
+Set(LINKDEF MpdPhotonsLinkDef.h)
 Set(LIBRARY_NAME MpdPhotons)
 Set(DEPENDENCIES MpdBase MpdMCStack Kalman MpdPid LHETrack Physics)
 

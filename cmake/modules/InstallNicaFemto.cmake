@@ -12,5 +12,5 @@ execute_process(COMMAND git fetch WORKING_DIRECTORY  ${CMAKE_SOURCE_DIR}/externa
             MESSAGE(FATAL_ERROR "SUBIDR NOT FOUND")
         endif()
         add_subdirectory (${CMAKE_SOURCE_DIR}/external/nicafemto)
-        add_subdirectory (${CMAKE_SOURCE_DIR}/physics/nicafemto)
+        add_subdirectory (${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto)
 ENDMACRO(InstallNicaFemto)
