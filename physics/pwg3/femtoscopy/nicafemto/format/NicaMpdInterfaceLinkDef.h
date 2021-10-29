@@ -51,7 +51,6 @@
 #pragma link C++ class NicaMpdMiniDstTrack + ;
 #pragma link C++ class NicaMpdMiniDstTrackInterface + ;
 #pragma link C++ class NicaMpdMiniDstFullEvent + ;
-#pragma link C++ class NicaMiniDstSource + ;
 
 #pragma link C++ class NicaMiniDstFullV0Event + ;
 #pragma link C++ class NicaMpdMiniDstEventV0 + ;

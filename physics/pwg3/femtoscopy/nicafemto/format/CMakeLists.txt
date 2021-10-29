@@ -22,7 +22,7 @@ ${CMAKE_SOURCE_DIR}/mpddst
 ${CMAKE_SOURCE_DIR}/mpddst/mcDst
 ${CMAKE_SOURCE_DIR}/mpddst/MpdMiniEvent
 ${CMAKE_SOURCE_DIR}/generators/unigen_format
-${CMAKE_SOURCE_DIR}/physics/nicafemto/format
+${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/format
 ${NICAFEMTO_FEATURES}
 ${NICAFEMTO_MPDHELPERS}
 ${CMAKE_SOURCE_DIR}/external/nicafemto/nicagenerators
@@ -63,7 +63,6 @@ minidst/NicaMpdMiniDstMcEvent.cxx
 minidst/NicaMpdMiniDstMcEventInterface.cxx
 minidst/NicaMpdMiniDstMcTrack.cxx
 minidst/NicaMpdMiniDstTrack.cxx
-minidst/NicaMiniDstSource.cxx
 mpdevent/NicaMpdEvent.cxx
 mpdevent/NicaMpdEventTpcPads.cxx
 mpdevent/NicaMpdTrack.cxx

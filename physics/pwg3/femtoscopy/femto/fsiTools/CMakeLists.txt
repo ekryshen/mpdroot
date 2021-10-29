@@ -1,6 +1,6 @@
 set(INCLUDE_DIRECTORIES
  ${BASE_INCLUDE_DIRECTORIES}
- ${CMAKE_SOURCE_DIR}/physics/femto/fsiTools 
+ ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/femto/fsiTools 
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES

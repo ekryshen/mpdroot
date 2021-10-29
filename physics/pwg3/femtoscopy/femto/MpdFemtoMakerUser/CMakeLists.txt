@@ -10,8 +10,8 @@ set(INCLUDE_DIRECTORIES
  ${CMAKE_SOURCE_DIR}/tpc
  ${CMAKE_SOURCE_DIR}/lhetrack
  ${CMAKE_SOURCE_DIR}/kalman
- ${CMAKE_SOURCE_DIR}/physics/femto/MpdFemtoMaker
- ${CMAKE_SOURCE_DIR}/physics/femto/MpdFemtoMakerUser
+ ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/femto/MpdFemtoMaker
+ ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/femto/MpdFemtoMakerUser
  ${CMAKE_SOURCE_DIR}/mpddst/mcDst
  ${CMAKE_SOURCE_DIR}/mpddst/MpdMiniEvent
 )

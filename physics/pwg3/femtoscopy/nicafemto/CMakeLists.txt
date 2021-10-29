@@ -7,27 +7,27 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/external/nicafemto/cmake/modules"  ${
 include(NicaFemto)
 SetHeaderVariables(${CMAKE_SOURCE_DIR}/external/nicafemto)
 set(NICAFEMTO_MPDCUTS 
-    ${CMAKE_SOURCE_DIR}/physics/nicafemto/cuts
-    ${CMAKE_SOURCE_DIR}/physics/nicafemto/cuts/paircuts/common
-    ${CMAKE_SOURCE_DIR}/physics/nicafemto/cuts/paircuts/common/tpc_cylinder
-    ${CMAKE_SOURCE_DIR}/physics/nicafemto/cuts/paircuts/full
-    ${CMAKE_SOURCE_DIR}/physics/nicafemto/cuts/paircuts/full/tpc_modular
-    ${CMAKE_SOURCE_DIR}/physics/nicafemto/cuts/paircuts/minidst
-    ${CMAKE_SOURCE_DIR}/physics/nicafemto/cuts/trackcuts
-    ${CMAKE_SOURCE_DIR}/physics/nicafemto/cuts/cutmonitors
+    ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/cuts
+    ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/cuts/paircuts/common
+    ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/cuts/paircuts/common/tpc_cylinder
+    ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/cuts/paircuts/full
+    ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/cuts/paircuts/full/tpc_modular
+    ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/cuts/paircuts/minidst
+    ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/cuts/trackcuts
+    ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/cuts/cutmonitors
 )
 
 set(NICAFEMTO_MPDFORMAT
-    ${CMAKE_SOURCE_DIR}/physics/nicafemto/format/combined
-    ${CMAKE_SOURCE_DIR}/physics/nicafemto/format/minidst
-    ${CMAKE_SOURCE_DIR}/physics/nicafemto/format/hbtformat
-    ${CMAKE_SOURCE_DIR}/physics/nicafemto/format/mpdevent
-    ${CMAKE_SOURCE_DIR}/physics/nicafemto/format/mpdmc
-    ${CMAKE_SOURCE_DIR}/physics/nicafemto/format/unigen
-    ${CMAKE_SOURCE_DIR}/physics/nicafemto/format/
+    ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/format/combined
+    ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/format/minidst
+    ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/format/hbtformat
+    ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/format/mpdevent
+    ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/format/mpdmc
+    ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/format/unigen
+    ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/format/
 )
 set (NICAFEMTO_MPDHELPERS
-    ${CMAKE_SOURCE_DIR}/physics/nicafemto/nica_helpers
+    ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/nica_helpers
 )
 add_subdirectory(cuts)
 add_subdirectory(format)
