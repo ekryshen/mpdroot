@@ -18,7 +18,7 @@
 #include "NicaFemtoCorrFuncKt.h"
 #include "NicaFemtoSourceModelGauss.h"
 #include "NicaFemtoWeightGeneratorLednicky.h"
-#include "NicaMiniDstSource.h"
+#include "MpdMiniDstSource.h"
 #include "NicaMpdDstMCEventTpcPads.h"
 #include "NicaMpdMiniDstFullEvent.h"
 #include "NicaTrackTpcToFCut.h"
@@ -82,7 +82,7 @@ void minidst_ana(TString inFile, TString outFile = "hbt.root") {
   FairLogger* log = FairLogger::GetLogger();
   log->SetColoredLog(kTRUE);
 
-  NicaMiniDstSource* source = new NicaMiniDstSource(inFile);
+  MpdMiniDstSource* source = new MpdMiniDstSource(inFile);
 
   run->SetSource(source);
   // prepare analysis

@@ -57,8 +57,8 @@ void qa2() {
 
   FairRunAna* run = new FairRunAna();
   // set path to your files
-  NicaMiniDstSource* source =
-    new NicaMiniDstSource("/media/daniel/WD/mpdminidst/urqmd-BiBi-09.0GeV-0-14fm-eos0-250-0-0.reco.MiniDst.root");
+  MpdMiniDstSource* source =
+    new MpdMiniDstSource("/media/daniel/WD/mpdminidst/urqmd-BiBi-09.0GeV-0-14fm-eos0-250-0-0.reco.MiniDst.root");
   source->AddFile("/media/daniel/WD/mpdminidst/urqmd-BiBi-09.0GeV-0-14fm-eos0-250-0-1.reco.MiniDst.root");
 
   run->SetSource(source);

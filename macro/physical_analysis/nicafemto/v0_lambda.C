@@ -20,7 +20,7 @@
 #include "NicaCutMonitorXY.h"
 #include "NicaJobs.h"
 #include "NicaMiniDstFullV0Event.h"
-#include "NicaMiniDstSource.h"
+#include "MpdMiniDstSource.h"
 #include "NicaMpdMiniDstEvent.h"
 #include "NicaMpdMiniDstFullEvent.h"
 #include "NicaTrackAna.h"
@@ -153,7 +153,7 @@ void SetLambCut(NicaV0BasicFinder* task) {
 void v0_lambda(TString inFile, TString outFile = "v0.root") {
   FairRunAna* ana = new FairRunAna();
 
-  NicaMiniDstSource* source = new NicaMiniDstSource(inFile);
+  MpdMiniDstSource* source = new MpdMiniDstSource(inFile);
 
   ana->SetSource(source);
   ana->SetOutputFile(outFile);
