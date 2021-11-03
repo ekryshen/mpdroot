@@ -163,7 +163,7 @@ run_reco:ubuntu:
     - make -j 5
     - make install
     - ssh $STRATUM_0 "sudo cvmfs_server transaction nica.jinr.ru"
-    - rsync --filter='-p .cvmfscatalog' --filter='-p .cvmfsautocatalog' -a /cvmfs/nica.jinr.ru/$CI_ENVIRONMENT_NAME/mpdroot/$CI_COMMIT_REF_NAME $STRATUM_0:/cvmfs/nica.jinr.ru/$CI_ENVIRONMENT_NAME/mpdroot/
+    - rsync --filter='-p .cvmfscatalog' --filter='-p .cvmfsautocatalog' -a --delete /cvmfs/nica.jinr.ru/$CI_ENVIRONMENT_NAME/mpdroot/$CI_COMMIT_REF_NAME $STRATUM_0:/cvmfs/nica.jinr.ru/$CI_ENVIRONMENT_NAME/mpdroot/
     - ssh $STRATUM_0 "sudo cvmfs_server publish nica.jinr.ru"
     - ssh-agent -k
   only:
