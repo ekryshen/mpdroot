@@ -1,21 +1,21 @@
 /* Macro reads DST file produced by macro reco.C */
 
-void anaDST(TString inFile = "dst_auau_04gev_0_3fm_0.root") {
+void anaDST(TString inDir = "/opt/exp_soft/mpd/data4mpd/dst/09GeV/", TString inFile = "auau_09gev_0_3fm_0.root") {
   TStopwatch timer;
   timer.Start();
 
   /* Load basic libraries */
   gROOT->LoadMacro("$VMCWORKDIR/macro/mpd/mpdloadlibs.C");
-  mpdloadlibs(kTRUE, kFALSE);  // only reco lib
+  gROOT->ProcessLine("mpdloadlibs()");
 
   TString outDir = "a";
 
-  outFile = outDir + inFile;
-  fFile   = new TFile(outFile, "RECREATE");
+  TString outFile = outDir + inFile;
+  TFile* fFile    = new TFile(outFile, "RECREATE");
 
   TFile fileDST(inFile);
 
-  Float_t E, E_MC, P, Pt, Pz, Pt_MC, Pz, Pz_MC, Px, Px_MC, Py, Py_MC, Mt, Mt_MC, Eta, Eta_MC;
+  Float_t E, E_MC, P, Pt, Pz, Pt_MC, Pz_MC, Px, Px_MC, Py, Py_MC, Mt, Mt_MC, Eta, Eta_MC;
   Float_t M2, dEdx;
   Float_t ProbP, ProbPi, ProbK, ProbE;
   Float_t ProbP_dEdx, ProbPi_dEdx, ProbK_dEdx, ProbE_dEdx;
@@ -138,14 +138,14 @@ void anaDST(TString inFile = "dst_auau_04gev_0_3fm_0.root") {
   hkEtaMC->GetYaxis()->SetTitleOffset(1.2);
   hkEtaMC->GetXaxis()->SetTitle("#eta");
 
-  TTree* simTree = (TTree*) fileDST.Get("cbmsim");
+  TTree* simTree = (TTree*) fileDST.Get("mpdsim");
 
   //  TClonesArray *mpdEvents = (TClonesArray*) fileDST.FindObjectAny("MPDEvent.");
-  MpdEvent* event;
+  MpdEvent* event = nullptr;
   simTree->SetBranchAddress("MPDEvent.", &event);
   TBranch* dstBranch = simTree->GetBranch("MPDEvent.");
 
-  TClonesArray* fT1 = (TClonesArray) fileDST.FindObjectAny("MCTrack");
+  TClonesArray* fT1 = (TClonesArray*) fileDST.FindObjectAny("MCTrack");
   simTree->SetBranchAddress("MCTrack", &fT1);
   TBranch* MCBranch = simTree->GetBranch("MCTrack");
 
@@ -235,7 +235,7 @@ void anaDST(TString inFile = "dst_auau_04gev_0_3fm_0.root") {
       TVector3 Pxyz;
       mctrack = (MpdMCTrack*) fT1->At(j);
 
-      //      FairMCTrack *mctrack = fT1->UncheckedAt(j);
+      //      MpdMCTrack *mctrack = fT1->UncheckedAt(j);
 
       MotherID = mctrack->GetMotherId();
 
