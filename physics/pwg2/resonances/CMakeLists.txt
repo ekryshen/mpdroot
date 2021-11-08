@@ -27,6 +27,7 @@ set(SRCS
  MpdRoInvMassTask.cxx
 )
 
+Set(LINKDEF MpdResonancesLinkDef.h)
 Set(LIBRARY_NAME MpdResonances)
 Set(DEPENDENCIES Core Base MpdDst)
 
