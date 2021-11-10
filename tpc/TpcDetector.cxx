@@ -138,6 +138,9 @@ Bool_t TpcDetector::ProcessHits( FairVolume *v)
 	// New value
 	eLoss = deParams->GetEloss (betgam, gMC->TrackCharge(), gMC->TrackStep());
 	//cout << " xxxxxx " << gMC->Edep() << " " << eLoss << endl;
+	//AZ - fixed loss 2 keV/cm
+	//eLoss = 2.e-6;
+	//eLoss *= gMC->TrackStep();
 	//AZ
 	TpcPoint* p = AddHit(trackID, volumeID, pos.Vect(), mom.Vect(), time, length, eLoss);
 	p->SetStep(gMC->TrackStep());

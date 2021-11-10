@@ -77,10 +77,15 @@ MpdTpcDigitizerAZlt::MpdTpcDigitizerAZlt()
   fPersistence(kTRUE),
   fAttach(kFALSE),
   fDiffuse(kTRUE),
+    //fDiffuse(kFALSE), // debug
   fDistort(kFALSE),
   fResponse(kTRUE),
   fDistribute(kTRUE),
-  fPrintDebugInfo(kFALSE) {
+    //fDistribute(kFALSE), // debug
+  fPrintDebugInfo(kFALSE),
+  fOneRow(kFALSE)
+  //fOneRow(kTRUE) // debug
+{
   fInputBranchName = "TpcPoint";
   fOutputBranchName = "MpdTpcDigit";
   
@@ -347,7 +352,8 @@ void MpdTpcDigitizerAZlt::Check4Edge(UInt_t iSec, TpcPoint* &prePoint, TpcPoint*
   virtPoint->SetPosition(posG);
   virtPoint->SetTrackID(prePoint->GetTrackID());
   //AZ prePoint->SetEnergyLoss(prePoint->GetEnergyLoss()*1.3); // 29.10.16 - correct for edge-effect
-  virtPoint->SetEnergyLoss(prePoint->GetEnergyLoss()*1.3); //AZ-090620 - correct for entrance effect
+  //AZ-081121 virtPoint->SetEnergyLoss(prePoint->GetEnergyLoss()*1.3); //AZ-090620 - correct for entrance effect
+  virtPoint->SetEnergyLoss(prePoint->GetEnergyLoss()*0.77); //AZ-081121 
   prePoint = virtPoint;
 }
 
@@ -456,6 +462,7 @@ Double_t MpdTpcDigitizerAZlt::Polya()
   }
 
   return hPolya->GetRandom();
+  //return 1; // fixed gain - for debug
 }
 
 //---------------------------------------------------------------------------
@@ -616,6 +623,7 @@ void MpdTpcDigitizerAZlt::GetArea(Float_t xEll, Float_t yEll, Float_t radius, ve
     padIDs.push_back(pad1);
     rowIDs.push_back(row);
   }    
+  if (fOneRow) return; // for debug - charge only in one padrow
   // Add extra row
   if (TMath::Abs(yNext) < radius) {
     Int_t row1 = row;

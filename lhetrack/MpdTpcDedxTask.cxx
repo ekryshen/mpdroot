@@ -93,6 +93,11 @@ void MpdTpcDedxTask::Exec(Option_t * option)
       //cout << j << " " << hit->GetUniqueID() << " " << hit->GetDedx() << endl;
       if (hit->GetUniqueID() == 1) continue; // ITS hit
       if (hit->GetSignal() <= 0.) continue; // strange
+      // Apply flag cuts
+      if (hit->GetFlag() & MpdKalmanHit::kSinglePix) continue;
+      if (hit->GetFlag() & MpdKalmanHit::kSinglePad) continue;
+      //if (hit->GetFlag() & MpdKalmanHit::kVirtual) continue;
+      //
       Double_t sig = hit->GetSignal();
       if (!fHits) {
         // For hit producer

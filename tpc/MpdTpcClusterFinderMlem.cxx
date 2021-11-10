@@ -18,6 +18,7 @@
 #include "MpdTpcClusterFinderMlem.h"
 
 // Collaborating Class Headers --------
+#include "MpdMCEventHeader.h"
 #include "MpdTpc2dCluster.h"
 #include "MpdTpcDigit.h"
 #include "MpdTpcHit.h"
@@ -103,6 +104,9 @@ InitStatus MpdTpcClusterFinderMlem::Init()
   // Get input collection
   fDigiArray = (TClonesArray*) ioman->GetObject("MpdTpcDigit");
   
+  // Get event header (for vertex Z-position)
+  ioman->GetObject("MCEventHeader");
+
   if (fDigiArray == 0) {
     Error("TpcClusterFinderMlem::Init","Array of digits not found!");
     return kERROR;
@@ -157,6 +161,10 @@ void MpdTpcClusterFinderMlem::Exec(Option_t* opt)
     }
   }
   cout << " Control sum: " << nSum << endl;
+
+  // Get vertex Z-position estimate - at present is is taken as true MC value
+  //cout << " ******** header " << gROOT->FindObjectAny("MCEventHeader.") << endl;
+  fVertexZ = ((MpdMCEventHeader*)gROOT->FindObjectAny("MCEventHeader."))->GetZ();
 
   // Find hits
   FindHits();
@@ -305,6 +313,7 @@ void MpdTpcClusterFinderMlem::FindHits()
     Int_t idig = localMax.rbegin()->second;
     Int_t ipad = clus->Col(idig);
     if (ipad-2 == 0 || ipad-2 == 2*fSecGeo->NPadsInRows()[clus->Row()] - 1) edge = 1; // remember extra shift !!!
+    if (clus->GetNumPads() == 1) clus->SetSinglePad();
     //if (clus->GetNumPads() > 1) edge = -edge;
     if (edge > 0) {
       // Add "virtual" digit
@@ -324,10 +333,11 @@ void MpdTpcClusterFinderMlem::FindHits()
       }
       fDigis[ipadv][itime] = fDigis[ipad][itime];
       clus->Insert(fDigis[ipadv][itime], clus->Row(), ipadv, itime, fCharges[ipadv][itime]);
-      //cout << " Edge: " << clus->Row() << " " << clus->GetId() << " " << ipad << endl; 
+      //cout << " Edge: " << clus->Row() << " " << clus->GetId() << " " << ipadv << " " << itime << " " << ipadn << endl; 
       clus->SetVirtual(); // flag "virtual" pad addition
     }
     if (edge) clus->SetEdge(); // flag edge effect
+    if (nLocMax0 > 1) clus->SetMultMax(); // more than 1 local maximum
 
     //AZ if (edge || localMax.size() > 1) {
     //if (1) {
@@ -588,6 +598,7 @@ void MpdTpcClusterFinderMlem::Mlem(Int_t iclus, multimap<Double_t,Int_t> &localM
   Int_t nDigis = clus->NDigits();
   Int_t nx = clus->GetNumTimeBins();
   Int_t ny = clus->GetNumPads() + 2;
+  //cout << " Cluster: " << clus->Row() << " " << nDigis << " " << clus->GetADC() << " " << clus->Edge() << endl;
 
   TH2D *hXY = new TH2D("hTimePad","Pad No. vs Time bin",nx,clus->MinBkt(),clus->MaxBkt()+1,
 		       ny,clus->MinCol()-1,clus->MaxCol()+2);
@@ -1027,8 +1038,10 @@ void MpdTpcClusterFinderMlem::GetResponse(const MpdTpc2dCluster* clus, TH2D *hXY
   TVector3 p3loc(xloc, yloc, zloc), p3glob;
   if (clus->GetSect() >= fSecGeo->NofSectors()) p3loc[2] = -p3loc[2];
   fSecGeo->Local2Global(clus->GetSect(), p3loc, p3glob);
-  Double_t tanDip = TMath::Abs(p3glob[2]) / p3glob.Pt();
-  tanDip = TMath::Min (tanDip, 2.0);
+  //Double_t tanDip = TMath::Abs(p3glob[2]) / p3glob.Pt();
+  //tanDip = TMath::Min (tanDip, 2.0);
+  Double_t tanDip = TMath::Abs (p3glob[2] - fVertexZ) / p3glob.Pt(); //AZ-091121
+  tanDip = TMath::Min (tanDip, 3.0); //AZ-091121
   Double_t tanDip2 = tanDip * tanDip;
   Double_t tanDip4 = tanDip2 * tanDip2;
 
@@ -1118,7 +1131,13 @@ Double_t MpdTpcClusterFinderMlem::GetCij(Int_t irow, Double_t x0, Double_t y0, D
       for (Int_t j = -nxy; j <= nxy; ++j) {
 	Int_t ip = iyc + j;
 	//if (ip-2 == 0 || ip-2 == 2*fSecGeo->NPadsInRows()[irow] - 1) continue; // edge
-	if (ip-2 < 0 || ip-2 > 2*fSecGeo->NPadsInRows()[irow] - 1) continue; // edge
+	if (ip-2 < 0 || ip-2 > 2*fSecGeo->NPadsInRows()[irow] - 1) {
+	  Int_t ivirt = 0;
+	  // Edge - check for virtual pad (AZ-041121)
+	  if ((ip == 1 || ip == 2*fSecGeo->NPadsInRows()[irow] + 2) && fFlags[ip][it] != 0) ivirt = 1;
+	  if (!ivirt) continue; // outside of the edges
+	}
+	//cout << " ok " << i << " " << j << " " << it << " " << ip << endl;
 	Double_t dy = ip - y0 + 0.5;
 	dx /= sigt;
 	dy /= sigp; 
@@ -1459,9 +1478,16 @@ void MpdTpcClusterFinderMlem::ChargeMlem(Int_t nHits0, vector<pixel> &pixels, ve
 
   // Compute hit charges
   map<Int_t,Double_t> charges;
+  map<Int_t,Int_t> npixs;
+  
   for (Int_t ipix = 0; ipix < npix; ++ipix) {
-    if (charges.find(pixs[ipix].iy) == charges.end()) charges[pixs[ipix].iy] = pixs[ipix].qq;
-    else charges[pixs[ipix].iy] += pixs[ipix].qq;
+    if (charges.find(pixs[ipix].iy) == charges.end()) {
+      charges[pixs[ipix].iy] = pixs[ipix].qq;
+      npixs[pixs[ipix].iy] = 1;
+    } else {
+      charges[pixs[ipix].iy] += pixs[ipix].qq;
+      npixs[pixs[ipix].iy] += 1;
+    }
   }
 
   Double_t qCor = 0; //AZ
@@ -1470,10 +1496,11 @@ void MpdTpcClusterFinderMlem::ChargeMlem(Int_t nHits0, vector<pixel> &pixels, ve
     //cout << hit->GetQ() << " " << charges[ih] << " " << hit->GetNdigits() << " " << hit->GetLayer() << " " << nHits << endl;
     qCor += charges[ih]; //AZ
     //AZ hit->SetEnergyLoss(charges[ih]/1.089); // coefficient due to different peak with and w/out MLEM
-    //hit->SetEnergyLoss(charges[ih]/1.0); //AZ - 040620 coefficient due to different peak with and w/out MLEM
-    hit->SetEnergyLoss(charges[ih]*1.25); //AZ - 120620 coefficient due to different peak with and w/out MLEM
+    hit->SetEnergyLoss(charges[ih]/1.0); //AZ - 071121
+    //AZ-071121 hit->SetEnergyLoss(charges[ih]*1.25); //AZ - 120620 coefficient due to different peak with and w/out MLEM
+    if (npixs[ih] == 1) hit->SetSinglePix(); // one-pixel hit
+    //cout << " qtot: " << qTot << " " << qCor/qTot << " " << ih << " " << charges[ih] << " " << nBinsTot << " " << qbins << " " << pixels.size() << endl; //AZ
   }
-  //cout << " qtot: " << qTot << " " << qCor/qTot << " " << (nH-nHits0) << " " << nBinsTot << " " << qbins << " " << pixels.size() << endl; //AZ
 }
 
 //__________________________________________________________________________

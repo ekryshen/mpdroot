@@ -122,6 +122,7 @@ private:
     Bool_t fResponse;                // to do pad response or not
     Bool_t fDistribute;              // distribute electrons between two MC points or not
     Bool_t fPrintDebugInfo;          // print or not additional information in output
+    Bool_t fOneRow;                  // distribute charge only in one padrow - for debug 
 
     ClassDef(MpdTpcDigitizerAZlt, 0)
 };

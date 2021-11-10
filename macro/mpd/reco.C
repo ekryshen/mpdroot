@@ -109,7 +109,12 @@ void reco(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outFile
     MpdKalmanFilter *kalman = MpdKalmanFilter::Instance("KF");
     fRun->AddTask(kalman);
 
-#ifdef UseMlem
+#ifndef UseMlem
+    MpdTpcHitProducer* hitPr = new MpdTpcHitProducer();
+    hitPr->SetModular(0);
+    //hitPr->SetPersistance(); //AZ
+    fRun->AddTask(hitPr);
+#else
     //MpdTpcDigitizerAZ* tpcDigitizer = new MpdTpcDigitizerAZ();
     MpdTpcDigitizerAZlt* tpcDigitizer = new MpdTpcDigitizerAZlt();
     tpcDigitizer->SetPersistence(kFALSE);
@@ -125,10 +130,6 @@ void reco(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outFile
 #ifdef UseMlem
     MpdTpcClusterFinderMlem *tpcClusAZ = new MpdTpcClusterFinderMlem();
     fRun->AddTask(tpcClusAZ);
-#else
-    MpdTpcHitProducer* hitPr = new MpdTpcHitProducer();
-    hitPr->SetModular(0);
-    fRun->AddTask(hitPr);
 #endif
 
     FairTask* vertZ = new MpdVertexZfinder();

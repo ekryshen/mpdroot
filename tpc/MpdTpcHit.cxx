@@ -64,6 +64,8 @@ void MpdTpcHit::SetFlags(const MpdTpc2dCluster *clus)
   if (clus->Overflows()) fFlag |= MpdKalmanHit::kOverflow;
   if (clus->Edge()) fFlag |= MpdKalmanHit::kEdge;
   if (clus->Flag() & 1) fFlag |= MpdKalmanHit::kMlem;
+  if (clus->MultMax()) fFlag |= MpdKalmanHit::kMultMax;
+  if (clus->SinglePad()) fFlag |= MpdKalmanHit::kSinglePad;
 }
 
 //---------------------------------------------------------------------------

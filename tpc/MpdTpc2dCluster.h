@@ -22,8 +22,8 @@ class MpdTpc2dCluster : public TObject
 {
 
  public:
-  enum Masks {kOverflowM = 5, kVirtualM = 1, kEdgeM = 1};
-  enum Shifts {kOverflowS = 1, kVirtualS = kOverflowS+kOverflowM, kEdgeS = kVirtualS+1};
+  enum Masks {kOverflowM = 5, kVirtualM = 1, kEdgeM = 1, kSinglePadM = 1, kMultMaxM = 1};
+  enum Shifts {kOverflowS = 1, kVirtualS = kOverflowS+kOverflowM, kEdgeS = kVirtualS+1, kSinglePadS = kEdgeS+kEdgeM, kMultMaxS = kSinglePadS+kSinglePadM};
 
  public:
   MpdTpc2dCluster() {;}
@@ -38,6 +38,8 @@ class MpdTpc2dCluster : public TObject
   Int_t Overflows () const { return (fFlag >> kOverflowS) & kOverflowM; }
   Int_t Virtual   () const { return (fFlag >> kVirtualS) & kVirtualM; }
   Int_t Edge      () const { return (fFlag >> kEdgeS) & kEdgeM; }
+  Int_t MultMax   () const { return (fFlag >> kMultMaxS) & kMultMaxM; }
+  Int_t SinglePad () const { return (fFlag >> kSinglePadS) & kSinglePadM; }
   Int_t ID        () const {return fId;}
   Int_t NDigits   () const {return fAdcList.size();}
   Int_t Row       () const {return Row(0);}
@@ -59,15 +61,17 @@ class MpdTpc2dCluster : public TObject
   Int_t Bkt(Int_t i) const; 
   Int_t Sec(Int_t i) const;
 
-  void SetFlag     (UInt_t i) { fFlag = i; }
-  void SetOverflows(Int_t i) { fFlag |= (i << kOverflowS); }
-  void SetVirtual  (Int_t i = 1) { fFlag |= (i << kVirtualS); }
-  void SetEdge     (Int_t i = 1) { fFlag |= (i << kEdgeS); }
-  void SetID       (Int_t i) {fId = i;}
-  void SetMinCol   (Int_t i) {fMinCol = i;}
-  void SetMaxCol   (Int_t i) {fMaxCol = i;}
-  void SetMinBkt   (Int_t i) {fMinBkt = i;}
-  void SetMaxBkt   (Int_t i) {fMaxBkt = i;}
+  void SetFlag      (UInt_t i) { fFlag = i; }
+  void SetOverflows (Int_t i) { fFlag |= (i << kOverflowS); }
+  void SetVirtual   (Int_t i = 1) { fFlag |= (i << kVirtualS); }
+  void SetEdge      (Int_t i = 1) { fFlag |= (i << kEdgeS); }
+  void SetSinglePad (Int_t i = 1) { fFlag |= (i << kSinglePadS); }
+  void SetMultMax   (Int_t i = 1) { fFlag |= (i << kMultMaxS); }
+  void SetID        (Int_t i) {fId = i;}
+  void SetMinCol    (Int_t i) {fMinCol = i;}
+  void SetMaxCol    (Int_t i) {fMaxCol = i;}
+  void SetMinBkt    (Int_t i) {fMinBkt = i;}
+  void SetMaxBkt    (Int_t i) {fMaxBkt = i;}
 //  void SetAvgCol   (Float_t val) {fAvgCol = val;}
 //  void SetSigCol   (Float_t val) {fSigCol = val;}
 //  void SetAvgBkt   (Float_t val) {fAvgBkt = val;}

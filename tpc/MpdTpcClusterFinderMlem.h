@@ -82,6 +82,7 @@ private:
   Int_t fDigis[fgkNpads][fgkNtimes];
   Bool_t fPersistence;
   MpdTpcSectorGeo* fSecGeo;
+  Double_t fVertexZ; // !!! vertex Z-position estimate (at present it is taken from true value) !!! 
 
   // Private Methods -----------------
   void ProcessPadrow(Int_t isec, Int_t irow); // process one padrow of a sector

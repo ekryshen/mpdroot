@@ -7,6 +7,8 @@
 ///
 /// \author Alexander Zinchenko, LHEP JINR Dubna - extension of TpcHit
 
+#include "MpdKalmanHit.h"
+
 #include <FairHit.h>
 #include <TObject.h>
 #include <vector>
@@ -66,6 +68,15 @@ public:
     Int_t GetNdigits() const { return fNdigits; }
     Int_t GetNtracks() const { return fIDs.size(); }
     std::vector<Int_t>& GetIDs() { return fIDs; }
+
+    /**Get different flags **/
+    Int_t IsOverflow  () const { return (fFlag & MpdKalmanHit::kOverflow); }
+    Int_t IsVirtual   () const { return (fFlag & MpdKalmanHit::kVirtual); }
+    Int_t IsEdge      () const { return (fFlag & MpdKalmanHit::kEdge); }
+    Int_t IsMlem      () const { return (fFlag & MpdKalmanHit::kMlem); }
+    Int_t IsMultMax   () const { return (fFlag & MpdKalmanHit::kMultMax); }
+    Int_t IsSinglePad () const { return (fFlag & MpdKalmanHit::kSinglePad); }
+    Int_t IsSinglePix () const { return (fFlag & MpdKalmanHit::kSinglePix); }
     
     /** Modifiers **/
     void SetModular(Int_t imod) { SetUniqueID(imod); }
@@ -76,6 +87,7 @@ public:
     void SetStep(Double_t step) { fStep = step; }
     void SetLength(Double_t length) { fLength = length; }
     void SetFlag(Int_t flag) { fFlag = flag; }
+    void SetSinglePix() { fFlag |= MpdKalmanHit::kSinglePix; }
     // For backward compatibility
     void SetR(Double_t r) { fLocalY = r; }
     void SetRphi(Double_t rphi) { fLocalX = rphi; }

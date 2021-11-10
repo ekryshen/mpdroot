@@ -689,7 +689,14 @@ void MpdTpcHitProducer::ExecNew()
 
   MpdTpcSectorGeo *secGeo = MpdTpcSectorGeo::Instance();
   static TF1 func("func","[1]+[2]*(x-[0])+[3]*(x-[0])*(x-[0])",0,99999);
-  
+  static Double_t maxStep = -1;
+  if (maxStep < 0) {
+    // Get max step for TPC gas
+    TGeoMedium *tpcMed = gGeoManager->GetMedium("TPCmixture");
+    maxStep = tpcMed->GetParam(4) * 0.95;
+    cout << " ***!!! Maximum step in TPC: " << maxStep << endl;
+  }
+
   Int_t nPoints = fPointArray->GetEntriesFast(), nHits = 0, lay = 0;
   TVector3 p3, p30, p3loc, p3loc0, pmom3, pmom3loc, p3extr, p3err(0.05, 0., 0.1); // X error 500 um, Z error 1 mm
   map<Int_t,map<Double_t,Int_t> > idmap;
@@ -773,6 +780,7 @@ void MpdTpcHitProducer::ExecNew()
     for (map<Double_t,MpdTpcHit>::iterator mit1 = hitMap.begin(); mit1 != hitMap.end(); ++mit1) {
       MpdTpcHit& hit = mit1->second;
       Int_t isec = secGeo->Sector(hit.GetDetectorID());
+      //cout << isec << " " << secGeo->PadRow(hit.GetDetectorID()) << " " << hit.GetEnergyLoss() << endl;
       Int_t idir = hit.GetFlag();
       if (isec0 < 0) {
 	isec0 = isec;
@@ -874,7 +882,22 @@ void MpdTpcHitProducer::ExecNew()
 	  hitp->SetStep(hitok->GetStep());
 	  hitp->SetModular(1); // modular geometry flag
 	  hitp->SetLength(hitok->GetLength()); 
-	}
+	  // Compute correct step and energy loss (angular dependence) - if large step
+	  if (hitp->GetStep() > maxStep) {
+	    Double_t phi = secGeo->SectorAngle(isec0);
+	    //Double_t phi = secGeo->SectorAngle(secGeo->Sector(padID));
+	    TVector3 sec3 (TMath::Cos(phi), TMath::Sin(phi), 0.0);
+	    Double_t padh = (lay < secGeo->NofRowsReg(0)) ? secGeo->PadHeight(0) : secGeo->PadHeight(1);
+	    TpcPoint *point = (TpcPoint*) fPointArray->UncheckedAt(hitok->GetRefIndex());
+	    TVector3 mom3;
+	    point->Momentum(mom3);
+	    Double_t cosAngle = TMath::Cos (mom3.Angle(sec3));
+	    //cout << isec0 << " " << lay << " " << phi << " " << hitp->GetStep() << " " << cosAngle << endl;
+	    Double_t step = padh / TMath::Abs(cosAngle);
+	    hitp->SetStep (TMath::Min(step,3.5));
+	    hitp->SetEnergyLoss (hitp->GetEnergyLoss() * hitp->GetStep());
+	  }
+ 	}
 	for (Int_t j = 0; j < 4; ++j) xyzloct[j].clear();
 	isec0 = isec;
 	idir0 = idir;

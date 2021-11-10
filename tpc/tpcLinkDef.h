@@ -6,12 +6,12 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ class McDst;
-#pragma link C++ class McDstReader++;
-#pragma link C++ class McEvent++;
-#pragma link C++ class McParticle++;
-#pragma link C++ class McPIDConverter++;
-#pragma link C++ class McRun;
+#pragma link C++ class MpdMcDst++;
+#pragma link C++ class MpdMcDstReader++;
+#pragma link C++ class MpdMcEvent++;
+#pragma link C++ class MpdMcParticle++;
+#pragma link C++ class MpdMcPIDConverter++;
+#pragma link C++ class MpdMcRun++;
 
 #pragma link C++ class TpcDetector+;
 #pragma link C++ class TpcPoint+;

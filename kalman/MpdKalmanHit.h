@@ -17,7 +17,7 @@ class MpdKalmanHit : public TObject
  public:
   enum HitType {kFixedP, kFixedR, kFixedZ};
   enum HitFlag {kUsed = 1, kMirror = 2, kMlem = 4, kOverflow = 8, kEdge = 16,
-		kVirtual = 32};
+		kVirtual = 32, kSinglePad = 64, kSinglePix = 128, kMultMax = 256};
  public:
   
   MpdKalmanHit(); ///< Default ctor
