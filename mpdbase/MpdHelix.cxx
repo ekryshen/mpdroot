@@ -12,12 +12,10 @@
 #    endif
 #endif
 
+#include "MpdBase.h" // for basic SI units
+
 #define FOR_HELIX
 
-#include "CLHEP/Units/PhysicalConstants.h" 
-#include "CLHEP/Units/SystemOfUnits.h"
-
-using namespace CLHEP;
 #include "MpdHelix.h"
 #include <TMath.h>
 
@@ -189,7 +187,7 @@ double MpdHelix::pathLength(const TVector3 p, bool scanPeriods) const
 // 	    using namespace units;
 // #endif
 //	    const double MaxPrecisionNeeded = 0.000001;  // micrometer;
-	    const double MaxPrecisionNeeded = micrometer;
+	    const double MaxPrecisionNeeded = SI_units::micrometer;
 	    const int    MaxIterations      = 100;
 
 	    //
@@ -379,7 +377,7 @@ double MpdHelix::pathLength(const TVector3 r,
     }
     else {
 //        const double MaxPrecisionNeeded = 0.000001;  // micrometer;
-        const double MaxPrecisionNeeded = micrometer;
+        const double MaxPrecisionNeeded = SI_units::micrometer;
         const int    MaxIterations      = 20;
         	
 	double A = mCurvature*((mOrigin - r)*n) -
@@ -497,8 +495,8 @@ MpdHelix::pathLengths(const MpdHelix& hh) const
 	// 
 //	const double MinStepSize = 0.001;  // 10*micrometer;
 //	const double MinRange    = 10.;  // 10*centimeter;    
-	const double MinStepSize = 10*micrometer;
-	const double MinRange    = 10*centimeter;    
+	const double MinStepSize = 10*SI_units::micrometer;
+	const double MinRange    = 10*SI_units::centimeter;    
 	double dmin              = hh.distance(at(s));
 	double range             = max(2*dmin, MinRange);
 	double ds                = range/10;
@@ -591,6 +589,3 @@ int operator!= (const MpdHelix& a, const MpdHelix& b) {return !(a == b);}
 // 	      << "origin = "     << h.origin()    << ')';
 // }
 // 
-
-
-

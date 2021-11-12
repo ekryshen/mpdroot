@@ -38,11 +38,10 @@ endif()
 #endif()
 
 include(FairMacros) # needed by find_package(ROOT)
-find_package(ROOT 0.0.0 REQUIRED)
+find_package(ROOT 0.0.0 REQUIRED) # 0.0.0 - minimal requested version of ROOT - bug in FindRoot.cmake by FairRoot
 find_package(FairRoot REQUIRED)
 find_package(FMT REQUIRED)
 find_package(FairLogger REQUIRED)
-find_package(CLHEP REQUIRED)
 find_package(Pythia8 REQUIRED)
 find_package(Boost REQUIRED)
 find_package(LibXml2 REQUIRED)
