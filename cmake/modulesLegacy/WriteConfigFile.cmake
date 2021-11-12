@@ -224,7 +224,7 @@ MACRO (WRITE_CONFIG_FILE filename)
 
   ELSE(${filename} MATCHES "[.]csh.*$")
     IF(FAIRROOTPATH)
-    configure_file(${PROJECT_SOURCE_DIR}/cmake/modules/config.sh.in
+    configure_file(${PROJECT_SOURCE_DIR}/cmake/modulesLegacy/config.sh.in
 	           ${CMAKE_CURRENT_BINARY_DIR}/${filename}
                   )
     ELSE(FAIRROOTPATH) 

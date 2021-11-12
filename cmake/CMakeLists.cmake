@@ -30,13 +30,6 @@ else()
   message(FATAL_ERROR "FAIRROOT_ROOT variable must be defined")
 endif()
 
-# if (DEFINED FMT_ROOT)
-#  list(APPEND CMAKE_MODULE_PATH "$ENV{FAIRROOT_ROOT}/share/fairbase/cmake/modules")
-#  set(FairRoot_DIR ${FAIRROOT_ROOT}) # needed by ROOTMacros.cmake
-#else()
-#  message(FATAL_ERROR "FMT_ROOT variable must be defined")
-#endif()
-
 include(FairMacros) # needed by find_package(ROOT)
 find_package(ROOT 0.0.0 REQUIRED) # 0.0.0 - minimal requested version of ROOT - bug in FindRoot.cmake by FairRoot
 find_package(FairRoot REQUIRED)
