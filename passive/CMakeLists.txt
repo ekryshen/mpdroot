@@ -7,11 +7,11 @@
  ################################################################################
 # Create a library called "libPassive" which includes the source files given in
 # the array .
-# The extension is already found.  Any number of sources could be listed here.
+# The extension is already found.  Any number of sources could be listed here.`
 
 Set(INCLUDE_DIRECTORIES
- ${BASE_INCLUDE_DIRECTORIES}
- ${CMAKE_SOURCE_DIR}/passive
+  ${BASE_INCLUDE_DIRECTORIES}
+  ${CMAKE_SOURCE_DIR}/passive
 )
 
 Include_Directories( ${INCLUDE_DIRECTORIES})

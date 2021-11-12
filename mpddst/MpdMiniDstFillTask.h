@@ -39,6 +39,7 @@
 class MpdEvent;
 class MpdKalmanTrack;
 class MpdVertex;
+class MpdTpcKalmanTrack;
 
 // MpdMiniDst headers
 class MpdMiniDst;

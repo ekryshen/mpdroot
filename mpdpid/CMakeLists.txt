@@ -4,14 +4,13 @@
 
 set(INCLUDE_DIRECTORIES
  ${BASE_INCLUDE_DIRECTORIES}
- ${CMAKE_SOURCE_DIR}/mcstack
  ${CMAKE_SOURCE_DIR}/mpdbase
- ${CMAKE_SOURCE_DIR}/kalman
- ${CMAKE_SOURCE_DIR}/lhetrack
- ${CMAKE_SOURCE_DIR}/tof
- ${CMAKE_SOURCE_DIR}/tpc
- ${CMAKE_SOURCE_DIR}/etof
- ${CMAKE_SOURCE_DIR}/mpdfield
+# ${CMAKE_SOURCE_DIR}/kalman
+# ${CMAKE_SOURCE_DIR}/lhetrack
+# ${CMAKE_SOURCE_DIR}/tof
+# ${CMAKE_SOURCE_DIR}/tpc
+# ${CMAKE_SOURCE_DIR}/etof
+# ${CMAKE_SOURCE_DIR}/mpdfield
  ${CMAKE_SOURCE_DIR}/mpdpid
 )
 
@@ -43,6 +42,6 @@ MpdPidQA.h
 )
 Set(LINKDEF MpdPidLinkDef.h)
 Set(LIBRARY_NAME MpdPid)
-Set(DEPENDENCIES Core Base Hist MpdMCStack MpdBase)
+Set(DEPENDENCIES Core Base Hist MpdBase)
 
 GENERATE_LIBRARY()

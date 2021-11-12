@@ -120,10 +120,16 @@ if (MPDROOT)
  endif (TDAQ_FOUND)
 endif (MPDROOT)
 
+if (DEFINED LIBXML2_LIBRARIES) # if we have found XML2 library using find_package, then use this found libxml2
+  SET(MY_XML2 ${LIBXML2_LIBRARIES})
+else()
+  SET(MY_XML2 xml2)
+endif()
+
 if (TDAQ_FOUND)
-  Set(DEPENDENCIES Base Eve Geom EG Physics Ged Gui Graf3d Tree Core xml2 emon emon-dal cmdline ipc owl omniORB4 omnithread ers)
+  Set(DEPENDENCIES Base Eve Geom EG Physics Ged Gui Graf3d Tree Core ${MY_XML2} emon emon-dal cmdline ipc owl omniORB4 omnithread ers)
 else (TDAQ_FOUND)
-  Set(DEPENDENCIES Base Eve Geom EG Physics Ged Gui Graf3d Tree Core xml2)
+  Set(DEPENDENCIES Base Eve Geom EG Physics Ged Gui Graf3d Tree Core ${MY_XML2})
 endif (TDAQ_FOUND)
 if (BMNROOT)
  Set(DEPENDENCIES BmnData Geane ${DEPENDENCIES})

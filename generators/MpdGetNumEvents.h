@@ -1,3 +1,5 @@
+#ifndef SRC_MPDROOT_GENERATORS_MPDGETNUMEVENTS_H_
+#define SRC_MPDROOT_GENERATORS_MPDGETNUMEVENTS_H_
 #include "TROOT.h"
 
 #ifndef __CLING__
@@ -50,3 +52,4 @@ class MpdGetNumEvents
 
     ClassDef(MpdGetNumEvents, 1);
 };
+#endif // #ifndef SRC_MPDROOT_GENERATORS_MPDGETNUMEVENTS_H_

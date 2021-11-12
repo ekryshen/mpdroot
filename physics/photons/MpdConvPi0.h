@@ -41,6 +41,8 @@
   };
 
 
+class MpdTpcKalmanTrack;
+
 class MpdConvPi0 : public MpdAnalysisTask {
 
   public : 
