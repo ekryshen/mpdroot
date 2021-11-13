@@ -6,9 +6,12 @@
  *		E-mail: daniel.wielanek@gmail.com
  *		Warsaw University of Technology, Faculty of Physics
  */
-#include "MpdHitsOnTheFly.h"
+#include "MpdTpcKalmanTrack.h"
+#include "MpdKalmanHit.h"
 
+#include "MpdHitsOnTheFly.h"
 #include "NicaDataManager.h"
+
 
 MpdHitsOnTheFly::MpdHitsOnTheFly() : fEvent(NULL), fKalmans(NULL), fMpdTpcHits(NULL), fHitMapSize(0), fHitMap(NULL) {}
 
