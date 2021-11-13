@@ -8,6 +8,7 @@
  */
 #include "MpdSharedHitMap.h"
 #include "MpdTpcHit.h"
+#include "MpdTpcKalmanTrack.h"
 #include "NicaDataManager.h"
 #include "TArray.h"
 #include "TObjArray.h"

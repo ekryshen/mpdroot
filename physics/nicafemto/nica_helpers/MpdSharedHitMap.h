@@ -14,6 +14,7 @@
 #include "MpdTrack.h"
 #include "TVector3.h"
 
+class MpdTpcKalmanTrack;
 
 class MpdSharedHitMap : public FairTask{
 	MpdEvent *fEvent;
