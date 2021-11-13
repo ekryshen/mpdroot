@@ -214,7 +214,7 @@ add_subdirectory (mpdbase)
 add_subdirectory (mpdfield)
 add_subdirectory (kalman) #MpdBase MpdField
 add_subdirectory (shield_pack)
-add_subdirectory (generators/unigen_format)
+# automatically loaded with generators add_subdirectory (generators/unigen_format)
 add_subdirectory (generators) # MpdMcDst
 add_subdirectory (mcstack) # MpdGen
 add_subdirectory (mpdpid) # MpdMCStack MpdBase
