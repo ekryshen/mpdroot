@@ -6,6 +6,14 @@
 #include "TMath.h"
 #include "TDatabasePDG.h"
 
+R__ADD_INCLUDE_PATH($VMCWORKDIR/generators/)
+R__ADD_INCLUDE_PATH($VMCWORKDIR/tpc/)
+R__ADD_INCLUDE_PATH($VMCWORKDIR/emc/)
+R__ADD_INCLUDE_PATH($VMCWORKDIR/zdc/)
+R__ADD_INCLUDE_PATH($VMCWORKDIR/ffd/)
+
+// R__ADD_INCLUDE_PATH($VMCWORKDIR/generators/)
+
 #include "FairRunSim.h"
 #include "FairRuntimeDb.h"
 #include "FairParRootFileIo.h"
@@ -36,7 +44,9 @@ R__LOAD_LIBRARY(libParBase)
 
 R__LOAD_LIBRARY(libEmc)
 
-R__ADD_INCLUDE_PATH("/var/home/busa/fair/MPDRoot")
+
+
+//R__ADD_INCLUDE_PATH("/var/home/busa/fair/MPDRoot")
 //#include "macro/mpd/mpdloadlibs.C"
 //#include "macro/mpd/geometry_stage1.C"
 //#include "macro/mpd/geometry_v2.C"
