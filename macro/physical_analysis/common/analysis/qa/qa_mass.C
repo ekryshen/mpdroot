@@ -1,12 +1,14 @@
 /*
- * qa.C
+ * qa_mass.C
  *
- *  Created on: 5 lis 2021
+ *  Created on: 16 lis 2021
  *      Author: dr Daniel Wielanek
  *      E-mail: daniel.wielanek at pw.edu.pl
  *      Warsaw University of Technology, Faculty of Physics
  *      JINR,  Laboratory of High Energy Physics
  */
+
+
 #if !defined(__CINT__) && !defined(__CLING__)
 #include "FairLogger.h"
 #include "FairRunAna.h"
@@ -33,54 +35,38 @@
 #endif
 
 /**
- * macro for processing "complex events", in complex events reconstructed data is represented by "real" part whereas simulated
- * data is presented by "imaginary" part To switch between "real" or "imaginary" fields, you should add NicaDataFieldID::ReStep
- * and NicaDataFieldID::ImStep. Otherwise "default" value will be presented (corresponds to real part). Note - not all fields are
- * supported:
- * List of supported enums:
- * - Works only with MC-data
- *  -#NicaDataFieldID::EMcEvent
- *  -#NicaDataFieldID::EMcTrack
- * - works only with reconstructed data
- *  -#NicaDataFieldID::EExpEvent
- *  -#NicaDataFieldID::EExpTrack
- * - works with any data
- *  -#NicaDataFieldID::ETrack
- *  -#NicaDataFieldID::EEvent
- * - works only with complex format
- *  -#NicaDataFieldID::EComplexEvent
- *  -#NicaDataFieldID::EComplexTrack
- *
- *
- *  To create www report use nica-report [root_file] [output_dir]
- *  Note: the histograms are blockedby CORS policy - you have to upload your directory to some web server or use some "simple
- * server" like "python -m SimpleHTTPServer 8069" to browse such site enter 0.0.0.0:8069
+ * example macro for processing many files stored in a text file with a list with full paths to file
+ * This code uses "complex events" in complex events reconstructed data is represented by "real" part whereas simulated data is
+ * presented by "imaginary" part
+ * See also qa.C
  */
-#define MINIDST  // process full-DST file if this line is removed
-
 
 NicaQAPlot GetEventQA();
 
 NicaQAPlot GetTrackQA();
-#ifdef MINIDST
-void qa(TString inFile = "$VMCWORKDIR/macro/mpd/mpddst.MiniDst.root", TString outFile = "qa.root") {
-  FairRunAna* ana          = new FairRunAna();
-  MpdMiniDstSource* source = new MpdMiniDstSource(inFile);
-#else
-void qa(TString inFile = "$VMCWORKDIR/macro/mpd/mpddst.root", TString outFile = "qa.root") {
-  FairRunAna* ana        = new FairRunAna();
-  FairFileSource* source = new FairFileSource(inFile);
-#endif
+
+void qa_mass(TString inFile = "lista.txt", TString outFile = "qaMass.root") {
+
+  FairRunAna* ana = new FairRunAna();
+  std::ifstream fileList;
+  fileList.open(inFile);
+  TString file;
+  fileList >> file;
+  cout << file << endl;
+  MpdMiniDstSource* source = new MpdMiniDstSource(file);
+  for (int i = 1; i < 100; i++) {
+    fileList >> file;
+    cout << file << endl;
+    source->AddFile(file);
+  }
 
   ana->SetSource(source);
   ana->SetOutputFile(outFile);
 
   NicaQATrackTask* trackTask = new NicaQATrackTask();
-#ifdef MINIDST
+
   trackTask->SetFormat(new NicaMpdMiniDstFullEvent());
-#else
-  trackTask->SetFormat(new NicaMpdDstMCEvent());
-#endif
+
   Double_t Centrality[4] = {0, 5, 9.10, 20};
   Int_t Pids[6]          = {211, -211, 321, -321, 2212, -2212};
 
