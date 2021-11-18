@@ -2,14 +2,6 @@
 
 set(INCLUDE_DIRECTORIES
  ${BASE_INCLUDE_DIRECTORIES}
- ${CMAKE_SOURCE_DIR}/mcstack
- ${CMAKE_SOURCE_DIR}/passive
- ${CMAKE_SOURCE_DIR}/mpdbase
- ${CMAKE_SOURCE_DIR}/mpddst
- ${CMAKE_SOURCE_DIR}/mpdfield
- ${CMAKE_SOURCE_DIR}/tpc
- ${CMAKE_SOURCE_DIR}/lhetrack
- ${CMAKE_SOURCE_DIR}/kalman
  ${CMAKE_SOURCE_DIR}/physics/femto/MpdFemtoMaker
  ${CMAKE_SOURCE_DIR}/physics/femto/MpdFemtoMakerUser
  ${CMAKE_SOURCE_DIR}/mpddst/mcDst
@@ -18,13 +10,9 @@ set(INCLUDE_DIRECTORIES
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
  ${ROOT_INCLUDE_DIR}
- ${GSL_INCLUDE_DIRS}
- ${CLHEP_INCLUDE_DIR}
- ${Boost_INCLUDE_DIRS}
 )
 
 include_directories(${INCLUDE_DIRECTORIES})
-Include_Directories(SYSTEM ${SYSTEM_INCLUDE_DIRECTORIES})
 
 set(LINK_DIRECTORIES
  ${ROOT_LIBRARY_DIR}
@@ -56,13 +44,12 @@ MpdFemtoFxtPairCutMonitor.cxx
 MpdFemtoFxtTrackCutMonitor.cxx
 MpdFemtoMiniDstReader.cxx
 MpdFemtoAverageSeparation.cxx
-        
 MpdFemtoModelCorrFctnMomResolution.cxx        
 )
 
 Set(HEADERS)
 Set(LINKDEF UserLinkDef.h)
 Set(LIBRARY_NAME MpdFemtoMakerUser)
-Set(DEPENDENCIES Core Base MpdBase MpdFemtoMaker MpdMcDst)
+Set(DEPENDENCIES MpdFemtoMaker MpdMcDst MpdMiniEvent)
 
 GENERATE_LIBRARY()

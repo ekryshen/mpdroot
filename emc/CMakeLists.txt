@@ -4,25 +4,21 @@
 
 set(INCLUDE_DIRECTORIES
  ${BASE_INCLUDE_DIRECTORIES}
- ${CMAKE_SOURCE_DIR}/mcstack
- ${CMAKE_SOURCE_DIR}/clustering
- ${CMAKE_SOURCE_DIR}/emc
- ${CMAKE_SOURCE_DIR}/emc/hitmaker
- ${CMAKE_SOURCE_DIR}/emc/clustering
- ${CMAKE_SOURCE_DIR}/emc/emcKI
- ${CMAKE_SOURCE_DIR}/tpc
- ${CMAKE_SOURCE_DIR}/kalman
- ${CMAKE_SOURCE_DIR}/lhetrack
- ${CMAKE_SOURCE_DIR}/mpdbase
+  ${CMAKE_SOURCE_DIR}/mcstack
+  ${CMAKE_SOURCE_DIR}/clustering
+  ${CMAKE_SOURCE_DIR}/emc
+  ${CMAKE_SOURCE_DIR}/emc/hitmaker
+  ${CMAKE_SOURCE_DIR}/emc/emcKI
+  ${CMAKE_SOURCE_DIR}/tpc
+  ${CMAKE_SOURCE_DIR}/kalman
+  ${CMAKE_SOURCE_DIR}/mpdbase
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
  ${ROOT_INCLUDE_DIR}
- ${Boost_INCLUDE_DIRS}
 )
 
 include_directories(${INCLUDE_DIRECTORIES})
-Include_Directories(SYSTEM ${SYSTEM_INCLUDE_DIRECTORIES})
 
 set(LINK_DIRECTORIES
  ${ROOT_LIBRARY_DIR}
@@ -79,6 +75,6 @@ emcKI/MpdEmcTrackExtrap.cxx
 Set(HEADERS)
 Set(LINKDEF MpdEmcLinkDef.h)
 Set(LIBRARY_NAME Emc)
-Set(DEPENDENCIES Cluster Core Base)
+Set(DEPENDENCIES)
 
 GENERATE_LIBRARY()

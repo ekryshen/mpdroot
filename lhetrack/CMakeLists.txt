@@ -2,33 +2,27 @@
 
 set(INCLUDE_DIRECTORIES
  ${BASE_INCLUDE_DIRECTORIES}
- ${CMAKE_SOURCE_DIR}/mcstack
- ${CMAKE_SOURCE_DIR}/passive
- ${CMAKE_SOURCE_DIR}/mpdbase
- ${CMAKE_SOURCE_DIR}/mpdfield 
- ${CMAKE_SOURCE_DIR}/tpc
- ${CMAKE_SOURCE_DIR}/kalman
- ${CMAKE_SOURCE_DIR}/tof
- ${CMAKE_SOURCE_DIR}/etof
- ${CMAKE_SOURCE_DIR}/strawendcap
- ${CMAKE_SOURCE_DIR}/sts
- ${CMAKE_SOURCE_DIR}/lhetrack
+  ${CMAKE_SOURCE_DIR}/mcstack
+  ${CMAKE_SOURCE_DIR}/mpdbase
+  ${CMAKE_SOURCE_DIR}/mpdfield 
+  ${CMAKE_SOURCE_DIR}/tpc
+  ${CMAKE_SOURCE_DIR}/kalman
+  ${CMAKE_SOURCE_DIR}/sts
+  ${CMAKE_SOURCE_DIR}/lhetrack
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
  ${ROOT_INCLUDE_DIR}
- ${Boost_INCLUDE_DIRS}
 )
 
 include_directories(${INCLUDE_DIRECTORIES})
-Include_Directories(SYSTEM ${SYSTEM_INCLUDE_DIRECTORIES})
 
 set(LINK_DIRECTORIES
  ${ROOT_LIBRARY_DIR}
  ${FAIRROOT_LIBRARY_DIR}
 )
 
-link_directories( ${LINK_DIRECTORIES})
+link_directories(${LINK_DIRECTORIES})
 
 # List of source files
 set(SRCS
@@ -46,7 +40,6 @@ set(SRCS
 #TpcLheKalmanTrack.cxx
 MpdTpcKalmanFilter.cxx
 MpdItsKalmanTrack.cxx
-
 MpdEctKalmanTrack.cxx
 #MpdEctTrackFinderTof.cxx
 #MpdEctTrackFinderTofTpc.cxx
@@ -84,7 +77,6 @@ set(HEADERS
 #TpcLheKalmanTrack.h
 MpdTpcKalmanFilter.h
 MpdItsKalmanTrack.h
-
 MpdEctKalmanTrack.h
 #MpdEctTrackFinderTof.h
 #MpdEctTrackFinderTofTpc.h
@@ -109,6 +101,6 @@ MpdItsToTpcMatching.h
 
 Set(LINKDEF LHETrackLinkDef.h)
 Set(LIBRARY_NAME LHETrack)
-Set(DEPENDENCIES Core Base Kalman Sts Tof MpdBase)
+Set(DEPENDENCIES Kalman MpdBase)
 
 GENERATE_LIBRARY()

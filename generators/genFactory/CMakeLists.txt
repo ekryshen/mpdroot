@@ -4,8 +4,8 @@ ${BASE_INCLUDE_DIRECTORIES}
  ${CMAKE_SOURCE_DIR}/generators/genFactory
  ${CMAKE_SOURCE_DIR}/shield_pack/THadgen/inc
  ${CMAKE_SOURCE_DIR}/shield_pack/hadgen/inc
- ${CMAKE_SOURCE_DIR}/macro/mpd
- ${CMAKE_SOURCE_DIR}
+ ${CMAKE_SOURCE_DIR}/macro/mpd # needed to load loadlibs.C
+ ${CMAKE_SOURCE_DIR} # needed to find gconfig/basiclibs.C
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
@@ -14,7 +14,6 @@ Set(SYSTEM_INCLUDE_DIRECTORIES
 )
 
 include_directories(${INCLUDE_DIRECTORIES})
-Include_Directories(SYSTEM ${SYSTEM_INCLUDE_DIRECTORIES})
 
 set(LINK_DIRECTORIES
  ${ROOT_LIBRARY_DIR}
@@ -31,6 +30,6 @@ MpdGeneratorsFactory.cxx
 Set(HEADERS)
 Set(LINKDEF LinkDefFactory.h)
 Set(LIBRARY_NAME MpdGenFactory)
-Set(DEPENDENCIES Core Base MpdGen)
+Set(DEPENDENCIES)
 
 GENERATE_LIBRARY()

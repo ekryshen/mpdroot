@@ -63,31 +63,26 @@ set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
 # the project's entire directory structure.
 # LEVEL 1
 add_subdirectory (passive) # INDEPENDENT
-add_subdirectory (mpdbase) # CLHEP
+add_subdirectory (mpdbase) # INDEPENDENT
 add_subdirectory (mpdfield) # INDEPENDENT
 add_subdirectory (shield_pack) # INDEPENDENT
 add_subdirectory (clustering) # INDEPENDENT
-add_subdirectory (etof) # BOOST
-add_subdirectory (zdc) # BOOST
-add_subdirectory (ffd) # BOOST
-add_subdirectory (sts) # BOOST
-add_subdirectory (bmd) # BOOST
-add_subdirectory (mcord) # BOOST
+add_subdirectory (etof) # INDEPENDENT
+add_subdirectory (zdc) # INDEPENDENT
+add_subdirectory (ffd) # INDEPENDENT
+add_subdirectory (sts) # INDEPENDENT
+add_subdirectory (bmd) # INDEPENDENT
+add_subdirectory (mcord) # INDEPENDENT
+add_subdirectory (emc) # INDEPENDENT
+add_subdirectory (mpdpid) # INDEPENDENT
+add_subdirectory (tof) # INDEPENDENT
+add_subdirectory (mpddst) # Base
+add_subdirectory (generators) # INDEPENDENT
+add_subdirectory (mcstack) # INDEPENDENT
 # LEVEL 2
-add_subdirectory (emc) # clustering BOOST
-add_subdirectory (kalman) # mpdbase mpdfield
-add_subdirectory (mpdpid) # mpdbase
-# LEVEL 3
-add_subdirectory (tof) # kalman
-add_subdirectory (eventdisplay) # emc xml2
-# LEVEL 4
 add_subdirectory (tpc) # tof
-add_subdirectory (lhetrack) # mpdbase kalman sts tof
-# LEVEL 5
-add_subdirectory (mpddst) # mpdbase lhetrack mpdpid BOOST
-# LEVEL 6
-add_subdirectory (generators) # mpddst generators/unigen_format
-# LEVEL 7
-add_subdirectory (mcstack) # generators
-# LEVEL 8
-add_subdirectory (physics) # mpdbase mpddst generators mcstack kalman mpdpid lhetrack top mpdfield
+add_subdirectory (kalman) # mpdfield
+add_subdirectory (physics) # mpdbase mpddst
+# LEVEL 3
+add_subdirectory (eventdisplay) # emc xml2 TODO - remove dependencies on root configuration
+add_subdirectory (lhetrack) # mpdbase kalman

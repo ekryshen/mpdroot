@@ -8,7 +8,6 @@ Set(SYSTEM_INCLUDE_DIRECTORIES
 )
 
 include_directories(${INCLUDE_DIRECTORIES})
-Include_Directories(SYSTEM ${SYSTEM_INCLUDE_DIRECTORIES})
 
 set(LINK_DIRECTORIES
  ${ROOT_LIBRARY_DIR}
@@ -28,9 +27,9 @@ Set(HEADERS
   URun.h
 )
 
-#Set(HEADERS)
+Set(HEADERS)
 Set(LINKDEF UniGenLinkDef.h)
 Set(LIBRARY_NAME UniGenFormat)
-Set(DEPENDENCIES MathCore RIO Hist Tree Net EG Physics Core)
+Set(DEPENDENCIES Core)
 
 GENERATE_LIBRARY()

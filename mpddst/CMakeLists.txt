@@ -6,20 +6,18 @@ add_subdirectory(MpdMiniEvent)
 
 set(INCLUDE_DIRECTORIES
  ${BASE_INCLUDE_DIRECTORIES}
- ${CMAKE_SOURCE_DIR}/mcstack
- ${CMAKE_SOURCE_DIR}/mpdbase
- ${CMAKE_SOURCE_DIR}/mpdfield
- ${CMAKE_SOURCE_DIR}/tpc
- ${CMAKE_SOURCE_DIR}/tof
- ${CMAKE_SOURCE_DIR}/emc
- ${CMAKE_SOURCE_DIR}/emc/emcKI
- ${CMAKE_SOURCE_DIR}/etof
- ${CMAKE_SOURCE_DIR}/kalman
- ${CMAKE_SOURCE_DIR}/lhetrack
- ${CMAKE_SOURCE_DIR}/mpdpid
- ${CMAKE_SOURCE_DIR}/zdc
- ${CMAKE_SOURCE_DIR}/mpddst
- ${CMAKE_SOURCE_DIR}/mpddst/MpdMiniEvent
+  ${CMAKE_SOURCE_DIR}/mcstack
+  ${CMAKE_SOURCE_DIR}/mpdbase
+  ${CMAKE_SOURCE_DIR}/mpdfield
+  ${CMAKE_SOURCE_DIR}/tpc
+  ${CMAKE_SOURCE_DIR}/tof
+  ${CMAKE_SOURCE_DIR}/emc/emcKI
+  ${CMAKE_SOURCE_DIR}/kalman
+  ${CMAKE_SOURCE_DIR}/lhetrack
+  ${CMAKE_SOURCE_DIR}/mpdpid
+  ${CMAKE_SOURCE_DIR}/zdc
+  ${CMAKE_SOURCE_DIR}/mpddst
+  ${CMAKE_SOURCE_DIR}/mpddst/MpdMiniEvent
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
@@ -41,23 +39,11 @@ set(SRCS
  MpdFillDstTask.cxx
  MpdMiniDstFillTask.cxx
  MpdDstCompressTask.cxx
- MpdMiniEvent/MpdMiniBECalCluster.cxx
- MpdMiniEvent/MpdMiniBTofHit.cxx
- MpdMiniEvent/MpdMiniBTofPidTraits.cxx
- MpdMiniEvent/MpdMiniDstReader.cxx
- MpdMiniEvent/MpdMiniEvent.cxx
- MpdMiniEvent/MpdMiniFHCalHit.cxx
- MpdMiniEvent/MpdMiniHelix.cxx
- MpdMiniEvent/MpdMiniMcEvent.cxx
- MpdMiniEvent/MpdMiniMcTrack.cxx
- MpdMiniEvent/MpdMiniPhysicalHelix.cxx
- MpdMiniEvent/MpdMiniTrack.cxx
- MpdMiniEvent/MpdMiniTrackCovMatrix.cxx
 )
 
 Set(HEADERS)
 Set(LINKDEF MpdDstLinkDef.h)
 Set(LIBRARY_NAME MpdDst)
-Set(DEPENDENCIES Core Base MpdBase LHETrack MpdPid MpdMiniEvent)
+Set(DEPENDENCIES MpdMiniEvent)
 
 GENERATE_LIBRARY()

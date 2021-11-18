@@ -12,7 +12,6 @@ set(INCLUDE_DIRECTORIES
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
  ${ROOT_INCLUDE_DIR}
- ${Boost_INCLUDE_DIRS}
 )
 
 include_directories(${INCLUDE_DIRECTORIES})
@@ -32,10 +31,8 @@ set(SRCS
 )
 
 Set(HEADERS)
-
-
 Set(LINKDEF PhotonsLinkDef.h)
 Set(LIBRARY_NAME MpdPhotons)
-Set(DEPENDENCIES MpdBase MpdMCStack Kalman MpdPid LHETrack Physics)
+Set(DEPENDENCIES)
 
 GENERATE_LIBRARY()

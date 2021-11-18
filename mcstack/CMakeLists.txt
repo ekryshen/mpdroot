@@ -3,10 +3,8 @@
 # The extension is already found.  Any number of sources could be listed here.
 
 set(INCLUDE_DIRECTORIES
-  ${ROOT_INCLUDE_DIR}
-  ${Boost_INCLUDE_DIRS}
   ${BASE_INCLUDE_DIRECTORIES}
-  ${CMAKE_SOURCE_DIR}/mcstack 
+  ${CMAKE_SOURCE_DIR}/mcstack
   ${CMAKE_SOURCE_DIR}/generators 
 )
 
@@ -32,6 +30,6 @@ MpdDetectorList.h
 
 Set(LINKDEF MpdMCStackLinkDef.h)
 Set(LIBRARY_NAME MpdMCStack)
-Set(DEPENDENCIES Base EG Physics Core MpdGen)
+Set(DEPENDENCIES)
 
 GENERATE_LIBRARY()
