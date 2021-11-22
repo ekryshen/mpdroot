@@ -1151,7 +1151,7 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
 	} else fMethod = kTRUE;
 	
 	if ( !( (Generator == "LAQGSM") || (Generator == "QGSM") || (Generator == "URQMD") || (Generator == "NSIG") || (Generator == "PHSD") || (Generator == "EPOS") || (Generator == "PHSD_CENT") || (Generator == "PHSD_CSR") || (Generator == "PHSD_NOCSR") || (Generator == "PHQMD") ) ) {
-		cout << "Incorrect generator string! Switching to DEFAULT..." << endl;
+		cout << "Incorrect generator string (" << Generator << ")! Switching to DEFAULT..." << endl;
 		Generator = "DEFAULT";
 	}
 	
