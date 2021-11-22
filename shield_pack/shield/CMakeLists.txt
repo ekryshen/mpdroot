@@ -10,7 +10,7 @@ Set(LINK_DIRECTORIES
  
 Link_Directories(${LINK_DIRECTORIES})
 
-set(SHIELD_SRCS
+set(SRCS
     src/shield_decode_tree.c 
     src/shield_geo.c 
     src/shield_init.c 
@@ -35,6 +35,7 @@ set(SHIELD_SRCS
     src/Output.f
 )
 
-add_library(SHIELD SHARED ${SHIELD_SRCS})
-target_link_libraries(SHIELD HADGEN)
+Set(LIBRARY_NAME SHIELD)
+Set(DEPENDENCIES HADGEN)
 
+GENERATE_LIBRARY()
