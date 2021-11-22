@@ -1,18 +1,11 @@
-// #if !defined(__CINT__) && !defined(__CLING__)
+R__ADD_INCLUDE_PATH($VMCWORKDIR)
+
 #include "TString.h"
 #include "TStopwatch.h"
 #include "TROOT.h"
 #include "TSystem.h"
 #include "TMath.h"
 #include "TDatabasePDG.h"
-
-R__ADD_INCLUDE_PATH($VMCWORKDIR/generators/)
-R__ADD_INCLUDE_PATH($VMCWORKDIR/tpc/)
-R__ADD_INCLUDE_PATH($VMCWORKDIR/emc/)
-R__ADD_INCLUDE_PATH($VMCWORKDIR/zdc/)
-R__ADD_INCLUDE_PATH($VMCWORKDIR/ffd/)
-
-// R__ADD_INCLUDE_PATH($VMCWORKDIR/generators/)
 
 #include "FairRunSim.h"
 #include "FairRuntimeDb.h"
@@ -38,18 +31,6 @@ R__ADD_INCLUDE_PATH($VMCWORKDIR/ffd/)
 
 #include <iostream>
 using namespace std;
-// #endif
-
-R__LOAD_LIBRARY(libParBase)
-
-R__LOAD_LIBRARY(libEmc)
-
-
-
-//R__ADD_INCLUDE_PATH("/var/home/busa/fair/MPDRoot")
-//#include "macro/mpd/mpdloadlibs.C"
-//#include "macro/mpd/geometry_stage1.C"
-//#include "macro/mpd/geometry_v2.C"
 
 #include "geometry_stage1.C"
 
@@ -62,7 +43,7 @@ R__LOAD_LIBRARY(libEmc)
 // outFile - output file with MC data, default: evetest.root
 // flag_store_FairRadLenPoint
 // FieldSwitcher: 0 - corresponds to the ConstantField (0, 0, 5) kG (It is used by default); 1 - corresponds to the FieldMap ($VMCWORKDIR/input/B-field_v2.dat)
-void newRunMC(TString inFile = "auau.04gev.0_3fm.10k.f14.gz", TString outFile = "evetest.root", Int_t nStartEvent = 0, Int_t nEvents = 2,
+void runMC(TString inFile = "auau.04gev.0_3fm.10k.f14.gz", TString outFile = "evetest.root", Int_t nStartEvent = 0, Int_t nEvents = 2,
         Bool_t flag_store_FairRadLenPoint = kFALSE, Int_t FieldSwitcher = 0)
 {
     TStopwatch timer;
@@ -313,7 +294,6 @@ void newRunMC(TString inFile = "auau.04gev.0_3fm.10k.f14.gz", TString outFile = 
     TString Pdg_table_name = TString::Format("%s%s%c%s", gSystem->BaseName(inFile.Data()), ".g", (fRun->GetName())[6], ".pdg_table.dat");
     (TDatabasePDG::Instance())->WritePDGTable(Pdg_table_name.Data());
 #endif
-
     timer.Stop();
     Double_t rtime = timer.RealTime(), ctime = timer.CpuTime();
     printf("RealTime=%f seconds, CpuTime=%f seconds\n", rtime, ctime);

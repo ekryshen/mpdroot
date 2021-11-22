@@ -70,3 +70,12 @@ macro/mpd/mpddst.root
 
 doxygen/html/*
 doxygen/latex/*
+
+# Don't put to git files from macros except for given few
+/macros/*
+/macros/common/*
+!/macros/common/
+!/macros/common/geometry_stage1.C
+!/macros/common/readDST.C
+!/macros/common/runMC.C
+!/macros/common/runReco.C

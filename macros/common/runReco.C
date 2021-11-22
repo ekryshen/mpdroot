@@ -1,5 +1,6 @@
+R__ADD_INCLUDE_PATH($VMCWORKDIR)
+
 #include <Rtypes.h>
-#if !defined(__CINT__) && !defined(__CLING__)
 // ROOT includes
 #include "TString.h"
 #include "TStopwatch.h"
@@ -7,12 +8,12 @@
 #include "TChain.h"
 
 // Fair includes
-#include "FairRunAna.h"
 #include "FairFileSource.h"
 #include "FairRuntimeDb.h"
 #include "FairParRootFileIo.h"
 #include "FairTask.h"
 #include "FairField.h"
+#include "FairRunAna.h"
 
 // MPD includes
 #include "MpdTpcHitProducer.h"
@@ -27,24 +28,31 @@
 #include "MpdFfdHitProducer.h"
 #include "MpdTofHitProducer.h"
 #include "MpdEtofHitProducer.h"
-#include "MpdEctTrackFinderTpc.h"
-#include "MpdEctTrackFinderTof.h"
-#include "MpdEctTrackFinderCpc.h"
 #include "MpdTofMatching.h"
 #include "MpdZdcDigiProducer.h"
 #include "MpdEtofMatching.h"
 #include "MpdFillDstTask.h"
 #include "MpdGetNumEvents.h"
 #include "MpdEmcHitCreation.h"
+#include "MpdPid.h"
 
 #include <iostream>
 using namespace std;
-#endif
-
-R__ADD_INCLUDE_PATH($VMCWORKDIR)
-#include "macro/mpd/mpdloadlibs.C"
 
 #define UseMlem  // Choose: UseMlem HitProducer
+
+// check whether file exists
+bool CheckFileExist(TString& fileName)
+{
+    gSystem->ExpandPathName(fileName);
+    if (gSystem->AccessPathName(fileName.Data()) == true)
+    {
+        cout<<endl<<"no specified file: "<<fileName<<endl;
+        return false;
+    }
+
+    return true;
+}
 
 // Macro for running reconstruction:
 // inFile - input file with MC data, default: evetest.root
@@ -57,7 +65,8 @@ R__ADD_INCLUDE_PATH($VMCWORKDIR)
 //      "proof:user@proof.server:21001" - to run on the PROOF cluster created with PoD (under user 'MPD', default port - 21001)
 //      "proof:user@proof.server:21001:workers=10" - to run on the PROOF cluster created with PoD with 10 workers (under USER, default port - 21001)
 //	nc-farm : proof:mpd@nc10.jinr.ru:21001
-void reco(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outFile = "mpddst.root", Int_t nStartEvent = 0, Int_t nEvents = 10, TString run_type = "local") {
+void runReco(TString inFile = "evetest.root", TString outFile = "mpddst.root", Int_t nStartEvent = 0, Int_t nEvents = 10, TString run_type = "local") {
+
     // ========================================================================
     // Verbosity level (0=quiet, 1=event level, 2=track level, 3=debug)
     Int_t iVerbose = 0;

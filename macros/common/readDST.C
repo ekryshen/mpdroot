@@ -5,7 +5,7 @@
 #include <TClonesArray.h>
 #include <TStopwatch.h>
 
-void newReadDST(TString in = "") {
+void readDST(TString in = "") {
     if (in.IsNull()) {
         cout << "Please, provide an input DST-file!" << endl;
         return;
