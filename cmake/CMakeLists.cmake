@@ -30,11 +30,25 @@ else()
   message(FATAL_ERROR "FAIRROOT_ROOT variable must be defined")
 endif()
 
+if (DEFINED GEANT3_ROOT)
+  set(ENV{Geant3_DIR} ${GEANT3_ROOT}) # needed by FindGeant3.cmake
+else()
+  if (NOT ENV{Geant3_DIR})
+    message(FATAL_ERROR "Error, GEANT3_ROOT or Geant3_DIR has to be set")
+  endif()
+endif()
+
+if (NOT DEFINED FAIRLOGGER_ROOT)
+  if (NOT DEFINED ENV{FAIRLOGGER_ROOT})
+    message(FATAL_ERROR "Error, FAIRLOGGER_ROOT has to be set")
+  endif()
+endif()
+
 include(FairMacros) # needed by find_package(ROOT)
 find_package(ROOT 0.0.0 REQUIRED) # 0.0.0 - minimal requested version of ROOT - bug in FindRoot.cmake by FairRoot
 find_package(FairRoot REQUIRED)
-find_package(FMT REQUIRED)
 find_package(FairLogger REQUIRED)
+find_package(FMT REQUIRED)
 find_package(Pythia8 REQUIRED)
 find_package(Boost REQUIRED)
 find_package(LibXml2 REQUIRED)
@@ -43,7 +57,7 @@ find_package(Geant3 REQUIRED)
 #set(BASE_INCLUDE_DIRECTORIES ${BASE_INCLUDE_DIRECTORIES} ${SIMPATH}/include/root ${SIMPATH}/include/vmc)
 #list(APPEND BASE_INCLUDE_DIR ${ROOT_INCLUDE_DIR} ${FAIRROOT_INCLUDE_DIR} ${FairLogger_INCDIR} "${FMT_ROOT}/include")
 list(APPEND BASE_INCLUDE_DIR ${ROOT_INCLUDE_DIR} ${FAIRROOT_INCLUDE_DIR} ${FairLogger_INCDIR} ${FMT_INCLUDE_DIRS}
-                             ${CLHEP_INCLUDE_DIRS} ${PYTHIA8_INCLUDE_DIR} ${Boost_INCLUDE_DIRS}
+                             ${PYTHIA8_INCLUDE_DIR} ${Boost_INCLUDE_DIRS}
                              ${LIBXML2_INCLUDE_DIRS} ${Geant3_INCLUDE_DIRS}
                              )
 list(APPEND BASE_LIBRARY_DIR ${ROOT_LIB_DIR} ${FAIRROOT_LIB_DIR} ${FairLogger_LIBDIR} ${LIBXML2_LIBRARIES})
@@ -56,7 +70,8 @@ set(BASE_LIBRARY_DIRECTORIES ${BASE_LIBRARY_DIR})
 set(MPDROOT TRUE) # this 2 lines are necessary to build eventdisplay
 add_definitions(-DMPDROOT)
 
-set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
+set(CMAKE_INSTALL_LIBDIR "lib")
+set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
 
 # Recurse into the given subdirectories. This does not actually
 # cause another cmake executable to run. The same process will walk through
@@ -86,3 +101,9 @@ add_subdirectory (physics) # mpdbase mpddst
 # LEVEL 3
 add_subdirectory (eventdisplay) # emc xml2 TODO - remove dependencies on root configuration
 add_subdirectory (lhetrack) # mpdbase kalman
+
+INSTALL(DIRECTORY gconfig DESTINATION ${CMAKE_INSTALL_PREFIX})
+INSTALL(DIRECTORY input DESTINATION ${CMAKE_INSTALL_PREFIX})
+INSTALL(DIRECTORY geometry DESTINATION ${CMAKE_INSTALL_PREFIX})
+INSTALL(DIRECTORY macros DESTINATION ${CMAKE_INSTALL_PREFIX})
+INSTALL(FILES etc/env.sh DESTINATION ${CMAKE_INSTALL_PREFIX}/etc)
