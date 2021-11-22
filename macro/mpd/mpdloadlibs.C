@@ -18,7 +18,7 @@ void mpdloadlibs()
   /** Load MpdRoot libraries **/
   // Base
   gSystem->Load("libMpdBase");
-  gSystem->Load("libMCStack");
+  gSystem->Load("libMpdMCStack");
   gSystem->Load("libMpdField");
   gSystem->Load("libPassive");
   gSystem->Load("libUniGenFormat");
@@ -35,9 +35,6 @@ void mpdloadlibs()
   gSystem->Load("libEmc");
   gSystem->Load("libZdc");
   gSystem->Load("libSts");
-  gSystem->Load("libCpc");
-  gSystem->Load("libStrawECT");
-  gSystem->Load("libStrawendcap");
   gSystem->Load("libFfd");
   //gSystem->Load("libFsa");
   //gSystem->Load("libBbc");
