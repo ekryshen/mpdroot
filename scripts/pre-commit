@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# Git pre-commit hook
+# Copy the script to .git/hooks and make it executable by running
+# chmod u+x pre-commit
+#
+# Written for MPDRoot @JINR Dubna
+# First commit Slavomir Hnatic, 11.2021
+
+######################################################################
+######################### Functionality ##############################
+###                                                                ###
+### 1. If there is a clang-format version match, then applies      ###
+###    clang-format to all staged files with c++ file suffix       ###
+###								   ###
+### 2. If clang-format version is different than required          ###
+###    then attempts to run using pipx from remote server          ###
+###    (you must have pipx installed for that)                     ###
+###                                                                ###
+### 3. If there is no clang-format with required version and no    ###
+###    pipx, asks user to install one of them                      ###
+###								   ###
+###  IMPORTANT: Clang-format major versions must be identical !!!  ###
+###         (different versions produce different results)         ###
+###                                                                ###
+######################################################################
+
+REQUIRED_VERSION="13.0.0"
+CLANG_FORMAT_BIN=$(command -v clang-format)
+CLANG_STYLE=file
+
+# if clang-format is installed, check if its version is correct
+if [[ -n $CLANG_FORMAT_BIN ]]; then
+ VERSION=$($CLANG_FORMAT_BIN --version | awk '{print $3}')
+ if [[ $VERSION != $REQUIRED_VERSION ]]; then
+  echo "Installed clang-format version ($VERSION) does not match required version ($REQUIRED_VERSION)!"
+  CLANG_FORMAT_BIN=""
+ fi
+fi
+
+# if there is no installed required version of clang-format, check if pipx is installed
+if [[ -z $CLANG_FORMAT_BIN ]] && [[ -n $(command -v pipx) ]]; then
+  CLANG_FORMAT_BIN="pipx run --spec clang-format==$REQUIRED_VERSION clang-format"
+fi
+
+# do the formatting, or ask the user to install required package
+if [[ -n $CLANG_FORMAT_BIN ]]; then
+ for FILE in $(git diff --cached --name-only | grep -E '.*\.(h|hpp|c|cpp|cxx)$'); do
+  $CLANG_FORMAT_BIN -i --style=$CLANG_STYLE $FILE
+ done
+else
+ echo -e "\n YOUR CHANGES CANNOT BE FORMATTED\n\n Please install clang-format version $REQUIRED_VERSION.
+ If clang-format version $REQUIRED_VERSION is unavailable for your system, then\n
+ install pipx either as a package or by installing pip package and running:\n\n
+ python3 -m pip install --user pipx\n python3 -m pipx ensurepath\n"
+fi
+
