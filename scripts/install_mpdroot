@@ -24,14 +24,17 @@ else
  if [ "$1" == "--developer" ]; then
   git clone -b dev --recursive git@git.jinr.ru:nica/mpdroot.git 
  else
-  echo "Only --regular or --developer allowed as first parameter! Terminating...\n"
+  echo -e "Only --regular or --developer allowed as first parameter! Terminating...\n"
   exit 1 
  fi
 fi
 
-
 # assign input parameters to variables
 cpu_threads=$2
+
+# add clang pre-commit hook
+cp scripts/pre-commit .git/hooks/
+chmod u+x .git/hooks/pre-commit
 
 # linking with local Fair suite installation
 cd mpdroot
