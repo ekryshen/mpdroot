@@ -181,6 +181,7 @@ deploy:centos7:
   <<: *deploy
 
 codeOwners:
+    image: fedora:35
     stage: codeOwners
     before_script:
         - echo "Skipping global before_script."
@@ -190,7 +191,7 @@ codeOwners:
         variables:
             - $CI_MERGE_REQUEST_PROJECT_PATH == "nica/mpdroot" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"
     script:
-        # stable and tested versions of these packages must be put into base docker image later on
-        # this is to avoid potential errors in the future related to their installation
-        - apk update && apk add bash curl
+        - dnf install util-linux clang-tools-extra -y
         - chmod +x scripts/inform_codeowners.sh && scripts/inform_codeowners.sh
+        - chmod +x scripts/check_clangFormatting.sh && scripts/check_clangFormatting.sh
+
