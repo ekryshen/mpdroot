@@ -254,10 +254,6 @@ SET(VMCWORKDIR ${CMAKE_INSTALL_PREFIX})
 SET(ROOT_INCLUDE_PATH ${CMAKE_INSTALL_PREFIX}/include ${ROOT_INCLUDE_PATH})
 WRITE_CONFIG_FILE(install_config.sh)
 
-configure_file(${CMAKE_SOURCE_DIR}/CTestCustom.cmake 
-               ${CMAKE_BINARY_DIR}/CTestCustom.cmake
-              )
-
 # Summary ######################################################################
 if(CMAKE_CXX_FLAGS)
   message(STATUS "  ")
