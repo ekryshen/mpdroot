@@ -15,8 +15,11 @@ and
 Look for your OS in the link below to install required dependencies  
 [Dependencies link](https://github.com/FairRootGroup/FairSoft/blob/master/legacy/dependencies.md)
 
-Additionally development package for fftw3 library is required to install MpdRoot
-(fftw3-devel for RedHat based OS, fftw3-dev for Debian based OS)
+Additionally:  
+- development package for fftw3 library is required to install MpdRoot
+(fftw3-devel for RedHat based OS, fftw3-dev for Debian based OS)  
+- clang-format version 13.0.0 (make sure you install only this version) is required to install if you are a developer:   
+if version 13.0.0 is unavailable for your linux distro, then install pipx [pipx installation instructions](https://pypa.github.io/pipx/installation/)  
 
 NOTE: If you are new user we strongly suggest you install FairSoft and FairRoot by copying the [scripts/install_fairApr21](https://git.jinr.ru/nica/mpdroot/-/raw/dev/scripts/install_fairApr21?inline=false) to your $HOMEDIR
 and run:  
@@ -159,6 +162,13 @@ Source the environment file
 ```
 cd mpdroot
 . SetEnv.sh
+```
+
+Add pre-commit hook for	automatic file formatting
+
+```
+cp scripts/pre-commit .git/hooks/
+chmod u+x .git/hooks/pre-commit
 ```
 
 Create & enter local build dir, run cmake config
