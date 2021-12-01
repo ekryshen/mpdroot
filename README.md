@@ -15,41 +15,39 @@ and
 Look for your OS in the link below to install required dependencies  
 [Dependencies link](https://github.com/FairRootGroup/FairSoft/blob/master/legacy/dependencies.md)
 
-Additionally:  
-- development package for fftw3 library is required to install MpdRoot
-(fftw3-devel for RedHat based OS, fftw3-dev for Debian based OS)  
-- clang-format version 13.0.0 (make sure you install only this version) is required to install if you are a developer:   
-if version 13.0.0 is unavailable for your linux distro, then install pipx [pipx installation instructions](https://pypa.github.io/pipx/installation/)  
+Additional MPDroot dependencies:  
+- fftw3-devel, eigen3-devel, gtest-dev packages for RedHat based OS or fftw3-dev, libeigen3-dev, libgtest-devel for Debian based OS  
+- clang-format version 13.0.0 (this version only) is required to run formatting checks if you are a developer:   
+if version 13.0.0 is unavailable for your linux distro, then install pipx package available for both Red Hat and Debian based OS.  
+(Note: some Debian based OS have lousy pipx support, so you must install additionally python3.8-venv, then run  
+ 'pipx ensurepath && pipx install clang-format==13.0.0')  
 
-NOTE: If you are new user we strongly suggest you install FairSoft and FairRoot by copying the [scripts/install_fairApr21](https://git.jinr.ru/nica/mpdroot/-/raw/dev/scripts/install_fairApr21?inline=false) to your $HOMEDIR
+### Automatic Installation
+
+We advise (if you are new user, we strongly suggest) to install FairSoft/FairRoot/MpdRoot by copying the [scripts/install_fair_mpdroot.sh](https://git.jinr.ru/nica/mpdroot/-/raw/dev/scripts/install_fair_mpdroot.sh?inline=false) to your $HOMEDIR
 and run:  
 ```
-chmod +x install_fairApr21
-./install_fairApr21 ~/fairApr21 8
+chmod +x install_fair_mpdroot.sh && ./install_fair_mpdroot.sh
 ```
-- parameter ~/fairApr21 is the directory where your local installation of FairSoft/FairRoot will be located  
-- parameter 8 is the number of cpu_threads used in compilation  
-(you can of course, replace these by your own values)  
-- cloned FairSoft/FairRoot repositories and their builds will be located in fair_build directory  
+or if you are a developer then
+```
+chmod +x install_fair_mpdroot.sh && ./install_fair_mpdroot.sh -u developer
+```
+  
 
-Proceed with installation of MpdRoot by copying [scripts/install_mpdroot](https://git.jinr.ru/nica/mpdroot/-/raw/dev/scripts/install_mpdroot?inline=false) to your $HOMEDIR and run:  
-```
-chmod +x install_mpdroot
-./install_mpdroot --developer 8
-```
-if you are a developer with ssh access or:  
-```
-chmod +x install_mpdroot
-./install_mpdroot --regular 8
-```
-if you are a regular user.  
-Again 8 is the number of cpu_threads used in compilation.  
+This script will perform automatic installation of FairSoft vApr21, FairRoot v18.6.4 and mpdroot. The default parameters are (flags to switch are in quotation marks):  
+- regular user: change with '-u developer'
+- fair suite installation directory ~/fairSuite: change with '-f path_to_dir'
+- mpdroot installation directory ~/mpd: change with '-m path_to_dir'
+- don't skip fair suite installation: change with '-s yes' 
+- working directory for fair suite build ~/fair_build: change with '-w path_to_dir'
+- mpdroot cloned repository directory ~/mpdroot: change with '-r path_to_dir'
+- 8 cpu threads used during compilation: change with '-j number_of_threads'
 
-Once the script succeeds, your installation will be located in mpdroot directory.  
 If the script fails, please email the output to hnatics@jinr.ru   
 
-The above installation procedure was tested to work with the following OS (as of October 27th 2021):  
-CentOS 7, Fedora 34, Fedora 35 beta, Ubuntu 20.04, Linux Mint 20.2, Pop!_OS 21.04  
+The above installation procedure was tested to work with the following OS (as of December 5th 2021):  
+CentOS 7, Fedora 34, Fedora 35, Ubuntu 20.04, Linux Mint 20.2, Pop!_OS 21.04  
 
 #### NOTE: When using MPDRoot SetEnv.sh and config.sh must be invoked in each new terminal by
 ```
@@ -59,131 +57,6 @@ alternatively, you can  add this line to your ~/.bashrc file, if you don't want 
 
 
 ## Manual Install
-  (Advanced users)  
+For advanced users only, click on the following link:  
+[Explanation of automatic installation procedure in steps](https://git.jinr.ru/nica/mpdroot/-/wikis/Manual-Installation-of-Fair-Suite-and-MPDroot)
   
-The FairSoft, FairRoot and MpdRoot installation steps below are explanation of the installation procedure from the above scripts  
-
-### Install FairSoft 
-
-Set installation directory  
-```
-export fair_dir=~/fairApr21  
-```
-Set number of cpu threads used in compilation  
-```
-export cpu_threads=8
-```
-Set working directory for builds  
-```
-export work_dir=~/fair_build
-```
-Create and enter working directory  
-```
-mkdir $work_dir && cd $work_dir
-```
-Clone FairSoft apr21p1 release into working dir, create & enter build directory, run cmake configuration  
-```
-git clone -b apr21p1 https://github.com/FairRootGroup/FairSoft.git FairSoft  
-cd FairSoft && mkdir build && cd build
-cmake -DCMAKE_INSTALL_PREFIX=$fair_dir/FairSoft -DGEANT4MT=OFF ..
-
-```
-Build Fairsoft  
-(note: build is couple times restarted as some files downloaded during the build are broken and must be fixed in between.
-All questions about this "installation feature" should be directed to the FairSoft developers.)  
-```
-make -j $cpu_threads
-sed -i '/#include "UserDefaults.h"/a #include <thread>' Source/dds/dds-info/src/main.cpp
-make -j $cpu_threads
-sed -i '/#include <vector>/a #include <thread>' Source/fairmq/fairmq/sdk/DDSSession.cxx
-sed -i 's/  int dummy;/  int dummy = 0;/g' Source/fairmq/extern/googletest/googletest/src/gtest-death-test.cc
-sed -i 's/  bool result;/  bool result = false;/g' Source/fairmq/extern/googletest/googletest/src/gtest-death-test.cc
-make -j $cpu_threads
-cd $fair_dir/FairSoft/lib
-ln -s libpythia6.so libPythia6.so
-export SIMPATH=$fair_dir/FairSoft
-```
-
-### Install FairRoot
-
-Enter working directory  
-
-```
-cd $work_dir
-```
-   
-Clone FairRoot v18.6.4 release into working dir, create & enter build directory, run cmake configuration 
-```
-git clone -b v18.6.4 https://github.com/FairRootGroup/FairRoot.git FairRoot
-cd FairRoot && mkdir build && cd build
-cmake -DCMAKE_INSTALL_PREFIX=$fair_dir/FairRoot ..
-
-```
-Build and install FairRoot
-```
-make -j $cpu_threads
-make install
-```
-
-### Install MpdRoot
-dev - developer branch - currently the only supported branch   
-  
-HTTPS (read-only access, e.g. for regular users)
-```        
-git clone -b dev --recursive https://git.jinr.ru/nica/mpdroot.git  
-
-```
-
-SSH (for developers)  
-
-``` 
-git clone -b dev --recursive git@git.jinr.ru:nica/mpdroot.git 
-```
-
-Edit mpdroot/SetEnv.sh file and replace the lines
-```
-export SIMPATH=/opt/fairsoft/install
-export FAIRROOTPATH=/opt/fairroot/install
-```
-
-with the ones having correct FairSoft/FairRoot environment variables
-
-```  
-export SIMPATH=~/fairApr21/FairSoft
-export FAIRROOTPATH=~/fairApr21/FairRoot
-```
-
-Prevent the local  SetEnv.sh file from  being overwritten by the future git synchronizations
-```
-git rm --cached SetEnv.sh
-```
-
-Source the environment file
-```
-cd mpdroot
-. SetEnv.sh
-```
-
-Add pre-commit hook for	automatic file formatting
-
-```
-cp scripts/pre-commit .git/hooks/
-chmod u+x .git/hooks/pre-commit
-```
-
-Create & enter local build dir, run cmake config
-```
-mkdir build && cd build && cmake .. 
-```
-
-Build 
-```
-make -j $cpu_threads
-```
-
-Source new configuration
-```
-. config.sh  
-```
-
-
