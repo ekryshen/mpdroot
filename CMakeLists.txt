@@ -8,7 +8,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.0 FATAL_ERROR)
 
 # Set name of our project to "MPDROOT". Has to be done
 # after check of cmake version
-project(MPDROOT)
+project(MPDROOT NONE)
 
 IF(DEFINED ENV{SIMPATH})
   include(cmake/CMakeListsLegacy.cmake)

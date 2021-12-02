@@ -1,20 +1,19 @@
 # Check if cmake has the required version
 CMAKE_MINIMUM_REQUIRED(VERSION 3.11.0 FATAL_ERROR)
-cmake_policy(VERSION 3.11)
+
+cmake_policy(SET CMP0074 NEW) # allow to have _ROOT suffix in variables containing program installation roots
+
+include(cmake/CMakeListsDefaults.cmake) # preliminary check of input variables
 
 enable_language(C CXX Fortran)
 
 # This set of commands is needed at the end of ROOTMacros.cmake when building library (around line 335)
-if (DEFINED FAIRROOT_VERSION_STRING) # this REGEX expect FAIRROOT_VERSION_STRING in the form vXX.YY.ZZ
-  String(REGEX REPLACE "v([0-9]*)\\.[0-9][0-9]*\\.[0-9][0-9]*.*" "\\1" FAIRROOT_MAJOR_VERSION "${FAIRROOT_VERSION_STRING}")
-  String(REGEX REPLACE "v[0-9]*\\.([0-9][0-9]*)\\.[0-9][0-9]*.*" "\\1" FAIRROOT_MINOR_VERSION "${FAIRROOT_VERSION_STRING}")
-  String(REGEX REPLACE "v[0-9]*\\.[0-9][0-9]*\\.([0-9][0-9]*).*" "\\1" FAIRROOT_PATCH_VERSION "${FAIRROOT_VERSION_STRING}")
-else()
-  MESSAGE(WARNING "Warning FAIRROOT_SYSTEM_VERSION was not set. Using 0.0.0 instead.")
-  SET(FAIRROOT_MAJOR_VERSION 0)
-  SET(FAIRROOT_MINOR_VERSION 0)
-  SET(FAIRROOT_PATCH_VERSION 0)
-endif()
+execute_process(COMMAND ${FAIRROOT_ROOT}/bin/fairroot-config --major_version OUTPUT_VARIABLE FAIRROOT_MAJOR_VERSION)
+execute_process(COMMAND ${FAIRROOT_ROOT}/bin/fairroot-config --minor_version OUTPUT_VARIABLE FAIRROOT_MINOR_VERSION)
+execute_process(COMMAND ${FAIRROOT_ROOT}/bin/fairroot-config --patch_version OUTPUT_VARIABLE FAIRROOT_PATCH_VERSION)
+string(STRIP ${FAIRROOT_MAJOR_VERSION} FAIRROOT_MAJOR_VERSION)
+string(STRIP ${FAIRROOT_MINOR_VERSION} FAIRROOT_MINOR_VERSION)
+string(STRIP ${FAIRROOT_PATCH_VERSION} FAIRROOT_PATCH_VERSION)
 SET(FAIRROOT_VERSION "${FAIRROOT_MAJOR_VERSION}.${FAIRROOT_MINOR_VERSION}.${FAIRROOT_PATCH_VERSION}")
 SET(FAIRROOT_LIBRARY_PROPERTIES ${FAIRROOT_LIBRARY_PROPERTIES}
     VERSION "${FAIRROOT_VERSION}"
@@ -22,27 +21,9 @@ SET(FAIRROOT_LIBRARY_PROPERTIES ${FAIRROOT_LIBRARY_PROPERTIES}
     SUFFIX ".so"
 )
 
-if (DEFINED FAIRROOT_ROOT)
-  list(PREPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
-  list(APPEND CMAKE_MODULE_PATH "$ENV{FAIRROOT_ROOT}/share/fairbase/cmake/modules")
-  set(FairRoot_DIR ${FAIRROOT_ROOT}) # needed by ROOTMacros.cmake
-else()
-  message(FATAL_ERROR "FAIRROOT_ROOT variable must be defined")
-endif()
-
-if (DEFINED GEANT3_ROOT)
-  set(ENV{Geant3_DIR} ${GEANT3_ROOT}) # needed by FindGeant3.cmake
-else()
-  if (NOT ENV{Geant3_DIR})
-    message(FATAL_ERROR "Error, GEANT3_ROOT or Geant3_DIR has to be set")
-  endif()
-endif()
-
-if (NOT DEFINED FAIRLOGGER_ROOT)
-  if (NOT DEFINED ENV{FAIRLOGGER_ROOT})
-    message(FATAL_ERROR "Error, FAIRLOGGER_ROOT has to be set")
-  endif()
-endif()
+list(PREPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+list(APPEND CMAKE_MODULE_PATH "$ENV{FAIRROOT_ROOT}/share/fairbase/cmake/modules")
+set(FairRoot_DIR ${FAIRROOT_ROOT}) # needed by ROOTMacros.cmake
 
 include(FairMacros) # needed by find_package(ROOT)
 find_package(ROOT 0.0.0 REQUIRED) # 0.0.0 - minimal requested version of ROOT - bug in FindRoot.cmake by FairRoot
