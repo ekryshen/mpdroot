@@ -87,7 +87,7 @@ cutmonitors/MpdDcaMonitor.cxx
 Set(HEADERS )
 Set(LINKDEF MpdNicaCutsLinkDef.h)
 Set(LIBRARY_NAME NicaMpdCuts)
-Set(DEPENDENCIES  NicaCut NicaMpdFormat NicaMpdHelper)
+Set(DEPENDENCIES  NicaMpdFormat NicaMpdHelper)
 
 GENERATE_LIBRARY()
 
