@@ -70,3 +70,24 @@ void MpdBasicTrackCut::AddAllCutMonitorRequests(Option_t* opt) {
     AddRawCutMonitor(fKinMonitor);
   }
 }
+
+MpdBasicTrackCut& MpdBasicTrackCut::operator=(const MpdBasicTrackCut& other) {
+  if (&other == this) return *this;
+  NicaCutsAndMonitors::operator=(other);
+  if (fToFMonitor) { delete fToFMonitor; }
+  if (fDCAMonitor) delete fDCAMonitor;
+  if (fTpcMonitor) delete fTpcMonitor;
+  if (fKinMonitor) delete fKinMonitor;
+  fDCAMonitor = nullptr;
+  fToFMonitor = nullptr;
+  fTpcMonitor = nullptr;
+  fKinMonitor = nullptr;
+  if (other.fToFMonitor) { fToFMonitor = (MpdTofMonitor*) other.fToFMonitor->MakeCopy(); }
+  if (other.fDCAMonitor) { fDCAMonitor = (MpdDcaMonitor*) other.fDCAMonitor->MakeCopy(); }
+  if (other.fTpcMonitor) { fTpcMonitor = (MpdTpcMonitor*) other.fTpcMonitor->MakeCopy(); }
+  if (other.fKinMonitor) { fKinMonitor = (MpdKinMonitor*) other.fKinMonitor->MakeCopy(); }
+  return *this;
+}
+
+MpdBasicTrackCut::MpdBasicTrackCut(MpdBasicTrackCut& other) :
+  NicaCutsAndMonitors(other), fToFMonitor(nullptr), fKinMonitor(nullptr), fDCAMonitor(nullptr), fTpcMonitor(nullptr) {}

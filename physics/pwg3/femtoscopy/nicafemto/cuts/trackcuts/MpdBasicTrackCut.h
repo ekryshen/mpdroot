@@ -36,6 +36,8 @@ protected:
 
 public:
   MpdBasicTrackCut();
+  MpdBasicTrackCut(MpdBasicTrackCut& other);
+  MpdBasicTrackCut& operator=(const MpdBasicTrackCut& other);
   MpdTofMonitor* GetTofMonitor() const;
   MpdKinMonitor* GetKinMonitor() const;
   MpdTpcMonitor* GetTpcMonitor() const;
