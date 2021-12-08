@@ -20,9 +20,13 @@ nicadist-c7-build:
   only:
     - merge_requests
   allow_failure: true
+# temporary hack to give priority for old build jobs, as they take longer and we don't have enough runners
+  when: delayed
+  start_in: 10 seconds
 
 nicadist-c7-physics-GEANT3-HADGEN:
   image: registry.gitlab.com/ndmspc/user/c7:alibuild-dev
+  needs: ["nicadist-c7-build"]
   stage: test_runMC
   dependencies:
     - nicadist-c7-build
@@ -67,9 +71,13 @@ nicadist-c8-build:
   only:
     - merge_requests
   allow_failure: true
+ # temporary hack to give priority for old build jobs, as they take longer and we don't have enoguh runners
+  when: delayed
+  start_in: 15 seconds
 
 nicadist-c8-physics-GEANT3-HADGEN:
   image: registry.gitlab.com/ndmspc/user/c8:alibuild-dev
+  needs: ["nicadist-c8-build"]
   stage: test_runMC
   dependencies:
     - nicadist-c8-build

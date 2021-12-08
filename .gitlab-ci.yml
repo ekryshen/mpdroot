@@ -3,8 +3,7 @@ stages:
  - test_runMC
  - test_run_reco
  - deploy
- - codeOwners
- - check_permissions
+ - codeOwners_permissions
  
 before_script:
  - export SIMPATH=/cvmfs/nica.jinr.ru/$OS_TYPE/fairsoft/mpd
@@ -27,19 +26,20 @@ variables:
 
 check_permissions:
   image: git.jinr.ru:5005/nica/docker-images/centos7/base:latest
+  dependencies: []
   variables:
     OS_TYPE: "centos7"
-    PERMISSIONS_MESSAGE_FAUILURE: "Permissions check: ${RED}FAILED${NC}. You don't have permission to change some files, please contact your project maintainers."
+    PERMISSIONS_MESSAGE_FAILURE: "Permissions check: ${RED}FAILED${NC}. You don't have permission to change some files, please contact your project maintainers."
     PERMISSIONS_MESSAGE_SUCCESS: "Permissions check: ${GREEN}PASSED${NC}."
   before_script:
     - echo "Skipping global before_script"
   tags:
     - docker
-  stage: check_permissions
+  stage: codeOwners_permissions
   script:
     - >
       if git diff HEAD~ --name-only|grep .gitlab-ci.yml; then
-        if grep -q $GITLAB_USER_LOGIN <<< $MAINTAINERS; then echo -e $PERMISSIONS_MESSAGE_SUCCESS $(exit 0); else echo -e $PERMISSIONS_MESSAGE_FAUILURE; $(exit -1); fi
+        if grep -q $GITLAB_USER_LOGIN <<< $MAINTAINERS; then echo -e $PERMISSIONS_MESSAGE_SUCCESS $(exit 0); else echo -e $PERMISSIONS_MESSAGE_FAILURE; $(exit -1); fi
       fi;
   allow_failure: false
   <<: *only-default
@@ -95,6 +95,7 @@ build:ubuntu:
   
 runMC:centos:
   image: git.jinr.ru:5005/nica/docker-images/centos7/base:latest
+  needs: ["build:centos"]
   variables:
     OS_TYPE: "centos7"
   dependencies:
@@ -103,6 +104,7 @@ runMC:centos:
 
 runMC:ubuntu:
   image: git.jinr.ru:5005/nica/docker-images/ubuntu/base:latest
+  needs: ["build:ubuntu"]
   variables:
     OS_TYPE: "ubuntu"
   dependencies:
@@ -125,6 +127,7 @@ runMC:ubuntu:
   
 run_reco:centos:
   image: git.jinr.ru:5005/nica/docker-images/centos7/base:latest
+  needs: ["runMC:centos", "build:centos"]
   variables:
     OS_TYPE: "centos7"
   dependencies:
@@ -134,6 +137,7 @@ run_reco:centos:
   
 run_reco:ubuntu:
   image: git.jinr.ru:5005/nica/docker-images/ubuntu/base:latest
+  needs: ["runMC:ubuntu", "build:ubuntu"]
   variables:
     OS_TYPE: "ubuntu"
   dependencies:
@@ -184,7 +188,8 @@ deploy:centos7:
 
 codeOwners:
     image: registry.gitlab.com/ndmspc/user/c7:alibuild-dev
-    stage: codeOwners
+    stage: codeOwners_permissions
+    dependencies: []
     tags:
       - cvmfs
     before_script:
