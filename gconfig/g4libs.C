@@ -18,6 +18,8 @@
 
 #include <iostream>
 
+void g4libs_granular();
+
 void g4libs()
 {
 /// Macro function for loading Geant4 granular libraries.

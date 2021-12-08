@@ -28,6 +28,8 @@
 #include "MpdFieldMap.h"
 #include "MpdGetNumEvents.h"
 
+#include "MpdGeneralGenerator.h"
+
 #include <iostream>
 using namespace std;
 #endif

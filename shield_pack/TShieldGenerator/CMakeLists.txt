@@ -1,14 +1,11 @@
+set(PACKAGE TShieldGeneralGenerator) # this line comes after last add_subdirectory
 # Create a library called "libTShieldGenerator"
-enable_language (CXX)
-
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11") #Used for initializer lists at TShieldGeometry
-
 set(INCLUDE_DIRECTORIES
- ${CMAKE_CURRENT_SOURCE_DIR}/inc
- ${TSHIELD_ROOT_PATH}/hadgen/inc
- ${TSHIELD_ROOT_PATH}/shield/inc
- ${TSHIELD_ROOT_PATH}/THadgen/inc
- ${TSHIELD_ROOT_PATH}/TShield/inc
+ ${CMAKE_CURRENT_SOURCE_DIR}
+ ${TSHIELD_ROOT_PATH}/hadgen
+ ${TSHIELD_ROOT_PATH}/shield
+ ${TSHIELD_ROOT_PATH}/THadgen
+ ${TSHIELD_ROOT_PATH}/TShield
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
@@ -23,18 +20,16 @@ link_directories(
  ${FAIRROOT_LIBRARY_DIR}
 )
 
-configure_file(inc/TShieldGenerator.h inc/TShieldGenerator.h COPYONLY)
-configure_file(inc/LinkDef.h inc/LinkDef.h COPYONLY)
-
 # List of source files
 set(SRCS
-    src/TShieldGenerator.cxx
+    TShieldGenerator.cxx
 )
 
-set(HEADERS inc/TShieldGenerator.h)
+set(HEADERS TShieldGenerator.h)
 
-Set(LINKDEF inc/LinkDef.h)
-Set(LIBRARY_NAME TShieldGenerator)
+Set(LINKDEF ${PACKAGE}LinkDef.h)
+Set(LIBRARY_NAME ${PACKAGE})
 Set(DEPENDENCIES TShield THadgen Core Base)
 
 GENERATE_LIBRARY()
+unset(PACKAGE) # not really necessary, it will be overwritten by following CMakeLists.txt

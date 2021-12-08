@@ -6,6 +6,6 @@ export PATH=$MPDROOT:$PATH
 export ROOT_INCLUDE_PATH=$MPDROOT/macros/common:$MPDROOT/include:$ROOT_INCLUDE_PATH
 export GEOMPATH=$MPDROOT/geometry
 export CONFIG_DIR=$MPDROOT/gconfig
-
+export MPDROOT_MACROS=$MPDROOT/macros # root of macros directory
 export VMCWORKDIR=$MPDROOT # temporary patch until VMCWORKDIR will be removed
  # export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:"@MY_DYLD_LIBRARY_PATH@"

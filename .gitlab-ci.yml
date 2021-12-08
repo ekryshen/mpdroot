@@ -1,10 +1,10 @@
 stages:
- - check_permissions
  - build
  - test_runMC
  - test_run_reco
  - deploy
  - codeOwners
+ - check_permissions
  
 before_script:
  - export SIMPATH=/cvmfs/nica.jinr.ru/$OS_TYPE/fairsoft/mpd
@@ -89,6 +89,7 @@ build:ubuntu:
     - source build/config.sh
     - root -b -q -l '$CI_PROJECT_DIR/macro/mpd/runMC.C("auau.09gev.mbias.98k.ftn14","$VMCWORKDIR/macro/mpd/evetest.root",0,2)' | tee output.txt
     - (if grep -q "Macro finished successfully." output.txt; then $(exit 0); else $(exit -1); fi);
+  retry: 2      # retry script if it failed (sometimes if fails due to some unexpected particle)
   allow_failure: false
   <<: *only-default
   
@@ -118,6 +119,7 @@ runMC:ubuntu:
     - source build/config.sh
     - root -b -q -l "$CI_PROJECT_DIR/macro/mpd/reco.C" | tee output.txt
     - (if grep -q "Macro finished successfully." output.txt; then $(exit 0); else $(exit -1); fi);
+  retry: 2      # retry script if it failed (sometimes if fails due to some unexpected particle)
   allow_failure: false
   <<: *only-default
   
@@ -181,17 +183,20 @@ deploy:centos7:
   <<: *deploy
 
 codeOwners:
-    image: fedora:35
+    image: registry.gitlab.com/ndmspc/user/c7:alibuild-dev
     stage: codeOwners
+    tags:
+      - cvmfs
     before_script:
-        - echo "Skipping global before_script."
+      - source /etc/bashrc
     only:
         refs:
             - merge_requests
         variables:
             - $CI_MERGE_REQUEST_PROJECT_PATH == "nica/mpdroot" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"
     script:
-        - dnf install util-linux clang-tools-extra -y
+        - module add Clang/v13.0.0-1
         - chmod +x scripts/inform_codeowners.sh && scripts/inform_codeowners.sh
         - chmod +x scripts/check_clangFormatting.sh && scripts/check_clangFormatting.sh
 
+include: '.gitlab-ci-nicadist.yml' # file containing nicadist build of images and execution of new pipelines

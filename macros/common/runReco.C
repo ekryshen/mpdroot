@@ -1,5 +1,3 @@
-R__ADD_INCLUDE_PATH($VMCWORKDIR)
-
 #include <Rtypes.h>
 // ROOT includes
 #include "TString.h"
@@ -37,22 +35,10 @@ R__ADD_INCLUDE_PATH($VMCWORKDIR)
 #include "MpdPid.h"
 
 #include <iostream>
-using namespace std;
 
 #define UseMlem  // Choose: UseMlem HitProducer
 
-// check whether file exists
-bool CheckFileExist(TString& fileName)
-{
-    gSystem->ExpandPathName(fileName);
-    if (gSystem->AccessPathName(fileName.Data()) == true)
-    {
-        cout<<endl<<"no specified file: "<<fileName<<endl;
-        return false;
-    }
-
-    return true;
-}
+#include "commonFunctions.C"
 
 // Macro for running reconstruction:
 // inFile - input file with MC data, default: evetest.root
@@ -88,7 +74,7 @@ void runReco(TString inFile = "evetest.root", TString outFile = "mpddst.root", I
     if (run_type == "proof")
     {
         fRun = new FairRunAnaProof(proof_name);
-        ((FairRunAnaProof*)fRun)->SetProofParName("$VMCWORKDIR/gconfig/libMpdRoot.par");
+        ((FairRunAnaProof*)fRun)->SetProofParName("$CONFIG_DIR/libMpdRoot.par");
     }
     else
     {

@@ -1,7 +1,4 @@
-enable_language (C Fortran)
-
-include_directories(inc ${TSHIELD_ROOT_PATH}/hadgen/inc)
-set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -w")
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${TSHIELD_ROOT_PATH}/hadgen)
 
 Set(LINK_DIRECTORIES
  ${ROOT_LIBRARY_DIR}
@@ -11,28 +8,28 @@ Set(LINK_DIRECTORIES
 Link_Directories(${LINK_DIRECTORIES})
 
 set(SRCS
-    src/shield_decode_tree.c 
-    src/shield_geo.c 
-    src/shield_init.c 
-    src/shield_iso.c 
-    src/shield_media.c 
-    src/shield_setget.c 
+    shield_decode_tree.c 
+    shield_geo.c 
+    shield_init.c 
+    shield_iso.c 
+    shield_media.c 
+    shield_setget.c 
      
-    src/Fragments.f
-    src/Inspar.f
-    src/Loent28.f
-    src/Medium.f
-    src/Microd.f
-    src/Shield_so.f
-    src/Tree.f
-    src/decay1.f
-    src/elscat.f
-    src/gemca.f
-    src/files.f
-    src/gentree.f
-    src/lndata28.f
-    src/range.f
-    src/Output.f
+    Fragments.f
+    Inspar.f
+    Loent28.f
+    Medium.f
+    Microd.f
+    Shield_so.f
+    Tree.f
+    decay1.f
+    elscat.f
+    gemca.f
+    files.f
+    gentree.f
+    lndata28.f
+    range.f
+    Output.f
 )
 
 Set(LIBRARY_NAME SHIELD)

@@ -1,0 +1,93 @@
+nicadist-c7-build:
+  image: registry.gitlab.com/ndmspc/user/c7:alibuild-dev
+  stage: build
+  before_script:
+    - source /etc/bashrc
+    - export NPROC=$(cat /proc/cpuinfo | grep processor | wc -l)
+  script:
+    - export MPDROOT=$(readlink -m c7/mpdroot)
+    - module add mpddev/latest
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make install -j $NPROC
+  artifacts:
+    paths:
+      - c7/mpdroot/
+    expire_in: 2h
+  tags:
+    - cvmfs
+  only:
+    - merge_requests
+  allow_failure: true
+
+nicadist-c7-physics-GEANT3-HADGEN:
+  image: registry.gitlab.com/ndmspc/user/c7:alibuild-dev
+  stage: test_runMC
+  dependencies:
+    - nicadist-c7-build
+  before_script:
+    - source /etc/bashrc
+  script:
+    - module add mpddev/latest
+    - export MPDROOT=$(readlink -m c7/mpdroot)
+    - source $MPDROOT/etc/env.sh
+    - mkdir -p c7/GEANT3/HADGEN
+    - rm -rf c7/GEANT3/HADGEN/*
+    - cd c7/GEANT3/HADGEN/
+    - root -b -q -l '$MPDROOT_MACROS/common/runMC.C(EGenerators::HADGEN,EVMCType::GEANT3)'
+    - root -b -q -l '$MPDROOT_MACROS/common/runReco.C()'
+    - root -b -q -l '$MPDROOT_MACROS/common/readDST.C("mpddst.root")'
+  retry: 1      # retry script if it failed (sometimes if fails due to some unexpected particle). Maximum 2 retries.
+  tags:
+    - cvmfs
+  only:
+    - merge_requests
+  allow_failure: true
+
+nicadist-c8-build:
+  image: registry.gitlab.com/ndmspc/user/c8:alibuild-dev
+  stage: build
+  before_script:
+    - source /etc/bashrc
+    - export NPROC=$(cat /proc/cpuinfo | grep processor | wc -l)
+  script:
+    - export MPDROOT=$(readlink -m c8/mpdroot)
+    - module add mpddev/latest
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make install -j $NPROC
+  artifacts:
+    paths:
+      - c8/mpdroot/
+    expire_in: 2h
+  tags:
+    - cvmfs
+  only:
+    - merge_requests
+  allow_failure: true
+
+nicadist-c8-physics-GEANT3-HADGEN:
+  image: registry.gitlab.com/ndmspc/user/c8:alibuild-dev
+  stage: test_runMC
+  dependencies:
+    - nicadist-c8-build
+  before_script:
+    - source /etc/bashrc
+  script:
+    - module add mpddev/latest
+    - export MPDROOT=$(readlink -m c8/mpdroot)
+    - source $MPDROOT/etc/env.sh
+    - mkdir -p c8/GEANT3/HADGEN
+    - rm -rf c8/GEANT3/HADGEN/*
+    - cd c8/GEANT3/HADGEN/
+    - root -b -q -l '$MPDROOT_MACROS/common/runMC.C(EGenerators::HADGEN,EVMCType::GEANT3)'
+    - root -b -q -l '$MPDROOT_MACROS/common/runReco.C()'
+    - root -b -q -l '$MPDROOT_MACROS/common/readDST.C("mpddst.root")'
+  retry: 0      # retry script if it failed (sometimes if fails due to some unexpected particle). Maximum 2 retries.
+  tags:
+    - cvmfs
+  only:
+    - merge_requests
+  allow_failure: true

@@ -83,8 +83,8 @@ add_subdirectory (physics) # mpdbase mpddst
 add_subdirectory (eventdisplay) # emc xml2 TODO - remove dependencies on root configuration
 add_subdirectory (lhetrack) # mpdbase kalman
 
-INSTALL(DIRECTORY gconfig DESTINATION ${CMAKE_INSTALL_PREFIX})
-INSTALL(DIRECTORY input DESTINATION ${CMAKE_INSTALL_PREFIX})
-INSTALL(DIRECTORY geometry DESTINATION ${CMAKE_INSTALL_PREFIX})
-INSTALL(DIRECTORY macros DESTINATION ${CMAKE_INSTALL_PREFIX})
-INSTALL(FILES etc/env.sh DESTINATION ${CMAKE_INSTALL_PREFIX}/etc)
+INSTALL(DIRECTORY gconfig/ DESTINATION gconfig)
+INSTALL(DIRECTORY input/ DESTINATION input)
+INSTALL(DIRECTORY geometry/ DESTINATION geometry)
+INSTALL(DIRECTORY macros/ DESTINATION macros)
+INSTALL(FILES etc/env.sh DESTINATION etc)

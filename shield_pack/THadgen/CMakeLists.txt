@@ -1,9 +1,8 @@
+set(PACKAGE THadgen) # this line comes after last add_subdirectory
 # Create a library called "libTHadgen"
-enable_language (C CXX Fortran)
-
 set(INCLUDE_DIRECTORIES
- ${CMAKE_CURRENT_SOURCE_DIR}/inc
- ${TSHIELD_ROOT_PATH}/hadgen/inc
+ ${CMAKE_CURRENT_SOURCE_DIR}
+ ${TSHIELD_ROOT_PATH}/hadgen
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
@@ -18,19 +17,17 @@ link_directories(
  ${FAIRROOT_LIBRARY_DIR}
 )
 
-configure_file(inc/THadgen.h inc/THadgen.h COPYONLY)
-configure_file(inc/LinkDef.h inc/LinkDef.h COPYONLY)
-
 # List of source files
 set(SRCS
-    src/THadgen.cxx
-    src/THadgenRoutines.cxx
+    THadgen.cxx
+    THadgenRoutines.cxx
 )
 
-set(HEADERS inc/THadgen.h)
+set(HEADERS THadgen.h)
 
-Set(LINKDEF inc/LinkDef.h)
-Set(LIBRARY_NAME THadgen)
+Set(LINKDEF ${PACKAGE}LinkDef.h)
+Set(LIBRARY_NAME ${PACKAGE})
 Set(DEPENDENCIES HADGEN Core Base)
 
 GENERATE_LIBRARY()
+unset(PACKAGE) # not really necessary, it will be overwritten by following CMakeLists.txt

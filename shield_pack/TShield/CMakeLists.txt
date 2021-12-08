@@ -1,13 +1,10 @@
+set(PACKAGE TShield) # this line comes after last add_subdirectory
 # Create a library called "libTShield"
-enable_language (C CXX Fortran)
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-
 set(INCLUDE_DIRECTORIES
- ${CMAKE_CURRENT_SOURCE_DIR}/inc
- ${TSHIELD_ROOT_PATH}/shield/inc
- ${TSHIELD_ROOT_PATH}/hadgen/inc
- ${TSHIELD_ROOT_PATH}/THadgen/inc
+ ${CMAKE_CURRENT_SOURCE_DIR}
+ ${TSHIELD_ROOT_PATH}/shield
+ ${TSHIELD_ROOT_PATH}/hadgen
+ ${TSHIELD_ROOT_PATH}/THadgen
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
@@ -22,26 +19,23 @@ link_directories(
  ${FAIRROOT_LIBRARY_DIR}
 )
 
-configure_file(inc/TShield.h inc/TShield.h COPYONLY)
-configure_file(inc/LinkDef.h inc/LinkDef.h COPYONLY)
-
 # List of source files
 set(SRCS
-    src/TShield.cxx
-    src/TShieldCallbacks.cxx
-    src/TShieldOpt.cxx
-    src/TShieldGeometry.cxx
-    src/TShieldGeometryBool.cxx
-    src/TShieldGeometryConvert.cxx
-    src/TShieldGeometryOperators.cxx
-    src/TShieldGeometryPrint.cxx
+    TShield.cxx
+    TShieldCallbacks.cxx
+    TShieldOpt.cxx
+    TShieldGeometry.cxx
+    TShieldGeometryBool.cxx
+    TShieldGeometryConvert.cxx
+    TShieldGeometryOperators.cxx
+    TShieldGeometryPrint.cxx
 )
 
-set(HEADERS inc/TShield.h)
+set(HEADERS TShield.h)
 
-Set(LINKDEF inc/LinkDef.h)
-Set(LIBRARY_NAME TShield)
+Set(LINKDEF ${PACKAGE}LinkDef.h)
+Set(LIBRARY_NAME ${PACKAGE})
 Set(DEPENDENCIES SHIELD HADGEN Core Base)
 
 GENERATE_LIBRARY()
-
+unset(PACKAGE) # not really necessary, it will be overwritten by following CMakeLists.txt

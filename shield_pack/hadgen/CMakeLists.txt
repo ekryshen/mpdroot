@@ -1,10 +1,7 @@
 # Create a library called "libHADGEN"
-enable_language (C Fortran)
-
 add_subdirectory (parse)
 
-include_directories(inc ${CMAKE_CURRENT_BINARY_DIR}/parse)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pthread")
+include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/parse)
 
 Set(LINK_DIRECTORIES
  ${ROOT_LIBRARY_DIR}
@@ -15,33 +12,33 @@ Link_Directories(${LINK_DIRECTORIES})
 
 # List of source files
 set(SRCS
-    src/hadgen_common_blocks.c
-    src/hadgen_options.c
-    src/hadgen_prev.c
-    src/hadgen_tabnuc.c
-    src/hadgen_time.c
-    src/hadgen_setdky.c
+    hadgen_common_blocks.c
+    hadgen_options.c
+    hadgen_prev.c
+    hadgen_tabnuc.c
+    hadgen_time.c
+    hadgen_setdky.c
 
-    src/HistAGT.f
-    src/Qgsmn1.f
-    src/Qgsmn2.f
-    src/casevp.f
-    src/coales.f
-    src/deex.f
-    src/files.f
-    src/genagt.f
-    src/gqaar.f
-    src/gqamn.f
-    src/gqstn.f
-    src/hadgen_so.f
-    src/preco.f
-    src/ranlux.f
+    HistAGT.f
+    Qgsmn1.f
+    Qgsmn2.f
+    casevp.f
+    coales.f
+    deex.f
+    files.f
+    genagt.f
+    gqaar.f
+    gqamn.f
+    gqstn.f
+    hadgen_so.f
+    preco.f
+    ranlux.f
 )
 
 # List of header files
 set(HEADERS
-    inc/hadgen.h
-    inc/hadgen_common_blocks.h
+    hadgen.h
+    hadgen_common_blocks.h
 )
 
 Set(LIBRARY_NAME HADGEN)

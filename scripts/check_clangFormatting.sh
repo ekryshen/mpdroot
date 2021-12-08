@@ -45,8 +45,8 @@ main() {
 
 function get_changed_files_list() {
 
-  CHANGED_FILES=$(curl -s -X GET -H "PRIVATE-TOKEN: " "$MERGE_REQUEST_URL/changes" | sed 's/{"old_path/\n&/g' | grep "old_path" \
-                  | cut -d '"' -f 4 | grep -E '.*\.(h|hpp|c|cpp|cxx)$')
+  CHANGED_FILES=$(curl -s -X GET -H "PRIVATE-TOKEN: " "$MERGE_REQUEST_URL/changes" | sed 's/,"new_path/\n&/g' | grep "new_path" \
+                 | grep "\"deleted_file\":false" | cut -d '"' -f 4 | grep -E '.*\.(h|hpp|c|cpp|cxx)$')
   echo "Changed files to be checked for formatting:"  $CHANGED_FILES
 
 }
@@ -71,6 +71,8 @@ function check_formatting() {
     fi
   done
 
+  [[ $UNFORMATTED_FILES ]] && echo -e "The unformatted files are:\n $UNFORMATTED_FILES \n" || echo -e "There are no unformatted files.\n"
+
 }
 
 
@@ -82,7 +84,7 @@ function post_label_comment() {
     curl -s -o /dev/null -S -f -X PUT -H "PRIVATE-TOKEN: $COMMENT_TOKEN" "$MERGE_REQUEST_URL?add_labels=$UNFORMATTED_LABEL"
     echo "Unformatted label added."
     author=$(curl -s -X GET -H "PRIVATE-TOKEN: " "$MERGE_REQUEST_URL" | sed 's/author/\n&/g' | grep "author" | cut -d '"' -f 11)
-    comment="Dear @$author, the files: <br>**$UNFORMATTED_FILES**<br>you submitted are unformatted.<br><br>Please format them according to the instructions."
+    comment="Dear @$author, you submitted unformatted files.<br><br>Please format them by running from your mpdroot dir:<br><br>clang-format -i **$UNFORMATTED_FILES**<br>"
     curl -s -o /dev/null -S -f -X POST -d "body=$comment" -H "PRIVATE-TOKEN: $COMMENT_TOKEN" "$MERGE_REQUEST_URL/notes"
     echo "New comment added."
   fi

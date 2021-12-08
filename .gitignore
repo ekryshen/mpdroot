@@ -79,3 +79,4 @@ doxygen/latex/*
 !/macros/common/readDST.C
 !/macros/common/runMC.C
 !/macros/common/runReco.C
+!/macros/common/commonFunctions.C

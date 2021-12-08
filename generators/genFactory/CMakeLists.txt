@@ -2,8 +2,8 @@ set(INCLUDE_DIRECTORIES
 ${BASE_INCLUDE_DIRECTORIES}
  ${CMAKE_SOURCE_DIR}/generators
  ${CMAKE_SOURCE_DIR}/generators/genFactory
- ${CMAKE_SOURCE_DIR}/shield_pack/THadgen/inc
- ${CMAKE_SOURCE_DIR}/shield_pack/hadgen/inc
+ ${CMAKE_SOURCE_DIR}/shield_pack/THadgen
+ ${CMAKE_SOURCE_DIR}/shield_pack/hadgen
  ${CMAKE_SOURCE_DIR}/macro/mpd # needed to load loadlibs.C
  ${CMAKE_SOURCE_DIR} # needed to find gconfig/basiclibs.C
 )
