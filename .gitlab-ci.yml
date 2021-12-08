@@ -1,9 +1,8 @@
 stages:
  - build
- - test_runMC
- - test_run_reco
+ - test
  - deploy
- - codeOwners_permissions
+ - codeOwners_Permissions
  
 before_script:
  - export SIMPATH=/cvmfs/nica.jinr.ru/$OS_TYPE/fairsoft/mpd
@@ -24,126 +23,70 @@ variables:
     - dev
     - tags
 
-check_permissions:
-  image: git.jinr.ru:5005/nica/docker-images/centos7/base:latest
-  dependencies: []
-  variables:
-    OS_TYPE: "centos7"
-    PERMISSIONS_MESSAGE_FAILURE: "Permissions check: ${RED}FAILED${NC}. You don't have permission to change some files, please contact your project maintainers."
-    PERMISSIONS_MESSAGE_SUCCESS: "Permissions check: ${GREEN}PASSED${NC}."
-  before_script:
-    - echo "Skipping global before_script"
+.build_template: &build
+  image: git.jinr.ru:5005/nica/docker-images/$OS_TYPE/base:latest
+  stage: build
   tags:
     - docker
-  stage: codeOwners_permissions
-  script:
-    - >
-      if git diff HEAD~ --name-only|grep .gitlab-ci.yml; then
-        if grep -q $GITLAB_USER_LOGIN <<< $MAINTAINERS; then echo -e $PERMISSIONS_MESSAGE_SUCCESS $(exit 0); else echo -e $PERMISSIONS_MESSAGE_FAILURE; $(exit -1); fi
-      fi;
-  allow_failure: false
-  <<: *only-default
-
-.build_template: &build
-  stage: build
+    - cvmfs
   artifacts:
     paths:
       - build
   script:
     - test $OS_TYPE = "centos7" && source /opt/rh/devtoolset-7/enable
-    - mkdir build
-    - cd build
-    - cmake "$CI_PROJECT_DIR"
+    - mkdir build && cd build && cmake "$CI_PROJECT_DIR"
     - make -j 5
   allow_failure: false
   <<: *only-default
   
 build:centos:
-  image: git.jinr.ru:5005/nica/docker-images/centos7/base:latest
   variables:
     OS_TYPE: "centos7"
-  tags:
-    - docker
-    - cvmfs
   <<: *build
 
 build:ubuntu:
-  image: git.jinr.ru:5005/nica/docker-images/ubuntu/base:latest
   variables:
     OS_TYPE: "ubuntu"
-  tags: 
-    - docker
-    - cvmfs
   <<: *build 
-  
-.runMC_template: &runMC
-  stage: test_runMC
+
+
+.test_build_template: &build_tests
+  image: git.jinr.ru:5005/nica/docker-images/$OS_TYPE/base:latest
+  stage: test
   tags:
     - docker
     - cvmfs
   artifacts:
+    when: always
     paths:
       - macro/mpd/evetest.root
+    reports:
+      junit: $REPORT_NAME.xml
   script:
-    - test $OS_TYPE = "centos7" && source /opt/rh/devtoolset-7/enable
-    - source build/config.sh
-    - root -b -q -l '$CI_PROJECT_DIR/macro/mpd/runMC.C("auau.09gev.mbias.98k.ftn14","$VMCWORKDIR/macro/mpd/evetest.root",0,2)' | tee output.txt
-    - (if grep -q "Macro finished successfully." output.txt; then $(exit 0); else $(exit -1); fi);
-  retry: 2      # retry script if it failed (sometimes if fails due to some unexpected particle)
+      - chmod +x scripts/run_build_tests.sh && scripts/run_build_tests.sh -t old -r $REPORT_NAME
+      - (if grep -q "failure" $REPORT_NAME.xml; then $(exit -1); else $(exit 0); fi);
+  retry: 1      # retry script if it failed (sometimes it fails due to some unexpected particle)
   allow_failure: false
   <<: *only-default
   
-runMC:centos:
-  image: git.jinr.ru:5005/nica/docker-images/centos7/base:latest
+build_tests:centos:
   needs: ["build:centos"]
   variables:
     OS_TYPE: "centos7"
+    REPORT_NAME: report_centos
   dependencies:
     - build:centos
-  <<: *runMC
+  <<: *build_tests
 
-runMC:ubuntu:
-  image: git.jinr.ru:5005/nica/docker-images/ubuntu/base:latest
+build_tests:ubuntu:
   needs: ["build:ubuntu"]
   variables:
     OS_TYPE: "ubuntu"
+    REPORT_NAME: "report_ubuntu"
   dependencies:
     - build:ubuntu
-  <<: *runMC
-  
-.run_reco_template: &run_reco
-  stage: test_run_reco
-  tags:
-    - docker
-    - cvmfs
-  script:
-    - test $OS_TYPE = "centos7" && source /opt/rh/devtoolset-7/enable
-    - source build/config.sh
-    - root -b -q -l "$CI_PROJECT_DIR/macro/mpd/reco.C" | tee output.txt
-    - (if grep -q "Macro finished successfully." output.txt; then $(exit 0); else $(exit -1); fi);
-  retry: 2      # retry script if it failed (sometimes if fails due to some unexpected particle)
-  allow_failure: false
-  <<: *only-default
-  
-run_reco:centos:
-  image: git.jinr.ru:5005/nica/docker-images/centos7/base:latest
-  needs: ["runMC:centos", "build:centos"]
-  variables:
-    OS_TYPE: "centos7"
-  dependencies:
-    - build:centos
-    - runMC:centos
-  <<: *run_reco
-  
-run_reco:ubuntu:
-  image: git.jinr.ru:5005/nica/docker-images/ubuntu/base:latest
-  needs: ["runMC:ubuntu", "build:ubuntu"]
-  variables:
-    OS_TYPE: "ubuntu"
-  dependencies:
-    - build:ubuntu
-    - runMC:ubuntu
-  <<: *run_reco
+  <<: *build_tests
+
   
 .deploy_template: &deploy
   stage: deploy
@@ -152,7 +95,7 @@ run_reco:ubuntu:
   script:
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add /dev/stdin > /dev/null
-    - mkdir -p ~/.ssh
+    - mkdir -p ~/.ssh && 
     - chmod 700 ~/.ssh
     - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
@@ -186,9 +129,10 @@ deploy:centos7:
     - no-cvmfs
   <<: *deploy
 
+
 codeOwners:
     image: registry.gitlab.com/ndmspc/user/c7:alibuild-dev
-    stage: codeOwners_permissions
+    stage: codeOwners_Permissions
     dependencies: []
     tags:
       - cvmfs
@@ -204,4 +148,103 @@ codeOwners:
         - chmod +x scripts/inform_codeowners.sh && scripts/inform_codeowners.sh
         - chmod +x scripts/check_clangFormatting.sh && scripts/check_clangFormatting.sh
 
-include: '.gitlab-ci-nicadist.yml' # file containing nicadist build of images and execution of new pipelines
+check_permissions:
+  image: git.jinr.ru:5005/nica/docker-images/centos7/base:latest
+  dependencies: []
+  variables:
+    OS_TYPE: "centos7"
+    PERMISSIONS_MESSAGE_FAILURE: "Permissions check: ${RED}FAILED${NC}. You don't have permission to change some files, please contact your project maintainers."
+    PERMISSIONS_MESSAGE_SUCCESS: "Permissions check: ${GREEN}PASSED${NC}."
+  before_script:
+    - echo "Skipping global before_script"
+  tags:
+    - docker
+  stage: codeOwners_Permissions
+  script:
+    - >
+      if git diff HEAD~ --name-only|grep .gitlab-ci.yml; then
+        if grep -q $GITLAB_USER_LOGIN <<< $MAINTAINERS; then echo -e $PERMISSIONS_MESSAGE_SUCCESS $(exit 0); else echo -e $PERMISSIONS_MESSAGE_FAILURE; $(exit -1); fi
+      fi;
+  allow_failure: false
+  <<: *only-default
+
+# nicadist images and execution of new pipelines 
+# cannot place into separate .yml file, due to ongoing mutation of Gitlab parsing bug 5078
+.build_nica_template: &build_nica
+  image: registry.gitlab.com/ndmspc/user/$OS_TYPE:alibuild-dev
+  stage: build
+  before_script:
+    - source /etc/bashrc
+    - export NPROC=$(cat /proc/cpuinfo | grep processor | wc -l)
+  script:
+    - export MPDROOT=$(readlink -m $OS_TYPE/mpdroot)
+    - module add mpddev/latest
+    - mkdir build && cd build && cmake ..
+    - make install -j $NPROC
+  artifacts:
+    paths:
+      - $OS_TYPE/mpdroot/
+    expire_in: 2h
+  tags:
+    - cvmfs
+  only:
+    - merge_requests
+  allow_failure: true
+  #temporary hack to give priority for old build jobs, as they take longer
+  when: delayed
+  start_in: 10 seconds
+  <<: *only-default
+
+build_nica:c7:
+  variables:
+    OS_TYPE: "c7"
+  <<: *build_nica
+
+build_nica:c8:
+  variables:
+    OS_TYPE: "c8"
+  <<: *build_nica
+
+
+.test_build_nica_template: &build_tests_nica
+  image: registry.gitlab.com/ndmspc/user/$OS_TYPE:alibuild-dev
+  stage: test
+  before_script:
+    - source /etc/bashrc
+  script:
+    - module add mpddev/latest
+    - export MPDROOT=$(readlink -m $OS_TYPE/mpdroot)
+    - source $MPDROOT/etc/env.sh
+    - chmod +x $CI_PROJECT_DIR/scripts/run_build_tests.sh && $CI_PROJECT_DIR/scripts/run_build_tests.sh -r $REPORT_NAME
+    - (if grep -q "failure" $REPORT_NAME.xml; then $(exit -1); else $(exit 0); fi);
+  tags:
+    - cvmfs
+  only:
+    - merge_requests
+  artifacts:
+    when: always
+    reports:
+      junit: $REPORT_NAME.xml
+  allow_failure: true
+  <<: *only-default
+
+
+build_tests_nica:c7:
+  variables:
+    OS_TYPE: "c7"
+    REPORT_NAME: "report_c7"
+  needs: ["build_nica:c7"]
+  dependencies:
+    - build_nica:c7
+  retry: 1	 # retry script if it failed (sometimes if fails due to some unexpected particle). Maximum 2 retries.
+  <<: *build_tests_nica
+
+build_tests_nica:c8:
+  variables:
+    OS_TYPE: "c8"
+    REPORT_NAME: "report_c8"
+  needs: ["build_nica:c8"]
+  dependencies:
+    - build_nica:c8
+  <<: *build_tests_nica
+
