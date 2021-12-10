@@ -73,6 +73,7 @@ add_subdirectory (ffd) # BOOST
 add_subdirectory (sts) # BOOST
 add_subdirectory (bmd) # BOOST
 add_subdirectory (mcord) # BOOST
+add_subdirectory(floor)
 # LEVEL 2
 add_subdirectory (emc) # clustering BOOST
 add_subdirectory (kalman) # mpdbase mpdfield

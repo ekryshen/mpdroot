@@ -233,7 +233,7 @@ add_subdirectory (bmd)
 add_subdirectory (mcord)
 add_subdirectory (physics) #MpdBase MpdMCStack Kalman MpdPid LHETrack
 add_subdirectory (eventdisplay) #Emc
-
+add_subdirectory(floor)
 #add_subdirectory (macro)
 #add_subdirectory (bbc)
 
