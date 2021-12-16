@@ -63,7 +63,7 @@ build:ubuntu:
     reports:
       junit: $REPORT_NAME.xml
   script:
-      - chmod +x scripts/run_build_tests.sh && scripts/run_build_tests.sh -t old -r $REPORT_NAME
+      - scripts/run_build_tests.sh -t old -r $REPORT_NAME
       - (if grep -q "failure" $REPORT_NAME.xml; then $(exit -1); else $(exit 0); fi);
   retry: 1      # retry script if it failed (sometimes it fails due to some unexpected particle)
   allow_failure: false
@@ -145,8 +145,8 @@ codeOwners:
             - $CI_MERGE_REQUEST_PROJECT_PATH == "nica/mpdroot" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"
     script:
         - module add Clang/v13.0.0-1
-        - chmod +x scripts/inform_codeowners.sh && scripts/inform_codeowners.sh
-        - chmod +x scripts/check_clangFormatting.sh && scripts/check_clangFormatting.sh
+        - scripts/inform_codeowners.sh
+        - scripts/check_clangFormatting.sh
 
 check_permissions:
   image: git.jinr.ru:5005/nica/docker-images/centos7/base:latest
@@ -215,7 +215,7 @@ build_nica:c8:
     - module add mpddev/latest
     - export MPDROOT=$(readlink -m $OS_TYPE/mpdroot)
     - source $MPDROOT/etc/env.sh
-    - chmod +x $CI_PROJECT_DIR/scripts/run_build_tests.sh && $CI_PROJECT_DIR/scripts/run_build_tests.sh -r $REPORT_NAME
+    - $CI_PROJECT_DIR/scripts/run_build_tests.sh -r $REPORT_NAME
     - (if grep -q "failure" $REPORT_NAME.xml; then $(exit -1); else $(exit 0); fi);
   tags:
     - cvmfs
