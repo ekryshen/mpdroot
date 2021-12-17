@@ -14,30 +14,32 @@
 class MpdRoInvMassTask : public FairTask {
 
 private:
-    UInt_t fEventCounter; //! event counter
-    TDatabasePDG*  fPDG;  //!  PDG database
+  UInt_t fEventCounter;  //! event counter
+  TDatabasePDG* fPDG;    //!  PDG database
 
-    MpdEvent *fDstEvent; // dst event
-    TClonesArray *fMCTracks; // array of MC tracks
-    
-    TH1F *fRoInvMass;
-    TH1F *fRoInvMassMC;
+  MpdEvent* fDstEvent;      // dst event
+  TClonesArray* fMCTracks;  // array of MC tracks
+
+  TH1F* fRoInvMass;
+  TH1F* fRoInvMassMC;
 
 public:
-
   MpdRoInvMassTask();
-  MpdRoInvMassTask(const char *name, const char *title="MPD Analysis");
-  virtual ~MpdRoInvMassTask();	// Destructor
+  MpdRoInvMassTask(const char* name, const char* title = "MPD Analysis");
+  virtual ~MpdRoInvMassTask();  // Destructor
 
-    virtual void Exec(Option_t * option);
-    virtual InitStatus Init(); // Init before Exec
-    virtual void Finish(); // Finish after Exec
+  virtual void Exec(Option_t* option);
+  virtual InitStatus Init();  // Init before Exec
+  virtual void Finish();      // Finish after Exec
 
-    void  Reset(); //
-    void  Register(); // Register what do you want to write to file
-    void  SetOption(Option_t *option=" ") {fOption = option;  fOption.ToLower();}
+  void Reset();     //
+  void Register();  // Register what do you want to write to file
+  void SetOption(Option_t* option = " ") {
+    fOption = option;
+    fOption.ToLower();
+  }
 
-  ClassDef(MpdRoInvMassTask,0)
+  ClassDef(MpdRoInvMassTask, 0)
 };
 
 #endif

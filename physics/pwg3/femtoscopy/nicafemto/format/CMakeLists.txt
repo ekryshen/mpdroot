@@ -22,6 +22,7 @@ ${CMAKE_SOURCE_DIR}/mpddst
 ${CMAKE_SOURCE_DIR}/mpddst/mcDst
 ${CMAKE_SOURCE_DIR}/mpddst/MpdMiniEvent
 ${CMAKE_SOURCE_DIR}/generators/unigen_format
+${CMAKE_SOURCE_DIR}/physics/common
 ${CMAKE_SOURCE_DIR}/physics/pwg3/femtoscopy/nicafemto/format
 ${NICAFEMTO_FEATURES}
 ${NICAFEMTO_MPDHELPERS}
@@ -92,7 +93,7 @@ MpdQACoreManager.cxx
 Set(HEADERS )
 Set(LINKDEF NicaMpdInterfaceLinkDef.h)
 Set(LIBRARY_NAME NicaMpdFormat)
-Set(DEPENDENCIES MpdDst MpdBase tpc MpdMCStack NicaMpdHelper UniGenFormat NicaQA)
+Set(DEPENDENCIES MpdDst MpdBase tpc MpdMCStack NicaMpdHelper UniGenFormat NicaQA MpdPhysicsCommon)
 
 GENERATE_LIBRARY()
 

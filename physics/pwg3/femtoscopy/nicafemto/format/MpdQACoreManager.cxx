@@ -9,7 +9,7 @@
 
 #include "MpdQACoreManager.h"
 
-#include "NicaMiniDstSource.h"
+#include "MpdMiniDstSource.h"
 #include "NicaMpdHbtComplexEvent.h"
 #include "NicaMpdHbtEvent.h"
 #include "NicaMpdMiniDstEvent.h"
@@ -30,8 +30,8 @@ FairRunAna* MpdQACoreManager::GetRunAna(TString outFile, TString simFile, TStrin
     simFile  = recoFile;
     recoFile = "";
   }
-  FairRunAna* run         = new FairRunAna();
-  NicaMiniDstSource* file = new NicaMiniDstSource(simFile);
+  FairRunAna* run        = new FairRunAna();
+  MpdMiniDstSource* file = new MpdMiniDstSource(simFile);
   run->SetSource(file);
   run->SetOutputFile(outFile);
   return run;
