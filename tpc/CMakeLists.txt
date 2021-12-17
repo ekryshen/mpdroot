@@ -3,7 +3,8 @@
 # The extension is already found.  Any number of sources could be listed here.
 
 set(INCLUDE_DIRECTORIES
- ${BASE_INCLUDE_DIRECTORIES}
+  ${BASE_INCLUDE_DIRECTORIES}
+  ${Eigen3_INCLUDE_DIRS}
   ${CMAKE_SOURCE_DIR}/mpdfield
   ${CMAKE_SOURCE_DIR}/mcstack
   ${CMAKE_SOURCE_DIR}/tpc
@@ -54,6 +55,8 @@ MpdTpcClusterFinderAZ.cxx
 MpdTPCpid.cxx
 MpdTpcClusterFinderMlem.cxx
 MpdTpcEDepParams.cxx
+MpdTpcAlignmentKalman.cxx
+MpdTpcTrackEmulator.cxx
 )
 
 Set(HEADERS)

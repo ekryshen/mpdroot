@@ -59,6 +59,9 @@ html/
 # VS Code directory
 .vscode/*
 
+# QTCreator SDK config
+CMakeLists.txt.user
+
 # Files generated running root runMC.C and root reco.C for test purposes
 macro/mpd/evetest.root
 macro/mpd/file.txt
