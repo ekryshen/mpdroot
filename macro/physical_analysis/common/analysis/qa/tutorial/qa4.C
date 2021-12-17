@@ -17,6 +17,7 @@
 #include "NicaConst.h"
 #include "NicaDataFormat.h"
 #include "NicaEventImpactParameterCut.h"
+#include "NicaEventVirtualCut.h"
 #include "NicaFemto1DCF.h"
 #include "NicaFemtoBasicAna.h"
 #include "NicaFemtoCorrFuncKt.h"
@@ -25,6 +26,7 @@
 #include "NicaMpdDstMCEvent.h"
 #include "NicaMpdDstMCEventTpcPads.h"
 #include "NicaMpdMiniDstFullEvent.h"
+#include "NicaMpdMiniDstMcEvent.h"
 #include "NicaQATrackTask.h"
 #include "NicaTrackNullCut.h"
 #include "NicaTrackPdgCut.h"
@@ -56,59 +58,47 @@
  *  Note: the histograms are blockedby CORS policy - you have to upload your directory to some web server or use some "simple
  * server" like "python -m SimpleHTTPServer 8069" to browse such site enter 0.0.0.0:8069
  */
-#define MINIDST  // process full-DST file if this line is removed
-
 
 NicaQAPlot GetEventQA();
 
 NicaQAPlot GetTrackQA();
-#ifdef MINIDST
-void qa(TString inFile = "$VMCWORKDIR/macro/mpd/mpddst.MiniDst.root", TString outFile = "qa.root") {
+
+void qa4(TString inFile = "$VMCWORKDIR/macro/mpd/mpddst.MiniDst.root", TString outFile = "qa.root") {
   FairRunAna* ana          = new FairRunAna();
   MpdMiniDstSource* source = new MpdMiniDstSource(inFile);
-#else
-void qa(TString inFile = "$VMCWORKDIR/macro/mpd/mpddst.root", TString outFile = "qa.root") {
-  FairRunAna* ana        = new FairRunAna();
-  FairFileSource* source = new FairFileSource(inFile);
-#endif
+
 
   ana->SetSource(source);
   ana->SetOutputFile(outFile);
 
   NicaQATrackTask* trackTask = new NicaQATrackTask();
-#ifdef MINIDST
+
   trackTask->SetFormat(new NicaMpdMiniDstFullEvent());
-#else
-  trackTask->SetFormat(new NicaMpdDstMCEvent());
-#endif
-  Double_t Centrality[4] = {0, 5, 9.10, 20};
-  Int_t Pids[6]          = {211, -211, 321, -321, 2212, -2212};
-
-  NicaEventImpactParameterCut bCut;
-
-  trackTask->SetEventCollectionNames({"Central", "MidCentral", "Peripheral"});
-  trackTask->SetTrackCollectionNames({"Pion+", "Pion-", "Kaon+", "Kaon-", "Proton", "AntiProton", "Unmatched"});
-  for (int i = 0; i < 3; i++) {
-    bCut.SetMinMax(Centrality[i], Centrality[i + 1]);
-    bCut.SetCollectionID(i);
-    trackTask->AddCut(bCut, "im");
-  }
-
-  for (int j = 0; j < 6; j++) {
-    NicaTrackPdgCut pid;
-    pid.SetMinAndMax(Pids[j]);
-    pid.SetCollectionID(j);
-    trackTask->AddCut(pid, "im");
-  }
-  NicaTrackNullCut nullcut;
-  nullcut.AcceptOnlyNotMatched();
-  nullcut.SetCollectionID(6);
-  trackTask->AddCut(nullcut);
-  trackTask->SetQAPlot(GetTrackQA());
-
 
   trackTask->SetQAPlot(GetTrackQA());
   trackTask->SetQAPlot(GetEventQA());
+  trackTask->SetEventCollectionNames({"CentralE", "SemicentralE"});
+  trackTask->SetTrackCollectionNames({"Pions", "Protons"});
+
+
+  NicaEventImpactParameterCut central;
+  central.SetMinMax(0, 3.5);
+  central.SetCollectionID(0);
+  NicaEventImpactParameterCut semicentral;
+  semicentral.SetMinMax(5, 10);
+  semicentral.SetCollectionID(1);
+
+  trackTask->AddCut(central, "im");  // cut on "imaginary part of data"
+  trackTask->AddCut(semicentral, "im");
+
+
+  NicaTrackPdgCut pion, proton;
+  pion.SetMinAndMax(NicaConst::PionPlusPID());
+  proton.SetMinAndMax(NicaConst::ProtonPID());
+
+  trackTask->AddCut(pion, "{0}+im");  // you can specify collection ID by {}
+  trackTask->AddCut(proton, "{1}+im");
+
 
   ana->AddTask(trackTask);
   ana->Init();
@@ -119,30 +109,13 @@ using namespace NicaDataFieldID;
 
 NicaQAPlot GetEventQA() {
   NicaQAPlot plot(ENicaCutUpdate::kEventUpdate);
-  plot.AddTH2("centrality", ImStep + EEvent::kTracksNo, ImStep + EMcEvent::kB, 100, 0, 3000, 100, 0, 20);
-  plot.AddTH2("vertex", ImStep + EEvent::kVertexZ, ReStep + EEvent::kVertexZ, 100, -100, 100, 100, -100, 100);
   plot.AddTH1("imp", ImStep + EMcEvent::kB, 100, 0, 20);
-  plot.AddTH2("vertexXY", ReStep + EEvent::kVertexX, ReStep + EEvent::kVertexY, 50, -5, 5, 50, -5, 5);
-  plot.AddTH2("multiVsImp", ReStep + EEvent::kTracksNo, ImStep + EMcEvent::kB, 1000, 0, 2000, 100, 0, 20);
   return plot;
 }
 
 NicaQAPlot GetTrackQA() {
   NicaQAPlot plot(ENicaCutUpdate::kTrackUpdate);
-  // plot MC values
   plot.AddTH2("KinematicsMC", ImStep + ETrack::kEta, ImStep + ETrack::kPt, 100, -2, 2, 100, 0, 4);
-  // plot Reco values
   plot.AddTH2("KinematicsReco", ReStep + ETrack::kEta, ReStep + ETrack::kPt, 100, -2, 2, 100, 0, 4);
-  plot.AddTH2("TpcMon", ReStep + ETrack::kP, ReStep + EExpTrack::kTpcDedx, 200, 0, 3, 1000, 0, 1E+5);
-  plot.AddTH2("TofMon", ReStep + ETrack::kP, ReStep + EExpTrack::kTofM2, 200, 0, 3, 200, -.1, 2);
-  plot.AddTH2("TofMon2", ReStep + ETrack::kP, ReStep + EExpTrack::kToFBeta, 200, 0, 3, 200, -0.1, 1.2);
-  plot.AddTH1("NtpcHits", ReStep + EExpTrack::kTpcNHits, 56, 0, 56);
-  plot.AddTH1("Chi2", ReStep + EExpTrack::kChi2, 40, 0, 20);
-
-  // plot "complex values"
-  plot.AddTH2("P reso", ReStep + ETrack::kP, EComplexTrack::kDeltaP, 100, 0, 2, 100, -0.1, 0.1);
-  plot.AddTH2("Phi reso", ReStep + ETrack::kP, EComplexTrack::kDeltaPhi, 100, 0, 2, 100, -0.2, 0.2);
-  plot.AddTH2("Theta reso", ReStep + ETrack::kP, EComplexTrack::kDeltaTheta, 100, 0, 2, 100, -.2, 0.2);
-
   return plot;
 }
