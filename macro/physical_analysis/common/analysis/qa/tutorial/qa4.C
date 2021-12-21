@@ -64,6 +64,7 @@ NicaQAPlot GetEventQA();
 NicaQAPlot GetTrackQA();
 
 void qa4(TString inFile = "$VMCWORKDIR/macro/mpd/mpddst.MiniDst.root", TString outFile = "qa.root") {
+inFile = "/media/daniel/Baza/postdoc/2021/mpd/vhlle_prod/AuAu_ecm7.7GeV_hydroON_EoSXPT_0-16fm_500ev_9979-1.reco.MiniDst.root";
   FairRunAna* ana          = new FairRunAna();
   MpdMiniDstSource* source = new MpdMiniDstSource(inFile);
 
@@ -117,5 +118,6 @@ NicaQAPlot GetTrackQA() {
   NicaQAPlot plot(ENicaCutUpdate::kTrackUpdate);
   plot.AddTH2("KinematicsMC", ImStep + ETrack::kEta, ImStep + ETrack::kPt, 100, -2, 2, 100, 0, 4);
   plot.AddTH2("KinematicsReco", ReStep + ETrack::kEta, ReStep + ETrack::kPt, 100, -2, 2, 100, 0, 4);
+  plot.AddTH2("simPtvsrecoPt", ImStep + ETrack::kPt, ReStep + ETrack::kPt, 100, 0, 4, 100, 0, 4);
   return plot;
 }
