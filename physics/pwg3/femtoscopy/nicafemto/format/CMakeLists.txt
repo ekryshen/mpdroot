@@ -93,7 +93,7 @@ MpdQACoreManager.cxx
 Set(HEADERS )
 Set(LINKDEF NicaMpdInterfaceLinkDef.h)
 Set(LIBRARY_NAME NicaMpdFormat)
-Set(DEPENDENCIES MpdDst MpdBase tpc MpdMCStack NicaMpdHelper UniGenFormat NicaQA MpdPhysicsCommon)
+Set(DEPENDENCIES MpdDst MpdBase tpc MpdMCStack NicaMpdHelper UniGenFormat NicaQA MpdPhysicsCommon NicaGen)
 
 GENERATE_LIBRARY()
 
