@@ -26,10 +26,10 @@ class MpdTofMatchingData : public TObject
         TVector3	fMomentum;		// Momentum [GeV/c]	{KFTrack copy}   
 	Double_t	fdPhi;                  // VR
 	Double_t	fdZed;			// VR
-   
+        Double_t	fTime;              	// Time since event start [ns]	{TofHit copy}
+
 public: 
 	// CAUTION: transparent data, MUST be used only at run-time, for debug purpose
-        Double_t	fTime;              	//! Time since event start [ns]	{TofHit copy} 
        	Int_t      	fFlag = 0;		//! copy of MpdTofHit::fFlag instance.   
         TVector3	fEstPoint;		//! extrapolated point on pad plate(x,y,z), [cm] {KFTrack refit}
        	TVector3	fHitPosition;	      	//! Position of hit [cm] {TofHit copy}  
@@ -53,14 +53,14 @@ public:
 	Double_t		GetWeight(void)const{ return fWeight;};	
 	Double_t		GetNormWeight(void)const{ return fNormWeight;};	
 	void			SetNormWeight(Double_t v){fNormWeight = v;};
-
+	Double_t		GetTime(void)const{ return fTime;};
 	Double_t		GetdPhi(void)const{ return fdPhi;};
 	Double_t		GetdZed(void)const{ return fdZed;};
 
 	// CAUTION: getters for transparent(NOT serialized) data
 	Double_t		GetDelta(void)const{ return  (fEstPoint - fHitPosition).Mag();};
 
-ClassDef(MpdTofMatchingData, 8)
+ClassDef(MpdTofMatchingData, 9)
 };
 //------------------------------------------------------------------------------------------------------------------------
 

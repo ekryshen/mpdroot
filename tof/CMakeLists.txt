@@ -37,6 +37,7 @@ MpdTofMatching.cxx
 MpdTofMatchingData.cxx
 MpdTofMatchingQA.cxx
 MpdTofHitProducerQA.cxx
+MpdTofT0.cxx
 MpdTOFpid.cxx
 )
 
@@ -57,6 +58,7 @@ MpdTofMatching.h
 MpdTofMatchingData.h
 MpdTofMatchingQA.h
 MpdTofHitProducerQA.h
+MpdTofT0.h
 MpdTOFpid.h
 )
 
