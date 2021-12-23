@@ -143,7 +143,7 @@ void MpdBayesPriors::_add(TH1D *h1)
 //------------------------------------------------------------------------------------------------------------------------
 TString MpdBayesPriors::_getFullFlnm(size_t iterNmb, const char *flnm) const
 {
-   return TString::Format("%s_iter%d.root", flnm, iterNmb);
+   return TString::Format("%s_iter%d.root", flnm, (int)iterNmb);
 }
 //------------------------------------------------------------------------------------------------------------------------
 TString MpdBayesPriors::_getTHname(size_t iterNmb, size_t pid) const

@@ -34,7 +34,8 @@
 
 using namespace std;
 
-ClassImp(MpdTofT0) ClassImp(MpdTofT0Data)
+ClassImp(MpdTofT0) 
+ClassImp(MpdTofT0Data)
    //------------------------------------------------------------------------------------------------------------------------
    LState::LState(size_t &size)
 {
