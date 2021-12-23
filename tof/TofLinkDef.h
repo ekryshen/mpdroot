@@ -5,22 +5,21 @@
 #pragma link off all globals;
 #pragma link off all classes;
 #pragma link off all functions;
- 
+
 #pragma link C++ class MpdTofGeo;
 #pragma link C++ class MpdTofGeoPar;
-#pragma link C++ class MpdTof+;
+#pragma link C++ class MpdTof + ;
 #pragma link C++ class MpdTofContFact;
-#pragma link C++ class MpdTofHit+;
-#pragma link C++ class MpdTofPoint+;
-#pragma link C++ class MpdTofHitProducer+;
-#pragma link C++ class MpdTofHitProducerIdeal+;
-#pragma link C++ class MpdTofMatching+;
-#pragma link C++ class MpdTofMatchingData+;
-#pragma link C++ class MpdTofT0+;
-#pragma link C++ class MpdTofT0Data+;
-#pragma link C++ class MpdTofBayesPid+;
-#pragma link C++ class MpdBayesPriors+;
-#pragma link C++ class MpdTOFpid+;
+#pragma link C++ class MpdTofHit + ;
+#pragma link C++ class MpdTofPoint + ;
+#pragma link C++ class MpdTofHitProducer + ;
+#pragma link C++ class MpdTofHitProducerIdeal + ;
+#pragma link C++ class MpdTofMatching + ;
+#pragma link C++ class MpdTofMatchingData + ;
+#pragma link C++ class MpdTofT0 + ;
+#pragma link C++ class MpdTofT0Data + ;
+#pragma link C++ class MpdTofBayesPid + ;
+#pragma link C++ class MpdBayesPriors + ;
+#pragma link C++ class MpdTOFpid + ;
 
 #endif
-
