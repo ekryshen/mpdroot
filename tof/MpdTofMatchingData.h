@@ -36,6 +36,7 @@ public:
 	bool		fIsTrueMatching = false;//!	
 	bool		fHadTofSignal = false;	//!
 	bool		fBestParameter = false;	//!
+	double		fBayesPid[4] = {};	//! species probability: 0 - proton, 1 - pion, 2 - kaon, 3 - electron(filled by [MpdTofBayesPid::Exec])
        	
         MpdTofMatchingData();
         MpdTofMatchingData(Int_t kfTrackId, Int_t tofHitId, Double_t weight, const  MpdTofHit*,  Double_t length, Int_t nTrHits, const TVector3& Momentum, const TVector3& estPoint);        
@@ -60,7 +61,7 @@ public:
 	// CAUTION: getters for transparent(NOT serialized) data
 	Double_t		GetDelta(void)const{ return  (fEstPoint - fHitPosition).Mag();};
 
-ClassDef(MpdTofMatchingData, 9)
+ClassDef(MpdTofMatchingData, 10)
 };
 //------------------------------------------------------------------------------------------------------------------------
 

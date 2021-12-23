@@ -16,9 +16,11 @@
 #pragma link C++ class MpdTofHitProducerIdeal+;
 #pragma link C++ class MpdTofMatching+;
 #pragma link C++ class MpdTofMatchingData+;
-#pragma link C++ class MpdTOFpid+;
 #pragma link C++ class MpdTofT0+;
 #pragma link C++ class MpdTofT0Data+;
+#pragma link C++ class MpdTofBayesPid+;
+#pragma link C++ class MpdBayesPriors+;
+#pragma link C++ class MpdTOFpid+;
 
 #endif
 

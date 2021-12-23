@@ -38,6 +38,7 @@ MpdTofMatchingData.cxx
 MpdTofMatchingQA.cxx
 MpdTofHitProducerQA.cxx
 MpdTofT0.cxx
+MpdTofBayesPid.cxx
 MpdTOFpid.cxx
 )
 
@@ -59,6 +60,7 @@ MpdTofMatchingData.h
 MpdTofMatchingQA.h
 MpdTofHitProducerQA.h
 MpdTofT0.h
+MpdTofBayesPid.h
 MpdTOFpid.h
 )
 
