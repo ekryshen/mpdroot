@@ -3,14 +3,14 @@ stages:
  - test
  - deploy
  - codeOwners_Permissions
- 
+
 before_script:
  - export SIMPATH=/cvmfs/nica.jinr.ru/$OS_TYPE/fairsoft/mpd
  - export FAIRROOTPATH=/cvmfs/nica.jinr.ru/$OS_TYPE/fairroot/mpd
  - sed -i "s/\/opt\/fairsoft\/install/\/cvmfs\/nica.jinr.ru\/$OS_TYPE\/fairsoft\/mpd/g" SetEnv.sh
  - sed -i "s/\/opt\/fairroot\/install/\/cvmfs\/nica.jinr.ru\/$OS_TYPE\/fairroot\/mpd/g" SetEnv.sh
  - source ./SetEnv.sh
- 
+
 variables:
  GIT_SUBMODULE_STRATEGY: recursive
  GREEN: '\033[1;32m'
@@ -38,7 +38,7 @@ variables:
     - make -j 5
   allow_failure: false
   <<: *only-default
-  
+
 build:centos:
   variables:
     OS_TYPE: "centos7"
@@ -47,8 +47,7 @@ build:centos:
 build:ubuntu:
   variables:
     OS_TYPE: "ubuntu"
-  <<: *build 
-
+  <<: *build
 
 .test_build_template: &build_tests
   image: git.jinr.ru:5005/nica/docker-images/$OS_TYPE/base:latest
@@ -68,7 +67,7 @@ build:ubuntu:
   retry: 1      # retry script if it failed (sometimes it fails due to some unexpected particle)
   allow_failure: false
   <<: *only-default
-  
+
 build_tests:centos:
   needs: ["build:centos"]
   variables:
@@ -87,12 +86,44 @@ build_tests:ubuntu:
     - build:ubuntu
   <<: *build_tests
 
-  
+# .deploy_template: &deploy
+#   stage: deploy
+#   before_script:
+#     - echo "Skipping global before_script"
+#   script:
+#     - eval $(ssh-agent -s)
+#     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add /dev/stdin > /dev/null
+#     - mkdir -p ~/.ssh && 
+#     - chmod 700 ~/.ssh
+#     - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+#     - chmod 644 ~/.ssh/known_hosts
+#     - rm -rf /cvmfs/nica.jinr.ru/$CI_ENVIRONMENT_NAME/mpdroot/$CI_COMMIT_REF_NAME
+#     - rm -rf build
+#     - mkdir build
+#     - cd build
+#     - source /opt/rh/devtoolset-7/enable
+#     - sed -i "s/\/opt\/fairsoft\/install/\/cvmfs\/nica.jinr.ru\/$CI_ENVIRONMENT_NAME\/fairsoft\/apr21p1/g" ../SetEnv.sh
+#     - sed -i "s/\/opt\/fairroot\/install/\/cvmfs\/nica.jinr.ru\/$CI_ENVIRONMENT_NAME\/fairroot\/v18.6.4/g" ../SetEnv.sh
+#     - source ../SetEnv.sh
+#     - echo "/cvmfs/nica.jinr.ru/$CI_ENVIRONMENT_NAME/mpdroot/$CI_COMMIT_REF_NAME"
+#     - cmake -DCMAKE_INSTALL_PREFIX=/cvmfs/nica.jinr.ru/$CI_ENVIRONMENT_NAME/mpdroot/$CI_COMMIT_REF_NAME ..
+#     - make -j 5
+#     - make install
+#     - ssh $STRATUM_0 "sudo cvmfs_server transaction nica.jinr.ru"
+#     - rsync --filter='-p .cvmfscatalog' --filter='-p .cvmfsautocatalog' -a --delete /cvmfs/nica.jinr.ru/$CI_ENVIRONMENT_NAME/mpdroot/$CI_COMMIT_REF_NAME $STRATUM_0:/cvmfs/nica.jinr.ru/$CI_ENVIRONMENT_NAME/mpdroot/
+#     - ssh $STRATUM_0 "sudo cvmfs_server publish nica.jinr.ru"
+#     - ssh-agent -k
+#   only:
+#     - tags
+#     - dev
+#   allow_failure: false
+
 .deploy_template: &deploy
   stage: deploy
   before_script:
     - echo "Skipping global before_script"
   script:
+    - scripts/trigger_nicadist.sh          # new deployment via nicabuild
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add /dev/stdin > /dev/null
     - mkdir -p ~/.ssh && 
@@ -119,7 +150,7 @@ build_tests:ubuntu:
     - tags
     - dev
   allow_failure: false
-  
+
 deploy:centos7:
   image: git.jinr.ru:5005/nica/docker-images/centos7/fair:latest
   environment:
@@ -128,7 +159,6 @@ deploy:centos7:
     - docker
     - no-cvmfs
   <<: *deploy
-
 
 codeOwners:
     image: registry.gitlab.com/ndmspc/user/c7:alibuild-dev
@@ -205,7 +235,6 @@ build_nica:c8:
     OS_TYPE: "c8"
   <<: *build_nica
 
-
 .test_build_nica_template: &build_tests_nica
   image: registry.gitlab.com/ndmspc/user/$OS_TYPE:alibuild-dev
   stage: test
@@ -228,7 +257,6 @@ build_nica:c8:
   allow_failure: true
   <<: *only-default
 
-
 build_tests_nica:c7:
   variables:
     OS_TYPE: "c7"
@@ -236,7 +264,7 @@ build_tests_nica:c7:
   needs: ["build_nica:c7"]
   dependencies:
     - build_nica:c7
-  retry: 1	 # retry script if it failed (sometimes if fails due to some unexpected particle). Maximum 2 retries.
+  retry: 1       # retry script if it failed (sometimes if fails due to some unexpected particle). Maximum 2 retries.
   <<: *build_tests_nica
 
 build_tests_nica:c8:
@@ -246,5 +274,5 @@ build_tests_nica:c8:
   needs: ["build_nica:c8"]
   dependencies:
     - build_nica:c8
+  retry: 1       # retry script if it failed (sometimes if fails due to some unexpected particle). Maximum 2 retries.
   <<: *build_tests_nica
-
