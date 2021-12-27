@@ -16,8 +16,8 @@ public:
     MpdEmcHit(Int_t detectorID, TVector3 pos, TVector3 dpos, Int_t refIndex);
 
     MpdEmcHit(UInt_t sec, UInt_t row, UInt_t supMod, UInt_t mod, Float_t e) {} //TEMPORARY FIX: was not implemented -> undefined reference
-
     MpdEmcHit(UInt_t sec, UInt_t row, UInt_t supMod, UInt_t mod, Float_t e, Float_t time);
+    MpdEmcHit(UInt_t detID, Float_t e, Float_t time); 
 
     virtual ~MpdEmcHit();
 
@@ -28,16 +28,19 @@ public:
     };
 
     Int_t GetSec() const {
-        return fSecId;
+        return fDetectorID/(1000*12);
     };
 
     Int_t GetMod() const {
-        return fModId;
+       return fDetectorID - (fDetectorID/1000)*1000;
     };
 
+    Int_t GetSupMod() const {
+       return -1;	
+    };
 
     Int_t GetRow() const {
-        return fRowId;
+        return fDetectorID/1000;;
     };
 
     Float_t GetE() const {
@@ -48,41 +51,49 @@ public:
         return fTime;
     };
 
-    Int_t GetSupMod() const {
-        return fSupModId;
-    }; 
-
     Float_t GetRhoCenter() const {
-        return fRhoCenter;
+        return sqrt(fX*fX+fY*fY);
     }
 
     Float_t GetZCenter() const {
-        return fZCenter;
-    }
+        return fZ;
+    };
 
     Float_t GetPhiCenter() const {
         return fPhiCenter;
-    }
+    };
 
     Float_t GetThetaCenter() const {
         return fThetaCenter;
-    }
+    };
 
     Int_t GetTrackId() const {
         return fTrackID;
-    }
+    };
 
     Int_t GetPdg() const {
         return fPDG;
-    }
+    };
 
     Int_t GetNumTracks() const {
         return fNumTracks;
-    }
+    };
+
+    Int_t GetDetectorID() const {
+	return fDetectorID; 
+    };
+
+    Float_t GetX() const {
+        return fX;
+    };
+
+    Float_t GetY() const {
+        return fY;
+    };
 
     Float_t GetZ() const {
         return fZ;
-    }
+    };
 
     void SetFlag(Int_t flag) {
         fFlag = flag;
@@ -116,53 +127,43 @@ public:
         fNumTracks = n;
     };
 
-    void SetRhoCenter(Float_t rho) {
-        fRhoCenter = rho;
+    void SetPhiCenter(Float_t phi) {
+        fPhiCenter = phi;
     };
 
     void SetZCenter(Float_t z) {
-        fZCenter = z;
-    };
-
-    void SetPhiCenter(Float_t phi) {
-        fPhiCenter = phi;
+        fZ = z;
     };
 
     void SetThetaCenter(Float_t theta) {
         fThetaCenter = theta;
     };
 
-    void SetSecId(UInt_t id) {
-        fSecId = id;
+    void SetX(Float_t x) {
+       fX = x; 
     };
 
-    void SetRowId(UInt_t row) {
-        fRowId = row;
+    void SetY(Float_t y) {
+       fY = y; 
     };
 
-
-    void SetModId(UInt_t id) {
-        fModId = id;
+    void SetZ(Float_t z) {
+       fZ = z; 
     };
+
 
 protected:
 
-    UInt_t fSecId;
-    UInt_t fRowId;
-    UInt_t fModId;
-    UInt_t fSupModId; // super module = square of modules (3x3) (only)
-
     Float_t fE; //energy
     Float_t fTime; // hit mean time
+    Int_t fDetectorID; // detector id of each hit 
+    UInt_t fNumTracks; // number of tracks, which have contribution in module
+    Float_t fPhiCenter; // phi-angle of the center of module
+    Float_t fThetaCenter; // theta-angle of the center of module
 
     Int_t fTrackID; // -1 if more than one track in module
     Int_t fFlag; // Flag for general purposes [TDC, event tagging...]
     Int_t fPDG; // code of particle if only one track presented in module 
-    UInt_t fNumTracks; // number of tracks, which have contribution in module
-    Float_t fRhoCenter;// rho-coordinate of the center of module
-    Float_t fZCenter; // z-coordinate of the center of module
-    Float_t fPhiCenter; // phi-angle of the center of module
-    Float_t fThetaCenter; // theta-angle of the center of module
 
     ClassDef(MpdEmcHit, 1)
 

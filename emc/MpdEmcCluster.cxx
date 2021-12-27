@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////
 //                                                            //
 //  MpdEmcHitCluster                                          //
-//  Cluster production for EMC, v01                           //
-//  Author List : Martemianov M., ITEP, 2017                  //
+//  Cluster production for EMC, v03                           //
+//  Author List : Martemianov M., ITEP, 2021                  //
 //                                                            //
 ////////////////////////////////////////////////////////////////
 

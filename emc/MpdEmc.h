@@ -78,6 +78,7 @@ class MpdEmc: public FairDetector {
     virtual void   PostTrack(){;}                                     
     virtual void   PreTrack(){;}                                      
     virtual void   BeginEvent(){;}
+    virtual Int_t  GetDetectorEmcID();
 
 
  private: 

@@ -3,6 +3,7 @@
 
 #include "FairParGenericSet.h"
 #include "TMath.h"
+#include <map>
 
 class TObjArray;
 class FairParamList;
@@ -11,17 +12,24 @@ using namespace std;
 using namespace TMath;
 
 class MpdEmcGeoParams       : public FairParGenericSet {
+
 public:
  
   /** List of FairGeoNodes for sensitive  volumes */
   TObjArray      *fGeoSensNodes; 
-
   /** List of FairGeoNodes for sensitive  volumes */
   TObjArray      *fGeoPassNodes; 
 
   MpdEmcGeoParams(const char* name, const char* title, const char* context);
   MpdEmcGeoParams();
   ~MpdEmcGeoParams(void);
+
+  static MpdEmcGeoParams* GetInstance() {
+    if (!fGeomParams) fGeomParams = new MpdEmcGeoParams();
+    return fGeomParams;
+  }
+
+
   void clear(void);
   void putParams(FairParamList*);
   Bool_t getParams(FairParamList*);
@@ -30,68 +38,48 @@ public:
   
   const Double_t GetLength() const {return length;}
   const Double_t GetRmin() const {return rMin;}
-  const Double_t GetRmax() const {return rMax;}
-  
-  const UInt_t GetNsec() const {return nSec;}
-  const UInt_t GetNrows() const {return nRows;}
-  const UInt_t GetNmod() const {return nTowers;}
-
-  const Double_t GetSizeAngleSector() const {return fAngleSector;}
-  const Double_t GetSizeAngleCrate() const {return fAngleCrate;}
-
-  const Double_t GetSizeLowBox() const {return sizeLowBox;}
-  const Double_t GetSizeHighBox() const {return sizeHighBox;}
-  const Double_t GetLengthBox() const {return lengthBox;}
+  const Double_t GetRmax() const {return rMax;}  
+  const Double_t GetXTower(Int_t iID){return xTower[pointID[iID]];}
+  const Double_t GetYTower(Int_t iID){return yTower[pointID[iID]];}
+  const Double_t GetZTower(Int_t iID){return zTower[pointID[iID]];}
+  const Double_t GetPhiTower(Int_t iID){return phiTower[pointID[iID]];} 
+  const Double_t GetThetaTower(Int_t iID){return thetaTower[pointID[iID]];} 
  
-  vector<Double_t> GetPhiSector() {return phiSector;}
-  vector<Double_t> GetPhiRow() {return phiRow;}
-  vector<Double_t> GetXRow() {return xRow;}
-  vector<Double_t> GetYRow() {return yRow;}
+  vector<Double_t> GetPhiRow(){return phiRow;}
+  vector<Double_t> GetZCenterBox() {return zTower;}
+  vector<Double_t> GetThetaBox() {return thetaTower;}
+  vector<Double_t> GetPhiBox() {return phiTower;}
+  vector<Double_t> GetRhoCenterBox() {return rhoTower;}
 
-  vector<Double_t> GetXBox() {return xBox;}
-  vector<Double_t> GetYBox() {return yBox;}
-  vector<Double_t> GetZBox() {return zBox;}
+  const UInt_t GetNsec() const {return fSectorNumber;}
+  const UInt_t GetNrows() const {return fTowerNumberXY;}
+  const UInt_t GetNmod() const {return fTowerNumberZ;}
 
-  vector<Double_t> GetRhoCenterBox() {return rhoBox;}
-  vector<Double_t> GetZCenterBox() {return zBox;}
-
-  vector<Double_t> GetThetaBox() {return thetaBox;}
-  vector<Double_t> GetPhiBox() {return phiBox;}
-
-
-  UInt_t GetNsupMod()const {return nSupMod;}
-
+  const Int_t GetCrateNumber(){return fCrateNumber;}
+  const Int_t GetModuleTypes(){return fModuleTypes;}
+  const Int_t GetTowerNumber(){return fTowerNumber;}
+  const Double_t GetLengthBox(){return fTowerLength;}
 
 private:
 
-  UInt_t geoVersion; // version number (2 or 3)
-    
+  static MpdEmcGeoParams* fGeomParams;
+
   Double_t length; // Total EMC length
   Double_t rMin; // Barell minimal radius 
   Double_t rMax; // Barell maximal radius
 
-  UInt_t nSec;  // number of sectors in EMC
-  UInt_t nRows; // number of rows in one sector
-  UInt_t nTowers;  // number of towers in one rows
+  Int_t fSectorNumber; // number of sectors
+  Int_t fCrateNumber; // number of module lines in sector
+  Int_t fModuleTypes; // number of module types 
+  Int_t fTowerNumber; // total number of towers in ECal
+  Int_t fTowerNumberXY; // number of towers in module (XY-plane)
+  Int_t fTowerNumberZ; // number of towers in module along Z-axis
+  Double_t fTowerLength; // tower length  
 
-  UInt_t  nSupMod;
-  
-// Static module parameters 
+  map<Int_t, Int_t> pointID;
+  vector<Double_t> xTower, yTower, zTower, rhoTower, phiRow; 
+  vector<Double_t> thetaTower, phiTower; 
 
-  Double_t fAngleSector; // sector phi angle size
-  Double_t fAngleCrate; // crate phi angle 
-
-  Double_t sizeLowBox; // low XY-size of module 
-  Double_t sizeHighBox; // high XY-size of module
-  Double_t lengthBox; // module Z - length
-
-  vector<Double_t> phiSector; // phi - central angle of each sector
-  vector<Double_t> phiRow; // phi - central angle of each row
-  vector<Double_t> xRow, yRow; // x and y of row in the local system
-
-  vector<Double_t> xBox, yBox, zBox; // X, Y, Z - coordinate of tower (center)
-  vector<Double_t> rhoBox; // tower radius (center)
-  vector<Double_t> phiBox, thetaBox; // phi, theta - angles of each tower
 
   ClassDef(MpdEmcGeoParams, 1)
 };

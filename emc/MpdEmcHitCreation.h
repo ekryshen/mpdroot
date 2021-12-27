@@ -10,7 +10,6 @@
 #include "MpdEmcHit.h"
 #include "MpdEmcGeoParams.h"
 
-
 class TClonesArray;
 
 class MpdEmcHitCreation : public FairTask {
@@ -41,12 +40,7 @@ private:
 
     /** Output array of MpdEmcHit **/
     TClonesArray* fDigiArray;
-
-    Int_t GetSecId(Double_t , Double_t);
-    Int_t GetRowId(Double_t , Double_t);
-    Int_t GetTowerId(Double_t, Double_t, Double_t, Int_t, Double_t&, Double_t&, Double_t&, Double_t&, Double_t&);
-    MpdEmcHit* SearchHit(UInt_t sec, UInt_t row, UInt_t tower);
-
+    MpdEmcHit* SearchHit(UInt_t detID);
     MpdEmcGeoParams* fGeoPar;
 
     ClassDef(MpdEmcHitCreation, 2);

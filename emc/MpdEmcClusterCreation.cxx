@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////
 //							      //
 //  MpdEmcClusterCreation				      //
-//  EMC clsuters in MpdEmcCluster, v02  		      //
-//  Author List : Martemianov M., 2019		              //	
+//  EMC clsuters in MpdEmcCluster, v03  		      //
+//  Author List : Martemianov M., 2021		              //	
 //  							      //	
 //////////////////////////////////////////////////////////////// 
 
@@ -17,15 +17,25 @@
 #include "MpdEmcCluster.h"
 #include "MpdEmcClusterCreation.h"
 #include "MpdMCTrack.h"
-
 #include "TGeoManager.h"
+
+//
+// To produce clusters the in reco file (geometry version -> emc_v4) :
+//
+//  FairTask *emcHP = new MpdEmcHitCreation();
+//  fRun->AddTask(emcHP);
+//
+//  MpdEmcClusterCreation *EmcCluster = new MpdEmcClusterCreation();
+//  EmcCluster->SetClusterFrame(4, 3); -> Cluster frame
+//  EmcCluster->SetEnergyThreshold(5.0); -> MeV
+//  fRun->AddTask(EmcCluster);
+//
 
 namespace EMC {
     UInt_t nRows = 300; // number of rows (xy - plane)
     UInt_t nMods = 128; // number of modules in row
     Float_t Distance3DCut = 20.0; // cm
     Float_t HitThreshold = 5.0; // MeV
-    UInt_t algorithmNum = 2; // algorithm number
     UInt_t frameRow = 5; // row frame
     UInt_t frameMod = 5; // module frame 
 }
@@ -37,8 +47,8 @@ using namespace TMath;
 // -----   Default constructor   -------------------------------------------
 
 MpdEmcClusterCreation::MpdEmcClusterCreation() :
-	FairTask("EMC cluster creation"), fEnergyThreshold(EMC::HitThreshold), algoIndex(EMC::algorithmNum),
-	fMaxClusterRadius(EMC::Distance3DCut), rowFrame(EMC::frameRow), modFrame(EMC::frameMod){
+	FairTask("EMC cluster creation"), fEnergyThreshold(EMC::HitThreshold), fMaxClusterRadius(EMC::Distance3DCut),
+	rowFrame(EMC::frameRow), modFrame(EMC::frameMod){
 }
 
 
@@ -82,7 +92,7 @@ InitStatus MpdEmcClusterCreation::Init() {
 
     // Create and register output array
 
-    fClusterArray = new TClonesArray("MpdEmcCluster", 100);
+    fClusterArray = new TClonesArray("MpdEmcCluster", 1000);
     ioman->Register("MpdEmcCluster", "EMC", fClusterArray, kTRUE);
     ioman->Register("MCTrack","EMC",fMcTrackArray, kTRUE);
 ////    ioman->Register("MpdEmcHit","EMC",fHitArray, kTRUE);
@@ -112,159 +122,141 @@ void MpdEmcClusterCreation::Exec(Option_t* opt) {
 	
     MpdEmcCluster *cluster = NULL;
    
-    Bool_t addHit, addCut;
-    vector<UInt_t> modId, relHits, supHits, outHits;
-    vector<vector<UInt_t> > relCluster;
-    vector<Float_t> xHit, yHit, zHit;
-    vector<Float_t> energy, time;
+    vector<Int_t> outHits, modId;
+    Int_t towerNumber, emcRow, emcMod, numHit;
+    vector<Float_t> xHit, yHit, zHit, energy, time;
+    Float_t rho, phi, theta, rhoCenter, thetaCenter, phiCenter;
+    Float_t thetaPos, phiPos, rhoPos, zPos, fEnergy, fTime, valRad;
    
     if (nHits > 0) {
 
-     for (UInt_t iHit = 0; iHit < nHits; ++iHit) { 
-      
+     for (UInt_t iHit = 0; iHit < nHits; ++iHit) {       
        MpdEmcHit* hit = (MpdEmcHit*)fHitArray->At(iHit);    
        if (hit->GetE()*1000. > fEnergyThreshold) {
-        modId.push_back(1000*(hit->GetRow()+1)+(hit->GetMod()+1));
-        xHit.push_back(hit->GetRhoCenter()*cos(hit->GetPhiCenter()*DegToRad()));
-        yHit.push_back(hit->GetRhoCenter()*sin(hit->GetPhiCenter()*DegToRad()));
-        zHit.push_back(hit->GetZCenter());
+        emcRow = hit->GetRow(); emcMod = hit->GetMod();
+        towerNumber =  1000*(emcRow+1)+(emcMod+1);
+        modId.push_back(towerNumber);
+        xHit.push_back(hit->GetX());
+        yHit.push_back(hit->GetY());
+        zHit.push_back(hit->GetZ());
         energy.push_back(hit->GetE());
         time.push_back(hit->GetTime());
        }
      }
 
-     UInt_t row, mod;
-     vector<Float_t> iterEnergy = energy;     
-
-     while (iterEnergy.size()) {
-
-       relHits.clear(); outHits.clear();
-       UInt_t indexMax = distance(iterEnergy.begin(), max_element(iterEnergy.begin(), iterEnergy.end()));
-       if (iterEnergy.size() == 1) indexMax = 0; 
-       indexMax = distance(energy.begin(),find(energy.begin(),energy.end(),iterEnergy[indexMax]));
-       relHits.push_back(indexMax); 
-       row = modId[indexMax]/1000; mod = modId[indexMax] - row*1000;
-       SearchFrameHits(row, mod, outHits);
-
-        for (UInt_t iHit = 0; iHit < energy.size(); iHit++) {
-
-         Float_t dist = sqrt(pow(xHit[indexMax] - xHit[iHit],2) + pow(yHit[indexMax] - yHit[iHit],2) +
-		    pow(zHit[indexMax] - zHit[iHit],2)); 
-         addHit = kTRUE; addCut = kFALSE;
-
-         for (UInt_t iAdd = 0; iAdd < supHits.size(); iAdd++) 
-				if (supHits[iAdd] == iHit) addHit = kFALSE; 
-
-         if (algoIndex == 1) addCut = (dist < fMaxClusterRadius);
-
-         if (algoIndex == 2) {
-	  for (UInt_t iRel = 0; iRel < outHits.size(); iRel++) 
-           	if (modId[iHit] == outHits[iRel]) addCut = kTRUE;
-         }
-
-         if ( (addCut) && (addHit) ) {
-          UInt_t pos = distance(iterEnergy.begin(),find(iterEnergy.begin(),iterEnergy.end(),energy[iHit]));
-          if (iterEnergy.size() == 1) pos = 0;
-          iterEnergy.erase(iterEnergy.begin()+pos);
-          if (indexMax != iHit) relHits.insert(relHits.end(), iHit); 
-         }        
-        }
-        for (UInt_t iRel = 0; iRel < relHits.size(); iRel++) 
-			supHits.insert(supHits.end(), relHits[iRel]);
-        relCluster.push_back(relHits);	
-       }
-
-    }
-
-// Fill cluster information (0,0 - central hit)
 
     TVector3 fPos; 
-    UInt_t numHits; 
-    Float_t rho, phi, theta, rhoCenter{0}, phiCenter{0}; //thetaCenter,
-    Float_t thetaPos, phiPos{0}, rhoPos, zPos, fEnergy, fTime;
-    vector<Float_t> eH, xH, yH, zH;
+    vector<Int_t>::iterator iterMod;
+    vector<Int_t> iterTower = modId;
+    vector<Float_t> iterEnergy = energy;
+    vector<Float_t> eH, xH, yH, zH, tH;  
 
-    for (UInt_t iCluster = 0; iCluster < relCluster.size(); iCluster++) {
-      fEnergy = 0.; fTime = 0.; phiPos = 0.; thetaPos = 0.;
- 
-      numHits = relCluster[iCluster].size();
-      eH.clear(); xH.clear(); yH.clear(); zH.clear();
+    while (iterEnergy.size()) {
 
-      for (UInt_t iHit = 0; iHit < relCluster[iCluster].size(); iHit++) {
+     outHits.clear(); numHit = 0;
+     eH.clear(); xH.clear(); yH.clear(); zH.clear(); tH.clear();
 
-        eH.insert(eH.end(), energy[relCluster[iCluster][iHit]]);
-        xH.insert(xH.end(),xHit[relCluster[iCluster][iHit]]);
-        yH.insert(yH.end(),yHit[relCluster[iCluster][iHit]]); 
-        zH.insert(zH.end(),zHit[relCluster[iCluster][iHit]]);
-        rho = sqrt(xH[iHit]*xH[iHit]+yH[iHit]*yH[iHit]+zH[iHit]*zH[iHit]);
-        theta = ACos(zH[iHit]/rho);
-	phi = ATan2(yH[iHit],xH[iHit])*RadToDeg();
-        if (phi < 0) phi += 360;
-        if (iHit == 0) {
-	 phiCenter = phi; rhoCenter = rho; //thetaCenter = theta; 
-        }
+     UInt_t indexMax = distance(iterEnergy.begin(), max_element(iterEnergy.begin(), 
+		       iterEnergy.end()));
+     emcRow = iterTower[indexMax]/1000; emcMod = iterTower[indexMax] - emcRow*1000;
+     fEnergy = 0.; fTime = 0.; phiPos = 0.; thetaPos = 0.;
+     SearchFrameHits(emcRow, emcMod, outHits);
 
-	fEnergy += eH[iHit]; thetaPos += theta*eH[iHit];  
-        phiPos += MpdEmcMath::GetPhiDiff(phi, phiCenter)*eH[iHit]; 
-        fTime += time[relCluster[iCluster][iHit]]*eH[iHit];
-        
+     indexMax = distance(modId.begin(), find(modId.begin(), modId.end(), iterTower[indexMax]));
+     rho = sqrt(xHit[indexMax]*xHit[indexMax]+yHit[indexMax]*yHit[indexMax]+
+		zHit[indexMax]*zHit[indexMax]);
+     phi = TMath::ATan2(yHit[indexMax],xHit[indexMax])*RadToDeg();
+     if (phi < 0) phi += 360;
+     phiCenter = phi; rhoCenter = rho; thetaCenter = TMath::ACos(zHit[indexMax]/rho);
+
+     for (Int_t nInd = 0; nInd < outHits.size(); nInd++) {
+      iterMod = find(iterTower.begin(), iterTower.end(), outHits[nInd]);
+      if (iterMod != iterTower.end()) {
+
+       UInt_t ind = distance(modId.begin(), find(modId.begin(), modId.end(), *iterMod));
+       UInt_t pos = iterMod - iterTower.begin();
+       iterTower.erase(iterMod); iterEnergy.erase(iterEnergy.begin()+pos);
+
+        eH.insert(eH.end(),energy[ind]);
+        xH.insert(xH.end(),xHit[ind]);
+        yH.insert(yH.end(),yHit[ind]);
+        zH.insert(zH.end(),zHit[ind]);
+        tH.insert(tH.end(),time[ind]);
+
+        rho = sqrt(xHit[ind]*xHit[ind]+yHit[ind]*yHit[ind]+zHit[ind]*zHit[ind]);
+        theta = TMath::ACos(zHit[ind]/rho);
+        phi = TMath::ATan2(yHit[ind],xHit[ind])*RadToDeg();
+        fEnergy += energy[ind]; thetaPos += theta*energy[ind];
+        phiPos += MpdEmcMath::GetPhiDiff(phi, phiCenter)*energy[ind];
+/////        phiPos += phi*energy[ind];
+//////        fTime += time[ind]*energy[ind]; numHit++;
+
+       }
       }
 
+// Cluster parameters
+       
+  
        thetaPos = thetaPos/fEnergy;
        phiPos = phiCenter + phiPos/fEnergy;
-       fTime = fTime/fEnergy;    
-       rhoPos = rhoCenter*sin(thetaPos); 
+       rhoPos = rhoCenter*sin(thetaPos);
        zPos = rhoCenter*cos(thetaPos);
-       fPos.SetXYZ(phiPos, rhoPos, zPos);   
+       fPos.SetXYZ(phiPos, rhoPos, zPos);
+       UInt_t indMax = distance(eH.begin(), max_element(eH.begin(), eH.end()));
+       fTime = tH[indMax]; 
+
+/// Calculate cluster radius
+
+       valRad = 0.0;
+       for (Int_t iHit = 0; iHit < numHit; iHit++) {
+        phi = ATan2(yH[iHit],xH[iHit])*RadToDeg();
+        rho = sqrt(xH[iHit]*xH[iHit]+yH[iHit]*yH[iHit]+zH[iHit]*zH[iHit]);
+        if (phi < 0) phi += 360;
+        theta = ACos(zH[iHit]/rho);
+        valRad += (pow(rhoCenter*(theta-thetaPos),2)+
+                   pow(rhoPos*MpdEmcMath::GetPhiDiff(phi,phiPos)*DegToRad(),2))*eH[iHit];
+        }
 
        cluster = new((*fClusterArray)[fClusterArray->GetEntriesFast()]) MpdEmcCluster(fEnergy, fTime, fPos);
-       cluster->SetNHits(numHits); 
-       cluster->SetRad(cluster->ComputeClusterRadius(fPos, xH, yH, zH, eH));
+       cluster->SetNHits(numHit);
+       cluster->SetRad(valRad/fEnergy);
 
+      }
     }
+
   }
 
 // Search relative hits in the definite frame 
 
-void MpdEmcClusterCreation::SearchFrameHits(UInt_t row, UInt_t mod, vector<UInt_t> &outMod) {
+void MpdEmcClusterCreation::SearchFrameHits(Int_t row, Int_t mod, vector<Int_t> &outMod) {
 
-      UInt_t ind, curRow; 
-      UInt_t nRow = EMC::nRows;
-      UInt_t nMod = EMC::nMods;
-      vector<Int_t> geoMod;
-      Int_t dRowMin = row - rowFrame, dRowMax = row + rowFrame; 
+      Int_t curRow;
+      Int_t nRow = EMC::nRows, nMod = EMC::nMods;
+      Int_t dRowMin = row - rowFrame, dRowMax = row + rowFrame;
       Int_t dModMin = mod - modFrame, dModMax = mod + modFrame;
 
-      if (dRowMin <= 0) dRowMin = nRow - fabs(dRowMin);       
-      if ((UInt_t)dRowMax >= nRow) dRowMax = dRowMax - nRow; 
-      if (dModMin <= 0) dModMin = 1; 
-      if ((UInt_t)dModMax >= nMod) dModMax = nMod; 
+      if (dRowMin <= 0) dRowMin = nRow - fabs(dRowMin);
+      if (dRowMax >= nRow) dRowMax = dRowMax - nRow;
+      if (dModMin <= 0) dModMin = 1;
+      if (dModMax >= nMod) dModMax = nMod;
 
       curRow = dRowMin;
-      for (UInt_t iGeo1 = 0; iGeo1 < 2*rowFrame + 1; iGeo1++) {
-       if (curRow == nRow + 1) { curRow = 1;}
-       for (UInt_t iGeo2 = dModMin; iGeo2 < (UInt_t)dModMax + 1; iGeo2++) 
-         geoMod.insert(geoMod.end(), 1000*curRow + iGeo2);
+      for (Int_t iGeo1 = 0; iGeo1 < 2*rowFrame + 1; iGeo1++) {
+       if (curRow == nRow + 1) curRow = 1;
+       for (Int_t iGeo2 = dModMin; iGeo2 < dModMax + 1; iGeo2++)
+         outMod.insert(outMod.end(), 1000*curRow + iGeo2);
        curRow++;
       }
-      
-     outMod.clear();
-     for (UInt_t iHit = 0; iHit < (UInt_t)fHitArray->GetEntriesFast(); iHit++) {
-       MpdEmcHit* hit = (MpdEmcHit*)fHitArray->At(iHit);
-       ind = 1000*(hit->GetRow()+1) + (hit->GetMod()+1);
-       for (UInt_t iGeo = 0; iGeo < geoMod.size(); iGeo++)
-        if (ind == (UInt_t) geoMod[iGeo]) outMod.push_back(ind);
-     }
 
 }
 
 // Search relative hits
 
-void MpdEmcClusterCreation::SearchRelativeHits(UInt_t row, UInt_t mod, vector<Int_t> &outMod) {
+void MpdEmcClusterCreation::SearchRelativeHits(Int_t row, Int_t mod, vector<Int_t> &outMod) {
   
-      UInt_t ind; 
-      UInt_t nRow = EMC::nRows; 
-      UInt_t nMod = EMC::nMods;
+      Int_t ind; 
+      Int_t nRow = EMC::nRows; 
+      Int_t nMod = EMC::nMods;
       vector<Int_t> geoMod;
       
       row = row + 1; mod = mod + 1;
@@ -281,11 +273,11 @@ void MpdEmcClusterCreation::SearchRelativeHits(UInt_t row, UInt_t mod, vector<In
 
      outMod.clear();
      outMod.insert(outMod.begin(), 1000*(row) + mod);
-     for (UInt_t iHit = 0; iHit < (UInt_t) fHitArray->GetEntriesFast(); iHit++) {
+     for (UInt_t iHit = 0; iHit < fHitArray->GetEntriesFast(); iHit++) {
        MpdEmcHit* hit = (MpdEmcHit*)fHitArray->At(iHit);
        ind = 1000*(hit->GetRow()+1) + (hit->GetMod()+1);
        for (UInt_t iGeo = 0; iGeo < geoMod.size(); iGeo++)
-        if (ind == (UInt_t) geoMod[iGeo]) outMod.push_back(ind);
+        if (ind == geoMod[iGeo]) outMod.push_back(ind);
      }
    
 }

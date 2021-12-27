@@ -22,6 +22,15 @@
 using std::cout;
 using std::endl;
 
+// 
+// To start ECal MC production (add to geometry_stage1.C) 
+//
+//  FairDetector *Emc = new MpdEmc("EMC", kTRUE);
+//  Emc->SetGeometryFileName("emc_v4.root");
+//  fRun->AddModule(Emc);
+// 
+
+
 MpdEmc::MpdEmc() :
   FairDetector("EMC", kTRUE, kECAL) {
   /** create your collection for data points */
@@ -83,12 +92,15 @@ Bool_t  MpdEmc::ProcessHits(FairVolume* vol)
   fELoss += gMC->Edep();
     
   // Create MpdEmcPoint at exit of active volume
+
+  // Process Hit program 
+  
   if (gMC->IsTrackExiting() || gMC->IsTrackStop()  ||     gMC->IsTrackDisappeared()  )
   {
     fTrackID  = gMC->GetStack()->GetCurrentTrackNumber();
-    fVolumeID = vol->getMCid();
-   
+///////    fVolumeID = vol->getMCid();
 
+    fVolumeID = GetDetectorEmcID();   
     if (fELoss == 0. ) return kFALSE;
 
     AddHit(fTrackID, fVolumeID, TVector3(fPos.X(),  fPos.Y(),  fPos.Z()),
@@ -114,6 +126,24 @@ void MpdEmc::EndOfEvent() {
 }
 
 
+Int_t MpdEmc::GetDetectorEmcID() {
+
+  Int_t towerNumber = -1, towerXYNum, towerZNum; 
+  const Int_t totalTowerZ = 128, totalTowerXY = 300, totalTowerSectorXY = 12; 
+  Int_t chamberNum, sectorNum, crateNum, moduleNum, towerType, towerNum;
+  if (sscanf(gMC->CurrentVolPath(), 
+	"/cave_1/emcChamber_0/emcChH_%d/emcSector_%d/emcCrate_%d/emcModule%d_0/emc_box%d_%d/",
+      	&chamberNum, &sectorNum, &crateNum, &moduleNum, &towerType, &towerNum) > 0) { 
+   towerXYNum = sectorNum*totalTowerSectorXY + 2*crateNum + towerNum%2; 
+   towerZNum = 0.5*totalTowerZ + towerType - 1; 
+   if (chamberNum == 1) towerZNum = 0.5*totalTowerZ - towerType;  
+   towerNumber = towerXYNum*1000 + towerZNum;
+
+  }
+
+  return towerNumber;
+
+}
 
 void MpdEmc::Register() {
 
@@ -131,7 +161,7 @@ void MpdEmc::Register() {
 
 TClonesArray* MpdEmc::GetCollection(Int_t iColl) const {
   if (iColl == 0) return fMpdEmcPointCollection;
-  else return nullptr;
+  else return NULL;
 }
 
 void MpdEmc::Reset() {
@@ -151,18 +181,18 @@ void MpdEmc::Print() const {
 void MpdEmc::ConstructGeometry() {
 
     TString fileName = GetGeometryFileName();
-
     if ( fileName.EndsWith(".root") ) {
-        LOG(info)<<"Constructing EMC geometry from ROOT file "<<fileName.Data();
+        LOG(INFO) << "Constructing EMC geometry from ROOT file " << fileName.Data(); 
         ConstructRootGeometry();
     }
     else if ( fileName.EndsWith(".geo") ) {
-        LOG(info)<<"Constructing EMC geometry from ASCII file "<<fileName.Data();
+	LOG(INFO) << "Constructing EMC geometry from ASCII file " << fileName.Data(); 
         ConstructAsciiGeometry();
     }
     else {
-        LOG(fatal)<<"Geometry format of EMC file %s not supported."<<fileName.Data();
+        LOG(FATAL) << "Geometry format of EMC file " << fileName.Data() << " not supported."; 
     }
+
 } 
 
 
@@ -187,8 +217,8 @@ void MpdEmc::ConstructAsciiGeometry() {
   TObjArray *fPassNodes = par->GetGeoPassiveNodes();
 
   TListIter iter(volList);
-  FairGeoNode* node   = nullptr;
-  FairGeoVolume *aVol=nullptr;
+  FairGeoNode* node   = NULL;
+  FairGeoVolume *aVol=NULL;
   
   while( (node = (FairGeoNode*)iter.Next()) ) {
     aVol = dynamic_cast<FairGeoVolume*> ( node );
@@ -226,3 +256,4 @@ MpdEmcPoint* MpdEmc::AddHit(Int_t trackID, Int_t detID,
 }
 
 ClassImp(MpdEmc)
+

@@ -123,8 +123,8 @@ protected:
 
     Float_t fE; // cluster energy
     Float_t fTime; // cluster time
-    Float_t fPhi;// x-coordinate of cluster
-    Float_t fRho;// y-coordinate of cluster
+    Float_t fPhi;// phi - angle of cluster
+    Float_t fRho;// radius of custer
     Float_t fZ;// z-coordinate of cluster 
     Float_t fRad;// cluster radius
     UInt_t fNHits;// number of hits in cluster

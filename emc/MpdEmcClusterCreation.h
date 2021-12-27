@@ -29,15 +29,10 @@ public:
     void virtual Finish();
 
 // Search relative module of the central hit inside frame with sides rowFrame and modFrame
-    void SearchFrameHits(UInt_t row, UInt_t mod, vector<UInt_t> &relHits);
+    void SearchFrameHits(Int_t row, Int_t mod, vector<Int_t> &relHits);
 
 // Search relative module of the central hit with row/mod position
-    void SearchRelativeHits(UInt_t row, UInt_t mod, vector<Int_t> &relHits);
-
-// Set algorithm number (1 - search cluster by radius; 2 - search cluster by surrounding modules)
-    void SetAlgorithmNumber(UInt_t algo) {
-      algoIndex = algo;	     
-    }
+    void SearchRelativeHits(Int_t row, Int_t mod, vector<Int_t> &relHits);
 
 // Set threshold for each hit
     void SetEnergyThreshold(Float_t fEnMin) {
@@ -72,7 +67,6 @@ private:
     TClonesArray* fClusterArray;
 
      Float_t fEnergyThreshold; // Energy threshold for each module
-     UInt_t algoIndex; // Algorithm ID
 
 // First method variable
      Float_t fMaxClusterRadius; // Maximal radius of cluster
@@ -82,7 +76,6 @@ private:
      UInt_t modFrame; // tower (z) window to search cluster candidates 
 
      MpdEmcGeoParams* fGeoPar;
-
 
     ClassDef(MpdEmcClusterCreation, 2);
 
