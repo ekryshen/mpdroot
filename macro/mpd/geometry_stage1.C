@@ -13,7 +13,7 @@ void geometry_stage1(FairRunSim *fRun) {
   fRun->AddModule(Pipe);
 
   FairModule *Magnet = new FairMagnet("MAGNET");
-  Magnet->SetGeometryFileName("magnet_v5.root");
+  Magnet->SetGeometryFileName("magnet_v6.root");
   fRun->AddModule(Magnet);
 
   FairModule *Cradle = new FairMagnet("CRADLE");
