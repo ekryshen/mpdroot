@@ -14,37 +14,31 @@ class TClonesArray;
 
 class MpdEmcHitCreation : public FairTask {
 public:
+   /** Default constructor **/
+   MpdEmcHitCreation();
 
-    /** Default constructor **/
-    MpdEmcHitCreation();
+   /** Destructor **/
+   ~MpdEmcHitCreation();
 
+   /** Virtual method Init **/
+   virtual InitStatus Init();
 
-    /** Destructor **/
-    ~MpdEmcHitCreation();
-
-
-    /** Virtual method Init **/
-    virtual InitStatus Init();
-
-
-    /** Virtual method Exec **/
-    virtual void Exec(Option_t* opt);
-    void virtual Finish();
+   /** Virtual method Exec **/
+   virtual void Exec(Option_t *opt);
+   void virtual Finish();
 
 private:
+   /** Input array of MpdEmcPoints **/
+   TClonesArray *fPointArray;
+   /** Input array of MCTracks **/
+   TClonesArray *fMcTrackArray;
 
-    /** Input array of MpdEmcPoints **/
-    TClonesArray* fPointArray;
-    /** Input array of MCTracks **/
-    TClonesArray* fMcTrackArray;
+   /** Output array of MpdEmcHit **/
+   TClonesArray    *fDigiArray;
+   MpdEmcHit       *SearchHit(UInt_t detID);
+   MpdEmcGeoParams *fGeoPar;
 
-    /** Output array of MpdEmcHit **/
-    TClonesArray* fDigiArray;
-    MpdEmcHit* SearchHit(UInt_t detID);
-    MpdEmcGeoParams* fGeoPar;
-
-    ClassDef(MpdEmcHitCreation, 2);
-
+   ClassDef(MpdEmcHitCreation, 2);
 };
 
 #endif

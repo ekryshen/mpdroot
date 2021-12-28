@@ -13,72 +13,62 @@ class TClonesArray;
 
 class MpdEmcClusterCreation : public FairTask {
 public:
+   /** Default constructor **/
+   MpdEmcClusterCreation();
 
+   /** Destructor **/
+   ~MpdEmcClusterCreation();
 
-    /** Default constructor **/
-    MpdEmcClusterCreation();
+   /** Virtual method Init **/
+   virtual InitStatus Init();
 
-    /** Destructor **/
-    ~MpdEmcClusterCreation();
+   /** Virtual method Exec **/
+   virtual void Exec(Option_t *opt);
+   void virtual Finish();
 
-    /** Virtual method Init **/
-    virtual InitStatus Init();
+   // Search relative module of the central hit inside frame with sides rowFrame and modFrame
+   void SearchFrameHits(Int_t row, Int_t mod, vector<Int_t> &relHits);
 
-    /** Virtual method Exec **/
-    virtual void Exec(Option_t* opt);
-    void virtual Finish();
+   // Search relative module of the central hit with row/mod position
+   void SearchRelativeHits(Int_t row, Int_t mod, vector<Int_t> &relHits);
 
-// Search relative module of the central hit inside frame with sides rowFrame and modFrame
-    void SearchFrameHits(Int_t row, Int_t mod, vector<Int_t> &relHits);
+   // Set threshold for each hit
+   void SetEnergyThreshold(Float_t fEnMin) { fEnergyThreshold = fEnMin; };
 
-// Search relative module of the central hit with row/mod position
-    void SearchRelativeHits(Int_t row, Int_t mod, vector<Int_t> &relHits);
+   // Set max radius for each cluster
+   void SetMaxClusterRadius(Float_t fRad) { fMaxClusterRadius = fRad; };
 
-// Set threshold for each hit
-    void SetEnergyThreshold(Float_t fEnMin) {
-      fEnergyThreshold = fEnMin; 
-    };  
+   // Set frame to search cluster candidates
+   void SetClusterFrame(Float_t row, Float_t mod)
+   {
+      rowFrame = row;
+      modFrame = mod;
+   };
 
-// Set max radius for each cluster
-    void SetMaxClusterRadius(Float_t fRad) {
-      fMaxClusterRadius = fRad; 
-    };  
+   Float_t GetEnergyThreshold() { return fEnergyThreshold; };
 
-// Set frame to search cluster candidates
-    void SetClusterFrame(Float_t row, Float_t mod) {
-      rowFrame = row; modFrame = mod;
-    };
-
-Float_t GetEnergyThreshold() {
-     return fEnergyThreshold;
-    };
-
-Float_t GetMaxClusterRadius() {
-     return fMaxClusterRadius;
-    };
+   Float_t GetMaxClusterRadius() { return fMaxClusterRadius; };
 
 private:
+   /** Input array of MpdEmcHit **/
+   TClonesArray *fHitArray;
+   /** Input array of MCTracks **/
+   TClonesArray *fMcTrackArray;
+   /** Output array of MpdEmcCluster **/
+   TClonesArray *fClusterArray;
 
-    /** Input array of MpdEmcHit **/
-    TClonesArray* fHitArray;
-    /** Input array of MCTracks **/
-    TClonesArray* fMcTrackArray;
-    /** Output array of MpdEmcCluster **/
-    TClonesArray* fClusterArray;
+   Float_t fEnergyThreshold; // Energy threshold for each module
 
-     Float_t fEnergyThreshold; // Energy threshold for each module
+   // First method variable
+   Float_t fMaxClusterRadius; // Maximal radius of cluster
 
-// First method variable
-     Float_t fMaxClusterRadius; // Maximal radius of cluster
+   // Second method variables
+   UInt_t rowFrame; // row window to search cluster candidates
+   UInt_t modFrame; // tower (z) window to search cluster candidates
 
-// Second method variables
-     UInt_t rowFrame; // row window to search cluster candidates
-     UInt_t modFrame; // tower (z) window to search cluster candidates 
+   MpdEmcGeoParams *fGeoPar;
 
-     MpdEmcGeoParams* fGeoPar;
-
-    ClassDef(MpdEmcClusterCreation, 2);
-
+   ClassDef(MpdEmcClusterCreation, 2);
 };
 
 #endif
