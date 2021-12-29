@@ -129,7 +129,7 @@ deploy:centos7:
   <<: *deploy
 
 codeOwners:
-    image: registry.gitlab.com/ndmspc/user/c7:alibuild-dev
+    image: git.jinr.ru:5005/nica/nicadist/c7:alibuild-dev
     stage: codeOwners_Permissions
     dependencies: []
     tags:
@@ -169,7 +169,7 @@ check_permissions:
 # nicadist images and execution of new pipelines 
 # cannot place into separate .yml file, due to ongoing mutation of Gitlab parsing bug 5078
 .build_nica_template: &build_nica
-  image: registry.gitlab.com/ndmspc/user/$OS_TYPE:alibuild-dev
+  image: git.jinr.ru:5005/nica/nicadist/$OS_TYPE:alibuild-dev
   stage: build
   before_script:
     - source /etc/bashrc
@@ -204,7 +204,7 @@ build_nica:c8:
   <<: *build_nica
 
 .test_build_nica_template: &build_tests_nica
-  image: registry.gitlab.com/ndmspc/user/$OS_TYPE:alibuild-dev
+  image: git.jinr.ru:5005/nica/nicadist/$OS_TYPE:alibuild-dev
   stage: test
   before_script:
     - source /etc/bashrc
