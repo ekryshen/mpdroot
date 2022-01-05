@@ -237,7 +237,7 @@ Int_t MpdEventManager::StringToColor(TString color)
 void MpdEventManager::InitColorStructure()
 {
    // check and load colors from my XML file
-   TString coloring_xml_path = "$VMCWORKDIR/config/eventdisplay.xml";
+   TString coloring_xml_path = "$VMCWORKDIR/eventdisplay/eventdisplay.xml";
    TString coloring_xsd_path = "$VMCWORKDIR/eventdisplay/coloring.xsd";
    gSystem->ExpandPathName(coloring_xml_path);
    gSystem->ExpandPathName(coloring_xsd_path);
