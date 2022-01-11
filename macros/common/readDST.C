@@ -56,5 +56,4 @@ void readDST(TString in = "") {
     cout << "Macro finished successfully." << endl;	 // marker of successful execution for Gitlab test framework
     cout << " Test passed" << endl;
     cout << " All ok " << endl;
-    exit(0);
 }
