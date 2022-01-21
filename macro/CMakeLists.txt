@@ -3,7 +3,7 @@ add_subdirectory(tof)
 add_subdirectory(physical_analysis)
 
 INSTALL(DIRECTORY ./ DESTINATION ${CMAKE_INSTALL_PREFIX}/macro/
-	PATTERN "./mpd_scheduler" EXCLUDE
+	PATTERN "./nica_scheduler" EXCLUDE
 	PATTERN "./profiling" EXCLUDE
 	PATTERN "./CMakeLists.txt" EXCLUDE
 )

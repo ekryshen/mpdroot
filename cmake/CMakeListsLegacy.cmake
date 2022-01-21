@@ -238,8 +238,8 @@ add_subdirectory (eventdisplay) #Emc
 #add_subdirectory (macro)
 #add_subdirectory (bbc)
 
-if(EXISTS "${CMAKE_SOURCE_DIR}/macro/mpd_scheduler/CMakeLists.txt")
- add_subdirectory (macro/mpd_scheduler)
+if(EXISTS "${CMAKE_SOURCE_DIR}/macro/nica_scheduler/CMakeLists.txt")
+ add_subdirectory (macro/nica_scheduler)
 endif()
 InstallNicaFemto()
 
