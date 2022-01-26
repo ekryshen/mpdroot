@@ -870,7 +870,7 @@ INPUT                  = ../detectors/bbc/ \
                          ../detectors/emc/ \
                          ../detectors/etof/ \
                          ../eventdisplay/ \
-                         ../ffd/ \
+                         ../detectors/ffd/ \
                          ../gconfig/ \
                          ../generators/ \
                          ../kalman/ \

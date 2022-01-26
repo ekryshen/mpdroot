@@ -228,7 +228,7 @@ add_subdirectory (detectors/etof)
 add_subdirectory (zdc)
 add_subdirectory (clustering)
 add_subdirectory (detectors/emc) # Cluster
-add_subdirectory (ffd)
+add_subdirectory (detectors/ffd)
 add_subdirectory (sts)
 add_subdirectory (detectors/bmd)
 add_subdirectory (mcord)

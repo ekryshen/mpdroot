@@ -5,7 +5,7 @@
 set(INCLUDE_DIRECTORIES
  ${BASE_INCLUDE_DIRECTORIES}
  ${CMAKE_SOURCE_DIR}/mcstack
- ${CMAKE_SOURCE_DIR}/ffd
+ ${CMAKE_CURRENT_LIST_DIR}
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
@@ -23,12 +23,12 @@ link_directories(${LINK_DIRECTORIES})
 
 # List of source files
 set(SRCS
-MpdFfdGeo.cxx 
-MpdFfdGeoPar.cxx 
-MpdFfd.cxx 
-MpdFfdContFact.cxx 
-MpdFfdHit.cxx 
-MpdFfdHitProducer.cxx 
+MpdFfdGeo.cxx
+MpdFfdGeoPar.cxx
+MpdFfd.cxx
+MpdFfdContFact.cxx
+MpdFfdHit.cxx
+MpdFfdHitProducer.cxx
 MpdFfdPoint.cxx
 )
 
