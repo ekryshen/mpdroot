@@ -68,7 +68,7 @@ add_subdirectory (etof) # INDEPENDENT
 add_subdirectory (zdc) # INDEPENDENT
 add_subdirectory (ffd) # INDEPENDENT
 add_subdirectory (sts) # INDEPENDENT
-add_subdirectory (bmd) # INDEPENDENT
+add_subdirectory (detectors/bmd) # INDEPENDENT
 add_subdirectory (mcord) # INDEPENDENT
 add_subdirectory (emc) # INDEPENDENT
 add_subdirectory (mpdpid) # INDEPENDENT
