@@ -46,7 +46,7 @@ main() {
 function get_changed_files_list() {
 
   CHANGED_FILES=$(curl -s -X GET -H "PRIVATE-TOKEN: " "$MERGE_REQUEST_URL/changes" | sed 's/,"new_path/\n&/g' | grep "new_path" \
-                 | grep "\"deleted_file\":false" | cut -d '"' -f 4 | grep -E '.*\.(h|hpp|c|cpp|cxx)$')
+                 | grep "\"deleted_file\":false" | cut -d '"' -f 4 | grep -E '.*\.(h|hpp|c|cpp|cxx)$' | grep -viE '.*LinkDef.h$')
   echo "Changed files to be checked for formatting:"  $CHANGED_FILES
 
 }

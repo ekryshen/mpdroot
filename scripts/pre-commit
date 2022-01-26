@@ -45,7 +45,7 @@ fi
 
 # do the formatting, or ask the user to install required package
 if [[ -n $CLANG_FORMAT_BIN ]]; then
- for FILE in $(git diff --cached --name-only | grep -E '.*\.(h|hpp|c|cpp|cxx)$'); do
+ for FILE in $(git diff --cached --name-only | grep -E '.*\.(h|hpp|c|cpp|cxx)$' | grep -viE '.*LinkDef.h$'); do
   $CLANG_FORMAT_BIN -i --style=$CLANG_STYLE $FILE
  done
 else
