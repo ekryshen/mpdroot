@@ -8,7 +8,7 @@
 
 
 #include "mpdshape.class.C"
-#include "../../../emc/emc.h"
+#include "../../../detectors/emc/emc.h"
 #include <vector>
 
 using namespace std;

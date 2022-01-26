@@ -23,7 +23,7 @@
 /ffd/                          @nlashmanov
 
 # EMC
-/emc/                          @boiana2012
+/detectors/emc/                          @boiana2012
 
 # MCORD
 /mcord/                        @Wielanek

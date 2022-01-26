@@ -867,7 +867,7 @@ WARN_LOGFILE           =
 INPUT                  = ../detectors/bbc/ \
                          ../detectors/bmd/ \
                          ../clustering/ \
-                         ../emc/ \
+                         ../detectors/emc/ \
                          ../etof/ \
                          ../eventdisplay/ \
                          ../ffd/ \

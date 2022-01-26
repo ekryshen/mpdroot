@@ -64,7 +64,7 @@ if (MPDROOT)
     ${CMAKE_SOURCE_DIR}/kalman
     ${CMAKE_SOURCE_DIR}/tpc
     ${CMAKE_SOURCE_DIR}/lhetrack
-    ${CMAKE_SOURCE_DIR}/emc
+    ${CMAKE_SOURCE_DIR}/detectors/emc
     ${CMAKE_SOURCE_DIR}/zdc
   )
   Set(SRCS

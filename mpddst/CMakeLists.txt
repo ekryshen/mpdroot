@@ -11,7 +11,7 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_SOURCE_DIR}/mpdfield
   ${CMAKE_SOURCE_DIR}/tpc
   ${CMAKE_SOURCE_DIR}/tof
-  ${CMAKE_SOURCE_DIR}/emc/emcKI
+  ${CMAKE_SOURCE_DIR}/detectors/emc/emcKI
   ${CMAKE_SOURCE_DIR}/kalman
   ${CMAKE_SOURCE_DIR}/lhetrack
   ${CMAKE_SOURCE_DIR}/mpdpid

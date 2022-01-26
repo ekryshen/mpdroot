@@ -227,7 +227,7 @@ add_subdirectory (tpc) # Tof
 add_subdirectory (etof)
 add_subdirectory (zdc)
 add_subdirectory (clustering)
-add_subdirectory (emc) # Cluster
+add_subdirectory (detectors/emc) # Cluster
 add_subdirectory (ffd)
 add_subdirectory (sts)
 add_subdirectory (detectors/bmd)

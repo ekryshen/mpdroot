@@ -70,7 +70,7 @@ add_subdirectory (ffd) # INDEPENDENT
 add_subdirectory (sts) # INDEPENDENT
 add_subdirectory (detectors/bmd) # INDEPENDENT
 add_subdirectory (mcord) # INDEPENDENT
-add_subdirectory (emc) # INDEPENDENT
+add_subdirectory (detectors/emc) # INDEPENDENT
 add_subdirectory (mpdpid) # INDEPENDENT
 add_subdirectory (tof) # INDEPENDENT
 add_subdirectory (mpddst) # Base
