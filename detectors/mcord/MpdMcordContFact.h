@@ -13,15 +13,16 @@
 
 class FairContainer;
 
-class MpdMcordContFact : public FairContFact{
+class MpdMcordContFact : public FairContFact {
 private:
-	void setAllContainers();
-public:
-	MpdMcordContFact();
-	virtual ~MpdMcordContFact();
-    FairParSet*	createContainer(FairContainer*);
+   void setAllContainers();
 
-ClassDef(MpdMcordContFact,0)
+public:
+   MpdMcordContFact();
+   virtual ~MpdMcordContFact();
+   FairParSet *createContainer(FairContainer *);
+
+   ClassDef(MpdMcordContFact, 0)
 };
 
 #endif /* MCORD_MCORD_MPDMCORDCONTFACT_H_ */

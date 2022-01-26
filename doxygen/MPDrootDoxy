@@ -876,7 +876,7 @@ INPUT                  = ../detectors/bbc/ \
                          ../kalman/ \
                          ../lhetrack/ \
                          ../macro/ \
-                         ../mcord/ \
+                         ../detectors/mcord/ \
                          ../mcstack/ \
                          ../mpdbase/ \
                          ../mpddst/ \

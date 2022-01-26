@@ -66,7 +66,6 @@ add_subdirectory (shield_pack) # INDEPENDENT
 add_subdirectory (clustering) # INDEPENDENT
 add_subdirectory (zdc) # INDEPENDENT
 add_subdirectory (sts) # INDEPENDENT
-add_subdirectory (mcord) # INDEPENDENT
 add_subdirectory (mpdpid) # INDEPENDENT
 add_subdirectory (tof) # INDEPENDENT
 add_subdirectory (mpddst) # Base
@@ -76,6 +75,7 @@ add_subdirectory (detectors/bmd) # INDEPENDENT
 add_subdirectory (detectors/etof) # INDEPENDENT
 add_subdirectory (detectors/emc) # INDEPENDENT
 add_subdirectory (detectors/ffd) # INDEPENDENT
+add_subdirectory (detectors/mcord) # INDEPENDENT
 # LEVEL 2
 add_subdirectory (tpc) # tof
 add_subdirectory (kalman) # mpdfield
