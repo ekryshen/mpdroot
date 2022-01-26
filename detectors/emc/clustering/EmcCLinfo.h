@@ -15,26 +15,23 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-class EmcCLinfo: public TObject {
+class EmcCLinfo : public TObject {
 
 public:
+   EmcCLinfo();
+   virtual ~EmcCLinfo();
 
-    EmcCLinfo();
-    virtual ~EmcCLinfo();
-    
-    void Print(const Option_t* opt = 0) const;
-    void Save(TString fullname);
-    
-    void SetNEvents(Int_t ne)  { fNEvents = ne;  }
-    void SetCLMethod(Int_t nm) { fCLMethod = nm; }
- 
+   void Print(const Option_t *opt = 0) const;
+   void Save(TString fullname);
+
+   void SetNEvents(Int_t ne) { fNEvents = ne; }
+   void SetCLMethod(Int_t nm) { fCLMethod = nm; }
+
 private:
-  
-    Int_t fNEvents;
-    Int_t fCLMethod;
-    
-    ClassDef(EmcCLinfo,1)
+   Int_t fNEvents;
+   Int_t fCLMethod;
+
+   ClassDef(EmcCLinfo, 1)
 };
 
-#endif  /* __EMCCLINFO_H__ */
-
+#endif /* __EMCCLINFO_H__ */

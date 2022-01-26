@@ -18,24 +18,21 @@ class TH2D;
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-class EmcCluster: public Cluster {
+class EmcCluster : public Cluster {
 
 public:
+   EmcCluster();
+   EmcCluster(Int_t uid);
 
-    EmcCluster();
-    EmcCluster(Int_t uid);
-    
-    virtual ~EmcCluster();
-    
-    EmcClusterInfo* CreateClusterInfo();
-    
-    virtual void FillClusterInfo(EmcClusterInfo* clinfo);
-    virtual void FillH(TH2D* h);
+   virtual ~EmcCluster();
+
+   EmcClusterInfo *CreateClusterInfo();
+
+   virtual void FillClusterInfo(EmcClusterInfo *clinfo);
+   virtual void FillH(TH2D *h);
 
 private:
-
-    ClassDef(EmcCluster,1)
+   ClassDef(EmcCluster, 1)
 };
 
-#endif  /* __EMCCLUSTER_H__ */
-
+#endif /* __EMCCLUSTER_H__ */

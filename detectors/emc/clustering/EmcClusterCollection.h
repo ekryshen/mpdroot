@@ -19,23 +19,20 @@ class TH2D;
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-class EmcClusterCollection: public ClusterCollection {
+class EmcClusterCollection : public ClusterCollection {
 
 public:
+   EmcClusterCollection();
+   EmcClusterCollection(Int_t uid);
+   // EmcClusterCollection(TString name);
 
-    EmcClusterCollection();
-    EmcClusterCollection(Int_t uid);
-    //EmcClusterCollection(TString name);
-    
-    virtual ~EmcClusterCollection();
+   virtual ~EmcClusterCollection();
 
-    virtual Bool_t FillClusterInfo(TClonesArray* info, Int_t clflag = -1);
-    virtual void   FillH(TH2D* h);
-       
+   virtual Bool_t FillClusterInfo(TClonesArray *info, Int_t clflag = -1);
+   virtual void   FillH(TH2D *h);
+
 private:
-
-    ClassDef(EmcClusterCollection,1)
+   ClassDef(EmcClusterCollection, 1)
 };
 
-#endif  /* __EMCCLUSTERCOLLECTION_H__ */
-
+#endif /* __EMCCLUSTERCOLLECTION_H__ */

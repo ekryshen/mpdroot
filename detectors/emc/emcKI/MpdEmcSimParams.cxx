@@ -8,5 +8,5 @@
 #include "MpdEmcSimParams.h"
 
 // these initialisations are needed for a singleton
-MpdEmcSimParams* MpdEmcSimParams::sParams = 0;
+MpdEmcSimParams *MpdEmcSimParams::sParams = 0;
 ClassImp(MpdEmcSimParams)
