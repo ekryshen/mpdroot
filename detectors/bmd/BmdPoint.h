@@ -26,50 +26,38 @@
 
 // Collaborating Class Declarations --
 
-
-
 class BmdPoint : public FairMCPoint {
 public:
+   // Constructors/Destructors ---------
+   BmdPoint();
+   BmdPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length, Double_t eLoss);
+   virtual ~BmdPoint() { ; }
 
-  // Constructors/Destructors ---------
-  BmdPoint();
-  BmdPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom,
-             Double_t tof, Double_t length, Double_t eLoss);
-  virtual ~BmdPoint(){;}
+   // Operators
 
-  // Operators
-  
+   // Accessors -----------------------
 
-  // Accessors -----------------------
+   // Modifiers -----------------------
 
-
-  // Modifiers -----------------------
-
-
-  // Operations ----------------------
-  virtual void Print(const Option_t* opt=0) const ;
-  Double_t GetStep() const { return fStep; } ///> return step length
-  void SetStep(Double_t step) { fStep = step; } ///> set step length
+   // Operations ----------------------
+   virtual void Print(const Option_t *opt = 0) const;
+   Double_t     GetStep() const { return fStep; }        ///> return step length
+   void         SetStep(Double_t step) { fStep = step; } ///> set step length
 
 private:
+   // Private Data Members ------------
+   Double32_t fStep; // step length
+   Double_t   pT;
+   Double_t   eta;
+   // Int_t     pdgCode;
 
-  // Private Data Members ------------
-  Double32_t fStep; // step length
-  Double_t  pT;
-  Double_t  eta;
-  //Int_t     pdgCode;
-  
-
-  // Private Methods -----------------
+   // Private Methods -----------------
 
 public:
-  ClassDef(BmdPoint,1)
-
+   ClassDef(BmdPoint, 1)
 };
-
 #endif
 
 //--------------------------------------------------------------
 // $Log$
 //--------------------------------------------------------------
-

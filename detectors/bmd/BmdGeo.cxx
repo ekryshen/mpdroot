@@ -21,7 +21,6 @@
 
 // C/C++ Headers ----------------------
 
-
 // Collaborating Class Headers --------
 #include "FairGeoNode.h"
 
@@ -29,38 +28,36 @@
 
 ClassImp(BmdGeo)
 
-// -----   Default constructor   -------------------------------------------
-BmdGeo::BmdGeo() {
-  // Constructor
-  fName="bmd";
-  maxSectors=2;
-  maxModules=160;
+   // -----   Default constructor   -------------------------------------------
+   BmdGeo::BmdGeo()
+{
+   // Constructor
+   fName      = "bmd";
+   maxSectors = 2;
+   maxModules = 160;
 }
 
 // -------------------------------------------------------------------------
 
-const char* BmdGeo::getModuleName(Int_t m) {
+const char *BmdGeo::getModuleName(Int_t m)
+{
+   // Returns the module name of Bmd number m
 
-  // Returns the module name of Bmd number m
+   // Setting tpc here means that all modules names in the ASCII file should start with tpc otherwise they will not be
+   // constructed
 
-  // Setting tpc here means that all modules names in the ASCII file should start with tpc otherwise they will not be constructed
-
-
-  //sprintf(modName,"bmdChamber%i",m+1); 
-  sprintf(modName,"BMD");
-  return modName;
+   // sprintf(modName,"bmdChamber%i",m+1);
+   sprintf(modName, "BMD");
+   return modName;
 }
 
-const char* BmdGeo::getEleName(Int_t m) {
-    
-    printf("Hola entro a BmdGeo");
-  // Returns the element name of Det number m
-  if( m == 0 )
-  sprintf(eleName,"BMDPLUSA");
-  else if ( m == 1 )
-  sprintf(eleName,"BMDPLUSC");  
-  return eleName;
+const char *BmdGeo::getEleName(Int_t m)
+{
+   printf("Hola entro a BmdGeo");
+   // Returns the element name of Det number m
+   if (m == 0)
+      sprintf(eleName, "BMDPLUSA");
+   else if (m == 1)
+      sprintf(eleName, "BMDPLUSC");
+   return eleName;
 }
-
- 
-

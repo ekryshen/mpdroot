@@ -30,8 +30,8 @@ BmdGeoPar.cxx
 )
 
 Set(HEADERS)
-Set(LINKDEF bmdLinkDef.h)
-Set(LIBRARY_NAME bmd)
+Set(LINKDEF BmdLinkDef.h)
+Set(LIBRARY_NAME Bmd)
 Set(DEPENDENCIES)
 
 GENERATE_LIBRARY()

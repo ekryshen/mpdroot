@@ -25,33 +25,23 @@
 
 // Collaborating Class Headers --------
 
-
 // Class Member definitions -----------
 
-BmdPoint::BmdPoint()
-  : FairMCPoint()
-{}
+BmdPoint::BmdPoint() : FairMCPoint() {}
 
-BmdPoint::BmdPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom,
-             Double_t tof, Double_t length, Double_t eLoss)
-  : FairMCPoint(trackID, detID, pos, mom, tof, length, eLoss)
+BmdPoint::BmdPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length,
+                   Double_t eLoss)
+   : FairMCPoint(trackID, detID, pos, mom, tof, length, eLoss)
 {
-  
-  pT = mom.Pt();
-  eta = mom.Eta();
-  
-  
-  
+   pT  = mom.Pt();
+   eta = mom.Eta();
 }
 
-void 
-BmdPoint::Print(const Option_t*) const {
-  std::cout<<"BmdPoint\n"
-	   <<" Pos("<<fX<<","<<fY<<","<<fZ<<")\n"
-	   <<" dE="<< fELoss << fTrackID
-	   <<std::endl;	   
+void BmdPoint::Print(const Option_t *) const
+{
+   std::cout << "BmdPoint\n"
+             << " Pos(" << fX << "," << fY << "," << fZ << ")\n"
+             << " dE=" << fELoss << fTrackID << std::endl;
 }
-
-
 
 ClassImp(BmdPoint)
