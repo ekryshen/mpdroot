@@ -4,8 +4,8 @@
 
 //------------------------------------------------------------------------------------------------------------------------
 /// \class MpdEtofHitProducerIdeal
-/// 
-/// \brief 
+///
+/// \brief
 /// \author Sergei Lobastov (LHE, JINR, Dubna)
 //------------------------------------------------------------------------------------------------------------------------
 
@@ -15,18 +15,19 @@
 #include "MpdTofHitProducerIdeal.h"
 
 //------------------------------------------------------------------------------------------------------------------------
-class MpdEtofHitProducerIdeal : public MpdTofHitProducerIdeal
-{
-	       
+class MpdEtofHitProducerIdeal : public MpdTofHitProducerIdeal {
+
 public:
-	MpdEtofHitProducerIdeal(const char *name = "ETOF Ideal HitProducer", Bool_t useMCdata = true, Int_t verbose = 1, Bool_t DoTest = false, Bool_t DoMergeHits = false, const char *flnm = "QA.MpdEtofHitProducerIdeal.root");
-	virtual ~MpdEtofHitProducerIdeal();
+   MpdEtofHitProducerIdeal(const char *name = "ETOF Ideal HitProducer", Bool_t useMCdata = true, Int_t verbose = 1,
+                           Bool_t DoTest = false, Bool_t DoMergeHits = false,
+                           const char *flnm = "QA.MpdEtofHitProducerIdeal.root");
+   virtual ~MpdEtofHitProducerIdeal();
 
-	virtual InitStatus	Init();
-	virtual void		Exec(Option_t * option);
-//	virtual void		Finish();	
+   virtual InitStatus Init();
+   virtual void       Exec(Option_t *option);
+   //	virtual void		Finish();
 
-ClassDef(MpdEtofHitProducerIdeal,3);
+   ClassDef(MpdEtofHitProducerIdeal, 3);
 };
 //------------------------------------------------------------------------------------------------------------------------
 #endif

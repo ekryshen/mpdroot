@@ -224,7 +224,7 @@ add_subdirectory (mpddst) # MpdBase LHETrack MpdPid
 
 add_subdirectory (tof) # MpdMCStack Kalman
 add_subdirectory (tpc) # Tof
-add_subdirectory (etof)
+add_subdirectory (detectors/etof)
 add_subdirectory (zdc)
 add_subdirectory (clustering)
 add_subdirectory (detectors/emc) # Cluster

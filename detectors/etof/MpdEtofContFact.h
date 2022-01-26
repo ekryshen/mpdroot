@@ -6,18 +6,17 @@
 
 class FairContainer;
 //------------------------------------------------------------------------------------------------------------------------
-class MpdEtofContFact : public FairContFact
-{
+class MpdEtofContFact : public FairContFact {
 private:
-  	void setAllContainers();
-	
+   void setAllContainers();
+
 public:
-  	MpdEtofContFact();
-  	~MpdEtofContFact() {};
-	
-        FairParSet* createContainer(FairContainer*);
-	
-ClassDef(MpdEtofContFact,0) // Factory for all TOF parameter containers
+   MpdEtofContFact();
+   ~MpdEtofContFact(){};
+
+   FairParSet *createContainer(FairContainer *);
+
+   ClassDef(MpdEtofContFact, 0) // Factory for all TOF parameter containers
 };
 //------------------------------------------------------------------------------------------------------------------------
-#endif 
+#endif

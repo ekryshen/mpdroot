@@ -26,7 +26,7 @@
   includePath        += "-I${VMCWORKDIR}/lhetrack ";
   includePath        += "-I${VMCWORKDIR}/mcstack ";
   includePath        += "-I${VMCWORKDIR}/strawendcap ";
-  includePath        += "-I${VMCWORKDIR}/etof ";
+  includePath        += "-I${VMCWORKDIR}/detectors/etof ";
   includePath        += "-I${VMCWORKDIR}/tof ";
   includePath        += "-I${VMCWORKDIR}/sft ";
   includePath        += "-I${VMCWORKDIR}/parbase ";

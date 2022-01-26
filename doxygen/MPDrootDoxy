@@ -868,7 +868,7 @@ INPUT                  = ../detectors/bbc/ \
                          ../detectors/bmd/ \
                          ../clustering/ \
                          ../detectors/emc/ \
-                         ../etof/ \
+                         ../detectors/etof/ \
                          ../eventdisplay/ \
                          ../ffd/ \
                          ../gconfig/ \
