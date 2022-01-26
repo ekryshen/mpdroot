@@ -1,11 +1,11 @@
 # Create a library called "libSts" which includes the source files given in
-# the array .
+# the array.
 # The extension is already found.  Any number of sources could be listed here.
 
 set(INCLUDE_DIRECTORIES
  ${BASE_INCLUDE_DIRECTORIES}
- ${CMAKE_SOURCE_DIR}/mcstack 
- ${CMAKE_SOURCE_DIR}/sts
+ ${CMAKE_SOURCE_DIR}/mcstack
+ ${CMAKE_CURRENT_LIST_DIR}
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
@@ -23,19 +23,19 @@ link_directories(${LINK_DIRECTORIES})
 
 # List of source files
 set(SRCS
-MpdStsGeo.cxx 
-MpdStsGeoPar.cxx 
-#MpdSts.cxx 
-#MpdStsNew2.cxx 
+MpdStsGeo.cxx
+MpdStsGeoPar.cxx
+#MpdSts.cxx
+#MpdStsNew2.cxx
 MpdIts5spd.cxx
-MpdStsContFact.cxx 
-#MpdStsHit.cxx 
-#MpdStsHitProducer.cxx 
-#MpdStsHitProducerV1.cxx 
-#MpdStsHitProducerNew2.cxx 
+MpdStsContFact.cxx
+#MpdStsHit.cxx
+#MpdStsHitProducer.cxx
+#MpdStsHitProducerV1.cxx
+#MpdStsHitProducerNew2.cxx
 MpdStsPoint.cxx
-MpdItsHitProducer5spd.cxx 
-MpdItsHit5spd.cxx 
+MpdItsHitProducer5spd.cxx
+MpdItsHit5spd.cxx
 )
 
 Set(HEADERS)

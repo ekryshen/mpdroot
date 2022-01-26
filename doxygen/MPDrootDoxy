@@ -885,7 +885,7 @@ INPUT                  = ../detectors/bbc/ \
                          ../passive/ \
                          ../physics/ \
                          ../shield_pack/ \
-                         ../sts/ \
+                         ../detectors/sts/ \
                          ../tof/ \
                          ../tpc/ \
                          ../zdc/

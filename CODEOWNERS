@@ -29,7 +29,7 @@
 /detectors/mcord/                        @Wielanek
 
 # STS  (ITS)
-/sts/                          @vkondrat
+/detectors/sts/                          @vkondrat
 
 # TOF
 /tof/                          @lobastov
