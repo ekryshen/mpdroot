@@ -2,7 +2,6 @@
 // -----                     MpdzdcContFact header file                -----
 // -------------------------------------------------------------------------
 
-
 #ifndef MPDZDCCONTFACT_H
 #define MPDZDCCONTFACT_H
 
@@ -12,13 +11,14 @@ class FairContainer;
 
 class MpdZdcContFact : public FairContFact {
 private:
-  void setAllContainers();
-public:
-  MpdZdcContFact();
-  ~MpdZdcContFact() {}
-  FairParSet* createContainer(FairContainer*);
+   void setAllContainers();
 
-  ClassDef( MpdZdcContFact,0) // Factory for all HYP parameter containers
+public:
+   MpdZdcContFact();
+   ~MpdZdcContFact() {}
+   FairParSet *createContainer(FairContainer *);
+
+   ClassDef(MpdZdcContFact, 0) // Factory for all HYP parameter containers
 };
 
-#endif  /* !MPDZDCCONTFACT_H */
+#endif /* !MPDZDCCONTFACT_H */

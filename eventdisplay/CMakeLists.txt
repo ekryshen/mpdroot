@@ -65,7 +65,7 @@ if (MPDROOT)
     ${CMAKE_SOURCE_DIR}/lhetrack
     ${CMAKE_SOURCE_DIR}/detectors/emc
     ${CMAKE_SOURCE_DIR}/detectors/tpc
-    ${CMAKE_SOURCE_DIR}/zdc
+    ${CMAKE_SOURCE_DIR}/detectors/zdc
   )
   Set(SRCS
     ${SRCS}

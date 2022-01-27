@@ -35,7 +35,7 @@
 /detectors/tof/                          @lobastov
 
 # ZDC  (FHCAL)
-/zdc/                          @marina 
+/detectors/zdc/                          @marina 
 
 
 # Reconstruction
