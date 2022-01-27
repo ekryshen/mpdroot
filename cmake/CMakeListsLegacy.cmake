@@ -83,6 +83,7 @@ include(CTest)
 include(CheckCompiler)
 include(CheckFortran)
 include(InstallNicaFemto)
+include(InstallKFPackage)
 include(CreateMpdConfig)
 
 # Set the build type: None, Debug, Release, RelWithDebInfo or MinSizeRel 
@@ -242,6 +243,7 @@ if(EXISTS "${CMAKE_SOURCE_DIR}/macro/nica_scheduler/CMakeLists.txt")
  add_subdirectory (macro/nica_scheduler)
 endif()
 InstallNicaFemto()
+InstallKFPackage()
 
 Option(BUILD_DOXYGEN "Build Doxygen" OFF)
 if(BUILD_DOXYGEN)
