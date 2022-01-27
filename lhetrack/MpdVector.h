@@ -9,7 +9,6 @@
 #include "MpdItsKalmanTrack.h"
 #include "MpdKalmanHit.h"
 #include "MpdKalmanTrack.h"
-//#include "MpdStsHit.h"
 #include "FairTask.h"
 
 #include <TArrayI.h> 

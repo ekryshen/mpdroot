@@ -16,7 +16,6 @@
 #include "MpdVertexZfinder.h"
 #include "MpdTpcFoundHit.h" 
 #include "MpdTpcSectorGeo.h" 
-#include "TpcCluster.h"
 #include "TpcGeoPar.h"
 #include "TpcPoint.h"
 #include "TpcLheTrack.h"
@@ -134,7 +133,6 @@ InitStatus MpdTpcKalmanFilter::Init() {
 
   fhLays = new TH1F("hLays","TPC layers",150,0,150);
 
-  //fHits = (TClonesArray*) manager->GetObject("TpcCluster");
   if (fUseMCHit) fHits = (TClonesArray*) manager->GetObject("TpcHit");
   //else fHits = (TClonesArray*) manager->GetObject("MpdTpcHit");
   else fHits = (TClonesArray*) manager->GetObject("TpcRecPoint");
@@ -278,9 +276,14 @@ void MpdTpcKalmanFilter::Exec(Option_t * option)
   if (fHits->GetEntriesFast() == 0) return;
   TString name = fHits->UncheckedAt(0)->GetName();
   cout << " Name: " << name << endl;
+#if 0 // class TpcCluster is not built
   if (name.Contains("TpcCluster")) Cluster2KalmanHits();
   else if (fModular == 0) MakeKalmanHits();
   else MakeKalmanHitsModul();
+#else
+  if (fModular == 0) MakeKalmanHits();
+  else MakeKalmanHitsModul();
+#endif  
 
   // Evaluate vertex Z
   MpdVertexZfinder *vertexZ = (MpdVertexZfinder*) FairRun::Instance()->GetTask("MpdVertexZfinder");
@@ -945,6 +948,7 @@ void MpdTpcKalmanFilter::GetTrackSeedsEndCaps()
 }
 
 //__________________________________________________________________________
+#if 0 // this function depends on class TpcCluster which is not built
 void MpdTpcKalmanFilter::Cluster2KalmanHits()
 {
   /// Create Kalman hits from Rec. Points found from clusters
@@ -995,6 +999,7 @@ void MpdTpcKalmanFilter::Cluster2KalmanHits()
     ipos += (Int_t) fhLays->GetBinContent(i+1,0);
   }
 }
+#endif
 
 //__________________________________________________________________________
 void MpdTpcKalmanFilter::MakeKalmanHits()

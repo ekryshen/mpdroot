@@ -16,7 +16,6 @@
 #include "MpdKalmanHit.h"
 #include "MpdKalmanTrack.h"
 //#include "MpdKalmanStripHit.h"
-#include "MpdStsHit.h"
 #include "MpdStsPoint.h"
 #include "MpdItsKalmanTrack.h"
 #include "MpdTpcKalmanTrack.h"

@@ -19,17 +19,14 @@
   includePath        += "-I${VMCWORKDIR}/base/steer ";
   includePath        += "-I${VMCWORKDIR}/base/field ";
   includePath        += "-I${VMCWORKDIR}/base/sim ";
-  includePath        += "-I${VMCWORKDIR}/geobase ";
   includePath        += "-I${VMCWORKDIR}/detectors/tpc ";
   includePath        += "-I${VMCWORKDIR}/kalman ";
   includePath        += "-I${VMCWORKDIR}/lhetrack ";
   includePath        += "-I${VMCWORKDIR}/mcstack ";
   includePath        += "-I${VMCWORKDIR}/detectors/etof ";
   includePath        += "-I${VMCWORKDIR}/detectors/tof ";
-  includePath        += "-I${VMCWORKDIR}/parbase ";
   includePath        += "-I${VMCWORKDIR}/mpddata ";
   includePath        += "-I${VMCWORKDIR}/mpdbase ";
-  includePath        += "-I${VMCWORKDIR}/fairtools ";
   includePath        += "-I${VMCWORKDIR}/mpdpid ";
   /*
   includePath        += "-I${ALICE_ROOT}/RAW ";

@@ -48,7 +48,6 @@ MpdEctKalmanTrack.cxx
 #MpdSftTrackFinderTpc.cxx
 #MpdTpcTrackFollow2Sft.cxx
 MpdKfPrimaryVertexFinder.cxx
-#MpdTrackFinderIts.cxx
 MpdTrackFinderIts5spd.cxx
 MpdVertexZfinder.cxx
 MpdTpcDedxTask.cxx
@@ -85,7 +84,6 @@ MpdEctKalmanTrack.h
 #MpdSftTrackFinderTpc.h
 #MpdTpcTrackFollow2Sft.h
 MpdKfPrimaryVertexFinder.h
-#MpdTrackFinderIts.h
 MpdTrackFinderIts5spd.h
 MpdVertexZfinder.h
 MpdTpcDedxTask.h

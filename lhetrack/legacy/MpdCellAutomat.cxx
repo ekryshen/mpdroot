@@ -10,7 +10,6 @@
  **/
 
 #include "MpdStsGeoPar.h"
-//#include "MpdTrackFinderIts.h"
 #include "MpdCellAutomat.h" 
 #include "MpdCellTrack.h" 
 #include "MpdCodeTimer.h"

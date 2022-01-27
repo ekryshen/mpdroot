@@ -90,7 +90,7 @@ class MpdTpcKalmanFilter : public FairTask
   void GetTrackSeedsEndCaps(); // build track seeds from end-cap regions 
   void DoTracking(Int_t iPass); // run tracking
   Double_t EvalPt(const MpdKalmanHit *hit1, const MpdKalmanHit *hit2, Double_t *params); // evaluate Pt
-  void Cluster2KalmanHits(); // create Kalman hits from clusters
+  // this depends on class TpcCluster which is not built void Cluster2KalmanHits(); // create Kalman hits from clusters
   void MakeKalmanHits(); // create Kalman hits  
   void MakeKalmanHitsModul(); // create Kalman hits for modular geom. of r/out chambers  
   void GoOutward(MpdTpcKalmanTrack *track); // propagate track outward

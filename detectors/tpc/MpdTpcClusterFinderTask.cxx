@@ -20,7 +20,6 @@
 // This Class' Header ------------------
 #include "MpdTpcClusterFinderTask.h"
 #include "MpdTpcHit.h"
-#include "TpcCluster.h"
 #include "TpcPoint.h"
 #include "MpdTpcPeak.h"
 #include "FairRootManager.h"

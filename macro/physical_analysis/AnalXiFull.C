@@ -6,7 +6,7 @@
 #include "MpdKalmanHit.h"
 #include "MpdKalmanFilter.h"
 #include "MpdKfV0Fitter.h"
-#include "MpdTrackFinderIts.h"
+// not supported #include "MpdTrackFinderIts.h"
 #include "MpdVertex.h"
 
 // CBM includes

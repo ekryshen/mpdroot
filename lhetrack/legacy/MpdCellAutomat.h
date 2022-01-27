@@ -7,7 +7,6 @@
 ///
 /// \author Maxim Strelchenko, Alexander Zinchenko, LHEP JINR Dubna
 
-#include "MpdStsHit.h"
 #include "MpdCellTrack.h"
 #include "FairTask.h"
 #include "TH1.h"

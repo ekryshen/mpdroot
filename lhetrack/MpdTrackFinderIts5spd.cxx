@@ -1,10 +1,10 @@
 // -------------------------------------------------------------------------
-// -----                  MpdTrackFinderIts source file                -----
+// -----                  MpdTrackFinderIts5spd source file            -----
 // -----                 Created 21/07/09  by A. Zinchenko             -----
 // -------------------------------------------------------------------------
 // -----   Modified by VK for ideal hit producer and 5 spd-layers geometry -------
 
-/**  MpdTrackFinderIts.h
+/**
  *@author A.Zinchenko <Alexander.Zinchenko@jinr.ru>
  **
  ** Track finder in MPD Inner Tracking System (ITS) using seeds from TPC

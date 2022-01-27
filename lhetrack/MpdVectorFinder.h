@@ -7,7 +7,6 @@
 ///
 /// \author Dmitri Zinchenko, Alexander Zinchenko, LHEP JINR Dubna
 
-///#include "MpdStsHit.h"
 #include "MpdItsHit5spd.h"
 #include "MpdVector.h"
 #include "FairTask.h"
