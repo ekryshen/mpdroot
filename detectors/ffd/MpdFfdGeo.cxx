@@ -8,9 +8,9 @@
 #include "MpdFfdGeo.h"
 #include "FairGeoNode.h"
 
-ClassImp(MpdFfdGeo)
+ClassImp(MpdFfdGeo);
 
-   MpdFfdGeo::MpdFfdGeo()
+MpdFfdGeo::MpdFfdGeo()
 {
    // Constructor
    fName      = "ffd";

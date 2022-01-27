@@ -70,7 +70,7 @@ private:
    // Private Methods -----------------
 
 public:
-   ClassDef(MpdTpcDriftTask, 1)
+   ClassDef(MpdTpcDriftTask, 1);
 };
 
 #endif

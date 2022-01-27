@@ -27,4 +27,4 @@ void MpdStsPoint::Print(const Option_t *opt) const
         << endl;
 }
 //------------------------------------------------------------------------------------------------------------------------
-ClassImp(MpdStsPoint)
+ClassImp(MpdStsPoint);

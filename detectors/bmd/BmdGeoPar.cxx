@@ -5,10 +5,9 @@ using namespace std;
 #include <iostream>
 #include <iomanip>
 
-ClassImp(BmdGeoPar)
+ClassImp(BmdGeoPar);
 
-BmdGeoPar::BmdGeoPar(const char *name, const char *title, const char *context)
-   : FairParGenericSet(name, title, context)
+BmdGeoPar::BmdGeoPar(const char *name, const char *title, const char *context) : FairParGenericSet(name, title, context)
 {
    fGeoSensNodes = new TObjArray();
    fGeoPassNodes = new TObjArray();

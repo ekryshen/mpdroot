@@ -13,9 +13,9 @@ using namespace std;
 #include <iostream>
 #include <iomanip>
 
-ClassImp(MpdFfdContFact)
+ClassImp(MpdFfdContFact);
 
-   static MpdFfdContFact gMpdFfdContFact;
+static MpdFfdContFact gMpdFfdContFact;
 
 MpdFfdContFact::MpdFfdContFact()
 {

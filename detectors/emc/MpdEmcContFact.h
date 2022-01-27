@@ -13,7 +13,7 @@ public:
    MpdEmcContFact();
    ~MpdEmcContFact() {}
    FairParSet *createContainer(FairContainer *);
-   ClassDef(MpdEmcContFact, 0) // Factory for all MyDet parameter containers
+   ClassDef(MpdEmcContFact, 0); // Factory for all MyDet parameter containers
 };
 
 #endif /* !MPDEMCDETCONTFACT_H */

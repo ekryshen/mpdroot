@@ -61,7 +61,7 @@ private:
    void   MakeRegion();
 
    /** **/
-   ClassDef(TpcCluster, 1)
+   ClassDef(TpcCluster, 1);
 };
 
 #endif // _TPCCLUSTER_H_

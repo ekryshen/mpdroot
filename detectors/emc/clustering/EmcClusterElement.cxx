@@ -15,11 +15,10 @@
 using std::cout;
 using std::endl;
 
-ClassImp(EmcClusterElement)
+ClassImp(EmcClusterElement);
 
 //_____________________________________________________________________________
-EmcClusterElement::EmcClusterElement()
-   : ClusterElement(), fHitCont(0)
+EmcClusterElement::EmcClusterElement() : ClusterElement(), fHitCont(0)
 {
    fHitCont = new TObjArray();
 }

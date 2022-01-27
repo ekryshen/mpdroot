@@ -53,7 +53,7 @@ private:
    MpdEmcSimParams *  fSimParams;     //! Configuration parameters
    MpdEmcGeoUtils *   fGeom;          //! Geometry class
    MpdEmcCalibParams *fCalibData;     //! Calibration parameters
-   ClassDef(MpdEmcClusterizerKI, 1)
+   ClassDef(MpdEmcClusterizerKI, 1);
 };
 
 #endif

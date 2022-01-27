@@ -12,9 +12,9 @@
 
 #include "TObjArray.h"
 
-ClassImp(MpdMcordGeoPar)
+ClassImp(MpdMcordGeoPar);
 
-   MpdMcordGeoPar::~MpdMcordGeoPar()
+MpdMcordGeoPar::~MpdMcordGeoPar()
 {
    // TODO Auto-generated destructor stub
 }

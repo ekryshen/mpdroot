@@ -107,7 +107,7 @@ private:
    const MpdTpc2dCluster *fCluster; // poInt_ter to the cluster from which hit was formed
    Float_t                _xg, _yg, _zg, _xl, _yl, _zl, _dx, _dy, _dz;
 
-   ClassDef(MpdTpcFoundHit, 4)
+   ClassDef(MpdTpcFoundHit, 4);
 };
 
 #endif // TPCRHIT

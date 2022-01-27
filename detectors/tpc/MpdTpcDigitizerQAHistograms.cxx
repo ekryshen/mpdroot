@@ -160,4 +160,4 @@ void MpdTpcDigitizerQAHistograms::Write()
    _hXT_dig_60->Write(0, kOverwrite);
 }
 
-ClassImp(MpdTpcDigitizerQAHistograms)
+ClassImp(MpdTpcDigitizerQAHistograms);

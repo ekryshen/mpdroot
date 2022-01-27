@@ -79,7 +79,7 @@ protected:
    Double_t fSignal; // Signal (energy deposit)
    Double_t fLocalX; // Local coordinate (in rotated coordinate system)
 
-   ClassDef(MpdStsHit, 1)
+   ClassDef(MpdStsHit, 1);
 };
 
 #endif

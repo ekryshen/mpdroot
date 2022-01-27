@@ -366,4 +366,4 @@ MpdEmcPointKI *MpdEmcKI::AddHit(Int_t trackID, Int_t detID, TVector3 pos, TVecto
    return new ((*fMpdEmcPointCollection)[fNhits++]) MpdEmcPointKI(trackID, detID, pos, mom, time, length, ELoss);
 }
 
-ClassImp(MpdEmcKI)
+ClassImp(MpdEmcKI);

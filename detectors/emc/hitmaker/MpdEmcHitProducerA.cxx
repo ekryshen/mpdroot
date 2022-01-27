@@ -26,7 +26,7 @@ using std::endl;
 
 #define ADD_CONT_MODE
 
-ClassImp(MpdEmcHitProducerA)
+ClassImp(MpdEmcHitProducerA);
 
 //_____________________________________________________________________________
 MpdEmcHitProducerA::MpdEmcHitProducerA()

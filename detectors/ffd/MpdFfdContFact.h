@@ -13,7 +13,7 @@ public:
    MpdFfdContFact();
    ~MpdFfdContFact() {}
    FairParSet *createContainer(FairContainer *);
-   ClassDef(MpdFfdContFact, 0) // Factory for all FFD parameter containers
+   ClassDef(MpdFfdContFact, 0); // Factory for all FFD parameter containers
 };
 
 #endif /* !MPDFFDCONTFACT_H */

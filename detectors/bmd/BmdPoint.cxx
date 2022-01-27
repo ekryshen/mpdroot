@@ -44,4 +44,4 @@ void BmdPoint::Print(const Option_t *) const
              << " dE=" << fELoss << fTrackID << std::endl;
 }
 
-ClassImp(BmdPoint)
+ClassImp(BmdPoint);

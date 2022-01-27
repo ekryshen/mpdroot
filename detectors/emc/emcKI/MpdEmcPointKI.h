@@ -63,7 +63,7 @@ public:
    /** Output to screen **/
    virtual void Print(const Option_t *opt) const;
 
-   ClassDef(MpdEmcPointKI, 1)
+   ClassDef(MpdEmcPointKI, 1);
 };
 
 #endif

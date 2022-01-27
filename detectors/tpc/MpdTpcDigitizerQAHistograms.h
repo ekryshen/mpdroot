@@ -66,7 +66,7 @@ public:
    TH2F *_hXT_dig_60;
 
 public:
-   ClassDef(MpdTpcDigitizerQAHistograms, 1)
+   ClassDef(MpdTpcDigitizerQAHistograms, 1);
 };
 
 #endif

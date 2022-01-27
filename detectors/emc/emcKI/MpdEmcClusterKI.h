@@ -171,7 +171,7 @@ protected:
 
    Int_t fNExLM; // Number of local maxima or NLM in parent cluster before unfolding
 
-   ClassDef(MpdEmcClusterKI, 1)
+   ClassDef(MpdEmcClusterKI, 1);
 };
 
 #endif

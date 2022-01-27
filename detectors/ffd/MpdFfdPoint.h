@@ -62,7 +62,7 @@ private:
    Double_t fBeta        = 0.;
    bool     isClosed     = false;
 
-   ClassDef(MpdFfdPoint, 2)
+   ClassDef(MpdFfdPoint, 2);
 };
 //------------------------------------------------------------------------------------------------------------------------
 #endif // #ifndef __HH_MPDFFDPOINT_H

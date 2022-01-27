@@ -46,4 +46,4 @@ Bool_t MpdEtofGeoPar::getParams(FairParamList *l)
    return kTRUE;
 }
 //------------------------------------------------------------------------------------------------------------------------
-ClassImp(MpdEtofGeoPar)
+ClassImp(MpdEtofGeoPar);

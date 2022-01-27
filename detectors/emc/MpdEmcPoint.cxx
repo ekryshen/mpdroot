@@ -31,4 +31,4 @@ void MpdEmcPoint::Print(const Option_t *opt) const
 }
 // -------------------------------------------------------------------------
 
-ClassImp(MpdEmcPoint)
+ClassImp(MpdEmcPoint);

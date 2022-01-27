@@ -13,7 +13,7 @@ using namespace std;
 #include <iostream>
 #include <iomanip>
 
-ClassImp(MpdStsContFact)
+ClassImp(MpdStsContFact);
 
 static MpdStsContFact gMpdStsContFact;
 

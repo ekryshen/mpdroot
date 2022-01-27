@@ -57,4 +57,4 @@ void MpdEmcHit::Print(const Option_t *opt) const
 }
 // -------------------------------------------------------------------------
 
-ClassImp(MpdEmcHit)
+ClassImp(MpdEmcHit);

@@ -15,7 +15,7 @@ using std::endl;
 
 using namespace TMath;
 
-ClassImp(MpdEmcGeoParWrapper)
+ClassImp(MpdEmcGeoParWrapper);
 
 //_____________________________________________________________________________
 MpdEmcGeoParWrapper::MpdEmcGeoParWrapper(MpdEmcGeoPar *pars, Bool_t is_owner)

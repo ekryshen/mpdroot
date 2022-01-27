@@ -51,7 +51,7 @@ private:
    Double32_t               fOrigWeight;
    std::map<Int_t, Float_t> fOrigins;
 
-   ClassDef(MpdTpcDigit, 2)
+   ClassDef(MpdTpcDigit, 2);
 };
 
 #endif

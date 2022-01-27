@@ -13,7 +13,7 @@ public:
    MpdStsContFact();
    ~MpdStsContFact() {}
    FairParSet *createContainer(FairContainer *);
-   ClassDef(MpdStsContFact, 0) // Factory for all STS parameter containers
+   ClassDef(MpdStsContFact, 0); // Factory for all STS parameter containers
 };
 
 #endif /* !MPDSTSCONTFACT_H */

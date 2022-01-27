@@ -93,4 +93,4 @@ Int_t MpdStsHit::SetDetId(Int_t sectorType, Int_t layer, Int_t ladder, Int_t det
    return fDetectorID;
 }
 
-ClassImp(MpdStsHit)
+ClassImp(MpdStsHit);

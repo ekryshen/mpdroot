@@ -62,7 +62,7 @@ private:
 
    Bool_t fTested;
 
-   ClassDef(MpdEmcHitProducerA, 1)
+   ClassDef(MpdEmcHitProducerA, 1);
 };
 
 #endif /* __MPDEMCHITPRODUCERA_H__ */

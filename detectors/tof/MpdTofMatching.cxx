@@ -418,9 +418,9 @@ void LWeightMatrix::MoveEntries(TClonesArray *aTofMatchings) const
    }
 }
 //------------------------------------------------------------------------------------------------------------------------
-ClassImp(MpdTofMatching)
-   //------------------------------------------------------------------------------------------------------------------------
-   MpdTofMatching::MpdTofMatching(const char *name, Int_t verbose, Bool_t test, const char *flnm)
+ClassImp(MpdTofMatching);
+//------------------------------------------------------------------------------------------------------------------------
+MpdTofMatching::MpdTofMatching(const char *name, Int_t verbose, Bool_t test, const char *flnm)
    : FairTask(name, verbose), fDoTest(test)
 {
    pRandom = new TRandom2;

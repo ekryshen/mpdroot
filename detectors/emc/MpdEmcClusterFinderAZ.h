@@ -87,7 +87,7 @@ private:
                       Int_t ishift);               // peak-and-valley
    void RedoId(std::map<Int_t, Float_t> &contrib); // recompute ID contributions (for tracks born outside EMC)
 
-   ClassDef(MpdEmcClusterFinderAZ, 1)
+   ClassDef(MpdEmcClusterFinderAZ, 1);
 };
 
 #endif

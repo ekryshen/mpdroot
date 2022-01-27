@@ -26,4 +26,4 @@ void MpdBbcPoint::Print(const Option_t *opt) const
         << endl;
 }
 //------------------------------------------------------------------------------------------------------------------------
-ClassImp(MpdBbcPoint)
+ClassImp(MpdBbcPoint);

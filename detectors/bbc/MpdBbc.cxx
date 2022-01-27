@@ -197,4 +197,4 @@ MpdBbcPoint *MpdBbc::AddHit(Int_t trackID, Int_t detID, TVector3 pos, TVector3 m
 }
 //------------------------------------------------------------------------------------------------------------------------
 
-ClassImp(MpdBbc)
+ClassImp(MpdBbc);

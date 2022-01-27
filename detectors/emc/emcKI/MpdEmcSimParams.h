@@ -126,7 +126,7 @@ public: // One can set parameters in configure macros, but use for access parame
    float  fZcorrA[2]           = {0.07887, 0.0101};  // Parameters for cluster position correction
    float  fZcorrB[2]           = {0.00256, 0.00032}; // Parameters for cluster position correction
 
-   ClassDef(MpdEmcSimParams, 1)
+   ClassDef(MpdEmcSimParams, 1);
 };
 
 #endif

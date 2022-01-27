@@ -137,7 +137,7 @@ private:
    Double32_t fLocalZ;
    Double32_t fXZrms[2]; // RMS of the hit (group of digits) along pad and drift directions
 
-   ClassDef(MpdTpcHit, 3)
+   ClassDef(MpdTpcHit, 3);
 };
 
 #endif // _MPDTPCHIT_H_

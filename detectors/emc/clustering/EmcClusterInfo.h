@@ -56,7 +56,7 @@ protected:
 
    CLPointsMap fPoints;
 
-   ClassDef(EmcClusterInfo, 1)
+   ClassDef(EmcClusterInfo, 1);
 };
 
 class EmcClusterInfo0 : public EmcClusterInfo {
@@ -65,7 +65,7 @@ public:
    EmcClusterInfo0() : EmcClusterInfo() {}
    virtual ~EmcClusterInfo0() {}
 
-   ClassDef(EmcClusterInfo0, 1)
+   ClassDef(EmcClusterInfo0, 1);
 };
 
 #endif /* __EMCCLUSTERINFO_H__ */

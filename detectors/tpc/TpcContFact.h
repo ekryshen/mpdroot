@@ -15,7 +15,7 @@ public:
    ~TpcContFact() {}
    FairParSet *createContainer(FairContainer *);
    // void  activateParIo(FairParIo* io);
-   ClassDef(TpcContFact, 1) // Factory for all TPC parameter containers
+   ClassDef(TpcContFact, 1); // Factory for all TPC parameter containers
 };
 
 #endif

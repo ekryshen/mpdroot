@@ -117,7 +117,7 @@ private:
    Bool_t fDistribute;              // distribute electrons between two MC points or not
    Bool_t fPrintDebugInfo;          // print or not additional information in output
 
-   ClassDef(MpdTpcDigitizerAZ, 1)
+   ClassDef(MpdTpcDigitizerAZ, 1);
 };
 
 #endif

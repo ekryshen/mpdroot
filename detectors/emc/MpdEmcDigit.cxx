@@ -87,4 +87,4 @@ UInt_t MpdEmcDigit::SetDetId(UInt_t side, UInt_t sector, UInt_t row, UInt_t chan
 
 // -------------------------------------------------------------------------
 
-ClassImp(MpdEmcDigit)
+ClassImp(MpdEmcDigit);

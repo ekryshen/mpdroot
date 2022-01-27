@@ -83,7 +83,7 @@ protected:
 
    Float_t fDeposit; // energy deposit
 
-   ClassDef(MpdEmcHitCont, 1)
+   ClassDef(MpdEmcHitCont, 1);
 };
 
 //_____________________________________________________________________________

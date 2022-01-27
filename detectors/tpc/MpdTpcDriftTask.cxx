@@ -183,4 +183,4 @@ void MpdTpcDriftTask::Clear(Option_t *opt)
    }
 }
 
-ClassImp(MpdTpcDriftTask)
+ClassImp(MpdTpcDriftTask);

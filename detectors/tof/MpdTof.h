@@ -58,7 +58,7 @@ public:
    static void GetDelta(const TVector3 &mcPos, const TVector3 &estPos, double &dev, double &devZ, double &devR,
                         double &devPhi);
 
-   ClassDef(MpdTof, 3)
+   ClassDef(MpdTof, 3);
 };
 //------------------------------------------------------------------------------------------------------------------------
 #endif // #ifndef __MPD_TOF_H

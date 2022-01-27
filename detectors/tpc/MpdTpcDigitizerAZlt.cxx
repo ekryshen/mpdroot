@@ -1046,4 +1046,4 @@ void MpdTpcDigitizerAZlt::Finish()
 
 //---------------------------------------------------------------------------
 
-ClassImp(MpdTpcDigitizerAZlt)
+ClassImp(MpdTpcDigitizerAZlt);

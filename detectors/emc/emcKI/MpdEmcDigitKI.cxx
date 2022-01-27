@@ -155,4 +155,4 @@ double MpdEmcDigitKI::GetPhiCenter()
 
 // -------------------------------------------------------------------------
 
-ClassImp(MpdEmcDigitKI)
+ClassImp(MpdEmcDigitKI);

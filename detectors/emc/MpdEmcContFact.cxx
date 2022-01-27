@@ -6,9 +6,9 @@
 
 #include <iostream>
 
-ClassImp(MpdEmcContFact)
+ClassImp(MpdEmcContFact);
 
-   static MpdEmcContFact gMpdEmcContFact;
+static MpdEmcContFact gMpdEmcContFact;
 
 MpdEmcContFact::MpdEmcContFact()
 {

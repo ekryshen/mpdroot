@@ -1563,4 +1563,4 @@ void MpdTpcClusterFinderMlem::ChargeMlem(Int_t nHits0, vector<pixel> &pixels, ve
 }
 
 //__________________________________________________________________________
-ClassImp(MpdTpcClusterFinderMlem)
+ClassImp(MpdTpcClusterFinderMlem);

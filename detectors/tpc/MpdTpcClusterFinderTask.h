@@ -106,7 +106,7 @@ private:
    TString fNameResFile;    // name of output residuals file
 
 public:
-   ClassDef(MpdTpcClusterFinderTask, 6)
+   ClassDef(MpdTpcClusterFinderTask, 6);
 };
 
 #endif

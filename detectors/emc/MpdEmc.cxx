@@ -243,4 +243,4 @@ MpdEmcPoint *MpdEmc::AddHit(Int_t trackID, Int_t detID, TVector3 pos, TVector3 m
    return new (clref[size]) MpdEmcPoint(trackID, detID, pos, mom, time, length, ELoss);
 }
 
-ClassImp(MpdEmc)
+ClassImp(MpdEmc);

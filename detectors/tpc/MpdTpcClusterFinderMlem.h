@@ -106,7 +106,7 @@ private:
                    std::vector<std::multimap<Double_t, Int_t>> &pixInMax, const TMatrixD &cij,
                    Double_t cijMin); // correct hit charges after MLEM
 
-   ClassDef(MpdTpcClusterFinderMlem, 0)
+   ClassDef(MpdTpcClusterFinderMlem, 0);
 };
 
 #endif

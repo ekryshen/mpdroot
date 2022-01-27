@@ -22,4 +22,4 @@ const char *MpdEtofGeo::getEleName(Int_t m)
    return eleName;
 }
 //------------------------------------------------------------------------------------------------------------------------
-ClassImp(MpdEtofGeo)
+ClassImp(MpdEtofGeo);

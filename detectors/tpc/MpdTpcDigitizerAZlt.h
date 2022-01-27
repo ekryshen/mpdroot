@@ -123,7 +123,7 @@ private:
    Bool_t fPrintDebugInfo;          // print or not additional information in output
    Bool_t fOneRow;                  // distribute charge only in one padrow - for debug
 
-   ClassDef(MpdTpcDigitizerAZlt, 0)
+   ClassDef(MpdTpcDigitizerAZlt, 0);
 };
 
 #endif

@@ -30,7 +30,7 @@ protected:
    Int_t fTrackID;
    Int_t fFlag; // Flag for general purposes [TDC, event tagging...]
 
-   ClassDef(MpdBbcHit, 1)
+   ClassDef(MpdBbcHit, 1);
 };
 
 #endif

@@ -15,7 +15,7 @@ public:
    const char *getModuleName(Int_t);
    const char *getEleName(Int_t);
 
-   ClassDef(MpdStsGeo, 0) // Class for Sts
+   ClassDef(MpdStsGeo, 0); // Class for Sts
 };
 
 #endif /* !MPDSTSGEO_H */

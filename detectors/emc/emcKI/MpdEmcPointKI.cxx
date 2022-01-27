@@ -85,4 +85,4 @@ Int_t MpdEmcPointKI::Compare(const TObject *obj) const
    return 0; // never happens
 }
 
-ClassImp(MpdEmcPointKI)
+ClassImp(MpdEmcPointKI);

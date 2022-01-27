@@ -16,9 +16,9 @@
 #include "TGeoPgon.h"
 #include "TGeoTube.h"
 
-ClassImp(MpdEmcGeoParams)
+ClassImp(MpdEmcGeoParams);
 
-   MpdEmcGeoParams ::MpdEmcGeoParams(const char *name, const char *title, const char *context)
+MpdEmcGeoParams ::MpdEmcGeoParams(const char *name, const char *title, const char *context)
    : FairParGenericSet(name, title, context)
 {
 

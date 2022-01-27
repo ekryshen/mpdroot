@@ -45,7 +45,7 @@ public:
    virtual void          CopyClones(TClonesArray *cl1, TClonesArray *cl2, Int_t offset);
    virtual void          ConstructGeometry();
 
-   ClassDef(MpdEtof, 3)
+   ClassDef(MpdEtof, 3);
 };
 //------------------------------------------------------------------------------------------------------------------------
 inline void MpdEtof::ResetParameters()

@@ -912,4 +912,4 @@ void MpdEmcClusterFinderAZ::RedoId(map<Int_t, Float_t> &contrib)
 }
 
 //__________________________________________________________________________
-ClassImp(MpdEmcClusterFinderAZ)
+ClassImp(MpdEmcClusterFinderAZ);

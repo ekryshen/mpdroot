@@ -37,10 +37,9 @@
 
 using namespace std;
 
-ClassImp(MpdEtofHitProducer)
-   //------------------------------------------------------------------------------------------------------------------------
-   MpdEtofHitProducer::MpdEtofHitProducer(const char *name, Bool_t useMCdata, Int_t verbose, Bool_t test,
-                                          const char *flnm)
+ClassImp(MpdEtofHitProducer);
+//------------------------------------------------------------------------------------------------------------------------
+MpdEtofHitProducer::MpdEtofHitProducer(const char *name, Bool_t useMCdata, Int_t verbose, Bool_t test, const char *flnm)
    : MpdEtofHitProducerIdeal(name, useMCdata, verbose, test, true, flnm), fTimeSigma(0.100), fErrPhi(0.5),
      fErrR(1. / sqrt(12.)), pRandom(new TRandom2)
 {

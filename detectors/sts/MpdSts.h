@@ -80,7 +80,7 @@ private:
    // Resets the private members for the track parameters
    void ResetParameters();
 
-   ClassDef(MpdSts, 1)
+   ClassDef(MpdSts, 1);
 };
 
 //------------------------------------------------------------------------------------------------------------------------

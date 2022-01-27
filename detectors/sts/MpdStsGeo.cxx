@@ -8,7 +8,7 @@
 #include "MpdStsGeo.h"
 #include "FairGeoNode.h"
 
-ClassImp(MpdStsGeo)
+ClassImp(MpdStsGeo);
 
 MpdStsGeo::MpdStsGeo()
 {

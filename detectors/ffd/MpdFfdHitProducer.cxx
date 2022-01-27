@@ -27,9 +27,9 @@
 #include "MpdFfdHitProducer.h"
 using namespace std;
 
-ClassImp(MpdFfdHitProducer)
+ClassImp(MpdFfdHitProducer);
 
-   TGraph *MpdFfdHitProducer::gPMTeff_pdf = nullptr;
+TGraph *MpdFfdHitProducer::gPMTeff_pdf = nullptr;
 //------------------------------------------------------------------------------------------------------------------------
 MpdFfdHitProducer::MpdFfdHitProducer(const char *name, bool useMCdata, bool timeWindow, Int_t verbose, const char *flnm)
    : FairTask(name, verbose), fUseMCData(useMCdata), fUseTimeWindow(timeWindow), fFlnm(flnm)

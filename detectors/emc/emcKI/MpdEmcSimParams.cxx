@@ -9,4 +9,4 @@
 
 // these initialisations are needed for a singleton
 MpdEmcSimParams *MpdEmcSimParams::sParams = 0;
-ClassImp(MpdEmcSimParams)
+ClassImp(MpdEmcSimParams);

@@ -11,7 +11,9 @@
 
 using namespace std;
 
-ClassImp(MpdFfdPoint) MpdFfdPoint::FFDPointMode MpdFfdPoint::fCurrentMode = FFDPointMode::kPhotoElectron;
+ClassImp(MpdFfdPoint);
+
+MpdFfdPoint::FFDPointMode MpdFfdPoint::fCurrentMode = FFDPointMode::kPhotoElectron;
 //------------------------------------------------------------------------------------------------------------------------
 MpdFfdPoint::MpdFfdPoint() : FairMCPoint() {}
 //------------------------------------------------------------------------------------------------------------------------

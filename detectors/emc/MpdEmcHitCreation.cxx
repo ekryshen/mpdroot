@@ -184,4 +184,4 @@ MpdEmcHit *MpdEmcHitCreation::SearchHit(UInt_t detID)
 
 // -------------------------------------------------------------------------
 
-ClassImp(MpdEmcHitCreation)
+ClassImp(MpdEmcHitCreation);

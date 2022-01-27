@@ -286,4 +286,4 @@ MpdStsHit *MpdStsHitProducerNew2::AddHit(Int_t trackID, Int_t detID, Int_t side)
 }
 // -----------------------------------------------------------------------------
 
-ClassImp(MpdStsHitProducerNew2)
+ClassImp(MpdStsHitProducerNew2);

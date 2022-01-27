@@ -78,7 +78,7 @@ private:
    void CorrectReco(TVector3 &p3loc, TVector3 &p3err, Int_t nPads,
                     Double_t &adc); // correct reco charge, coordinates and errors
 
-   ClassDef(MpdTpcClusterFinderAZ, 1)
+   ClassDef(MpdTpcClusterFinderAZ, 1);
 };
 
 #endif

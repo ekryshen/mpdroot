@@ -22,7 +22,7 @@ using std::endl;
 using namespace TMath;
 using namespace std;
 
-ClassImp(EmcClManager)
+ClassImp(EmcClManager);
 
 //_____________________________________________________________________________
 EmcClManager::EmcClManager()

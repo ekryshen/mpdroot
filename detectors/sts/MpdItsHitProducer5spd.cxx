@@ -259,4 +259,4 @@ void MpdItsHitProducer5spd::Finish()
    fDigiArray = nullptr;
 }
 
-ClassImp(MpdItsHitProducer5spd)
+ClassImp(MpdItsHitProducer5spd);

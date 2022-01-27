@@ -133,7 +133,7 @@ private:
    Int_t                fSector;
    Float_t              fADCSum, fAvgCol, fSigCol, fAvgBkt, fSigBkt, fCorrel;
 
-   ClassDef(MpdTpc2dCluster, 2)
+   ClassDef(MpdTpc2dCluster, 2);
 };
 
 #endif

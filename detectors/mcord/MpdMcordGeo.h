@@ -23,7 +23,7 @@ public:
    const char * getEleName(Int_t);
    inline Int_t getModNumInMod(const TString &name);
    virtual ~MpdMcordGeo();
-   ClassDef(MpdMcordGeo, 1)
+   ClassDef(MpdMcordGeo, 1);
 };
 
 inline Int_t MpdMcordGeo::getModNumInMod(const TString &name)

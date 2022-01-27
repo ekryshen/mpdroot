@@ -44,7 +44,7 @@ public:
 protected:
    Double32_t fXout, fYout, fZout; // Point coordinates at exit [cm]
 
-   ClassDef(MpdStsPoint, 1)
+   ClassDef(MpdStsPoint, 1);
 };
 
 inline void MpdStsPoint::SetPositionOut(const TVector3 &pos)

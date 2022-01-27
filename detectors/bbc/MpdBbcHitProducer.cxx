@@ -217,4 +217,4 @@ MpdBbcHit *MpdBbcHitProducer::AddHit(Int_t trackID, Int_t detID, Float_t energy)
 }
 // ----
 
-ClassImp(MpdBbcHitProducer)
+ClassImp(MpdBbcHitProducer);

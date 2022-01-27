@@ -49,7 +49,7 @@ private:
    Float_t sigmasEl[72];
 
 public:
-   ClassDef(MpdTPCpid, 1)
+   ClassDef(MpdTPCpid, 1);
 };
 
 #endif

@@ -38,4 +38,4 @@ FairParSet *MpdEtofContFact::createContainer(FairContainer *c)
    return p;
 }
 //------------------------------------------------------------------------------------------------------------------------
-ClassImp(MpdEtofContFact)
+ClassImp(MpdEtofContFact);

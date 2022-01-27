@@ -17,7 +17,7 @@ public:
    const char * getEleName(Int_t);
    inline Int_t getModNumInMod(const TString &);
 
-   ClassDef(MpdTofGeo, 0) // Class for Tof
+   ClassDef(MpdTofGeo, 0); // Class for Tof
 };
 
 //------------------------------------------------------------------------------------------------------------------------

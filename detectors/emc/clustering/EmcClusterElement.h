@@ -49,7 +49,7 @@ public:
 private:
    TObjArray *fHitCont;
 
-   ClassDef(EmcClusterElement, 1)
+   ClassDef(EmcClusterElement, 1);
 };
 
 #endif /* __EMCCLUSTERELEMENT_H__ */

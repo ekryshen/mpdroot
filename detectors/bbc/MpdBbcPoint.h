@@ -34,7 +34,7 @@ public:
    // Output to screen
    virtual void Print(const Option_t *opt) const;
 
-   ClassDef(MpdBbcPoint, 1)
+   ClassDef(MpdBbcPoint, 1);
 };
 
 //------------------------------------------------------------------------------------------------------------------------

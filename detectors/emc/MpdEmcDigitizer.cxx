@@ -297,4 +297,4 @@ MpdEmcDigit *MpdEmcDigitizer::SearchHit(TString tower)
 
 // -------------------------------------------------------------------------
 
-ClassImp(MpdEmcDigitizer)
+ClassImp(MpdEmcDigitizer);

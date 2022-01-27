@@ -12,7 +12,7 @@
 using std::cout;
 using std::endl;
 
-ClassImp(MpdEmcHitCont)
+ClassImp(MpdEmcHitCont);
 
 //_____________________________________________________________________________
 MpdEmcHitCont::MpdEmcHitCont()

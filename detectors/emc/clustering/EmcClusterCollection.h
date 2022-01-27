@@ -32,7 +32,7 @@ public:
    virtual void   FillH(TH2D *h);
 
 private:
-   ClassDef(EmcClusterCollection, 1)
+   ClassDef(EmcClusterCollection, 1);
 };
 
 #endif /* __EMCCLUSTERCOLLECTION_H__ */

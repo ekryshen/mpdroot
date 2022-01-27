@@ -15,13 +15,10 @@ using std::endl;
 #include <TClonesArray.h>
 #include <TH2D.h>
 
-ClassImp(EmcClusterCollection)
+ClassImp(EmcClusterCollection);
 
 //_____________________________________________________________________________
-EmcClusterCollection::EmcClusterCollection()
-   : ClusterCollection()
-{
-}
+EmcClusterCollection::EmcClusterCollection() : ClusterCollection() {}
 
 //_____________________________________________________________________________
 EmcClusterCollection::EmcClusterCollection(Int_t uid) : ClusterCollection(uid) {}

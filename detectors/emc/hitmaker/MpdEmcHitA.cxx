@@ -14,11 +14,10 @@
 using std::cout;
 using std::endl;
 
-ClassImp(MpdEmcHitA)
+ClassImp(MpdEmcHitA);
 
 //_____________________________________________________________________________
-MpdEmcHitA::MpdEmcHitA(Int_t uid)
-   : FairHit(), fHitCont(0), fDeposit(0)
+MpdEmcHitA::MpdEmcHitA(Int_t uid) : FairHit(), fHitCont(0), fDeposit(0)
 {
    fDetectorID = uid;
 }

@@ -1,10 +1,10 @@
 #include "MpdEmcGeo.h"
 #include "FairGeoNode.h"
 
-ClassImp(MpdEmcGeo)
+ClassImp(MpdEmcGeo);
 
-   // -----   Default constructor   -------------------------------------------
-   MpdEmcGeo::MpdEmcGeo()
+// -----   Default constructor   -------------------------------------------
+MpdEmcGeo::MpdEmcGeo()
 {
    // Constructor
    fName      = "emc";

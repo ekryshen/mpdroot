@@ -27,10 +27,10 @@
 
 // Class Member definitions -----------
 
-ClassImp(TpcGeo)
+ClassImp(TpcGeo);
 
-   // -----   Default constructor   -------------------------------------------
-   TpcGeo::TpcGeo()
+// -----   Default constructor   -------------------------------------------
+TpcGeo::TpcGeo()
 {
    // Constructor
    fName      = "tpc";

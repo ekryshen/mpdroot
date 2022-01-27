@@ -18,7 +18,7 @@ public:
    ~MpdZdcContFact() {}
    FairParSet *createContainer(FairContainer *);
 
-   ClassDef(MpdZdcContFact, 0) // Factory for all HYP parameter containers
+   ClassDef(MpdZdcContFact, 0); // Factory for all HYP parameter containers
 };
 
 #endif /* !MPDZDCCONTFACT_H */

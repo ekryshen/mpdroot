@@ -51,7 +51,7 @@ private:
    TArrayI       fPoints;  // MC-points (numbers), which have contribution in the hit
    Float_t       fDeposit; // total deposit
 
-   ClassDef(MpdEmcHitA, 1)
+   ClassDef(MpdEmcHitA, 1);
 };
 
 #endif /* __MPDEMCHITA_H__ */

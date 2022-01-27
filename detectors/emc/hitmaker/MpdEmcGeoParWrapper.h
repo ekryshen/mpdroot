@@ -65,7 +65,7 @@ private:
 
    Float_t fR; // cm
 
-   ClassDef(MpdEmcGeoParWrapper, 1)
+   ClassDef(MpdEmcGeoParWrapper, 1);
 };
 
 //_____________________________________________________________________________

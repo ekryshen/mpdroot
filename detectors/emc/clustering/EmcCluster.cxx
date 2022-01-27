@@ -14,13 +14,10 @@ using std::endl;
 
 #include <TH2D.h>
 
-ClassImp(EmcCluster)
+ClassImp(EmcCluster);
 
 //_____________________________________________________________________________
-EmcCluster::EmcCluster()
-   : Cluster()
-{
-}
+EmcCluster::EmcCluster() : Cluster() {}
 //_____________________________________________________________________________
 EmcCluster::EmcCluster(Int_t uid) : Cluster(uid) {}
 

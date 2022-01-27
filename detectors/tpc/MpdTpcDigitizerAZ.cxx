@@ -977,4 +977,4 @@ void MpdTpcDigitizerAZ::Finish()
 
 //---------------------------------------------------------------------------
 
-ClassImp(MpdTpcDigitizerAZ)
+ClassImp(MpdTpcDigitizerAZ);

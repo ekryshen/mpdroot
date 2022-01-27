@@ -24,6 +24,6 @@ public:
    const char *getModuleName(Int_t);
    const char *getEleName(Int_t);
 
-   ClassDef(MpdZdcGeo, 0) // Class for Hyp
+   ClassDef(MpdZdcGeo, 0); // Class for Hyp
 };
 #endif /* !MPDGEOZDC_H */

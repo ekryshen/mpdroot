@@ -109,7 +109,7 @@ private:
    Bool_t fPrintDebugInfo;          // print or not additional information in output
 
 public:
-   ClassDef(MpdTpcDigitizerTask, 5)
+   ClassDef(MpdTpcDigitizerTask, 5);
 };
 
 #endif

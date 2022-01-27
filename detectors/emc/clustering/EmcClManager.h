@@ -94,7 +94,7 @@ protected:
 
    void SaveHistos();
 
-   ClassDef(EmcClManager, 1)
+   ClassDef(EmcClManager, 1);
 };
 
 #endif /* __EMCCLMANAGER_H__ */

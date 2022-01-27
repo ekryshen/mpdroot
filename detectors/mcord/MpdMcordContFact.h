@@ -22,7 +22,7 @@ public:
    virtual ~MpdMcordContFact();
    FairParSet *createContainer(FairContainer *);
 
-   ClassDef(MpdMcordContFact, 0)
+   ClassDef(MpdMcordContFact, 0);
 };
 
 #endif /* MCORD_MCORD_MPDMCORDCONTFACT_H_ */

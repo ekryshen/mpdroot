@@ -172,4 +172,4 @@ UInt_t MpdZdcDigi::ADC(Double_t pfELoss)
 
 // -------------------------------------------------------------------------
 
-ClassImp(MpdZdcDigi)
+ClassImp(MpdZdcDigi);

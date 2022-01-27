@@ -252,4 +252,4 @@ void MpdEmcMatchingKI::MakeMatchToTracks()
    }
 }
 
-ClassImp(MpdEmcMatchingKI)
+ClassImp(MpdEmcMatchingKI);

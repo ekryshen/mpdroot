@@ -26,10 +26,10 @@
 
 // Class Member definitions -----------
 
-ClassImp(BmdGeo)
+ClassImp(BmdGeo);
 
-   // -----   Default constructor   -------------------------------------------
-   BmdGeo::BmdGeo()
+// -----   Default constructor   -------------------------------------------
+BmdGeo::BmdGeo()
 {
    // Constructor
    fName      = "bmd";

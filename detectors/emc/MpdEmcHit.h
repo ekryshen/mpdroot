@@ -103,7 +103,7 @@ protected:
    Int_t fFlag;    // Flag for general purposes [TDC, event tagging...]
    Int_t fPDG;     // code of particle if only one track presented in module
 
-   ClassDef(MpdEmcHit, 1)
+   ClassDef(MpdEmcHit, 1);
 };
 
 #endif

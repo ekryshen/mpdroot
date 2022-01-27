@@ -628,4 +628,4 @@ void MpdTpcDigitizerTask::Finish()
    }
 }
 
-ClassImp(MpdTpcDigitizerTask)
+ClassImp(MpdTpcDigitizerTask);

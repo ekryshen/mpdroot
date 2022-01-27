@@ -35,6 +35,6 @@ private:
    MpdMcordGeoPar(const MpdMcordGeoPar &);
    MpdMcordGeoPar &operator=(const MpdMcordGeoPar &);
 
-   ClassDef(MpdMcordGeoPar, 1)
+   ClassDef(MpdMcordGeoPar, 1);
 };
 #endif /* MCORD_MCORD_MPDMCORDGEOPAR_H_ */

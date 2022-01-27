@@ -12,14 +12,11 @@
 using std::cout;
 using std::endl;
 
-ClassImp(EmcClusterInfo)
-ClassImp(EmcClusterInfo0)
+ClassImp(EmcClusterInfo);
+ClassImp(EmcClusterInfo0);
 
 //_____________________________________________________________________________
-EmcClusterInfo::EmcClusterInfo()
-   : fId(-1), fId2(-1), fFlag(-1), fZ(-1), fPhi(-1), fDeposit(0)
-{
-}
+EmcClusterInfo::EmcClusterInfo() : fId(-1), fId2(-1), fFlag(-1), fZ(-1), fPhi(-1), fDeposit(0) {}
 
 //_____________________________________________________________________________
 EmcClusterInfo::~EmcClusterInfo() {}

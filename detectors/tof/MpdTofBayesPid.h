@@ -69,7 +69,7 @@ public:
    static size_t      GetNpdf() { return fNpdf; }
    static const char *GetSpeciesName(size_t index);
 
-   ClassDef(MpdBayesPriors, 1)
+   ClassDef(MpdBayesPriors, 1);
 };
 //------------------------------------------------------------------------------------------------------------------------
 class PidProbabilitiesMatrix {
@@ -163,7 +163,7 @@ public:
       Int_t pdgcode); // return pid index (same as fPdfNames[] array) for this pdfcode, negative - if don't found
    void SetProbMatrixThresh(size_t i, double value); // set threshould for ith PidProbabilitiesMatrix
 
-   ClassDef(MpdTofBayesPid, 1)
+   ClassDef(MpdTofBayesPid, 1);
 };
 //------------------------------------------------------------------------------------------------------------------------
 #endif

@@ -73,7 +73,7 @@ public:
    Float_t GetMinX() const { return _minX; }
    Float_t GetMidX() const { return _midX; }
 
-   ClassDef(TpcSector, 9)
+   ClassDef(TpcSector, 9);
 };
 
 #endif // TPC_SECTOR_H_

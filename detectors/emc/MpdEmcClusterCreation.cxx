@@ -292,4 +292,4 @@ void MpdEmcClusterCreation::SearchRelativeHits(Int_t row, Int_t mod, vector<Int_
 
 // -------------------------------------------------------------------------
 
-ClassImp(MpdEmcClusterCreation)
+ClassImp(MpdEmcClusterCreation);

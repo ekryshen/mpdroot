@@ -111,7 +111,7 @@ private:
 
    std::pair<Tparams::iterator, bool> FindTrackParams(Int_t tid, Int_t suid);
 
-   ClassDef(MpdFfd, 3)
+   ClassDef(MpdFfd, 3);
 };
 //------------------------------------------------------------------------------------------------------------------------
 inline void MpdFfd::ResetParameters()

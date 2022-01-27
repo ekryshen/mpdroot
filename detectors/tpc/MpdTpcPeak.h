@@ -76,7 +76,7 @@ private:
    // TRef fCluster; // pointer to the cluster from which hit was formed
    const MpdTpc2dCluster *fCluster; // pointer to the cluster from which hit was formed
 
-   ClassDef(MpdTpcPeak, 1)
+   ClassDef(MpdTpcPeak, 1);
 };
 
 #endif // TPCRPADPEAK

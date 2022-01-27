@@ -4,9 +4,9 @@
 #include "emc.h"
 #include <iostream>
 
-ClassImp(MpdEmcGeoPar)
+ClassImp(MpdEmcGeoPar);
 
-   MpdEmcGeoPar ::MpdEmcGeoPar(const char *name, const char *title, const char *context)
+MpdEmcGeoPar ::MpdEmcGeoPar(const char *name, const char *title, const char *context)
    : FairParGenericSet(name, title, context)
 {
 

@@ -57,7 +57,7 @@ private:
    UShort_t nMod;    // number of modules in one super-module (N x M)
    UInt_t   nSupMod; // number of super-modules in one row (slice)
 
-   ClassDef(MpdEmcGeoPar, 1)
+   ClassDef(MpdEmcGeoPar, 1);
 };
 
 #endif /* MPDEMCDETGEOPAR_H */

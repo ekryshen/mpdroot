@@ -90,7 +90,7 @@ private:
 
    TClonesArray *fMpdEmcPointCollection;
 
-   ClassDef(MpdEmc, 1)
+   ClassDef(MpdEmc, 1);
 };
 
 #endif // MPDEMCDET_H

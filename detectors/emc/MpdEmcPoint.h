@@ -33,7 +33,7 @@ public:
    /** Output to screen **/
    virtual void Print(const Option_t *opt) const;
 
-   ClassDef(MpdEmcPoint, 1)
+   ClassDef(MpdEmcPoint, 1);
 };
 
 #endif

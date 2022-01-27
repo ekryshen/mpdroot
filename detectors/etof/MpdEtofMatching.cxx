@@ -42,9 +42,9 @@ struct less_by_pointer
     }
 };
 */
-ClassImp(MpdEtofMatching)
-   //------------------------------------------------------------------------------------------------------------------------
-   MpdEtofMatching::MpdEtofMatching(const char *name, Int_t verbose, Bool_t test, const char *flnm)
+ClassImp(MpdEtofMatching);
+//------------------------------------------------------------------------------------------------------------------------
+MpdEtofMatching::MpdEtofMatching(const char *name, Int_t verbose, Bool_t test, const char *flnm)
    : FairTask(name, verbose), aMcPoints(nullptr), aMcTracks(nullptr), aTofHits(nullptr), aKFectTracks(nullptr),
      aTofMatchings(nullptr), fMode(kIntervalTree), fDoTest(test), fUseMCData(false), pRandom(new TRandom2),
      fNSmeared(20), fTofZpos(295.2), fTofRmax(140.), fThreshR(15.), fThreshTheta(1.5), // Z- 250.0
@@ -89,7 +89,7 @@ InitStatus MpdEtofMatching::Init()
 
    //	MpdEtofGeoUtils::Instance()->ParseTGeoManager(fUseMCData, nullptr, false);
    //	MpdEtofGeoUtils::Instance()->FindNeighborStrips(0.8, nullptr, nullptr, false);// 0.8 [cm] <--- thresh. distance
-   //between neighbor strips,  (see h1TestDistance histo)
+   // between neighbor strips,  (see h1TestDistance histo)
 
    LOG(INFO) << "MpdEtofMatching initialization finished succesfully.";
 

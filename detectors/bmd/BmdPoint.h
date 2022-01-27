@@ -54,7 +54,7 @@ private:
    // Private Methods -----------------
 
 public:
-   ClassDef(BmdPoint, 1)
+   ClassDef(BmdPoint, 1);
 };
 #endif
 

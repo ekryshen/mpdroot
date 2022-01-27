@@ -453,4 +453,4 @@ void MpdEmcClusterKI::CorrectVertex(double zVtx)
    double b  = simParams->ZcorrB(0) + simParams->ZcorrB(1) * logE;
    fZ += (sA * TMath::Sin(fZ / sW) + a + b * fZ);
 }
-ClassImp(MpdEmcClusterKI)
+ClassImp(MpdEmcClusterKI);

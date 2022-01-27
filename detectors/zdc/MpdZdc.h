@@ -131,7 +131,7 @@ private:
    // reset all parameters
    void ResetParameters();
 
-   ClassDef(MpdZdc, 2)
+   ClassDef(MpdZdc, 2);
 };
 
 //------------------------------------------------------------------------------------------------------------------------

@@ -21,7 +21,8 @@
 
 #include "MpdEtofHitProducerIdeal.h"
 
-ClassImp(MpdEtofHitProducerIdeal) using namespace std;
+ClassImp(MpdEtofHitProducerIdeal);
+using namespace std;
 //------------------------------------------------------------------------------------------------------------------------
 MpdEtofHitProducerIdeal::MpdEtofHitProducerIdeal(const char *name, Bool_t useMCdata, Int_t verbose, Bool_t test,
                                                  Bool_t merge, const char *flnm)

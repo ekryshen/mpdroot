@@ -8,9 +8,9 @@
 #include "MpdBbcGeo.h"
 #include "FairGeoNode.h"
 
-ClassImp(MpdBbcGeo)
+ClassImp(MpdBbcGeo);
 
-   MpdBbcGeo::MpdBbcGeo()
+MpdBbcGeo::MpdBbcGeo()
 {
    // Constructor
    fName      = "bbc";

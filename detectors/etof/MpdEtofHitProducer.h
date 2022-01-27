@@ -49,7 +49,7 @@ public:
    void SetAlongStripzResolution(Double_t err) { fErrPhi = err; };
    void SetSeed(UInt_t seed = 0);
 
-   ClassDef(MpdEtofHitProducer, 2)
+   ClassDef(MpdEtofHitProducer, 2);
 };
 //------------------------------------------------------------------------------------------------------------------------
 #endif

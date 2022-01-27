@@ -409,4 +409,4 @@ Bool_t TpcDetector::CheckIfSensitive(std::string name)
 }
 //---------------------------------------------------------
 
-ClassImp(TpcDetector)
+ClassImp(TpcDetector);

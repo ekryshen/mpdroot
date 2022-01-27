@@ -64,7 +64,10 @@ public:
    MpdMcordPoint *AddHit(Int_t trackID, Int_t detId, TVector3 pos, TVector3 mom, Double_t time, Double_t lenght,
                          Double_t eloss);
 
-   ClassDef(MpdMcord, 1) private : TClonesArray *fPointCollection;
+   ClassDef(MpdMcord, 1);
+
+private:
+   TClonesArray *      fPointCollection;
    static MpdMcordGeo *fgGeo;
 };
 #endif /* MCORD_MCORD_MPDMCORD_H_ */

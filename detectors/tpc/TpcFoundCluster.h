@@ -51,7 +51,7 @@ public:
 
    TVector3 globalPos() const;
 
-   ClassDef(TpcFoundCluster, 6)
+   ClassDef(TpcFoundCluster, 6);
 };
 
 #endif

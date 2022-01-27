@@ -425,4 +425,4 @@ void MpdZdcTstSim::Finish()
    if (fMCTpcPointArray) fMCTpcPointArray->Clear();
 }
 
-ClassImp(MpdZdcTstSim)
+ClassImp(MpdZdcTstSim);

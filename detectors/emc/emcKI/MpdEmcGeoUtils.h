@@ -71,6 +71,6 @@ private:
    float fEcalRmax; // Maximal radius of ECAL
    float fEcalZmax; // Maximal lenght of ECAL in z direction
 
-   ClassDef(MpdEmcGeoUtils, 1)
+   ClassDef(MpdEmcGeoUtils, 1);
 };
 #endif

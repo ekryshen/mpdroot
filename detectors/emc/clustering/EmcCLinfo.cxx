@@ -12,13 +12,10 @@
 
 using namespace std;
 
-ClassImp(EmcCLinfo)
+ClassImp(EmcCLinfo);
 
 //_____________________________________________________________________________
-EmcCLinfo::EmcCLinfo()
-   : fNEvents(0), fCLMethod(0)
-{
-}
+EmcCLinfo::EmcCLinfo() : fNEvents(0), fCLMethod(0) {}
 
 //_____________________________________________________________________________
 EmcCLinfo::~EmcCLinfo() {}

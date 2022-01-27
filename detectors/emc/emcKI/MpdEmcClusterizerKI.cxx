@@ -464,4 +464,4 @@ void MpdEmcClusterizerKI::GetPhiTheta(Double_t &phi, Double_t &theta)
 }
 */
 //__________________________________________________________________________
-ClassImp(MpdEmcClusterizerKI)
+ClassImp(MpdEmcClusterizerKI);

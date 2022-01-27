@@ -96,7 +96,7 @@ protected:
    Float_t fRad;   // cluster radius
    UInt_t  fNHits; // number of hits in cluster
 
-   ClassDef(MpdEmcCluster, 1)
+   ClassDef(MpdEmcCluster, 1);
 };
 
 #endif

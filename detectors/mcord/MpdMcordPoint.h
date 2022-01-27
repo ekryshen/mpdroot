@@ -18,7 +18,7 @@ public:
    MpdMcordPoint(Int_t trackId, Int_t detId, TVector3 pos, TVector3 mom, Double_t time, Double_t length, Double_t eloss,
                  Int_t eventId = 0);
    virtual ~MpdMcordPoint();
-   ClassDef(MpdMcordPoint, 1)
+   ClassDef(MpdMcordPoint, 1);
 };
 
 #endif /* MCORD_MCORD_MPDMCORDPOINT_H_ */

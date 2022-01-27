@@ -33,4 +33,4 @@ void MpdEmcTrackExtrap::DistanceLongPerp(MpdEmcClusterKI *clu, double &dLong, do
    }
 }
 
-ClassImp(MpdEmcTrackExtrap)
+ClassImp(MpdEmcTrackExtrap);

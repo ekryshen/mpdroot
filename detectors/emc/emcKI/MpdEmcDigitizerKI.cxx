@@ -233,4 +233,4 @@ double MpdEmcDigitizerKI::SimulateLightCollection(const double lostenergy)
    return lightYield / coef;
 }
 
-ClassImp(MpdEmcDigitizerKI)
+ClassImp(MpdEmcDigitizerKI);

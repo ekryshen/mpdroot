@@ -31,7 +31,7 @@ private:
    Int_t fNEvents;
    Int_t fCLMethod;
 
-   ClassDef(EmcCLinfo, 1)
+   ClassDef(EmcCLinfo, 1);
 };
 
 #endif /* __EMCCLINFO_H__ */

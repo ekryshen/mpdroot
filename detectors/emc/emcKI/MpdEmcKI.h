@@ -77,7 +77,7 @@ private:
    Double_t           fEcalRmin;              //! inner and outer
    Double_t           fEcalRmax;              //! radii of ECAL (used for tracking)
 
-   ClassDef(MpdEmcKI, 2)
+   ClassDef(MpdEmcKI, 2);
 };
 
 #endif // MPDEMCDET_H

@@ -54,7 +54,7 @@ private:
 
    // mapper emcX, emcY, emcZ, emcTheta, emcPhi, emcTau;
 
-   ClassDef(MpdItsHitProducer5spd, 0)
+   ClassDef(MpdItsHitProducer5spd, 0);
 };
 
 #endif

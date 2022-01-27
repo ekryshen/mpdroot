@@ -4,11 +4,9 @@
 #include "MpdFfdHit.h"
 
 using namespace std;
-ClassImp(MpdFfdHit)
-   //------------------------------------------------------------------------------------------------------------------------
-   MpdFfdHit::MpdFfdHit()
-{
-}
+ClassImp(MpdFfdHit);
+//------------------------------------------------------------------------------------------------------------------------
+MpdFfdHit::MpdFfdHit() {}
 //------------------------------------------------------------------------------------------------------------------------
 MpdFfdHit::MpdFfdHit(Int_t suid, TVector3 pos, TVector3 dpos, Int_t index, Double_t time, size_t npe, Int_t flag)
    : FairHit(suid, pos, dpos, index), fTime(time), fFlag(flag), fNpe(npe)

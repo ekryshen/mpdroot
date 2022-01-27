@@ -16,7 +16,7 @@ public:
 
    FairParSet *createContainer(FairContainer *);
 
-   ClassDef(MpdEtofContFact, 0) // Factory for all TOF parameter containers
+   ClassDef(MpdEtofContFact, 0); // Factory for all TOF parameter containers
 };
 //------------------------------------------------------------------------------------------------------------------------
 #endif

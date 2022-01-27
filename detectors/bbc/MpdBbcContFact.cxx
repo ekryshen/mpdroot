@@ -13,9 +13,9 @@ using namespace std;
 #include <iostream>
 #include <iomanip>
 
-ClassImp(MpdBbcContFact)
+ClassImp(MpdBbcContFact);
 
-   static MpdBbcContFact gMpdBbcContFact;
+static MpdBbcContFact gMpdBbcContFact;
 
 MpdBbcContFact::MpdBbcContFact()
 {

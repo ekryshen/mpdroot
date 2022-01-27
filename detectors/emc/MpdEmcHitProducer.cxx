@@ -207,4 +207,4 @@ MpdEmcHit *MpdEmcHitProducer::SearchHit(UInt_t sec, UInt_t supMod, UInt_t row, U
 
 // -------------------------------------------------------------------------
 
-ClassImp(MpdEmcHitProducer)
+ClassImp(MpdEmcHitProducer);

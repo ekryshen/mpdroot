@@ -75,7 +75,7 @@ public:
       nMatchings = 0;
    }
 
-   ClassDef(MpdTofT0Data, 1)
+   ClassDef(MpdTofT0Data, 1);
 };
 //------------------------------------------------------------------------------------------------------------------------
 class MpdTofT0 : public FairTask {

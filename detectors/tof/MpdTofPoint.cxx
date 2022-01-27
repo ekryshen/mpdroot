@@ -6,12 +6,9 @@
 
 using namespace std;
 
-ClassImp(MpdTofPoint)
-   //------------------------------------------------------------------------------------------------------------------------
-   MpdTofPoint::MpdTofPoint()
-   : FairMCPoint()
-{
-}
+ClassImp(MpdTofPoint);
+//------------------------------------------------------------------------------------------------------------------------
+MpdTofPoint::MpdTofPoint() : FairMCPoint() {}
 //------------------------------------------------------------------------------------------------------------------------
 MpdTofPoint::MpdTofPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length,
                          Double_t eLoss)

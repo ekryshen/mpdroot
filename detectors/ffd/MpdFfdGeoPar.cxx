@@ -5,12 +5,11 @@ using namespace std;
 #include <iomanip>
 #include "TObjArray.h"
 
-ClassImp(MpdFfdGeoPar)
+ClassImp(MpdFfdGeoPar);
 
 MpdFfdGeoPar::MpdFfdGeoPar(const char *name, const char *title, const char *context)
    : FairParGenericSet(name, title, context)
 {
-
    fGeoSensNodes = new TObjArray();
    fGeoPassNodes = new TObjArray();
 }
@@ -40,6 +39,5 @@ Bool_t MpdFfdGeoPar::getParams(FairParamList *l)
    if (!l) return kFALSE;
    if (!l->fillObject("FairGeoNodes Sensitive List", fGeoSensNodes)) return kFALSE;
    if (!l->fillObject("FairGeoNodes Passive List", fGeoPassNodes)) return kFALSE;
-
    return kTRUE;
 }

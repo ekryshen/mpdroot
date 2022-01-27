@@ -347,4 +347,4 @@ void MpdTpcClusterizerTask::ClearData(Int_t isec)
    }
 }
 
-ClassImp(MpdTpcClusterizerTask)
+ClassImp(MpdTpcClusterizerTask);

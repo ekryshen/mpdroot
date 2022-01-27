@@ -65,7 +65,7 @@ private:
    void ClearData(Int_t isec); // save and clear data structures
 
 public:
-   ClassDef(MpdTpcClusterizerTask, 1)
+   ClassDef(MpdTpcClusterizerTask, 1);
 };
 
 #endif

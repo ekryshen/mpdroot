@@ -17,6 +17,6 @@ public:
    Bool_t     getParams(FairParamList *);
    TObjArray *GetGeoSensitiveNodes() { return fGeoSensNodes; }
    TObjArray *GetGeoPassiveNodes() { return fGeoPassNodes; }
-   ClassDef(BmdGeoPar, 1)
+   ClassDef(BmdGeoPar, 1);
 };
 #endif // #ifndef BMDGEOPAR_H

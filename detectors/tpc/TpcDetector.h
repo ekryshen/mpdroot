@@ -104,9 +104,8 @@ private:
    // Private Methods -----------------
 
 public:
-   ClassDef(TpcDetector, 1)
+   ClassDef(TpcDetector, 1);
 };
-
 #endif
 
 //--------------------------------------------------------------

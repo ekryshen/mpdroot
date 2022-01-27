@@ -22,7 +22,7 @@
 // these initialisations are needed for a singleton
 MpdEmcGeoUtils *MpdEmcGeoUtils::sGeom = nullptr;
 
-ClassImp(MpdEmcGeoUtils)
+ClassImp(MpdEmcGeoUtils);
 
 // -----   Default constructor   -------------------------------------------
 MpdEmcGeoUtils::MpdEmcGeoUtils()

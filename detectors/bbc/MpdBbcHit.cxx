@@ -40,4 +40,4 @@ void MpdBbcHit::Print(const Option_t *opt) const
 }
 // -------------------------------------------------------------------------
 
-ClassImp(MpdBbcHit)
+ClassImp(MpdBbcHit);

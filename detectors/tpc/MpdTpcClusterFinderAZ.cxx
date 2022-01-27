@@ -778,4 +778,4 @@ void MpdTpcClusterFinderAZ::CorrectReco(TVector3 &p3loc, TVector3 &p3errCor, Int
 
 //__________________________________________________________________________
 
-ClassImp(MpdTpcClusterFinderAZ)
+ClassImp(MpdTpcClusterFinderAZ);

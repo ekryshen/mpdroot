@@ -233,4 +233,4 @@ MpdStsPoint *MpdStsNew2::AddHit(Int_t trackID, Int_t detID, TVector3 posIn, TVec
 }
 //--------------------------------------------------------------------------------------------------------
 
-ClassImp(MpdStsNew2)
+ClassImp(MpdStsNew2);

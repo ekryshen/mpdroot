@@ -61,7 +61,7 @@ public:
 
    void SetETofZposition(Double_t z) { fTofZpos = z; };
 
-   ClassDef(MpdEtofMatching, 1) // MpdEtofMatching
+   ClassDef(MpdEtofMatching, 1); // MpdEtofMatching
 };
 //------------------------------------------------------------------------------------------------------------------------
 #endif

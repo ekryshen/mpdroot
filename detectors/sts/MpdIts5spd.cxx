@@ -224,4 +224,4 @@ MpdStsPoint *MpdIts5spd::AddHit(Int_t trackID, Int_t detID, TVector3 posIn, TVec
 }
 //--------------------------------------------------------------------------------------------------------
 
-ClassImp(MpdIts5spd)
+ClassImp(MpdIts5spd);

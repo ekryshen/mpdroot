@@ -427,4 +427,4 @@ Int_t BmdDetector::GetVolumeID(TString volname)
 
 //---------------------------------------------------------
 
-ClassImp(BmdDetector)
+ClassImp(BmdDetector);

@@ -75,7 +75,7 @@ private:
    // Resets the private members for the track parameters
    void ResetParameters();
 
-   ClassDef(MpdStsNew2, 1)
+   ClassDef(MpdStsNew2, 1);
 };
 //--------------------------------------------------------------------------------
 

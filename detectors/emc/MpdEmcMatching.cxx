@@ -457,4 +457,4 @@ void MpdEmcMatching::GetTowerCoords(TVector3 &pos, Int_t io, Double_t &phiT, Dou
 }
 //__________________________________________________________________________
 
-ClassImp(MpdEmcMatching)
+ClassImp(MpdEmcMatching);

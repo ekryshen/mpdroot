@@ -5,7 +5,7 @@ using namespace std;
 #include <iomanip>
 #include "TObjArray.h"
 
-ClassImp(MpdStsGeoPar)
+ClassImp(MpdStsGeoPar);
 
 MpdStsGeoPar::MpdStsGeoPar(const char *name, const char *title, const char *context)
    : FairParGenericSet(name, title, context)

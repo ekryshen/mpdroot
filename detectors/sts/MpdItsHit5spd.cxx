@@ -86,4 +86,4 @@ Int_t MpdItsHit5spd::SetDetId(Int_t layer, Int_t ladder, Int_t sector)
    return fDetectorID;
 }
 
-ClassImp(MpdItsHit5spd)
+ClassImp(MpdItsHit5spd);

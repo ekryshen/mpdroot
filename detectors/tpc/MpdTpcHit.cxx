@@ -73,4 +73,4 @@ void MpdTpcHit::SetFlags(const MpdTpc2dCluster *clus)
 }
 
 //---------------------------------------------------------------------------
-ClassImp(MpdTpcHit)
+ClassImp(MpdTpcHit);

@@ -68,7 +68,7 @@ protected:
 
    std::map<int, float> fEdep; // energy deposit for each track ID
 
-   ClassDef(MpdEmcDigitKI, 1)
+   ClassDef(MpdEmcDigitKI, 1);
 };
 
 #endif

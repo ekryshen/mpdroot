@@ -50,7 +50,7 @@ private:
    // Private Methods -----------------
 
 public:
-   ClassDef(BmdGeo, 1)
+   ClassDef(BmdGeo, 1);
 };
 
 #endif

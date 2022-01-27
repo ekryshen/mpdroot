@@ -33,10 +33,9 @@
 class FairVolume;
 using namespace std;
 
-ClassImp(MpdFfd)
-   //------------------------------------------------------------------------------------------------------------------------
-   MpdFfd::MpdFfd()
-   : FairDetector("FFD", kTRUE)
+ClassImp(MpdFfd);
+//------------------------------------------------------------------------------------------------------------------------
+MpdFfd::MpdFfd() : FairDetector("FFD", kTRUE)
 {
    aFfdPoints    = new TClonesArray("MpdFfdPoint");
    fPosIndex     = 0;

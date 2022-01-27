@@ -78,7 +78,7 @@ private:
    vector<Double_t>  xTower, yTower, zTower, rhoTower, phiRow;
    vector<Double_t>  thetaTower, phiTower;
 
-   ClassDef(MpdEmcGeoParams, 1)
+   ClassDef(MpdEmcGeoParams, 1);
 };
 
 #endif /* MPDEMCDETGEOPARAMS_H */

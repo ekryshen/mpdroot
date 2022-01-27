@@ -19,7 +19,7 @@ public:
    Int_t GetFlag() const { return fFlag; };
    void  SetFlag(Int_t flag) { fFlag = flag; };
 
-   ClassDef(MpdFfdHit, 2)
+   ClassDef(MpdFfdHit, 2);
 };
 //------------------------------------------------------------------------------------------------------------------------
 #endif // #ifndef __MPD_FFD_HIT_H

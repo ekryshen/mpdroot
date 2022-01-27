@@ -41,4 +41,4 @@ MpdEmcMatch::~MpdEmcMatch() {}
 
 // -------------------------------------------------------------------------
 
-ClassImp(MpdEmcMatch)
+ClassImp(MpdEmcMatch);

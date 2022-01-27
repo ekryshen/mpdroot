@@ -17,7 +17,7 @@ public:
    const char *getModuleName(Int_t);
    const char *getEleName(Int_t);
 
-   ClassDef(MpdEtofGeo, 0)
+   ClassDef(MpdEtofGeo, 0);
 };
 //------------------------------------------------------------------------------------------------------------------------
 #endif

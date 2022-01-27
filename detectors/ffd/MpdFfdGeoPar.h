@@ -18,7 +18,7 @@ public:
    TObjArray *GetGeoSensitiveNodes() { return fGeoSensNodes; }
    TObjArray *GetGeoPassiveNodes() { return fGeoPassNodes; }
 
-   ClassDef(MpdFfdGeoPar, 1)
+   ClassDef(MpdFfdGeoPar, 1);
 };
 
 #endif /* !MPDFFDGEOPAR_H */
