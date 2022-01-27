@@ -222,7 +222,7 @@ add_subdirectory (mpdpid) # MpdMCStack MpdBase
 add_subdirectory (lhetrack) # MpdBase Kalman Sts Tof
 add_subdirectory (mpddst) # MpdBase LHETrack MpdPid
 
-add_subdirectory (tof) # MpdMCStack Kalman
+add_subdirectory (detectors/tof) # MpdMCStack Kalman
 add_subdirectory (tpc) # Tof
 add_subdirectory (detectors/etof)
 add_subdirectory (zdc)

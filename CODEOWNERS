@@ -32,7 +32,7 @@
 /detectors/sts/                          @vkondrat
 
 # TOF
-/tof/                          @lobastov
+/detectors/tof/                          @lobastov
 
 # ZDC  (FHCAL)
 /zdc/                          @marina 
