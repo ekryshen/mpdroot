@@ -864,19 +864,22 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = ../detectors/bbc/ \
+INPUT                  = ../clustering/ \
+                         ../detectors/bbc/ \
                          ../detectors/bmd/ \
-                         ../clustering/ \
                          ../detectors/emc/ \
                          ../detectors/etof/ \
-                         ../eventdisplay/ \
                          ../detectors/ffd/ \
+                         ../detectors/mcord/ \
+                         ../detectors/sts/ \
+                         ../detectors/tof/ \
+                         ../detectors/tpc/ \
+                         ../eventdisplay/ \
                          ../gconfig/ \
                          ../generators/ \
                          ../kalman/ \
                          ../lhetrack/ \
                          ../macro/ \
-                         ../detectors/mcord/ \
                          ../mcstack/ \
                          ../mpdbase/ \
                          ../mpddst/ \
@@ -885,9 +888,6 @@ INPUT                  = ../detectors/bbc/ \
                          ../passive/ \
                          ../physics/ \
                          ../shield_pack/ \
-                         ../detectors/sts/ \
-                         ../detectors/tof/ \
-                         ../tpc/ \
                          ../zdc/
 
 # This tag can be used to specify the character encoding of the source files

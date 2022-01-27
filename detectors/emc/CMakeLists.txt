@@ -9,7 +9,7 @@ set(INCLUDE_DIRECTORIES
  ${CMAKE_CURRENT_LIST_DIR}/emcKI
  ${CMAKE_SOURCE_DIR}/clustering
  ${CMAKE_SOURCE_DIR}/mcstack
- ${CMAKE_SOURCE_DIR}/tpc
+ ${CMAKE_SOURCE_DIR}/detectors/tpc
  ${CMAKE_SOURCE_DIR}/kalman
  ${CMAKE_SOURCE_DIR}/mpdbase
 )

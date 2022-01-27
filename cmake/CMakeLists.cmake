@@ -59,25 +59,25 @@ set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
 # cause another cmake executable to run. The same process will walk through
 # the project's entire directory structure.
 # LEVEL 1
-add_subdirectory (passive) # INDEPENDENT
-add_subdirectory (mpdbase) # INDEPENDENT
-add_subdirectory (mpdfield) # INDEPENDENT
-add_subdirectory (shield_pack) # INDEPENDENT
 add_subdirectory (clustering) # INDEPENDENT
-add_subdirectory (zdc) # INDEPENDENT
-add_subdirectory (mpdpid) # INDEPENDENT
-add_subdirectory (mpddst) # Base
-add_subdirectory (generators) # INDEPENDENT
-add_subdirectory (mcstack) # INDEPENDENT
 add_subdirectory (detectors/bmd) # INDEPENDENT
-add_subdirectory (detectors/etof) # INDEPENDENT
 add_subdirectory (detectors/emc) # INDEPENDENT
+add_subdirectory (detectors/etof) # INDEPENDENT
 add_subdirectory (detectors/ffd) # INDEPENDENT
 add_subdirectory (detectors/mcord) # INDEPENDENT
 add_subdirectory (detectors/sts) # INDEPENDENT
 add_subdirectory (detectors/tof) # INDEPENDENT
+add_subdirectory (generators) # INDEPENDENT
+add_subdirectory (mcstack) # INDEPENDENT
+add_subdirectory (mpdbase) # INDEPENDENT
+add_subdirectory (mpddst) # Base
+add_subdirectory (mpdfield) # INDEPENDENT
+add_subdirectory (mpdpid) # INDEPENDENT
+add_subdirectory (passive) # INDEPENDENT
+add_subdirectory (shield_pack) # INDEPENDENT
+add_subdirectory (zdc) # INDEPENDENT
 # LEVEL 2
-add_subdirectory (tpc) # tof
+add_subdirectory (detectors/tpc) # tof
 add_subdirectory (kalman) # mpdfield
 add_subdirectory (physics) # mpdbase mpddst
 # LEVEL 3

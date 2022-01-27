@@ -5,7 +5,7 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_SOURCE_DIR}/mcstack
   ${CMAKE_SOURCE_DIR}/mpdbase
   ${CMAKE_SOURCE_DIR}/mpdfield 
-  ${CMAKE_SOURCE_DIR}/tpc
+  ${CMAKE_SOURCE_DIR}/detectors/tpc
   ${CMAKE_SOURCE_DIR}/kalman
   ${CMAKE_SOURCE_DIR}/detectors/sts
   ${CMAKE_SOURCE_DIR}/lhetrack

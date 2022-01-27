@@ -20,7 +20,7 @@
   includePath        += "-I${VMCWORKDIR}/base/field ";
   includePath        += "-I${VMCWORKDIR}/base/sim ";
   includePath        += "-I${VMCWORKDIR}/geobase ";
-  includePath        += "-I${VMCWORKDIR}/tpc ";
+  includePath        += "-I${VMCWORKDIR}/detectors/tpc ";
   includePath        += "-I${VMCWORKDIR}/zdc ";
   includePath        += "-I${VMCWORKDIR}/kalman ";
   includePath        += "-I${VMCWORKDIR}/lhetrack ";

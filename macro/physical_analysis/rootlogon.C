@@ -14,7 +14,7 @@
   TString includePath = "-I${ROOT_INCLUDE_DIR} ";
   includePath        += "-I${VMCWORKDIR}/base ";
   includePath        += "-I${VMCWORKDIR}/geobase ";
-  includePath        += "-I${VMCWORKDIR}/tpc ";
+  includePath        += "-I${VMCWORKDIR}/detectors/tpc ";
   includePath        += "-I${VMCWORKDIR}/kalman ";
   includePath        += "-I${VMCWORKDIR}/lhetrack ";
   includePath        += "-I${VMCWORKDIR}/mcstack ";

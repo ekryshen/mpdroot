@@ -17,10 +17,10 @@
 # Detectors
 #----------------------------------------------------------------------------------
 # TPC
-/tpc/                          @zinchenk  @abychkov
+/detectors/tpc/                          @zinchenk  @abychkov
 
 # FFD
-/ffd/                          @nlashmanov
+/detectors/ffd/                          @nlashmanov
 
 # EMC
 /detectors/emc/                          @boiana2012
