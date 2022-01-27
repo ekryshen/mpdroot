@@ -73,10 +73,12 @@ function assign_vmc_generator_pairs() {
   # MPD generators: HADGEN BOX FLUID HSD ION LAQGSM MCDST PART SMASH UNIGEN URQMD VHLLE
   # MPD vmcs : GEANT3 GEANT4
   # Each pair is one test suite for which vmc,generator test template is executed
-  NO_VMC_GEN_PAIRS=3
-  vmc[0]="GEANT3"; generator[0]="HADGEN";
-  vmc[1]="GEANT4"; generator[1]="HADGEN";
-  vmc[2]="GEANT4"; generator[2]="BOX";
+  NO_VMC_GEN_PAIRS=4
+  INFILE_DEFAULT="auau.09gev.mbias.98k.ftn14"
+  vmc[0]="GEANT3"; generator[0]="HADGEN"; inFile[0]=$INFILE_DEFAULT;
+  vmc[1]="GEANT4"; generator[1]="HADGEN"; inFile[1]=$INFILE_DEFAULT;
+  vmc[2]="GEANT4"; generator[2]="BOX";    inFile[2]=$INFILE_DEFAULT;
+  vmc[3]="GEANT4"; generator[3]="UNIGEN"; inFile[3]="$CI_PROJECT_DIR/input/tests/dcmqgsm_bibi_9.2gev_local_1.mcini.root";
 }
 
 
@@ -89,7 +91,7 @@ function generate_tests() {
  TEST_COUNTER=0
  TESTS_IN_SUITE=3
  for i in "${!vmc[@]}"; do
-    tests[$TEST_COUNTER]='root -b -q -l '"'"'$MPDROOT_MACROS/common/runMC.C(EGenerators::'"${generator[$i]}"',EVMCType::'"${vmc[$i]}"',2021,"auau.09gev.mbias.98k.ftn14")'"'"' | tee output_'"$TEST_COUNTER"'.txt'
+    tests[$TEST_COUNTER]='root -b -q -l '"'"'$MPDROOT_MACROS/common/runMC.C(EGenerators::'"${generator[$i]}"',EVMCType::'"${vmc[$i]}"',1,"'"${inFile[$i]}"'","evetest.root",0,1)'"'"' | tee output_'"$TEST_COUNTER"'.txt'
     names[$TEST_COUNTER]="runMC"
     suitename[$TEST_COUNTER]="${vmc[$i]} ${generator[$i]}"
     ((TEST_COUNTER++))
