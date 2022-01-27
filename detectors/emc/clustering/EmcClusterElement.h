@@ -44,7 +44,7 @@ public:
    Bool_t   HasCont();
 
    MpdEmcHitCont *GetCont(Int_t i);
-   TObjArray *    GetCont() { return fHitCont; }
+   TObjArray     *GetCont() { return fHitCont; }
 
 private:
    TObjArray *fHitCont;

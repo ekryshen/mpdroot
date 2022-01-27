@@ -240,7 +240,7 @@ void MpdTpcDigitizerAZlt::Exec(Option_t *opt)
       }
 
       multimap<Int_t, Int_t>::iterator it       = pointID.begin();
-      TpcPoint *                       prePoint = (TpcPoint *)fMCPointArray->UncheckedAt(it->second);
+      TpcPoint                        *prePoint = (TpcPoint *)fMCPointArray->UncheckedAt(it->second);
       // cout << " prePoint: " << prePoint->GetTrackID() << " " << prePoint->GetX() << " "
       //<< prePoint->GetY() << " " << prePoint->GetZ() << endl;
       Check4Edge(iSec, prePoint, virtPoint); // check for edge-effect
@@ -460,7 +460,7 @@ void MpdTpcDigitizerAZlt::SignalShaping()
    // Apply electronics response function
 
    static Int_t        first = 0, nbins = 0, icent = 0, n2 = 0;
-   static Double_t *   reFilt = nullptr, *imFilt = nullptr;
+   static Double_t    *reFilt = nullptr, *imFilt = nullptr;
    static TVirtualFFT *fft[2] = {nullptr, nullptr};
    const Double_t      sigma = 190. / 2 / TMath::Sqrt(2 * TMath::Log(2)), sigma2 = sigma * sigma; // FWHM = 190 ns
    const Int_t         maxTimeBin = MpdTpcSectorGeo::Instance()->TimeMax() / MpdTpcSectorGeo::Instance()->TimeBin() + 1;
@@ -486,10 +486,10 @@ void MpdTpcDigitizerAZlt::SignalShaping()
       fft[0]->GetPointsComplex(reFilt, imFilt);
    }
 
-   Double_t *        reSig = new Double_t[nbins];
-   Double_t *        imSig = new Double_t[nbins];
-   Double_t *        reTot = new Double_t[nbins];
-   Double_t *        imTot = new Double_t[nbins];
+   Double_t         *reSig = new Double_t[nbins];
+   Double_t         *imSig = new Double_t[nbins];
+   Double_t         *reTot = new Double_t[nbins];
+   Double_t         *imTot = new Double_t[nbins];
    map<Int_t, Int_t> cumul;                     // cumulative active time bin counter
    const Double_t    ScaleFactor = 0.083916084; // See ampl for details
    // AZ Int_t nRows = MpdTpcSectorGeo::Instance()->NofRows();

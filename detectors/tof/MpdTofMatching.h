@@ -75,7 +75,7 @@ public:
 
    // debug info
    size_t                  fNCandTofTracks = 0, fNCandTrueMatch = 0, fNFoundTrueMatch = 0, fNFoundMisMatch = 0;
-   MpdTofMatchingQA *      pMatchingQA = nullptr;
+   MpdTofMatchingQA       *pMatchingQA = nullptr;
    std::map<Int_t, mcInfo> fmT2MC; // pair< kf trackIndex, mcInfo>
 
    double        SumWeightsForHit(size_t hitId) const;                              // [0,...N-1]
@@ -142,9 +142,9 @@ public:
    void                      CountFoundCandidates();
    void                      Boost1thRankCand(double mult);
    void                      Reset(size_t trackSize, size_t hitSize);
-   MpdTofMatchingData *      AddCandidate(const MpdTofMatchingData &data);
-   mcInfo *                  saveMCinfo(Int_t trackId, const mcInfo &mc);
-   const mcInfo *            getMCinfo(Int_t trackId) const;
+   MpdTofMatchingData       *AddCandidate(const MpdTofMatchingData &data);
+   mcInfo                   *saveMCinfo(Int_t trackId, const mcInfo &mc);
+   const mcInfo             *getMCinfo(Int_t trackId) const;
    void                      MoveEntries(TClonesArray *aTofMatchings) const;
    const MpdTofMatchingData *FindCandidate(size_t trackId, size_t hitId) const;
    std::pair<size_t, size_t> GetMatchFound() const { return {fNFoundTrueMatch, fNFoundMisMatch}; }
@@ -166,11 +166,11 @@ class MpdTofMatching : public FairTask {
    TClonesArray *aTPCkfTracks  = nullptr; //! <--- input KF TPC tracks
    TClonesArray *aTofMatchings = nullptr; //! ---> output
 
-   MpdKalmanFilter * pKF      = nullptr; //!
-   LWeightMatrix *   fWeights = nullptr; //!
-   TRandom2 *        pRandom  = nullptr; //!
+   MpdKalmanFilter  *pKF      = nullptr; //!
+   LWeightMatrix    *fWeights = nullptr; //!
+   TRandom2         *pRandom  = nullptr; //!
    MpdTofMatchingQA *pQA      = nullptr; //!
-   TStopwatch *      pTimer   = nullptr; //!
+   TStopwatch       *pTimer   = nullptr; //!
 
    Bool_t         fDoTest, fIsMcRun = false, fDoMCtest;
    const Double_t fTofBarrelRadius = 152.;                  // [cm]

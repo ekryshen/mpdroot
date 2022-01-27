@@ -155,7 +155,7 @@ void MpdTofGeoUtils::ParseTGeoManager(MpdTofHitProducerQA *pQA, bool forced, con
 
          // Add Detector location interval to intervalTree
          Int_t       duid = MpdTofPoint::ClearGap(MpdTofPoint::GetSuid72(
-            sectorID, detectorID, 0)); // suid for 0th strip of the selected detector, gap reset to 0
+                  sectorID, detectorID, 0)); // suid for 0th strip of the selected detector, gap reset to 0
          LRectangle *det  = new LRectangle(duid, A, B, C, D);
          det->InitCenterPerp();
 

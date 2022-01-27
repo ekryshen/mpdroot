@@ -201,7 +201,7 @@ void MpdEmcClusterizerKI::MakeUnfoldings()
    if (!fSimParams->UnfoldClusters()) {
       return;
    }
-   int *  maxAt       = new int[fSimParams->NLMMax()]; // NLMMax:Maximal number of local maxima
+   int   *maxAt       = new int[fSimParams->NLMMax()]; // NLMMax:Maximal number of local maxima
    float *maxAtEnergy = new float[fSimParams->NLMMax()];
 
    float localMaxCut         = fSimParams->LocalMaximumCut();

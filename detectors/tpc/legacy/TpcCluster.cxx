@@ -79,7 +79,7 @@ void TpcCluster::MakeRegion()
 
    for (Int_t i = 0; i < fSequences->GetEntriesFast(); ++i) {
       TpcSequence *seq = (TpcSequence *)fSequences->At(i);
-      TpcPad *     pad = seq->GetPad();
+      TpcPad      *pad = seq->GetPad();
       for (Int_t ibin = seq->GetBegin(); ibin < seq->GetEnd(); ++ibin) {
          TpcTimeBin *bin = pad->GetTimeBin(ibin);
          fRegion->AddAt(bin, (pad->GetPadId() - fLoPad) * (fHiBin - fLoBin) + ibin - fLoBin);

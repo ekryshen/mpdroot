@@ -48,10 +48,10 @@ protected:
 private:
    int fNumberOfClusters; // Number of created clusters
 
-   TClonesArray *     fDigitsArray;   //! Input digits array
-   TObjArray *        fClustersArray; //! output clusters array
-   MpdEmcSimParams *  fSimParams;     //! Configuration parameters
-   MpdEmcGeoUtils *   fGeom;          //! Geometry class
+   TClonesArray      *fDigitsArray;   //! Input digits array
+   TObjArray         *fClustersArray; //! output clusters array
+   MpdEmcSimParams   *fSimParams;     //! Configuration parameters
+   MpdEmcGeoUtils    *fGeom;          //! Geometry class
    MpdEmcCalibParams *fCalibData;     //! Calibration parameters
    ClassDef(MpdEmcClusterizerKI, 1);
 };

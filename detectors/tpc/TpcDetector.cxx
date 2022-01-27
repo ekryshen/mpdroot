@@ -203,9 +203,9 @@ void TpcDetector::ConstructGeometry()
 void TpcDetector::ConstructAsciiGeometry()
 {
 
-   FairGeoLoader *   geoLoad = FairGeoLoader::Instance();
+   FairGeoLoader    *geoLoad = FairGeoLoader::Instance();
    FairGeoInterface *geoFace = geoLoad->getGeoInterface();
-   TpcGeo *          TPCGeo  = new TpcGeo();
+   TpcGeo           *TPCGeo  = new TpcGeo();
    TPCGeo->setGeomFile(GetGeometryFileName());
    geoFace->addGeoModule(TPCGeo);
 
@@ -213,14 +213,14 @@ void TpcDetector::ConstructAsciiGeometry()
    if (rc) TPCGeo->create(geoLoad->getGeoBuilder());
    TList *volList = TPCGeo->getListOfVolumes();
    // store geo parameter
-   FairRun *      fRun       = FairRun::Instance();
+   FairRun       *fRun       = FairRun::Instance();
    FairRuntimeDb *rtdb       = FairRun::Instance()->GetRuntimeDb();
-   TpcGeoPar *    par        = (TpcGeoPar *)(rtdb->getContainer("TpcGeoPar"));
-   TObjArray *    fSensNodes = par->GetGeoSensitiveNodes();
-   TObjArray *    fPassNodes = par->GetGeoPassiveNodes();
+   TpcGeoPar     *par        = (TpcGeoPar *)(rtdb->getContainer("TpcGeoPar"));
+   TObjArray     *fSensNodes = par->GetGeoSensitiveNodes();
+   TObjArray     *fPassNodes = par->GetGeoPassiveNodes();
 
    TListIter      iter(volList);
-   FairGeoNode *  node = nullptr;
+   FairGeoNode   *node = nullptr;
    FairGeoVolume *aVol = nullptr;
 
    while ((node = (FairGeoNode *)iter.Next())) {
@@ -240,7 +240,7 @@ void TpcDetector::ConstructAsciiGeometry()
 // -----   ConstructGDMLGeometry   -------------------------------------------
 void TpcDetector::ConstructGDMLGeometry()
 {
-   TFile *     old = gFile;
+   TFile      *old = gFile;
    TGDMLParse  parser;
    TGeoVolume *gdmlTop;
 
@@ -293,9 +293,9 @@ void TpcDetector::ExpandNodeForGdml(TGeoNode *node)
    if (curVol->IsAssembly()) {
       LOG(DEBUG) << "    skipping volume-assembly";
    } else {
-      TGeoMedium *  curMed                  = curVol->GetMedium();
+      TGeoMedium   *curMed                  = curVol->GetMedium();
       TGeoMaterial *curMat                  = curVol->GetMaterial();
-      TGeoMedium *  curMedInGeoManager      = gGeoManager->GetMedium(curMed->GetName());
+      TGeoMedium   *curMedInGeoManager      = gGeoManager->GetMedium(curMed->GetName());
       TGeoMaterial *curMatOfMedInGeoManager = curMedInGeoManager->GetMaterial();
       TGeoMaterial *curMatInGeoManager      = gGeoManager->GetMaterial(curMat->GetName());
 
@@ -334,10 +334,10 @@ void TpcDetector::ExpandNodeForGdml(TGeoNode *node)
          if (fFixedMedia.find(medName) == fFixedMedia.end()) {
             LOG(DEBUG) << "    There is no correct medium in the memory yet";
 
-            FairGeoLoader *   geoLoad      = FairGeoLoader::Instance();
+            FairGeoLoader    *geoLoad      = FairGeoLoader::Instance();
             FairGeoInterface *geoFace      = geoLoad->getGeoInterface();
-            FairGeoMedia *    geoMediaBase = geoFace->getMedia();
-            FairGeoBuilder *  geobuild     = geoLoad->getGeoBuilder();
+            FairGeoMedia     *geoMediaBase = geoFace->getMedia();
+            FairGeoBuilder   *geobuild     = geoLoad->getGeoBuilder();
 
             FairGeoMedium *curMedInGeo = geoMediaBase->getMedium(medName);
             if (curMedInGeo == 0) {
@@ -384,7 +384,7 @@ void TpcDetector::ExpandNodeForGdml(TGeoNode *node)
    //! Recursevly go down the tree of nodes
    if (curVol->GetNdaughters() != 0) {
       TObjArray *NodeChildList = curVol->GetNodes();
-      TGeoNode * curNodeChild;
+      TGeoNode  *curNodeChild;
       for (Int_t j = 0; j < NodeChildList->GetEntriesFast(); j++) {
          curNodeChild = (TGeoNode *)NodeChildList->At(j);
          ExpandNodeForGdml(curNodeChild);

@@ -55,7 +55,7 @@ public:
    virtual void       Finish();
 
    void    PadResponse(Float_t x, Float_t y, UInt_t timeID, Int_t origin, DigOrigArray ***arr);
-   TF1 *   padResponseFunction();
+   TF1    *padResponseFunction();
    Float_t CalculatePadResponse(UInt_t padID, UInt_t rowID, Float_t x, Float_t y);
    void    GetArea(Float_t xEll, Float_t yEll, Float_t radius, vector<UInt_t> &padIDs, vector<UInt_t> &rowIDs);
    Int_t   CalcOrigin(const DigOrigArray dig);
@@ -67,20 +67,20 @@ private:
    TString fInputBranchName;
    TString fOutputBranchName;
 
-   TClonesArray *               fMCPointArray;  // input array of MC points
-   TClonesArray *               fMCTracksArray; // input array of MC tracks
-   TClonesArray *               fDigits;        // output array of TPC digits (write into output tree)
-   TpcGas *                     fGas;           // pointer to gas system
-   DigOrigArray ***             fDigits4dArray; // output array of digital signals (don't write into output tree)
-   TpcSector *                  fSector;        // object for getting geometrical parameters of TPC sector
+   TClonesArray                *fMCPointArray;  // input array of MC points
+   TClonesArray                *fMCTracksArray; // input array of MC tracks
+   TClonesArray                *fDigits;        // output array of TPC digits (write into output tree)
+   TpcGas                      *fGas;           // pointer to gas system
+   DigOrigArray              ***fDigits4dArray; // output array of digital signals (don't write into output tree)
+   TpcSector                   *fSector;        // object for getting geometrical parameters of TPC sector
    MpdTpcDigitizerQAHistograms *fHisto;         // pointer to object needed only for QA creating
-   TF1 *                        fPRF;           // pad response function
-   FairField *                  fMagField;      // magnetic field
+   TF1                         *fPRF;           // pad response function
+   FairField                   *fMagField;      // magnetic field
 
    Float_t fGain;           // coefficient for avalanches calculating
    Float_t zCathode;        // length of TPC
    Float_t fNoiseThreshold; // threshold for signal separation
-   Int_t * fNumOfPadsInRow; // array of pads quantity in every TPC rows
+   Int_t  *fNumOfPadsInRow; // array of pads quantity in every TPC rows
    UInt_t  nSectors;        // number of TPC sectors
    UInt_t  nTimeBackets;    // number of time samples in TPC
    UInt_t  nRows;           // number of rows in TPC sector

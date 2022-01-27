@@ -220,7 +220,7 @@ void MpdEmcDigitizer::RedoId(TClonesArray *digis, TClonesArray *mctrs)
    Int_t                 nDigis = digis->GetEntriesFast();
 
    for (Int_t iDig = 0; iDig < nDigis; ++iDig) {
-      MpdEmcDigit *       digi    = (MpdEmcDigit *)digis->UncheckedAt(iDig);
+      MpdEmcDigit        *digi    = (MpdEmcDigit *)digis->UncheckedAt(iDig);
       map<Int_t, Float_t> contrib = digi->GetContrib();
       map<Int_t, Float_t> copy(contrib);
       contrib.clear();
@@ -258,7 +258,7 @@ void MpdEmcDigitizer::FindChanPhiZ(Double_t &phi, Double_t &z)
    Int_t       ip1     = path.Last('_');
    TString     volName = path(ip + 1, ip1 - ip - 1);
    TGeoVolume *tower   = gGeoManager->GetVolume(volName);
-   TGeoBBox *  box     = (TGeoBBox *)tower->GetShape();
+   TGeoBBox   *box     = (TGeoBBox *)tower->GetShape();
    Double_t    xyzL[3] = {0, 0, -box->GetDZ()}, xyzM[3];
    gGeoManager->LocalToMaster(xyzL, xyzM);
    z   = xyzM[2];
@@ -277,7 +277,7 @@ void MpdEmcDigitizer::FindChanPhiThe(Double_t &phi, Double_t &the)
    Int_t       ip1     = path.Last('_');
    TString     volName = path(ip + 1, ip1 - ip - 1);
    TGeoVolume *tower   = gGeoManager->GetVolume(volName);
-   TGeoBBox *  box     = (TGeoBBox *)tower->GetShape();
+   TGeoBBox   *box     = (TGeoBBox *)tower->GetShape();
    Double_t    xyzL[3] = {0, 0, -box->GetDZ()}, xyzM[3];
    gGeoManager->LocalToMaster(xyzL, xyzM);
    phi = TMath::ATan2(xyzM[1], xyzM[0]);

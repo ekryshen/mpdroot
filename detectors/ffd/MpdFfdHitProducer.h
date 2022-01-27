@@ -58,12 +58,12 @@ private:
    // 160 channels(quartz SV), key = timebin
    std::multimap<size_t, PointData> fData[160];
 
-   TH1D *       hSuids   = nullptr;
-   TH2D *       hOpYield = nullptr, *hOpYieldPion = nullptr, *hOpYieldProton = nullptr, *hOpYieldElectron = nullptr;
-   TH2D *       hPeYield = nullptr, *hPeYieldPion = nullptr, *hPeYieldProton = nullptr, *hPeYieldElectron = nullptr;
-   TH2D *       hOpTrash = nullptr, *hXY = nullptr, *hXmap = nullptr, *hYmap = nullptr, *hZmap = nullptr;
-   TH2D *       hXcenter = nullptr, *hYcenter = nullptr, *hCenter = nullptr, *hOccup = nullptr, *hChannelsEW = nullptr;
-   TH2D *       hTimeWindows = nullptr, *hTimeSize = nullptr;
+   TH1D        *hSuids   = nullptr;
+   TH2D        *hOpYield = nullptr, *hOpYieldPion = nullptr, *hOpYieldProton = nullptr, *hOpYieldElectron = nullptr;
+   TH2D        *hPeYield = nullptr, *hPeYieldPion = nullptr, *hPeYieldProton = nullptr, *hPeYieldElectron = nullptr;
+   TH2D        *hOpTrash = nullptr, *hXY = nullptr, *hXmap = nullptr, *hYmap = nullptr, *hZmap = nullptr;
+   TH2D        *hXcenter = nullptr, *hYcenter = nullptr, *hCenter = nullptr, *hOccup = nullptr, *hChannelsEW = nullptr;
+   TH2D        *hTimeWindows = nullptr, *hTimeSize = nullptr;
    TEfficiency *hPMTeff = nullptr;
    static TGraph *gPMTeff_pdf; // PDF for PMT yield
 

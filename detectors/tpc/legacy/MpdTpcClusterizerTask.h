@@ -54,7 +54,7 @@ public:
 private:
    // Private Data Members ------------
    TString        fPointBranchName;
-   TClonesArray * fPointArray;
+   TClonesArray  *fPointArray;
    TClonesArray **fPrimArray;
 
    TpcGas *fGas;

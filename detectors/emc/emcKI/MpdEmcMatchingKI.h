@@ -38,9 +38,9 @@ protected:
 
 private:
    std::vector<MpdEmcTrackExtrap> fTrackPoints;  //! Coordinates and link to track extrapolations
-   TObjArray *                    fClusterArray; //! Input/output list of clusters
-   TClonesArray *                 fTpcTracks;    //! Input/output clusters array
-   TClonesArray *                 fvtx;          //! list of reconstructed vertexes
+   TObjArray                     *fClusterArray; //! Input/output list of clusters
+   TClonesArray                  *fTpcTracks;    //! Input/output clusters array
+   TClonesArray                  *fvtx;          //! list of reconstructed vertexes
    double                         fzMax;         // Maximal size of ECAL in z direction
    double                         frMin;         // inner radius of ECAL
 

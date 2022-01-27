@@ -102,7 +102,7 @@ public:
 
 private:
    // Private Data Members ------------
-   TClonesArray * fBmdPointCollection;
+   TClonesArray  *fBmdPointCollection;
    Int_t          fTrackID;       //!  track index
    Int_t          fVolumeID;      //!  volume id
    TLorentzVector fPos;           //!  position

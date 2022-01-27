@@ -72,7 +72,7 @@ private:
    std::vector<Int_t>                 fSecRows0;
    std::set<Int_t>                    fSecRows1;
    Bool_t                             fPersistence;
-   MpdEmcGeoParams *                  fEmcGeo;
+   MpdEmcGeoParams                   *fEmcGeo;
    Float_t                            fThresh;
    Int_t                              fTimeWindow;
 

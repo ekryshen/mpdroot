@@ -267,7 +267,7 @@ void MpdFfdHitProducer::Exec(Option_t *opt)
                   TVector3 padCenter = GetPadCenter(suid + 1); // [0,159] -> [1,160]
                   auto     pPoint    = (MpdFfdPoint *)aMcPoints->UncheckedAt(maxIndex);
                   auto     hit       = AddHit(pPoint, padCenter, TVector3(fErrXY, fErrXY, fErrZ), maxIndex, maxDeposit,
-                                    mIntegrals.size(), mIntegrals);
+                                              mIntegrals.size(), mIntegrals);
 
                   if (fDoTest) CenterTest(pPoint, suid, hit, padCenter);
 

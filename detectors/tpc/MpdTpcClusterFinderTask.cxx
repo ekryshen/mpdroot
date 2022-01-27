@@ -1173,7 +1173,7 @@ void MpdTpcClusterFinderTask::CalcResiduals(MpdTpcFoundHit *hit, Float_t sectPhi
    TGraph *gResZ     = new TGraph();
 
    Int_t         j, mctrackid;
-   TpcPoint *    point;
+   TpcPoint     *point;
    const Float_t gX         = hit->GetGlobalX();
    const Float_t gY         = hit->GetGlobalY();
    const Float_t gZ         = hit->GetGlobalZ();
@@ -1196,13 +1196,13 @@ void MpdTpcClusterFinderTask::CalcResiduals(MpdTpcFoundHit *hit, Float_t sectPhi
    if (gResX->GetN() < 2 || gResZ->GetN() < 2) return;
 
    gResX->Fit("pol1", "Q");
-   TF1 *         fitfcn_x = gResX->GetFunction("pol1");
+   TF1          *fitfcn_x = gResX->GetFunction("pol1");
    const Float_t bx       = fitfcn_x->GetParameter(0);
    const Float_t ax       = fitfcn_x->GetParameter(1);
    const Float_t xRes     = (lY - bx) / ax - lX;
 
    gResZ->Fit("pol1", "Q");
-   TF1 *         fitfcn_z = gResZ->GetFunction("pol1");
+   TF1          *fitfcn_z = gResZ->GetFunction("pol1");
    const Float_t bz       = fitfcn_z->GetParameter(0);
    const Float_t az       = fitfcn_z->GetParameter(1);
    const Float_t zRes     = (Sqrt(gX * gX + gY * gY) - bz) / az - gZ;

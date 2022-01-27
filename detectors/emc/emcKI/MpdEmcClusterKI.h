@@ -139,11 +139,11 @@ protected:
    std::map<int, float>               fMCTracks;      //! transient trackID and energy deposit
 
    Int_t    fNDigits; // Digit multiplicity
-   Int_t *  fDitisId; //[fNDigits] cellId
+   Int_t   *fDitisId; //[fNDigits] cellId
    Float_t *fDigitsE; //[fNDigits] deposited energy
 
    Int_t    fNPrimaries; // Number of primaries
-   Int_t *  fPrimId;     //[fNPrimaries] cellId
+   Int_t   *fPrimId;     //[fNPrimaries] cellId
    Float_t *fPrimE;      //[fNPrimaries] deposited energy per cell
 
    Float_t fE;       // cluster energy

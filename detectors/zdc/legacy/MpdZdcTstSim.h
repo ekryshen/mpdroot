@@ -39,14 +39,14 @@ public:
 private:
    Int_t nevents;
 
-   TClonesArray *     fMCTrackArray;    //!
-   TClonesArray *     fMCZdcPointArray; //!
-   TClonesArray *     fMCTpcPointArray; //!
+   TClonesArray      *fMCTrackArray;    //!
+   TClonesArray      *fMCZdcPointArray; //!
+   TClonesArray      *fMCTpcPointArray; //!
    FairMCEventHeader *fMCEventHeader;   //!
 
-   TNtuple * fTree;        //
+   TNtuple  *fTree;        //
    TNtupleD *fTreeSummary; //
-   TH3F *    fH3;          //
+   TH3F     *fH3;          //
 
    //  MpdZdcGeoPar *fPar;           //  !
 

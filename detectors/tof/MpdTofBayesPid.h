@@ -35,13 +35,13 @@ class TClonesArray;
 //------------------------------------------------------------------------------------------------------------------------
 class MpdBayesPriors : public TObject {
    static const size_t fNpdf = 4;
-   static const char * fSpeciesNames[fNpdf];
-   static const TH1D * fPriorOrigin;
+   static const char  *fSpeciesNames[fNpdf];
+   static const TH1D  *fPriorOrigin;
 
    size_t  fIterNmb; // iteration number [1,2,3,..]
    TString fFlnm;
    TList   fList;
-   TH1D *  fPriors[fNpdf] = {}; // clones of fPriorOrigin
+   TH1D   *fPriors[fNpdf] = {}; // clones of fPriorOrigin
 
    TString _getFullFlnm(size_t iterNmb, const char *flnm) const;
    TString _getTHname(size_t iterNmb, size_t pid) const;
@@ -99,9 +99,9 @@ public:
    void         Update(double *prob_H_S, double Pt, Int_t pdgcode);
    void         Print(const char *comment = nullptr, std::ostream &os = std::cout);
    void         SetName(const char *name) { fName = name; };
-   const char * GetFlnm() const { return fFlnm.Data(); };
+   const char  *GetFlnm() const { return fFlnm.Data(); };
    const TList &GetHistos() const { return fList; };
-   TH1D *       CreatePriorClone(TString name);
+   TH1D        *CreatePriorClone(TString name);
 };
 //------------------------------------------------------------------------------------------------------------------------
 class MpdTofBayesPid : public FairTask {
@@ -109,17 +109,17 @@ class MpdTofBayesPid : public FairTask {
 
    TString               fPriorPrefix = "TofBayesPidPriors";
    const MpdBayesPriors *fPriors      = nullptr; // used current priors
-   MpdBayesPriors *      fNextPrior   = nullptr; // calc. next iteration priors
+   MpdBayesPriors       *fNextPrior   = nullptr; // calc. next iteration priors
 
    static const size_t     fNmatrix             = 10;
    PidProbabilitiesMatrix *fEffMatrix[fNmatrix] = {};
 
-   TH1D * fYield[fNpdf]        = {}; // clone of MpdBayesPriors::fPriorOrigin)
+   TH1D  *fYield[fNpdf]        = {}; // clone of MpdBayesPriors::fPriorOrigin)
    double fProb_H_S[fNpdf]     = {}; //
    double fProb_S_H[fNpdf]     = {}; //  calc. from PDFs
-   TH2D * fH_S[fNpdf]          = {}; // calc. H_S distribution
+   TH2D  *fH_S[fNpdf]          = {}; // calc. H_S distribution
    double fPdfIntegrals[fNpdf] = {}; // calc. from PDFs
-   TH3D * hPdf[fNpdf]          = {}; // PDFs: 3D-function of mass², P, dE/dx (all species histos MUST BE same dim)
+   TH3D  *hPdf[fNpdf]          = {}; // PDFs: 3D-function of mass², P, dE/dx (all species histos MUST BE same dim)
 
    Bool_t fUseMCData;      // true - MC data need to use
    Bool_t fDoTest = false; // true - make QA tests

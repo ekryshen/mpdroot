@@ -96,7 +96,7 @@ private:
    void     PeakAndValley(const MpdTpc2dCluster *clus, std::multimap<Double_t, Int_t> &localMax); // peak-and-valley
    void     PeakAndValley(const std::vector<pixel> &pixels, std::multimap<Double_t, Int_t> &localMax,
                           std::vector<std::vector<Double_t>> &charges,
-                          std::vector<std::vector<Int_t>> &   flags); // peak-and-valley in pixel domain
+                          std::vector<std::vector<Int_t>>    &flags); // peak-and-valley in pixel domain
    void     CreateHits(const std::vector<pixel> &pixels, std::multimap<Double_t, Int_t> &localMax,
                        std::vector<std::vector<Double_t>> &charges, std::vector<std::vector<Int_t>> &flags, Int_t iclus,
                        std::vector<std::multimap<Double_t, Int_t>> &pixInMax);    // create hits from pixels

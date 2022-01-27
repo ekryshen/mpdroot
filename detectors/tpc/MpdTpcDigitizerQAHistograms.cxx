@@ -107,18 +107,18 @@ void MpdTpcDigitizerQAHistograms::Initialize()
    _hY_dig   = CreateHistogram1("Y distribution of TPC digits", _suffix, "Y, pad rows", nRows, 0, nRows);
    _hZ_dig   = CreateHistogram1("Z distribution of TPC digits", _suffix, "Z, time bins", nTimeBin, 0, nTimeBin);
    _hXY_dig  = CreateHistogram2("XY distribution of TPC digits", _suffix, "X, pads", "Y, pad rows", nPads, 0, nPads,
-                               nRows, 0, nRows);
+                                nRows, 0, nRows);
    _h3D_dig  = CreateHistogram3("XYZ distribution of TPC digits", _suffix, "X, pads", "Y, pad rows", "Z, time bins",
-                               nPads, 0, nPads, nRows, 0, nRows, nTimeBin, 0, nTimeBin);
+                                nPads, 0, nPads, nRows, 0, nRows, nTimeBin, 0, nTimeBin);
    _hDiffuseXY =
       CreateHistogram2("XY diffuse of electrons", _suffix, "X (cm)", "Y (cm)", 400, -2.0, 2.0, 400, -2.0, 2.0);
    _hDistortXY =
       CreateHistogram2("XY distortion of electrons", _suffix, "X (cm)", "Y (cm)", 400, -2.0, 2.0, 400, -2.0, 2.0);
 
    _hXT_dig_1  = CreateHistogram2("XT distribution of TPC digits on PadRow #1", _suffix, "X, pads", "T, time bins",
-                                 nPads, 0, nPads, nTimeBin, 0, nTimeBin);
+                                  nPads, 0, nPads, nTimeBin, 0, nTimeBin);
    _hXT_dig_5  = CreateHistogram2("XT distribution of TPC digits on PadRow #5", _suffix, "X, pads", "T, time bins",
-                                 nPads, 0, nPads, nTimeBin, 0, nTimeBin);
+                                  nPads, 0, nPads, nTimeBin, 0, nTimeBin);
    _hXT_dig_10 = CreateHistogram2("XT distribution of TPC digits on PadRow #10", _suffix, "X, pads", "T, time bins",
                                   nPads, 0, nPads, nTimeBin, 0, nTimeBin);
    _hXT_dig_20 = CreateHistogram2("XT distribution of TPC digits on PadRow #20", _suffix, "X, pads", "T, time bins",

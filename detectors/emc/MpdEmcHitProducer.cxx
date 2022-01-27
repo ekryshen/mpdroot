@@ -87,7 +87,7 @@ void MpdEmcHitProducer::Exec(Option_t *opt)
    for (UInt_t iPnt = 0; iPnt < (UInt_t)fPointArray->GetEntriesFast(); ++iPnt) {
       FairMCPoint *pnt  = (FairMCPoint *)fPointArray->At(iPnt);
       Int_t        trId = pnt->GetTrackID();
-      MpdMCTrack * tr   = (MpdMCTrack *)fMcTrackArray->At(trId);
+      MpdMCTrack  *tr   = (MpdMCTrack *)fMcTrackArray->At(trId);
       //        if (tr->GetMotherId() != -1) continue;
       Int_t   pdg    = tr->GetPdgCode();
       Float_t x      = pnt->GetX();

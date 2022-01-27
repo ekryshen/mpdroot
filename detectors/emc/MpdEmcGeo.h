@@ -11,8 +11,8 @@ protected:
 public:
    MpdEmcGeo();
    ~MpdEmcGeo() {}
-   const char * getModuleName(Int_t);
-   const char * getEleName(Int_t);
+   const char  *getModuleName(Int_t);
+   const char  *getEleName(Int_t);
    inline Int_t getModNumInMod(const TString &);
    ClassDef(MpdEmcGeo, 1);
 };

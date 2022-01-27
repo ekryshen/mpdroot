@@ -121,9 +121,9 @@ void MpdMcord::ConstructGeometry()
 
    LOG(info) << "Constructing MCORD geometry from ASCII file  " << fileName;
 
-   FairGeoLoader *   loader       = FairGeoLoader::Instance();
+   FairGeoLoader    *loader       = FairGeoLoader::Instance();
    FairGeoInterface *GeoInterface = loader->getGeoInterface();
-   MpdMcordGeo *     MGeo         = new MpdMcordGeo();
+   MpdMcordGeo      *MGeo         = new MpdMcordGeo();
    MGeo->setGeomFile(GetGeometryFileName());
    GeoInterface->addGeoModule(MGeo);
    Bool_t rc = GeoInterface->readSet(MGeo);
@@ -134,14 +134,14 @@ void MpdMcord::ConstructGeometry()
    TList *volList = MGeo->getListOfVolumes();
    // store geo parameter
    // FairRun* fRun = FairRun::Instance();
-   FairRuntimeDb * rtdb       = FairRun::Instance()->GetRuntimeDb();
+   FairRuntimeDb  *rtdb       = FairRun::Instance()->GetRuntimeDb();
    MpdMcordGeoPar *par        = static_cast<MpdMcordGeoPar *>(rtdb->getContainer("MpdMcordGeoPar"));
-   TObjArray *     fSensNodes = par->GetGeoSensitiveNodes();
-   TObjArray *     fPassNodes = par->GetGeoPassiveNodes();
+   TObjArray      *fSensNodes = par->GetGeoSensitiveNodes();
+   TObjArray      *fPassNodes = par->GetGeoPassiveNodes();
 
    TListIter iter(volList);
 
-   FairGeoNode *  node = nullptr;
+   FairGeoNode   *node = nullptr;
    FairGeoVolume *aVol = nullptr;
 
    while ((node = (FairGeoNode *)iter.Next())) {
@@ -172,7 +172,7 @@ MpdMcordPoint *MpdMcord::AddHit(Int_t trackID, Int_t detId, TVector3 pos, TVecto
 {
    TClonesArray &clref = *fPointCollection;
    Int_t         size  = clref.GetEntriesFast();
-   MpdStack *    stack = static_cast<MpdStack *>(TVirtualMC::GetMC()->GetStack());
+   MpdStack     *stack = static_cast<MpdStack *>(TVirtualMC::GetMC()->GetStack());
    stack->AddPoint(kMCORD);
    return new (clref[size]) MpdMcordPoint(trackID, detId, pos, mom, time, length, eloss);
 }

@@ -30,7 +30,7 @@ public:
    TpcPadRow *GetPadRow() const { return fPadRow; }
    void       SetPadRow(TpcPadRow *aPadRow) { fPadRow = aPadRow; }
 
-   const TObjArray *  GetSequences() const { return fSequences; }
+   const TObjArray   *GetSequences() const { return fSequences; }
    Int_t              GetNSequences() const { return fSequences->GetEntriesFast(); }
    const TpcSequence *GetSequence(Int_t iSeq) const { return (TpcSequence *)fSequences->At(iSeq); }
 

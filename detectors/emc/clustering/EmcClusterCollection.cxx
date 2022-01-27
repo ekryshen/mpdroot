@@ -31,8 +31,8 @@ Bool_t EmcClusterCollection::FillClusterInfo(TClonesArray *info, Int_t clflag)
 {
    if (!info) return kFALSE;
 
-   EmcCluster *      cluster;
-   EmcClusterInfo *  clinfo;
+   EmcCluster       *cluster;
+   EmcClusterInfo   *clinfo;
    CL_CSET::iterator it = Clusters_.begin();
 
    Int_t n(0);

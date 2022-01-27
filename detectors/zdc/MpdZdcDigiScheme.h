@@ -40,7 +40,7 @@ public:
 
    Bool_t AddNodes(TObjArray *sensNodes, Int_t pGlobalDetectorNumber, Bool_t pAddPsd = kFALSE, Int_t pVerbose = 0);
    MpdZdcVolInfo_t *CreateVolInfoElement(FairGeoNode *nod, Int_t pVerbose);
-   MpdZdcVolId_t *  CreateVolElement(FairGeoNode *nod, Int_t nodeNumber, MpdZdcDigiId_t *right,
+   MpdZdcVolId_t   *CreateVolElement(FairGeoNode *nod, Int_t nodeNumber, MpdZdcDigiId_t *right,
                                      Int_t pGlobalDetectorNumber, Int_t pVerbose);
    Bool_t           CreateVolCopyElements(MpdZdcVolId_t *left, MpdZdcDigiId_t *right);
    Bool_t           CreateVolInfoCopyElements(MpdZdcDigiId_t *right, MpdZdcVolInfo_t *volInfo);
@@ -68,7 +68,7 @@ public:
                                           Int_t pMotherMotherCopyNumber);
    void           SplitDigiID(MpdZdcDigiId_t digiID, Int_t &detID, Int_t &modID, Int_t &chanID);
 
-   inline MpdZdcDigiPar *   GetZdcDigiPar() { return fZdcDigiPar; };
+   inline MpdZdcDigiPar    *GetZdcDigiPar() { return fZdcDigiPar; };
    inline MpdZdcPsdDigiPar *GetZdcPsdDigiPar() { return fZdcPsdDigiPar; };
 
 protected:
@@ -89,9 +89,9 @@ private:
    Int_t Ny_psd;
    Int_t Nz_psd;
 
-   MpdZdcDigiPar *   fZdcDigiPar;    //!
+   MpdZdcDigiPar    *fZdcDigiPar;    //!
    MpdZdcPsdDigiPar *fZdcPsdDigiPar; //!
-   TObjArray *       fPasNodes;      //!
+   TObjArray        *fPasNodes;      //!
 
    ClassDef(MpdZdcDigiScheme, 1);
 };

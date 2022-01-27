@@ -250,7 +250,7 @@ void MpdTpcClusterizerTask::ClearData(Int_t isec)
 
    const Int_t nSec = fgkNsec2 / 2; // number of TPC readout sectors
    TString     option, name;
-   TTask *     task = 0x0;
+   TTask      *task = 0x0;
 
    if (isec > 1 && isec < nSec || isec > nSec + 1 && isec < fgkNsec2) {
       Int_t saveSec = isec - 1;

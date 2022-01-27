@@ -67,13 +67,13 @@ public:
 
 private:
    std::map<int, int> fSuperParents; //! map of current tracks to SuperParents: entered ECAL active volumes particles
-   TClonesArray *     fMpdEmcPointCollection; //! Collection of ECAL hits
+   TClonesArray      *fMpdEmcPointCollection; //! Collection of ECAL hits
    Int_t              fNhits;                 //! Number of created so far hits
    Int_t              fCurrentTrackID;        //! current track Id
    Int_t              fCurrentCellID;         //! current cell Id
    Int_t              fCurentSuperParent;     //! current SuperParent ID: particle entered PHOS
-   MpdEmcPointKI *    fCurrentHit;            //! current Hit
-   MpdEmcGeoUtils *   fGeom;                  //! pointer to GeoUtils
+   MpdEmcPointKI     *fCurrentHit;            //! current Hit
+   MpdEmcGeoUtils    *fGeom;                  //! pointer to GeoUtils
    Double_t           fEcalRmin;              //! inner and outer
    Double_t           fEcalRmax;              //! radii of ECAL (used for tracking)
 

@@ -782,7 +782,7 @@ TVector3 MpdTofMatching::EstTrackOnR(const MpdTpcKalmanTrack *tr) const
    MpdKalmanHit hEnd;
    hEnd.SetType(MpdKalmanHit::kFixedR);
    MpdTpcKalmanTrack tr1(*tr);
-   TObjArray *       hits = tr1.GetHits();
+   TObjArray        *hits = tr1.GetHits();
 
    if (hits->GetEntriesFast() == 0) {
       Int_t nh = tr1.GetNofTrHits();

@@ -40,9 +40,9 @@ MpdEmcGeoParams::MpdEmcGeoParams()
    rMin   = ((TGeoTube *)gGeoManager->GetCurrentVolume()->GetShape())->GetRmin();
    rMax   = ((TGeoTube *)gGeoManager->GetCurrentVolume()->GetShape())->GetRmax();
 
-   TGeoMatrix *    rowMatrix;
+   TGeoMatrix     *rowMatrix;
    TString         pathTower, pathCh;
-   TGeoNode *      towerNode;
+   TGeoNode       *towerNode;
    const Double_t *fRotMatrix;
    const Double_t *fTransMatrix;
    Double_t        master[3], phiAngle, rotAngle, fAngleCrate;

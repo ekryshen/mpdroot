@@ -67,7 +67,7 @@ public:
    ClassDef(MpdMcord, 1);
 
 private:
-   TClonesArray *      fPointCollection;
+   TClonesArray       *fPointCollection;
    static MpdMcordGeo *fgGeo;
 };
 #endif /* MCORD_MCORD_MPDMCORD_H_ */

@@ -189,9 +189,9 @@ void MpdEmc::ConstructGeometry()
 void MpdEmc::ConstructAsciiGeometry()
 {
 
-   FairGeoLoader *   geoLoad = FairGeoLoader::Instance();
+   FairGeoLoader    *geoLoad = FairGeoLoader::Instance();
    FairGeoInterface *geoFace = geoLoad->getGeoInterface();
-   MpdEmcGeo *       Geo     = new MpdEmcGeo();
+   MpdEmcGeo        *Geo     = new MpdEmcGeo();
    Geo->setGeomFile(GetGeometryFileName());
    geoFace->addGeoModule(Geo);
 
@@ -200,14 +200,14 @@ void MpdEmc::ConstructAsciiGeometry()
    TList *volList = Geo->getListOfVolumes();
 
    // store geo parameter
-   FairRun *      fRun       = FairRun::Instance();
+   FairRun       *fRun       = FairRun::Instance();
    FairRuntimeDb *rtdb       = FairRun::Instance()->GetRuntimeDb();
-   MpdEmcGeoPar * par        = (MpdEmcGeoPar *)(rtdb->getContainer("MpdEmcGeoPar"));
-   TObjArray *    fSensNodes = par->GetGeoSensitiveNodes();
-   TObjArray *    fPassNodes = par->GetGeoPassiveNodes();
+   MpdEmcGeoPar  *par        = (MpdEmcGeoPar *)(rtdb->getContainer("MpdEmcGeoPar"));
+   TObjArray     *fSensNodes = par->GetGeoSensitiveNodes();
+   TObjArray     *fPassNodes = par->GetGeoPassiveNodes();
 
    TListIter      iter(volList);
-   FairGeoNode *  node = NULL;
+   FairGeoNode   *node = NULL;
    FairGeoVolume *aVol = NULL;
 
    while ((node = (FairGeoNode *)iter.Next())) {

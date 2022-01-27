@@ -235,7 +235,7 @@ void MpdTpcDigitizerAZ::Exec(Option_t *opt)
       }
 
       multimap<Int_t, Int_t>::iterator it       = pointID.begin();
-      TpcPoint *                       prePoint = (TpcPoint *)fMCPointArray->UncheckedAt(it->second);
+      TpcPoint                        *prePoint = (TpcPoint *)fMCPointArray->UncheckedAt(it->second);
       // cout << " prePoint: " << prePoint->GetTrackID() << " " << prePoint->GetX() << " "
       //<< prePoint->GetY() << " " << prePoint->GetZ() << endl;
       Check4Edge(iSec, prePoint, virtPoint); // check for edge-effect
@@ -448,7 +448,7 @@ void MpdTpcDigitizerAZ::SignalShaping()
    // Apply electronics response function
 
    static Int_t        first = 0, nbins = 0, icent = 0;
-   static Double_t *   reFilt = nullptr, *imFilt = nullptr;
+   static Double_t    *reFilt = nullptr, *imFilt = nullptr;
    static TVirtualFFT *fft[2] = {nullptr, nullptr};
    const Double_t      sigma = 190. / 2 / TMath::Sqrt(2 * TMath::Log(2)), sigma2 = sigma * sigma; // FWHM = 190 ns
 

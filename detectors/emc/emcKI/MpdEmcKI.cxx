@@ -87,7 +87,7 @@ Bool_t MpdEmcKI::ProcessHits(FairVolume *vol)
    // 3. Collect all energy depositions in sc* by all secondaries from particle first entered ECAL
 
    // Check if this is first entered ECAL particle ("SuperParent")
-   MpdStack *  stack        = static_cast<MpdStack *>(gMC->GetStack());
+   MpdStack   *stack        = static_cast<MpdStack *>(gMC->GetStack());
    const Int_t partID       = stack->GetCurrentTrackNumber();
    Int_t       superParent  = -1;
    Bool_t      isNewPartile = false; // Create Hit even if zero energy deposition
@@ -317,9 +317,9 @@ void MpdEmcKI::ConstructGeometry()
 
 void MpdEmcKI::ConstructAsciiGeometry()
 {
-   FairGeoLoader *   geoLoad = FairGeoLoader::Instance();
+   FairGeoLoader    *geoLoad = FairGeoLoader::Instance();
    FairGeoInterface *geoFace = geoLoad->getGeoInterface();
-   MpdEmcGeo *       Geo     = new MpdEmcGeo();
+   MpdEmcGeo        *Geo     = new MpdEmcGeo();
    Geo->setGeomFile(GetGeometryFileName());
    geoFace->addGeoModule(Geo);
 
@@ -328,14 +328,14 @@ void MpdEmcKI::ConstructAsciiGeometry()
    TList *volList = Geo->getListOfVolumes();
 
    // store geo parameter
-   FairRun *      fRun       = FairRun::Instance();
+   FairRun       *fRun       = FairRun::Instance();
    FairRuntimeDb *rtdb       = FairRun::Instance()->GetRuntimeDb();
-   MpdEmcGeoPar * par        = (MpdEmcGeoPar *)(rtdb->getContainer("MpdEmcGeoPar"));
-   TObjArray *    fSensNodes = par->GetGeoSensitiveNodes();
-   TObjArray *    fPassNodes = par->GetGeoPassiveNodes();
+   MpdEmcGeoPar  *par        = (MpdEmcGeoPar *)(rtdb->getContainer("MpdEmcGeoPar"));
+   TObjArray     *fSensNodes = par->GetGeoSensitiveNodes();
+   TObjArray     *fPassNodes = par->GetGeoPassiveNodes();
 
    TListIter      iter(volList);
-   FairGeoNode *  node = NULL;
+   FairGeoNode   *node = NULL;
    FairGeoVolume *aVol = NULL;
 
    while ((node = (FairGeoNode *)iter.Next())) {

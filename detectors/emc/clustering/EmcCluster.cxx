@@ -29,7 +29,7 @@ EmcClusterInfo *EmcCluster::CreateClusterInfo()
 {
    if (GetNElements() == 0) return 0;
 
-   EmcClusterInfo *   clinfo = new EmcClusterInfo();
+   EmcClusterInfo    *clinfo = new EmcClusterInfo();
    EmcClusterElement *elem;
    Int_t              iphi, iz;
    Float_t            dep;

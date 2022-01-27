@@ -50,7 +50,7 @@ public:
    LState(size_t &size); // max value = 19 matching, pow(3,19) = 1,162,261,500 combination of hypothesis(~10Gb)
    ~LState();
 
-   char & operator[](size_t index) { return fState[index]; };
+   char  &operator[](size_t index) { return fState[index]; };
    double Mass(size_t index) { return fMass[fState[index]]; };
    double TSigma(size_t index) { return fTsigma[fState[index]]; };
 
@@ -96,15 +96,15 @@ class MpdTofT0 : public FairTask {
       TmatchMini(double p, double l, double t, T_matchData::iterator i) : P(p), L(l), Ttof(t), it(i){};
    } T_matchMini;
 
-   MpdTofT0Data *     fResult = nullptr;
+   MpdTofT0Data      *fResult = nullptr;
    T_matchData        mmMatchData;
    double             fTofSigma     = 60.;     //[ns]
-   TClonesArray *     aTofMatchings = nullptr; //! <---  input
-   TClonesArray *     aTPCkfTracks  = nullptr; //! <---  input
-   TClonesArray *     aMcTracks     = nullptr; //! <--- MC input
+   TClonesArray      *aTofMatchings = nullptr; //! <---  input
+   TClonesArray      *aTPCkfTracks  = nullptr; //! <---  input
+   TClonesArray      *aMcTracks     = nullptr; //! <--- MC input
    FairMCEventHeader *fEventHeader  = nullptr; //! <--- MC input
 
-   TRandom2 *  pRandom = nullptr;
+   TRandom2   *pRandom = nullptr;
    TStopwatch *pTimer  = nullptr;
    TList       fList;
    TString     fFlnm;

@@ -53,7 +53,7 @@ private:
 
    MpdEmcDigit *SearchHit(TString tower);
 
-   MpdEmcGeoParams *                fGeoPar;
+   MpdEmcGeoParams                 *fGeoPar;
    std::map<TString, MpdEmcDigit *> fHitMap; //!
 
    ClassDef(MpdEmcDigitizer, 1);

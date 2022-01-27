@@ -58,7 +58,7 @@ private:
    TClonesArray **fPrimArray;
    TClonesArray **fDriftedArray;
 
-   TpcGas * fGas;
+   TpcGas  *fGas;
    Double_t fzGem; // get from Geom!
 
    Bool_t fPersistence;

@@ -278,7 +278,7 @@ bool MpdEtofMatching::EstTrackOnPlane(const MpdEctKalmanTrack *tr, Double_t Zeto
                                       TVector3 &Mom, Int_t &charge) const
 {
    MpdEctKalmanTrack tr1(*tr);
-   TObjArray *       hits = tr1.GetHits();
+   TObjArray        *hits = tr1.GetHits();
 
    if (hits->GetEntriesFast() == 0) {
       Int_t nh = tr1.GetNofTrHits();

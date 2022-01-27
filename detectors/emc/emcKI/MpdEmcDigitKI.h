@@ -63,7 +63,7 @@ protected:
    Float_t  fE;        // Full energy
    Float_t  fTime;     // hit mean time
    Int_t    fNprimary; // Number of primaries
-   Int_t *  fPrimary;  //[fNprimary] Array of primaries
+   Int_t   *fPrimary;  //[fNprimary] Array of primaries
    Float_t *fPrimEdep; //[fNprimary] Array of deposited energies
 
    std::map<int, float> fEdep; // energy deposit for each track ID

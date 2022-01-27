@@ -136,13 +136,13 @@ void MpdStsHitProducerNew2::Exec(Option_t *opt)
 
       // Define sensitive volumes
       FairRuntimeDb *rtdb      = FairRun::Instance()->GetRuntimeDb();
-      MpdStsGeoPar * geoPar    = (MpdStsGeoPar *)rtdb->getContainer("MpdStsGeoPar");
-      TObjArray *    sensNodes = geoPar->GetGeoSensitiveNodes();
+      MpdStsGeoPar  *geoPar    = (MpdStsGeoPar *)rtdb->getContainer("MpdStsGeoPar");
+      TObjArray     *sensNodes = geoPar->GetGeoSensitiveNodes();
       cout << "Number of sensors: " << sensNodes->GetEntriesFast() << endl;
       Int_t nSensors = sensNodes->GetEntriesFast();
       for (Int_t i = 0; i < nSensors; ++i) {
          FairGeoNode *sensVol = (FairGeoNode *)(sensNodes->At(i));
-         TArrayD *    params  = sensVol->getParameters();
+         TArrayD     *params  = sensVol->getParameters();
          par1[i]              = params->At(0); // half length of sensor
          par2[i]              = params->At(1); // half tickness of sensor
          par3[i]              = params->At(2); // half width of sensor
@@ -274,7 +274,7 @@ void MpdStsHitProducerNew2::CreateStructure() {}
 MpdStsHit *MpdStsHitProducerNew2::AddHit(Int_t trackID, Int_t detID, Int_t side)
 {
    // It fills the MpdStsHit category
-   MpdStsPoint * point = (MpdStsPoint *)fPointArray->UncheckedAt(trackID);
+   MpdStsPoint  *point = (MpdStsPoint *)fPointArray->UncheckedAt(trackID);
    TClonesArray &clref = *fDigiArray;
    Int_t         size  = clref.GetEntriesFast();
    TVector3      pos;

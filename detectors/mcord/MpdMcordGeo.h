@@ -19,8 +19,8 @@ protected:
    char eleName[20]; // substring for elements in module
 public:
    MpdMcordGeo();
-   const char * getModuleName(Int_t);
-   const char * getEleName(Int_t);
+   const char  *getModuleName(Int_t);
+   const char  *getEleName(Int_t);
    inline Int_t getModNumInMod(const TString &name);
    virtual ~MpdMcordGeo();
    ClassDef(MpdMcordGeo, 1);

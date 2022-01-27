@@ -575,7 +575,7 @@ void MpdZdc::CopyClones(TClonesArray *cl1, TClonesArray *cl2, Int_t offset)
    Int_t nEntries = cl1->GetEntriesFast();
    // cout << "-I- MpdZdc: " << nEntries << " entries to add." << endl;
    TClonesArray &clref    = *cl2;
-   MpdZdcPoint * oldpoint = NULL;
+   MpdZdcPoint  *oldpoint = NULL;
    for (Int_t i = 0; i < nEntries; i++) {
       oldpoint    = (MpdZdcPoint *)cl1->At(i);
       Int_t index = oldpoint->GetTrackID() + offset;
@@ -605,9 +605,9 @@ void MpdZdc::ConstructGeometry()
    fileName.Data());
    */
 
-   FairGeoLoader *   geoLoad = FairGeoLoader::Instance();
+   FairGeoLoader    *geoLoad = FairGeoLoader::Instance();
    FairGeoInterface *geoFace = geoLoad->getGeoInterface();
-   MpdZdcGeo *       zdcGeo  = new MpdZdcGeo();
+   MpdZdcGeo        *zdcGeo  = new MpdZdcGeo();
    zdcGeo->setGeomFile(GetGeometryFileName());
    geoFace->addGeoModule(zdcGeo);
 
@@ -616,14 +616,14 @@ void MpdZdc::ConstructGeometry()
    TList *volList = zdcGeo->getListOfVolumes();
 
    // store geo parameter
-   FairRun *      fRun       = FairRun::Instance();
+   FairRun       *fRun       = FairRun::Instance();
    FairRuntimeDb *rtdb       = FairRun::Instance()->GetRuntimeDb();
-   MpdZdcGeoPar * par        = (MpdZdcGeoPar *)(rtdb->getContainer("MpdZdcGeoPar"));
-   TObjArray *    fSensNodes = par->GetGeoSensitiveNodes();
-   TObjArray *    fPassNodes = par->GetGeoPassiveNodes();
+   MpdZdcGeoPar  *par        = (MpdZdcGeoPar *)(rtdb->getContainer("MpdZdcGeoPar"));
+   TObjArray     *fSensNodes = par->GetGeoSensitiveNodes();
+   TObjArray     *fPassNodes = par->GetGeoPassiveNodes();
 
    TListIter      iter(volList);
-   FairGeoNode *  node = NULL;
+   FairGeoNode   *node = NULL;
    FairGeoVolume *aVol = NULL;
 
    while ((node = (FairGeoNode *)iter.Next())) {

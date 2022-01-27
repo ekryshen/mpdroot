@@ -43,7 +43,7 @@ void MpdTpcEDepParams::Init()
    /// Get histograms and initialize parameters
 
    TFile *file = new TFile("$VMCWORKDIR/input/TpcEDepParamsHeed.root");
-   TH1D * h    = (TH1D *)file->Get("NCollTab");
+   TH1D  *h    = (TH1D *)file->Get("NCollTab");
 
    fNCollDensBgBins  = h->GetNbinsX();
    fCollDensL10BgMin = h->GetBinCenter(1);

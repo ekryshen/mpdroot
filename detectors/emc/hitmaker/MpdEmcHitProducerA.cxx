@@ -224,7 +224,7 @@ void MpdEmcHitProducerA::Exec(Option_t *opt)
    fDigiArray->Delete();
 
    FairMCPoint *pnt;
-   MpdEmcHitA * hit;
+   MpdEmcHitA  *hit;
 
    for (Int_t i(0); i < fPointArray->GetEntriesFast(); i++) {
 

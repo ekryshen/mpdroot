@@ -143,7 +143,7 @@ void MpdStsHitProducer::Exec(Option_t *opt)
    fDigiArray->Clear();
 
    // Declare some variables
-   MpdStsPoint *       point = NULL;
+   MpdStsPoint        *point = NULL;
    map<Int_t, Float_t> fTrackEnergy;
    fTrackEnergy.clear();
    map<Int_t, Float_t>::const_iterator p;
@@ -230,7 +230,7 @@ MpdStsHit *MpdStsHitProducer::AddHit(Int_t trackID, Int_t detID, Int_t side)
 
    // cout << "MpdStsHitProducer: track " << trackID << " evt " << eventID << " sec " << sec << " plane " << pla << "
    // strip " << strip << "box " << box << " tube " << tub << endl;
-   MpdStsPoint * point = (MpdStsPoint *)fPointArray->UncheckedAt(trackID);
+   MpdStsPoint  *point = (MpdStsPoint *)fPointArray->UncheckedAt(trackID);
    TClonesArray &clref = *fDigiArray;
    Int_t         size  = clref.GetEntriesFast();
    TVector3      pos;

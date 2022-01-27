@@ -558,7 +558,7 @@ void MpdEmcClusterFinderAZ::FindHits()
                // else mapIdQ[id] = TMath::Max (mapIdQ[id], fCharges[ip][it]);
                // if (mapIdQ.find(id) == mapIdQ.end()) mapIdQ[id] = 1;
                // else mapIdQ[id] = mapIdQ[id] + 1;
-               MpdEmcDigit *       dig     = (MpdEmcDigit *)fDigiArray->UncheckedAt(fDigis[ip][it]);
+               MpdEmcDigit        *dig     = (MpdEmcDigit *)fDigiArray->UncheckedAt(fDigis[ip][it]);
                map<Int_t, Float_t> contrib = dig->GetContrib();
                RedoId(contrib);
                for (map<Int_t, Float_t>::iterator mit = contrib.begin(); mit != contrib.end(); ++mit) {
@@ -627,7 +627,7 @@ void MpdEmcClusterFinderAZ::FindHits()
                         // else mapIdQ[id] = TMath::Max (mapIdQ[id], fCharges[ip1][it1]);
                         // if (mapIdQ.find(id) == mapIdQ.end()) mapIdQ[id] = 1;
                         // else mapIdQ[id] = mapIdQ[id] + 1; // number of digits with the same ID
-                        MpdEmcDigit *       dig     = (MpdEmcDigit *)fDigiArray->UncheckedAt(fDigis[ip1][it1]);
+                        MpdEmcDigit        *dig     = (MpdEmcDigit *)fDigiArray->UncheckedAt(fDigis[ip1][it1]);
                         map<Int_t, Float_t> contrib = dig->GetContrib();
                         RedoId(contrib);
                         for (map<Int_t, Float_t>::iterator mit = contrib.begin(); mit != contrib.end(); ++mit) {

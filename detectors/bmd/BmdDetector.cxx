@@ -179,7 +179,7 @@ void BmdDetector::ConstructGeometry()
 // -----   ConstructAsciiGeometry   -------------------------------------------
 void BmdDetector::ConstructAsciiGeometry()
 {
-   FairGeoLoader *   geoLoad = FairGeoLoader::Instance();
+   FairGeoLoader    *geoLoad = FairGeoLoader::Instance();
    FairGeoInterface *geoFace = geoLoad->getGeoInterface();
 
    BmdGeo *BMDGeo = new BmdGeo();
@@ -190,14 +190,14 @@ void BmdDetector::ConstructAsciiGeometry()
    if (rc) BMDGeo->create(geoLoad->getGeoBuilder());
    TList *volList = BMDGeo->getListOfVolumes();
    // store geo parameter
-   FairRun *      fRun       = FairRun::Instance();
+   FairRun       *fRun       = FairRun::Instance();
    FairRuntimeDb *rtdb       = FairRun::Instance()->GetRuntimeDb();
-   BmdGeoPar *    par        = (BmdGeoPar *)(rtdb->getContainer("BmdGeoPar"));
-   TObjArray *    fSensNodes = par->GetGeoSensitiveNodes();
-   TObjArray *    fPassNodes = par->GetGeoPassiveNodes();
+   BmdGeoPar     *par        = (BmdGeoPar *)(rtdb->getContainer("BmdGeoPar"));
+   TObjArray     *fSensNodes = par->GetGeoSensitiveNodes();
+   TObjArray     *fPassNodes = par->GetGeoPassiveNodes();
 
    TListIter      iter(volList);
-   FairGeoNode *  node = NULL;
+   FairGeoNode   *node = NULL;
    FairGeoVolume *aVol = NULL;
 
    while ((node = (FairGeoNode *)iter.Next())) {
@@ -269,9 +269,9 @@ void BmdDetector::ExpandNodeForGdml(TGeoNode *node)
    if (curVol->IsAssembly()) {
       LOG(DEBUG) << "    skipping volume-assembly";
    } else {
-      TGeoMedium *  curMed                  = curVol->GetMedium();
+      TGeoMedium   *curMed                  = curVol->GetMedium();
       TGeoMaterial *curMat                  = curVol->GetMaterial();
-      TGeoMedium *  curMedInGeoManager      = gGeoManager->GetMedium(curMed->GetName());
+      TGeoMedium   *curMedInGeoManager      = gGeoManager->GetMedium(curMed->GetName());
       TGeoMaterial *curMatOfMedInGeoManager = curMedInGeoManager->GetMaterial();
       TGeoMaterial *curMatInGeoManager      = gGeoManager->GetMaterial(curMat->GetName());
 
@@ -310,10 +310,10 @@ void BmdDetector::ExpandNodeForGdml(TGeoNode *node)
          if (fFixedMedia.find(medName) == fFixedMedia.end()) {
             LOG(DEBUG) << "    There is no correct medium in the memory yet";
 
-            FairGeoLoader *   geoLoad      = FairGeoLoader::Instance();
+            FairGeoLoader    *geoLoad      = FairGeoLoader::Instance();
             FairGeoInterface *geoFace      = geoLoad->getGeoInterface();
-            FairGeoMedia *    geoMediaBase = geoFace->getMedia();
-            FairGeoBuilder *  geobuild     = geoLoad->getGeoBuilder();
+            FairGeoMedia     *geoMediaBase = geoFace->getMedia();
+            FairGeoBuilder   *geobuild     = geoLoad->getGeoBuilder();
 
             FairGeoMedium *curMedInGeo = geoMediaBase->getMedium(medName);
             if (curMedInGeo == 0) {
@@ -359,7 +359,7 @@ void BmdDetector::ExpandNodeForGdml(TGeoNode *node)
    //! Recursevly go down the tree of nodes
    if (curVol->GetNdaughters() != 0) {
       TObjArray *NodeChildList = curVol->GetNodes();
-      TGeoNode * curNodeChild;
+      TGeoNode  *curNodeChild;
       for (Int_t j = 0; j < NodeChildList->GetEntriesFast(); j++) {
          curNodeChild = (TGeoNode *)NodeChildList->At(j);
          ExpandNodeForGdml(curNodeChild);

@@ -137,7 +137,7 @@ void MpdTpcClusterFinderQAHistograms::Initialize()
    // myend
 
    _hYZ_local  = CreateHistogram2("local ZY distribution of Found Hits", _prefix, "Z, cm", "Y, cm", 500, 0.0, zMax, 500,
-                                 0.0, maxY);
+                                  0.0, maxY);
    _hRZ_global = CreateHistogram2("global ZR distribution of Found Hits", _prefix, "Z, cm", "R, cm", 800, -zMax, zMax,
                                   800, -Rmax, Rmax);
 
@@ -185,9 +185,9 @@ void MpdTpcClusterFinderQAHistograms::Initialize()
    _hXT_clust_row = CreateHistogram2("_XT distribution of 2D-clusters on PadRow #", "X, pads", "T, time bins", nPads, 0,
                                      nPads, nTimeBin, 0, nTimeBin);
    _hXT_hit_row   = CreateHistogram2("_XT distribution of hits on PadRow #", "X, pads", "T, time bins", nPads, 0, nPads,
-                                   nTimeBin, 0, nTimeBin);
+                                     nTimeBin, 0, nTimeBin);
    _hXT_peak_row  = CreateHistogram2("(tmp)_XT distribution of Peaks on PadRow #", "X, pads", "T, time bins", nPads, 0,
-                                    nPads, nTimeBin, 0, nTimeBin);
+                                     nPads, nTimeBin, 0, nTimeBin);
    _hXT_collected_peak_row = CreateHistogram2("(tmp)_XT distribution of Collected Peaks on PadRow #", "X, pads",
                                               "T, time bins", nPads, 0, nPads, nTimeBin, 0, nTimeBin);
 

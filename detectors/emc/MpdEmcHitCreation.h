@@ -34,8 +34,8 @@ private:
    TClonesArray *fMcTrackArray;
 
    /** Output array of MpdEmcHit **/
-   TClonesArray *   fDigiArray;
-   MpdEmcHit *      SearchHit(UInt_t detID);
+   TClonesArray    *fDigiArray;
+   MpdEmcHit       *SearchHit(UInt_t detID);
    MpdEmcGeoParams *fGeoPar;
 
    ClassDef(MpdEmcHitCreation, 2);

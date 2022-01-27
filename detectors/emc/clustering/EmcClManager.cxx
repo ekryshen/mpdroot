@@ -263,8 +263,8 @@ void EmcClManager::Fill(TClonesArray *digits)
    if (!digits) digits = fHitsArray;
    if (!digits) return;
 
-   MpdEmcHitA *   hit;
-   TClonesArray * hitcont;
+   MpdEmcHitA    *hit;
+   TClonesArray  *hitcont;
    MpdEmcHitCont *cont;
    Int_t          iz, iphi;
    Float_t        hdep;
@@ -375,10 +375,10 @@ void EmcClManager::MakeMCClusters()
    std::map<Int_t, EmcCluster *>           clusters;
    std::map<Int_t, EmcCluster *>::iterator icl;
 
-   EmcCluster *       cl;
+   EmcCluster        *cl;
    EmcClusterElement *elem;
-   MpdEmcHitCont *    hcont;
-   TObjArray *        cont;
+   MpdEmcHitCont     *hcont;
+   TObjArray         *cont;
 
    Float_t thr = 0;
    // thr = 0.005;
@@ -418,14 +418,14 @@ void EmcClManager::MakeMCClusters()
    EmcClusterCollection *clcx = CreateNewCollection();
    clcx->SetName("MC-Clusters [(gamma,e)<-pi0]");
 
-   const CL_CSET &         pcls = clc->GetClusters();
+   const CL_CSET          &pcls = clc->GetClusters();
    CL_CSET::const_iterator it   = pcls.begin();
 
    for (; it != pcls.end(); ++it) {
 
       cl = (EmcCluster *)it->second;
 
-      const CL_ESET &         elems = cl->GetElements();
+      const CL_ESET          &elems = cl->GetElements();
       CL_ESET::const_iterator eit   = elems.begin();
 
       for (; eit != elems.end(); ++eit) {
@@ -582,7 +582,7 @@ void EmcClManager::Print(Int_t opt) const
    ClManager::Print();
    cout << "[I]<EmcClManager::Print> Elements:    " << Elements_.size() << endl;
 
-   EmcClusterCollection *  clc;
+   EmcClusterCollection   *clc;
    CL_SSET::const_iterator it = Collections_.begin();
    for (; it != Collections_.end(); ++it) {
       clc = (EmcClusterCollection *)it->second;

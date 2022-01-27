@@ -53,7 +53,7 @@ TH3F *CreateHistogram3(const char *name, const char *xtitle, const char *ytitle,
 void toDirectory(const char *dir)
 {
    std::vector<std::string> splitedPath = pathToList(dir);
-   TDirectory *             d           = (TDirectory *)gFile;
+   TDirectory              *d           = (TDirectory *)gFile;
    for (UInt_t i = 0; i < splitedPath.size(); i++) {
       TDirectory *nextDir = (TDirectory *)d->FindObject(splitedPath[i].c_str());
       if (!nextDir) {

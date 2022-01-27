@@ -173,7 +173,7 @@ void MpdZdcTstSim::Exec(Option_t *option)
 
       TVector3     position, momentum, vertex;
       MpdZdcPoint *pPoint = NULL;
-      MpdMCTrack * pTrack = NULL;
+      MpdMCTrack  *pTrack = NULL;
       Int_t        pdg    = 0;
 
       Float_t fArgs[30];

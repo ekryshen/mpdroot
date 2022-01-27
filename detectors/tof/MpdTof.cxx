@@ -215,7 +215,7 @@ void MpdTof::CopyClones(TClonesArray *cl1, TClonesArray *cl2, Int_t offset)
    Int_t nEntries = cl1->GetEntriesFast();
    cout << "-I- MpdTof: " << nEntries << " entries to add." << endl;
    TClonesArray &clref    = *cl2;
-   MpdTofPoint * oldpoint = nullptr;
+   MpdTofPoint  *oldpoint = nullptr;
 
    for (Int_t i = 0; i < nEntries; i++) {
       oldpoint    = (MpdTofPoint *)cl1->At(i);
@@ -243,9 +243,9 @@ void MpdTof::ConstructGeometry()
 //------------------------------------------------------------------------------------------------------------------------
 void MpdTof::ConstructAsciiGeometry()
 {
-   FairGeoLoader *   geoLoad = FairGeoLoader::Instance();
+   FairGeoLoader    *geoLoad = FairGeoLoader::Instance();
    FairGeoInterface *geoFace = geoLoad->getGeoInterface();
-   MpdTofGeo *       tofGeo  = new MpdTofGeo();
+   MpdTofGeo        *tofGeo  = new MpdTofGeo();
    tofGeo->setGeomFile(GetGeometryFileName());
    geoFace->addGeoModule(tofGeo);
 
@@ -256,11 +256,11 @@ void MpdTof::ConstructAsciiGeometry()
    // store geo parameter
 
    FairRuntimeDb *rtdb       = FairRun::Instance()->GetRuntimeDb();
-   MpdTofGeoPar * par        = (MpdTofGeoPar *)(rtdb->getContainer("MpdTofGeoPar"));
-   TObjArray *    fSensNodes = par->GetGeoSensitiveNodes();
-   TObjArray *    fPassNodes = par->GetGeoPassiveNodes();
+   MpdTofGeoPar  *par        = (MpdTofGeoPar *)(rtdb->getContainer("MpdTofGeoPar"));
+   TObjArray     *fSensNodes = par->GetGeoSensitiveNodes();
+   TObjArray     *fPassNodes = par->GetGeoPassiveNodes();
 
-   FairGeoNode *  node = nullptr;
+   FairGeoNode   *node = nullptr;
    FairGeoVolume *aVol = nullptr;
    TListIter      iter(volList);
 

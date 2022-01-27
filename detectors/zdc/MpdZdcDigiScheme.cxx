@@ -198,9 +198,9 @@ MpdZdcVolId_t *MpdZdcDigiScheme::CreateVolElement(FairGeoNode *nod, Int_t nodeNu
 Bool_t MpdZdcDigiScheme::AddNodes(TObjArray *sensNodes, Int_t pGlobalDetectorNumber, Bool_t pAddPsd, Int_t pVerbose)
 {
    Int_t           nNodes = sensNodes->GetEntriesFast();
-   FairGeoNode *   nod    = 0;
+   FairGeoNode    *nod    = 0;
    Int_t           nodeNumber; //,nodeCopyNo,nodeVolumeId, chanId2=0, chanId1=0;
-   MpdZdcVolId_t * left1, *left2;
+   MpdZdcVolId_t  *left1, *left2;
    MpdZdcDigiId_t *right1, *right2;
 
    if (pVerbose) {
@@ -250,7 +250,7 @@ Bool_t MpdZdcDigiScheme::AddNodes(TObjArray *sensNodes, Int_t pGlobalDetectorNum
 
 Bool_t MpdZdcDigiScheme::CreateVolCopyElements(MpdZdcVolId_t *left, MpdZdcDigiId_t *right)
 {
-   MpdZdcVolId_t * left1, *left2;
+   MpdZdcVolId_t  *left1, *left2;
    MpdZdcDigiId_t *right1, *right2;
 
    if (!fPasNodes) return kFALSE;

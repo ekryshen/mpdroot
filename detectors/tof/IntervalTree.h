@@ -70,8 +70,8 @@ public:
    typedef IntervalTree<T, K>    intervalTree;
 
    intervalVector intervals;
-   intervalTree * left;
-   intervalTree * right;
+   intervalTree  *left;
+   intervalTree  *right;
    K              center;
 
    //------------------------------------------------------------------------------------------------------------------------

@@ -112,7 +112,7 @@ size_t MpdTofHitProducerIdeal::MergeHitsOnStrip(void)
    size_t                  mergedNmb = 0;
    map<Int_t, MpdTofHit *> mHits;  // pair<suid, MpdTofHit*> fastest hits map
    multiset<Int_t>         msUIDs; // suid for Hits
-   MpdTofHit *             fastHit, *slowHit;
+   MpdTofHit              *fastHit, *slowHit;
 
    for (Int_t hitIndex = 0, nHits = aTofHits->GetEntriesFast(); hitIndex < nHits; hitIndex++) // cycle by hits
    {
@@ -189,7 +189,7 @@ void MpdTofHitProducerIdeal::Dump(const char *title, ostream &out) const
    out << ", size= " << aTofHits->GetEntriesFast();
 
    MpdTofPoint *point;
-   MpdTofHit *  pHit;
+   MpdTofHit   *pHit;
    TVector3     hitPos, pointPos;
 
    TIterator *iter = aTofHits->MakeIterator();

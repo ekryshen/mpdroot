@@ -236,7 +236,7 @@ void MpdItsHitProducer5spd::CreateStructure() {}
 MpdItsHit5spd *MpdItsHitProducer5spd::AddHit(Int_t trackID, Int_t detID)
 {
    // It fills the MpdStsHit category
-   MpdStsPoint * point = (MpdStsPoint *)fPointArray->UncheckedAt(trackID);
+   MpdStsPoint  *point = (MpdStsPoint *)fPointArray->UncheckedAt(trackID);
    TClonesArray &clref = *fDigiArray;
    Int_t         size  = clref.GetEntriesFast();
    TVector3      pos, posOut;

@@ -73,11 +73,11 @@ private:
 
    Int_t OnePeakCntr, MoreThenOnePeakCntr, OneDigitHitCntr, AllCntr, ThreePadsCntr; // TMP
 
-   TpcGas *        fGas;          // pointer to gas system
-   TClonesArray *  fDigits;       // input TClonesArray of TPC digits
-   TClonesArray *  fHitsArray;    // output TClonesArray of TPC hits
-   TClonesArray *  fMCPointArray; // input TClonesArray of MC points. It's needed only for residuals calculating
-   TClonesArray *  fMCTracks;     // input TClonesArray of MC tracks. It's needed only for residuals calculating
+   TpcGas         *fGas;          // pointer to gas system
+   TClonesArray   *fDigits;       // input TClonesArray of TPC digits
+   TClonesArray   *fHitsArray;    // output TClonesArray of TPC hits
+   TClonesArray   *fMCPointArray; // input TClonesArray of MC points. It's needed only for residuals calculating
+   TClonesArray   *fMCTracks;     // input TClonesArray of MC tracks. It's needed only for residuals calculating
    DigOrigArray ***fDigitsArray;  // input 4D-array of TPC digits
    MpdTpcClusterFinderQAHistograms *fHisto; // pointer to object needed for QA creating
 

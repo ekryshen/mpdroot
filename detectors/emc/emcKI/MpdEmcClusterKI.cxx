@@ -168,7 +168,7 @@ void MpdEmcClusterKI::EvalAll()
    fLambda1 = 0;
    fLambda2 = 0;
 
-   MpdEmcGeoUtils * geom      = MpdEmcGeoUtils::GetInstance();
+   MpdEmcGeoUtils  *geom      = MpdEmcGeoUtils::GetInstance();
    MpdEmcSimParams *simParams = MpdEmcSimParams::GetInstance();
    double           logWeight = simParams->LogWeight();
 
@@ -284,7 +284,7 @@ int MpdEmcClusterKI::GetNumberOfLocalMax(int *maxAt, float *maxAtEnergy) const
    // energy difference between maximum and surrounding digits
 
    int              n         = GetMultiplicity();
-   MpdEmcGeoUtils * geom      = MpdEmcGeoUtils::GetInstance();
+   MpdEmcGeoUtils  *geom      = MpdEmcGeoUtils::GetInstance();
    MpdEmcSimParams *simParams = MpdEmcSimParams::GetInstance();
    float            locMaxCut = simParams->LocalMaximumCut();
 

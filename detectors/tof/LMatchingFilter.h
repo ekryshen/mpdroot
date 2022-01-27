@@ -26,7 +26,7 @@ struct CandHistory {
    Int_t flag;
 
    std::vector<MpdTofMatchingData *> vCompetitors;
-   MpdTofMatchingData *              pCandidate;
+   MpdTofMatchingData               *pCandidate;
 
    void AddFlag(Int_t f) { flag = flag | f; }
    void ResetFlag(Int_t f)
@@ -73,7 +73,7 @@ public:
    using linkIter = TmmIntT<candIter>::iterator;
 
 private:
-   TClonesArray *              aMdata; //  Matching data container;
+   TClonesArray               *aMdata; //  Matching data container;
    TmmIntT<MpdTofMatchingData> mcTrueMdata,
       mcMaybeMdata; // pair<kfTrackIndex, MpdTofMatchingData>, filled by mcFindTrueMachings method, if used MC run data.
    TmmIntT<MpdTofMatchingData *> mmCandidate, mmCandidateSnapshot, mmAccepted,
@@ -529,7 +529,7 @@ void LMatchingFilter::ProcessNRankTrack(Int_t rank) // process  Nth rank  ONE tr
 }
 //----------------------------------------------------------------------------------------------------------------------------------------
 LMatchingFilter::candIter LMatchingFilter::FindClosest1hRankCandidate(const std::pair<linkIter, linkIter> &range,
-                                                                      Double_t &                           minDelta)
+                                                                      Double_t                            &minDelta)
 {
    ///////////	candHist.ResetFlag(CandHistory< MdataT>::k1thRank | CandHistory< MdataT>::kHaveCompetitor);
 
@@ -618,7 +618,7 @@ bool LMatchingFilter::CheckAdequacy(const char *comment)
 {
    TmmIntT<candIter> mmLinksTmp;
    //	for(const auto& entry : mmCandidate)   mmLinksTmp.insert(make_pair(entry.second->GetTofHitIndex(),
-   //mmCandidate.find(entry.first)));
+   // mmCandidate.find(entry.first)));
    for (candIter it = mmCandidate.begin(), itEnd = mmCandidate.end(); it != itEnd; it++)
       mmLinksTmp.insert(make_pair(it->second->GetTofHitIndex(), it));
 
@@ -749,8 +749,8 @@ void LMatchingFilter::Commit()
    for (const auto &it : mmLinks) {
       Int_t hitIndex = it.first;
       iter           = FindCandidate(
-         &mmCandidateSnapshot, hitIndex,
-         it.second->second->GetKFTrackIndex()); //  mmLinksSnapshot used iterators to mmCandidateSnapshot NOW
+                   &mmCandidateSnapshot, hitIndex,
+                   it.second->second->GetKFTrackIndex()); //  mmLinksSnapshot used iterators to mmCandidateSnapshot NOW
 
       mmLinksSnapshot.insert(make_pair(hitIndex, iter));
    }

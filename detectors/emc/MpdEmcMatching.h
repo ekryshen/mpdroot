@@ -59,7 +59,7 @@ private:
    void DoMatching(Int_t itrack);
    void GetTowerCoords(TVector3 &pos, Int_t io, Double_t &phiT, Double_t &theT);
 
-   MpdEmcGeoParams *                           fGeoPar;
+   MpdEmcGeoParams                            *fGeoPar;
    std::vector<std::multimap<Double_t, Int_t>> fRecPoints;
    std::set<Int_t>                             fSecRows0;
 

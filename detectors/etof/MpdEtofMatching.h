@@ -43,7 +43,7 @@ private:
    Double_t  fTofZpos, fTofRmax;     // [cm]
    Double_t  fThreshR, fThreshTheta; // [cm], acceptance window
 
-   MpdKalmanFilter * pKF;         //!
+   MpdKalmanFilter  *pKF;         //!
    MpdTofMatchingQA *pMatchingQA; //!
                                   //	LMatchingFilter		*pMF; 		//!
 

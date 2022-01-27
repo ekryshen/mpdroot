@@ -624,7 +624,7 @@ void MpdTpcClusterFinderMlem::Mlem(Int_t iclus, multimap<Double_t, Int_t> &local
    // cout << " Cluster: " << clus->Row() << " " << nDigis << " " << clus->GetADC() << " " << clus->Edge() << endl;
 
    TH2D *hXY   = new TH2D("hTimePad", "Pad No. vs Time bin", nx, clus->MinBkt(), clus->MaxBkt() + 1, ny,
-                        clus->MinCol() - 1, clus->MaxCol() + 2);
+                          clus->MinCol() - 1, clus->MaxCol() + 2);
    TH2D *hOvfw = nullptr;
    if (clus->Overflows() > 1 && nDigis < 50) {
       // Special treatment for (relatively) small clusters with many overflows
@@ -1212,8 +1212,8 @@ void MpdTpcClusterFinderMlem::CreateHits(const vector<pixel> &pixels, multimap<D
 
    // Int_t nLocMax0 = localMax.size();
    MpdTpc2dCluster *clus  = (MpdTpc2dCluster *)fClusArray->UncheckedAt(iclus);
-   TH2D *           hXY   = (TH2D *)gROOT->FindObject("hTimePad");
-   TH2D *           hMlem = (TH2D *)gROOT->FindObject("hMlem1");
+   TH2D            *hXY   = (TH2D *)gROOT->FindObject("hTimePad");
+   TH2D            *hMlem = (TH2D *)gROOT->FindObject("hMlem1");
    // if (hMlem == nullptr) hMlem = (TH2D*) gROOT->FindObject("hMlem1");
    Double_t scale = hXY->GetXaxis()->GetBinWidth(1) / hMlem->GetXaxis()->GetBinWidth(1);
 

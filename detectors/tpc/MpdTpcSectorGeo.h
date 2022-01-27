@@ -86,9 +86,9 @@ private:
    Double_t fZmin;        // sensitive volume Zmin
    Double_t fZmax;        // sensitive volume Zmax
    Double_t fNTimeBins;   // number of time bins
-   Int_t *  fNPadsInRows; // numbers of pads in rows
+   Int_t   *fNPadsInRows; // numbers of pads in rows
    Double_t fZ2TimeBin;   // Z-to-Time bin conversion coefficient
-   TpcGas * fGas;         // pointer to gas system
+   TpcGas  *fGas;         // pointer to gas system
    Double_t fTimeMax;     // max drift time
    Double_t fTimeBin;     // time bin length
    // Int_t fTimeBinMax; // max time bin

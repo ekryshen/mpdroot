@@ -38,7 +38,7 @@ public:
    Int_t   GetNPoints() const { return fPoints.GetSize(); }
    Int_t   GetNCont() const;
 
-   const Int_t * GetPoints() { return fPoints.GetArray(); }
+   const Int_t  *GetPoints() { return fPoints.GetArray(); }
    TClonesArray *GetContent() { return fHitCont; }
 
    MpdEmcHitCont *GetContent(Int_t i);

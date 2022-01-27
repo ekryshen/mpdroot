@@ -132,7 +132,7 @@ void MpdTpcHitProducer::Exec(Option_t *opt)
          if (sensVol0->getShape() == "PGON") {
             fModular            = 1; // force using modular geometry
             FairGeoNode *inWall = (FairGeoNode *)passNodes->FindObject("tpc01InWall");
-            TArrayD *    params = inWall->getParameters();
+            TArrayD     *params = inWall->getParameters();
             fZtpc               = params->At(2);
          } else {
             FairGeoNode *tpc     = (FairGeoNode *)passNodes->FindObject("tpcChamber1");
@@ -150,7 +150,7 @@ void MpdTpcHitProducer::Exec(Option_t *opt)
          // New geometry scheme (ROOT geo)
          fModular         = 1; // force using modular geometry
          TGeoVolume *inW  = gGeoManager->GetVolume("tpc01InWall");
-         TGeoTube *  tube = (TGeoTube *)inW->GetShape();
+         TGeoTube   *tube = (TGeoTube *)inW->GetShape();
          fZtpc            = tube->GetDZ();
       }
 
@@ -384,7 +384,7 @@ void MpdTpcHitProducer::ExecModular()
          i0    = 0;
       }
       MpdTpcHit *h     = (MpdTpcHit *)fHitArray->UncheckedAt(mit->second);
-      TpcPoint * point = (TpcPoint *)fPointArray->UncheckedAt(h->GetRefIndex());
+      TpcPoint  *point = (TpcPoint *)fPointArray->UncheckedAt(h->GetRefIndex());
       times[i0]        = point->GetTime();
       hindx[i0++]      = mit->second;
 
@@ -766,7 +766,7 @@ void MpdTpcHitProducer::ExecNew()
 
    for (map<Int_t, map<Double_t, Int_t>>::iterator mit = idmap.begin(); mit != idmap.end(); ++mit) {
       Int_t                    id  = mit->first;
-      map<Double_t, Int_t> &   aaa = mit->second;
+      map<Double_t, Int_t>    &aaa = mit->second;
       map<Double_t, MpdTpcHit> hitMap;
 
       // Loop over points from one track and create hit for each point

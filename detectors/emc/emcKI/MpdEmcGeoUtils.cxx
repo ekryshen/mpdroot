@@ -239,7 +239,7 @@ void MpdEmcGeoUtils::DetIdToGlobalPosition(int detId, double &x, double &y, doub
       gGeoManager->cd(path.Data());
       TGeoHMatrix *m = gGeoManager->GetCurrentMatrix();
       // check sizes of this tower
-      TGeoVolume *        v              = gGeoManager->GetVolume(Form("emc_box%d", detId / 2 + 1));
+      TGeoVolume         *v              = gGeoManager->GetVolume(Form("emc_box%d", detId / 2 + 1));
       double              towerHalfSizeZ = 0;
       TGeoCompositeShape *sh             = dynamic_cast<TGeoCompositeShape *>(v->GetShape());
       if (sh) {
@@ -284,7 +284,7 @@ void MpdEmcGeoUtils::GetECALTubeSize(double &rMin, double &rMax, double &zMax)
 {
    if (fEcalRmin == 0) {
       TGeoVolume *v  = gGeoManager->GetVolume("emcChH"); // TODO!!!!! check!!!
-      TGeoTube *  sh = dynamic_cast<TGeoTube *>(v->GetShape());
+      TGeoTube   *sh = dynamic_cast<TGeoTube *>(v->GetShape());
       fEcalRmin      = sh->GetRmin();
       fEcalRmax      = sh->GetRmax();
       fEcalZmax      = sh->GetDz();

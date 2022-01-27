@@ -36,8 +36,8 @@ public:
    virtual void       Exec(Option_t *opt);
    virtual void       Finish();
 
-   virtual EmcClusterElement *   CreateNewElement();
-   virtual EmcCluster *          CreateNewCluster();
+   virtual EmcClusterElement    *CreateNewElement();
+   virtual EmcCluster           *CreateNewCluster();
    virtual EmcClusterCollection *CreateNewCollection();
 
    void ResetCounter() { fNum = 0; }
@@ -45,7 +45,7 @@ public:
    virtual void Clear();
 
    Bool_t SearchHitsForErrors(TClonesArray *digits = 0);
-   TH2D * CreateHitMapHisto(TString name, TString title) const;
+   TH2D  *CreateHitMapHisto(TString name, TString title) const;
 
    virtual void Fill(TClonesArray *digits = 0);
 
@@ -71,9 +71,9 @@ public:
    virtual void Print(Int_t opt = 0) const;
 
 protected:
-   EmcCLinfo *          fCLinfo;
+   EmcCLinfo           *fCLinfo;
    MpdEmcGeoParWrapper *fGeoPar;
-   TClonesArray *       fHitsArray;
+   TClonesArray        *fHitsArray;
 
    TClonesArray *fMCClustersInfo;
    TClonesArray *fRCClustersInfo;
