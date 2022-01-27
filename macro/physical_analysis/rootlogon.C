@@ -18,10 +18,8 @@
   includePath        += "-I${VMCWORKDIR}/kalman ";
   includePath        += "-I${VMCWORKDIR}/lhetrack ";
   includePath        += "-I${VMCWORKDIR}/mcstack ";
-  includePath        += "-I${VMCWORKDIR}/strawendcap ";
   includePath        += "-I${VMCWORKDIR}/detectors/etof ";
   includePath        += "-I${VMCWORKDIR}/detectors/tof ";
-  includePath        += "-I${VMCWORKDIR}/sft ";
   includePath        += "-I${VMCWORKDIR}/parbase ";
   includePath        += "-I${VMCWORKDIR}/mpddata ";
   includePath        += "-I${VMCWORKDIR}/mpdbase ";
