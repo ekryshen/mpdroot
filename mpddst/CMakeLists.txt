@@ -39,6 +39,7 @@ set(SRCS
  MpdFillDstTask.cxx
  MpdMiniDstFillTask.cxx
  MpdDstCompressTask.cxx
+ MpdMiniDstSource.cxx
 )
 
 Set(HEADERS)

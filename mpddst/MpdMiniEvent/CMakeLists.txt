@@ -32,7 +32,6 @@ MpdMiniDstReader.cxx
 MpdMiniBTofPidTraits.cxx
 MpdMiniBTofHit.cxx
 MpdMiniFHCalHit.cxx
-MpdMiniDstSource.cxx
 )
 
 Set(HEADERS)
