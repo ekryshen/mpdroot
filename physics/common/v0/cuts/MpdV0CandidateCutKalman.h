@@ -27,6 +27,7 @@ public:
    void         SetLDL(Double_t val) { fLDL = val; };
    virtual void SetupKF(KFParticleTopoReconstructor *kf) const;
    virtual ~MpdV0CandidateCutKalman(){};
+   ClassDef(MpdV0CandidateCutKalman, 1)
 };
 
 #endif /* MPDROOT_PHYSICS_COMMON_V0_CANDIDATECUTS_MPDV0CANDIDATECUTKALMAN_H_ */

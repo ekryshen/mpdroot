@@ -29,16 +29,19 @@ link_directories(${LINK_DIRECTORIES})
 
 # List of source files
 set(SRCS
-	MpdV0FinderBasic.cxx
-    MpdV0FinderHelix.cxx
-	MpdV0Particle.cxx
-	MpdV0Track.cxx
-	MpdV0Namespace.cxx
 	cuts/MpdV0DaughterCut.cxx
 	cuts/MpdV0DaughterCutBasic.cxx
 	cuts/MpdV0CandidateCut.cxx
 	cuts/MpdV0CandidateCutBasic.cxx
-	MpdV0FinderKFPackage.cxx
+	cuts/MpdV0CandidateCutKalman.cxx
+	
+	MpdV0FinderBasic.cxx
+    MpdV0FinderHelix.cxx
+    MpdV0FinderKFPackage.cxx
+    
+	MpdV0Particle.cxx
+	MpdV0Track.cxx
+	MpdV0Namespace.cxx
 )
 
 Set(LINKDEF MpdV0CommonLinkDef.h)

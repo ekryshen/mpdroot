@@ -99,7 +99,7 @@ void MpdV0FinderHelix::ExecMiniDst(Option_t *option)
          }
       }
    }
-   LOG(info) << "Found daughters: " << fFirstDaughters.size() << " " << fSecondDaughters.size();
+   LOG(debug) << "Found daughters: " << fFirstDaughters.size() << " " << fSecondDaughters.size();
 }
 
 void MpdV0FinderHelix::ExecDst(Option_t *option)
