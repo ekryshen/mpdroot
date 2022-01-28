@@ -43,39 +43,39 @@ void MpdV0FinderHelix::ExecMiniDst(Option_t *option)
    Double_t      field  = event->bField();
    fFirstHelix.clear();
    fSecondHelix.clear();
-   fFirstDaughterCut->SetMiniDstEventInfo(*event);
-   fSecondDaughterCut->SetMiniDstEventInfo(*event);
+   fPositiveDaughterCut->SetMiniDstEventInfo(*event);
+   fNegativeDaughterCut->SetMiniDstEventInfo(*event);
    std::pair<TObject *, Int_t> data;
 
    for (int i = 0; i < fMiniTracks->GetEntriesFast(); i++) {
       MpdMiniTrack *track = (MpdMiniTrack *)fMiniTracks->UncheckedAt(i);
       data.first          = track;
       data.second         = i;
-      if (fFirstDaughterCut->PassMiniDstTrack(*track)) {
-         fFirstDaughters.push_back(data);
+      if (fPositiveDaughterCut->PassMiniDstTrack(*track)) {
+         fPositiveDaughters.push_back(data);
          fFirstHelix.push_back(NestedHelix(track->gMom(), track->gDCA(vertex), track->charge(), field * 0.1));
-      } else if (fSecondDaughterCut->PassMiniDstTrack(*track)) {
-         fSecondDaughters.push_back(data);
+      } else if (fNegativeDaughterCut->PassMiniDstTrack(*track)) {
+         fNegativeDaughters.push_back(data);
          fSecondHelix.push_back(NestedHelix(track->gMom(), track->gDCA(vertex), track->charge(), field * 0.1));
       }
    }
 
    MpdV0Track candidate;
-   for (int i = 0; i < fFirstDaughters.size(); i++) {
+   for (int i = 0; i < fPositiveDaughters.size(); i++) {
       std::pair<TObject *, Int_t> data1;
-      data1                = fFirstDaughters[i];
+      data1                = fPositiveDaughters[i];
       MpdMiniTrack *track1 = (MpdMiniTrack *)data1.first;
       Double_t      p1Tot  = track1->gMom().Mag();
-      candidate.SetFirstDaughterIndex(data1.second);
+      candidate.SetPositiveDaughterIndex(data1.second);
       NestedHelix &h1 = fFirstHelix[i];
 
-      for (int j = 0; j < fSecondDaughters.size(); j++) {
+      for (int j = 0; j < fNegativeDaughters.size(); j++) {
          std::pair<TObject *, Int_t> data2;
          if (data1.second == data2.second) continue;
-         data2                = fSecondDaughters[j];
+         data2                = fNegativeDaughters[j];
          MpdMiniTrack *track2 = (MpdMiniTrack *)data2.first;
          Double_t      p2Tot  = track2->gMom().Mag();
-         candidate.SetSecondDaughterIndex(data2.second);
+         candidate.SetNegativeDaughterIndex(data2.second);
 
          NestedHelix &             h2 = fSecondHelix[j];
          std::pair<double, double> s  = h1.pathLengths(h2);
@@ -85,21 +85,21 @@ void MpdV0FinderHelix::ExecMiniDst(Option_t *option)
          TVector3 mom1 = h1.cat(s.first) * p1Tot;
          TVector3 pos2 = h2.at(s.second);
          TVector3 mom2 = h2.cat(s.second) * p2Tot;
-         candidate.SetMomFirstDaughter(mom1);
-         candidate.SetMomSecondDaughter(mom2);
+         candidate.SetMomPositiveDaughter(mom1);
+         candidate.SetMomNegativeDaughter(mom2);
          candidate.SetDecayPoint((pos1 + pos2) * 0.5);
          candidate.SetDau1to2((pos1 - pos2).Mag());
-         candidate.SetFirstDaughterS(s.first);
-         candidate.SetSecondDaughterS(s.second);
+         candidate.SetPositiveDaughterS(s.first);
+         candidate.SetNegativeDaughterS(s.second);
          candidate.Recalculate(vertex);
-
+         candidate.SetPdg(fPidV0);
          if (fCandicateCut->Pass(candidate)) {
             MpdV0Track *v0 = (MpdV0Track *)fV0s->ConstructedAt(fV0s->GetEntriesFast());
             *v0            = candidate;
          }
       }
    }
-   LOG(debug) << "Found daughters: " << fFirstDaughters.size() << " " << fSecondDaughters.size();
+   LOG(debug) << "Found daughters: " << fPositiveDaughters.size() << " " << fNegativeDaughters.size();
 }
 
 void MpdV0FinderHelix::ExecDst(Option_t *option)
@@ -108,15 +108,15 @@ void MpdV0FinderHelix::ExecDst(Option_t *option)
    fFirstHelix.clear();
    fSecondHelix.clear();
    std::pair<TObject *, Int_t> data;
-   for (int i = 0; i < fMiniTracks->GetEntriesFast(); i++) {
-      MpdTrack *track = (MpdTrack *)fMiniTracks->UncheckedAt(i);
+   for (int i = 0; i < tracks->GetEntriesFast(); i++) {
+      MpdTrack *track = (MpdTrack *)tracks->UncheckedAt(i);
       data.first      = track;
       data.second     = i;
-      if (fFirstDaughterCut->PassDstTrack(*track)) {
-         fFirstDaughters.push_back(data);
+      if (fPositiveDaughterCut->PassDstTrack(*track)) {
+         fPositiveDaughters.push_back(data);
          fFirstHelix.push_back(NestedHelix(track->GetHelix()));
-      } else if (fSecondDaughterCut->PassDstTrack(*track)) {
-         fSecondDaughters.push_back(data);
+      } else if (fNegativeDaughterCut->PassDstTrack(*track)) {
+         fNegativeDaughters.push_back(data);
          fSecondHelix.push_back(NestedHelix(track->GetHelix()));
       }
    }
@@ -124,25 +124,25 @@ void MpdV0FinderHelix::ExecDst(Option_t *option)
    MpdV0Track candidate;
    TVector3   vertex(fMpdEvent->GetPrimaryVerticesX(), fMpdEvent->GetPrimaryVerticesY(),
                    fMpdEvent->GetPrimaryVerticesZ());
-   for (int i = 0; i < fFirstDaughters.size(); i++) {
+   for (int i = 0; i < fPositiveDaughters.size(); i++) {
       std::pair<TObject *, Int_t> data1;
-      data1            = fFirstDaughters[i];
+      data1            = fPositiveDaughters[i];
       MpdTrack *track1 = (MpdTrack *)data1.first;
       Double_t  pt1    = track1->GetPt();
       Double_t  pz1    = track1->GetPz();
       Double_t  p1Tot  = TMath::Sqrt(pt1 * pt1 + pz1 * pz1);
-      candidate.SetFirstDaughterIndex(data1.second);
+      candidate.SetPositiveDaughterIndex(data1.second);
       NestedHelix &h1 = fFirstHelix[i];
 
-      for (int j = 0; j < fSecondDaughters.size(); j++) {
+      for (int j = 0; j < fNegativeDaughters.size(); j++) {
          std::pair<TObject *, Int_t> data2;
          if (data1.second == data2.second) continue;
-         data2            = fSecondDaughters[j];
+         data2            = fNegativeDaughters[j];
          MpdTrack *track2 = (MpdTrack *)data2.first;
          Double_t  pt2    = track2->GetPt();
          Double_t  pz2    = track2->GetPz();
          Double_t  p2Tot  = TMath::Sqrt(pt2 * pt2 + pz2 * pz2);
-         candidate.SetSecondDaughterIndex(data2.second);
+         candidate.SetNegativeDaughterIndex(data2.second);
 
          NestedHelix &             h2 = fSecondHelix[j];
          std::pair<double, double> s  = h1.pathLengths(h2);
@@ -152,14 +152,14 @@ void MpdV0FinderHelix::ExecDst(Option_t *option)
          TVector3 mom1 = h1.cat(s.first) * p1Tot;
          TVector3 pos2 = h2.at(s.second);
          TVector3 mom2 = h2.cat(s.second) * p2Tot;
-         candidate.SetMomFirstDaughter(mom1);
-         candidate.SetMomSecondDaughter(mom2);
+         candidate.SetMomPositiveDaughter(mom1);
+         candidate.SetMomNegativeDaughter(mom2);
          candidate.SetDecayPoint((pos1 + pos2) * 0.5);
          candidate.SetDau1to2((pos1 - pos2).Mag());
-         candidate.SetFirstDaughterS(s.first);
-         candidate.SetSecondDaughterS(s.second);
+         candidate.SetPositiveDaughterS(s.first);
+         candidate.SetNegativeDaughterS(s.second);
          candidate.Recalculate(vertex);
-
+         candidate.SetPdg(fPidV0);
          if (fCandicateCut->Pass(candidate)) {
             MpdV0Track *v0 = (MpdV0Track *)fV0s->ConstructedAt(fV0s->GetEntriesFast());
             *v0            = candidate;

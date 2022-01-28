@@ -10,6 +10,6 @@
 
 #include "MpdV0Track.h"
 
-MpdV0Track::MpdV0Track() : MpdV0Particle(), fFirstDaughterS(0), fSecondDaughterS(0), fChi2(-1) {}
+MpdV0Track::MpdV0Track() : MpdV0Particle(), fPositiveDaughterS(0), fNegativeDaughterS(0), fChi2(-1) {}
 
 MpdV0Track::~MpdV0Track() {}

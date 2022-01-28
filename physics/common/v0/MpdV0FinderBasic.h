@@ -32,19 +32,19 @@ protected:
    Bool_t                                   fInit;
    Bool_t                                   fWrite;
    Bool_t                                   fFirstV0;
-   Int_t                                    fPidDau1, fPidDau2, fPidV0;
+   Int_t                                    fPidDauPos, fPidDauNeg, fPidV0;
    EFormat                                  fFormat;
    MpdEvent *                               fMpdEvent;
    TClonesArray *                           fMiniEvents;
    TClonesArray *                           fMiniTracks;
    TClonesArray *                           fV0s;
-   std::vector<std::pair<TObject *, Int_t>> fFirstDaughters;
-   std::vector<std::pair<TObject *, Int_t>> fSecondDaughters;
+   std::vector<std::pair<TObject *, Int_t>> fPositiveDaughters;
+   std::vector<std::pair<TObject *, Int_t>> fNegativeDaughters;
    virtual void                             ExecDst(Option_t *option)     = 0;
    virtual void                             ExecMiniDst(Option_t *option) = 0;
    virtual InitStatus                       Init();
-   MpdV0DaughterCut *                       fFirstDaughterCut;
-   MpdV0DaughterCut *                       fSecondDaughterCut;
+   MpdV0DaughterCut *                       fPositiveDaughterCut;
+   MpdV0DaughterCut *                       fNegativeDaughterCut;
    MpdV0CandidateCut *                      fCandicateCut;
 
 public:
@@ -52,8 +52,8 @@ public:
    void         SaveV0s(Bool_t write) { fWrite = write; };
    virtual void Exec(Option_t *option);
    virtual ~MpdV0FinderBasic();
-   void SetFirstDaughterCut(const MpdV0DaughterCut &cut);
-   void SetSecondDaughterCut(const MpdV0DaughterCut &cut);
+   void SetPositiveDaughterCut(const MpdV0DaughterCut &cut);
+   void SetNegativeDaughterCut(const MpdV0DaughterCut &cut);
    void SetCandicateCut(const MpdV0CandidateCut &cut);
    MpdV0FinderBasic(const MpdV0FinderBasic &other);
    MpdV0FinderBasic &operator=(const MpdV0FinderBasic &other);

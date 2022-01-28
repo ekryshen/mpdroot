@@ -14,8 +14,8 @@
 #include "MpdV0Particle.h"
 
 class MpdV0Track : public MpdV0Particle {
-   Double_t fFirstDaughterS;
-   Double_t fSecondDaughterS;
+   Double_t fPositiveDaughterS;
+   Double_t fNegativeDaughterS;
    Double_t fChi2;
 
 public:
@@ -23,12 +23,12 @@ public:
    MpdV0Track(const MpdV0Track &other) = default;
    MpdV0Track &operator=(const MpdV0Track &other) = default;
 
-   Double_t GetFirstDaughterS() const { return fFirstDaughterS; }
-   Double_t GetSecondDaughterS() const { return fSecondDaughterS; }
+   Double_t GetPositiveDaughterS() const { return fPositiveDaughterS; }
+   Double_t GetNegativeDaughterS() const { return fNegativeDaughterS; }
    Double_t GetChi2() const { return fChi2; };
 
-   void SetFirstDaughterS(Double_t firstDaughterS) { this->fFirstDaughterS = firstDaughterS; }
-   void SetSecondDaughterS(Double_t secondDaughterS) { this->fSecondDaughterS = secondDaughterS; }
+   void SetPositiveDaughterS(Double_t firstDaughterS) { this->fPositiveDaughterS = firstDaughterS; }
+   void SetNegativeDaughterS(Double_t secondDaughterS) { this->fNegativeDaughterS = secondDaughterS; }
    void SetChi2(Double_t chi) { fChi2 = chi; };
    virtual ~MpdV0Track();
    ClassDef(MpdV0Track, 2)

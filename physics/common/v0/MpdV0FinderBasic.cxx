@@ -19,30 +19,30 @@
 #include "MpdV0DaughterCut.h"
 
 MpdV0FinderBasic::MpdV0FinderBasic(Int_t pidMom, Int_t pidFirstDau, Int_t pidSecDau)
-   : FairTask(), fInit(kFALSE), fWrite(kFALSE), fFirstV0(kFALSE), fPidDau1(pidMom), fPidDau2(pidFirstDau),
-     fPidV0(pidSecDau), fFormat(EFormat::kDst), fMpdEvent(nullptr), fMiniEvents(nullptr), fMiniTracks(nullptr),
-     fV0s(nullptr), fFirstDaughterCut(nullptr), fSecondDaughterCut(nullptr), fCandicateCut(nullptr)
+   : FairTask(), fInit(kFALSE), fWrite(kFALSE), fFirstV0(kFALSE), fPidDauPos(pidSecDau), fPidDauNeg(pidFirstDau),
+     fPidV0(pidMom), fFormat(EFormat::kDst), fMpdEvent(nullptr), fMiniEvents(nullptr), fMiniTracks(nullptr),
+     fV0s(nullptr), fPositiveDaughterCut(nullptr), fNegativeDaughterCut(nullptr), fCandicateCut(nullptr)
 {
 }
 
 MpdV0FinderBasic::~MpdV0FinderBasic()
 {
-   if (fFirstDaughterCut) delete fFirstDaughterCut;
-   if (fSecondDaughterCut) delete fSecondDaughterCut;
+   if (fPositiveDaughterCut) delete fPositiveDaughterCut;
+   if (fNegativeDaughterCut) delete fNegativeDaughterCut;
    if (fCandicateCut) delete fCandicateCut;
 }
 
 MpdV0FinderBasic::MpdV0FinderBasic(const MpdV0FinderBasic &other)
-   : FairTask(), fInit(kFALSE), fWrite(other.fWrite), fFirstV0(other.fFirstV0), fPidDau1(other.fPidDau1),
-     fPidDau2(other.fPidDau2), fPidV0(other.fPidV0), fFormat(other.fFormat), fMpdEvent(nullptr), fMiniEvents(nullptr),
-     fMiniTracks(nullptr), fV0s(nullptr), fFirstDaughterCut(nullptr), fSecondDaughterCut(nullptr),
-     fCandicateCut(nullptr)
+   : FairTask(), fInit(kFALSE), fWrite(other.fWrite), fFirstV0(other.fFirstV0), fPidDauPos(other.fPidDauPos),
+     fPidDauNeg(other.fPidDauNeg), fPidV0(other.fPidV0), fFormat(other.fFormat), fMpdEvent(nullptr),
+     fMiniEvents(nullptr), fMiniTracks(nullptr), fV0s(nullptr), fPositiveDaughterCut(nullptr),
+     fNegativeDaughterCut(nullptr), fCandicateCut(nullptr)
 {
-   if (other.fFirstDaughterCut) {
-      fFirstDaughterCut = (MpdV0DaughterCut *)other.fFirstDaughterCut->Clone();
+   if (other.fPositiveDaughterCut) {
+      fPositiveDaughterCut = (MpdV0DaughterCut *)other.fPositiveDaughterCut->Clone();
    }
-   if (other.fSecondDaughterCut) {
-      fSecondDaughterCut = (MpdV0DaughterCut *)other.fSecondDaughterCut->Clone();
+   if (other.fNegativeDaughterCut) {
+      fNegativeDaughterCut = (MpdV0DaughterCut *)other.fNegativeDaughterCut->Clone();
    }
    if (other.fCandicateCut) {
       fCandicateCut = (MpdV0CandidateCut *)other.fCandicateCut->Clone();
@@ -52,8 +52,8 @@ MpdV0FinderBasic::MpdV0FinderBasic(const MpdV0FinderBasic &other)
 void MpdV0FinderBasic::Exec(Option_t *option)
 {
    if (fFirstV0) fV0s->Clear();
-   fFirstDaughters.clear();
-   fSecondDaughters.clear();
+   fPositiveDaughters.clear();
+   fNegativeDaughters.clear();
    switch (fFormat) {
    case EFormat::kDst: ExecDst(option); break;
    case EFormat::kMiniDst: ExecMiniDst(option);
@@ -79,11 +79,11 @@ InitStatus MpdV0FinderBasic::Init()
    }
 
    mngr->Register("MpdV0", "V0", fV0s, fWrite);
-   if (!fFirstDaughterCut) {
+   if (!fPositiveDaughterCut) {
       LOG(ERROR) << "Lack cut for first daughter";
       return kFATAL;
    }
-   if (!fSecondDaughterCut) {
+   if (!fNegativeDaughterCut) {
       LOG(ERROR) << "Lack cut for second daughter";
       return kFATAL;
    }
@@ -103,16 +103,16 @@ InitStatus MpdV0FinderBasic::Init()
    return kSUCCESS;
 }
 
-void MpdV0FinderBasic::SetFirstDaughterCut(const MpdV0DaughterCut &cut)
+void MpdV0FinderBasic::SetPositiveDaughterCut(const MpdV0DaughterCut &cut)
 {
-   if (fFirstDaughterCut) delete fFirstDaughterCut;
-   fFirstDaughterCut = (MpdV0DaughterCut *)cut.Clone();
+   if (fPositiveDaughterCut) delete fPositiveDaughterCut;
+   fPositiveDaughterCut = (MpdV0DaughterCut *)cut.Clone();
 }
 
-void MpdV0FinderBasic::SetSecondDaughterCut(const MpdV0DaughterCut &cut)
+void MpdV0FinderBasic::SetNegativeDaughterCut(const MpdV0DaughterCut &cut)
 {
-   if (fSecondDaughterCut) delete fSecondDaughterCut;
-   fSecondDaughterCut = (MpdV0DaughterCut *)cut.Clone();
+   if (fNegativeDaughterCut) delete fNegativeDaughterCut;
+   fNegativeDaughterCut = (MpdV0DaughterCut *)cut.Clone();
 }
 
 void MpdV0FinderBasic::SetCandicateCut(const MpdV0CandidateCut &cut)
@@ -132,16 +132,16 @@ MpdV0FinderBasic &MpdV0FinderBasic::operator=(const MpdV0FinderBasic &other)
       delete fV0s;
       fV0s = nullptr;
    }
-   fInit              = kFALSE;
-   fWrite             = other.fInit;
-   fFirstDaughterCut  = nullptr;
-   fSecondDaughterCut = nullptr;
-   fCandicateCut      = nullptr;
-   if (other.fFirstDaughterCut) {
-      fFirstDaughterCut = (MpdV0DaughterCut *)other.fFirstDaughterCut->Clone();
+   fInit                = kFALSE;
+   fWrite               = other.fInit;
+   fPositiveDaughterCut = nullptr;
+   fNegativeDaughterCut = nullptr;
+   fCandicateCut        = nullptr;
+   if (other.fPositiveDaughterCut) {
+      fPositiveDaughterCut = (MpdV0DaughterCut *)other.fPositiveDaughterCut->Clone();
    }
-   if (other.fSecondDaughterCut) {
-      fSecondDaughterCut = (MpdV0DaughterCut *)other.fSecondDaughterCut->Clone();
+   if (other.fNegativeDaughterCut) {
+      fNegativeDaughterCut = (MpdV0DaughterCut *)other.fNegativeDaughterCut->Clone();
    }
    if (other.fCandicateCut) {
       fCandicateCut = (MpdV0CandidateCut *)other.fCandicateCut->Clone();

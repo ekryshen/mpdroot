@@ -47,8 +47,8 @@ void MpdV0FinderKFPackage::ExecMiniDst(Option_t *option)
    fKFFinder->Clear();
    MpdMiniEvent *event = static_cast<MpdMiniEvent *>(fMiniEvents->UncheckedAt(0));
    fEventVertex        = event->primaryVertex();
-   fFirstDaughterCut->SetMiniDstEventInfo(*event);
-   fSecondDaughterCut->SetMiniDstEventInfo(*event);
+   fPositiveDaughterCut->SetMiniDstEventInfo(*event);
+   fNegativeDaughterCut->SetMiniDstEventInfo(*event);
    KFPVertex kfVertex;
    kfVertex.SetXYZ(fEventVertex.X(), fEventVertex.Y(), fEventVertex.Z());
    kfVertex.SetCovarianceMatrix(0, 0, 0, 0, 0, 0);
@@ -67,17 +67,17 @@ void MpdV0FinderKFPackage::ExecMiniDst(Option_t *option)
    std::vector<int> index1, index2;
    for (int iTrack = 0; iTrack < fMiniTracks->GetEntriesFast(); iTrack++) {
       MpdMiniTrack *track = (MpdMiniTrack *)fMiniTracks->UncheckedAt(iTrack);
-      if (fFirstDaughterCut->PassMiniDstTrack(*track)) {
+      if (fPositiveDaughterCut->PassMiniDstTrack(*track)) {
          index1.push_back(iTrack);
       }
-      if (fSecondDaughterCut->PassMiniDstTrack(*track)) {
+      if (fNegativeDaughterCut->PassMiniDstTrack(*track)) {
          index2.push_back(iTrack);
       }
    }
    fInputTracks.Resize(index1.size() + index2.size());
    for (unsigned int iTrack = 0; iTrack < index1.size(); iTrack++) {
       MpdMiniTrack *track = (MpdMiniTrack *)fMiniTracks->UncheckedAt(index1[iTrack]);
-      fInputTracks.SetPDG(fPidDau1, bufferedTrack);
+      fInputTracks.SetPDG(fPidDauPos, bufferedTrack);
       fInputTracks.SetQ(track->charge(), bufferedTrack);
       fInputTracks.SetId(index1[iTrack], bufferedTrack);
       if (track->isPrimary()) {
@@ -95,7 +95,7 @@ void MpdV0FinderKFPackage::ExecMiniDst(Option_t *option)
 
    for (unsigned int iTrack = 0; iTrack < index2.size(); iTrack++) {
       MpdMiniTrack *track = (MpdMiniTrack *)fMiniTracks->UncheckedAt(index2[iTrack]);
-      fInputTracks.SetPDG(fPidDau2, bufferedTrack);
+      fInputTracks.SetPDG(fPidDauNeg, bufferedTrack);
       fInputTracks.SetQ(track->charge(), bufferedTrack);
       fInputTracks.SetId(index2[iTrack], bufferedTrack);
       if (track->isPrimary()) {
@@ -276,10 +276,10 @@ void MpdV0FinderKFPackage::WriteCandidates()
 
       int id1 = firstDau.Id();
       int id2 = secondDau.Id();
-      candidate.SetFirstDaughterIndex(id1);
-      candidate.SetSecondDaughterIndex(id2);
-      candidate.SetMomFirstDaughter(TVector3(firstDau.GetPx(), firstDau.GetPy(), firstDau.GetPz()));
-      candidate.SetMomFirstDaughter(TVector3(secondDau.GetPx(), secondDau.GetPy(), secondDau.GetPz()));
+      candidate.SetPositiveDaughterIndex(id1);
+      candidate.SetNegativeDaughterIndex(id2);
+      candidate.SetMomPositiveDaughter(TVector3(firstDau.GetPx(), firstDau.GetPy(), firstDau.GetPz()));
+      candidate.SetMomPositiveDaughter(TVector3(secondDau.GetPx(), secondDau.GetPy(), secondDau.GetPz()));
       candidate.SetChi2(particle.GetChi2());
       candidate.Recalculate(fEventVertex);
       candidate.SetMomentum(TVector3(particle.Px(), particle.Py(), particle.Pz()));

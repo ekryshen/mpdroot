@@ -14,25 +14,22 @@
 #include <iostream>
 
 MpdV0Particle::MpdV0Particle()
-   : fDau1to2(0), fAplhaArm(0), fPtArm(0), fCosAngle(0), fDecLenght(0), fFirstDaugherIndex(-1), fSecondDaughterIndex(-1)
+   : fDau1to2(0), fAplhaArm(0), fPtArm(0), fCosAngle(0), fDecLenght(0), fPosDaugherIndex(-1),
+     fNegDaughterIndex(-1), fPdg(0)
 {
-   // TODO Auto-generated constructor stub
 }
 
-MpdV0Particle::~MpdV0Particle()
-{
-   // TODO Auto-generated destructor stub
-}
+MpdV0Particle::~MpdV0Particle() {}
 
 void MpdV0Particle::Recalculate(const TVector3 &vertex)
 {
-   fMomentum     = fMomFirstDaughter + fMomSecondDaughter;
+   fMomentum     = fMomPosDaughter + fMomNegDaughter;
    Double_t pTot = fMomentum.Mag();
 
-   Double_t pPosTot = fMomFirstDaughter.Mag();
+   Double_t pPosTot = fMomPosDaughter.Mag();
 
-   Double_t MomPosAlongV0 = fMomFirstDaughter * fMomentum / pTot;
-   Double_t MomNegALongV0 = fMomSecondDaughter * fMomentum / pTot;
+   Double_t MomPosAlongV0 = fMomPosDaughter * fMomentum / pTot;
+   Double_t MomNegALongV0 = fMomNegDaughter * fMomentum / pTot;
    /* std::cout << "****" << std::endl;
     std::cout << MomPosAlongV0 << " " << MomNegALongV0 << " " << fMomFirstDaughter.Mag() << " "
               << fMomSecondDaughter.Mag() << std::endl;
@@ -64,8 +61,8 @@ void MpdV0Particle::Recalculate(const TVector3 &vertex)
 const Double_t MpdV0Particle::GetMinv(MpdCommonV0::EParticleType type) const
 {
    Double_t ps   = fMomentum.Mag2();
-   Double_t p1_2 = fMomFirstDaughter.Mag2();
-   Double_t p2_2 = fMomSecondDaughter.Mag2();
+   Double_t p1_2 = fMomPosDaughter.Mag2();
+   Double_t p2_2 = fMomNegDaughter.Mag2();
    Double_t e1, e2;
    switch (type) {
    case MpdCommonV0::EParticleType::k0Short: {
@@ -80,6 +77,22 @@ const Double_t MpdV0Particle::GetMinv(MpdCommonV0::EParticleType type) const
    case MpdCommonV0::EParticleType::kAntiLambda: {
       e1 = TMath::Sqrt(p1_2 + 0.019479785);
       e2 = TMath::Sqrt(p2_2 + 0.880354511);
+   } break;
+   case MpdCommonV0::EParticleType::kPdgHypo: {
+      switch (fPdg) {
+      case 310: {
+         e1 = TMath::Sqrt(p1_2 + 0.019479785);
+         e2 = TMath::Sqrt(p2_2 + 0.019479785);
+      } break;
+      case 3122: {
+         e1 = TMath::Sqrt(p1_2 + 0.880354511);
+         e2 = TMath::Sqrt(p2_2 + 0.019479785);
+      } break;
+      case -3122: {
+         e1 = TMath::Sqrt(p1_2 + 0.019479785);
+         e2 = TMath::Sqrt(p2_2 + 0.880354511);
+      } break;
+      }
    } break;
    }
    return TMath::Sqrt((e1 + e2) * (e1 + e2) - ps);

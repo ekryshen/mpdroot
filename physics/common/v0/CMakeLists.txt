@@ -5,6 +5,7 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_SOURCE_DIR}/mpddst
   ${CMAKE_SOURCE_DIR}/mpdbase
   ${CMAKE_SOURCE_DIR}/kalman
+  ${CMAKE_SOURCE_DIR}/mcstack/
   ${CMAKE_SOURCE_DIR}/mpddst/mcDst
   ${CMAKE_SOURCE_DIR}/mpddst/MpdMiniEvent
   ${CMAKE_SOURCE_DIR}/physics/common/v0
@@ -38,14 +39,16 @@ set(SRCS
 	MpdV0FinderBasic.cxx
     MpdV0FinderHelix.cxx
     MpdV0FinderKFPackage.cxx
+    MpdV0Matcher.cxx
     
 	MpdV0Particle.cxx
 	MpdV0Track.cxx
 	MpdV0Namespace.cxx
+	MpdSimpleLinks.cxx
 )
 
 Set(LINKDEF MpdV0CommonLinkDef.h)
 Set(LIBRARY_NAME MpdV0Common)
-Set(DEPENDENCIES Core Base MpdDst MpdMiniEvent KFParticle Kalman)
+Set(DEPENDENCIES Core Base MpdDst MpdMiniEvent KFParticle Kalman MpdMCStack)
 
 GENERATE_LIBRARY()

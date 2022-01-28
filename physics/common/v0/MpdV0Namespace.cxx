@@ -10,6 +10,8 @@
 
 #include "MpdV0Namespace.h"
 
+#include <vector>
+
 namespace MpdCommonV0 {
 Double_t GetMass(EParticleType type)
 {
@@ -25,5 +27,28 @@ Double_t GetMass(EParticleType type)
    } break;
    }
    return 0;
+}
+std::vector<Int_t> GetPdgs(EParticleType type)
+{
+   std::vector<Int_t> res;
+   switch (type) {
+   case EParticleType::k0Short: {
+      res.push_back(310); // K0s
+      res.push_back(311); // K0
+   } break;
+   case EParticleType::kLambda: {
+      res.push_back(3122);
+   } break;
+   case EParticleType::kAntiLambda: {
+      res.push_back(-3122);
+   } break;
+   case EParticleType::kPdgHypo: {
+      res.push_back(310);   // K0s
+      res.push_back(311);   // K0
+      res.push_back(3122);  // Lambda
+      res.push_back(-3122); // Anti-lambda
+   } break;
+   }
+   return res;
 }
 } // namespace MpdCommonV0

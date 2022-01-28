@@ -12,9 +12,14 @@
 #define MPDROOT_PHYSICS_COMMON_V0_MPDV0NAMESPACE_H_
 
 #include <RtypesCore.h>
+#include <vector>
 
 namespace MpdCommonV0 {
-enum class EParticleType { k0Short, kLambda, kAntiLambda };
+enum class EParticleType { k0Short, kLambda, kAntiLambda, kPdgHypo };
+/**
+ * return Pdg code for given enum, for pdgHypo return codes for all supported V0s
+ */
+std::vector<Int_t> GetPdgs(EParticleType type);
 enum class ESigmaType { kPionSigma, kKaonSigma, kProtonSigma };
 Double_t GetMass(EParticleType type);
 } // namespace MpdCommonV0

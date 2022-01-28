@@ -22,6 +22,7 @@
 #pragma link C++ class MpdV0FinderBasic + ;
 #pragma link C++ class MpdV0FinderHelix + ;
 #pragma link C++ class MpdV0FinderKFPackage + ;
+#pragma link C++ class MpdV0Matcher + ;
 
 #pragma link C++ namespace MpdCommonV0;
 #pragma link C++ enum MpdCommonV0::EParticleType;
@@ -29,5 +30,6 @@
 
 #pragma link C++ class MpdV0Particle + ;
 #pragma link C++ class MpdV0Track + ;
+#pragma link C++ class MpdSimpleLinks < Int_t> + ;
 
 #endif
