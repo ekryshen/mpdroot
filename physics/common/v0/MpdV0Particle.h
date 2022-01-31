@@ -55,10 +55,10 @@ public:
    const TVector3 &GetMomPositiveDaughter() const { return fMomPosDaughter; }
    const TVector3 &GetMomNegativeDautgher() const { return fMomNegDaughter; }
    const TVector3 &GetMomentum() const { return fMomentum; }
-   const Double_t  GetMinv(MpdCommonV0::EParticleType type) const;
-   Double_t        GetLambdaMass() const { return GetMinv(MpdCommonV0::EParticleType::kLambda); };
-   Double_t        GetAntiLambdaMass() const { return GetMinv(MpdCommonV0::EParticleType::kAntiLambda); };
-   Double_t        GetK0Mass() const { return GetMinv(MpdCommonV0::EParticleType::k0Short); };
+   const Double_t  GetMinv(MpdV0::EParticleType type) const;
+   Double_t        GetLambdaMass() const { return GetMinv(MpdV0::EParticleType::kLambda); };
+   Double_t        GetAntiLambdaMass() const { return GetMinv(MpdV0::EParticleType::kAntiLambda); };
+   Double_t        GetK0Mass() const { return GetMinv(MpdV0::EParticleType::k0Short); };
 
    void SetPdg(Int_t pid) { fPdg = pid; }
    void SetAlphaArm(Double_t alpha) { fAplhaArm = alpha; }

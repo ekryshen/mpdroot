@@ -25,7 +25,7 @@ protected:
    Double_t                fSigmaHigh;
    Double_t                fNHitsTpcLow;
    Double_t                fNHitsTpcHigh;
-   MpdCommonV0::ESigmaType fSigmaType;
+   MpdV0::ESigmaType fSigmaType;
 
 public:
    MpdV0DaughterCutBasic();
@@ -34,7 +34,7 @@ public:
    void                   SetChargeCut(Int_t charge) { fCharge = charge; };
    void                   SetNTpcHitsCut(Double_t low, Double_t high = 56);
    void                   SetDcaMinCut(Double_t dcaXY, Double_t dcaZ);
-   void                   SetSigmaCut(Double_t low, Double_t high, MpdCommonV0::ESigmaType type);
+   void                   SetSigmaCut(Double_t low, Double_t high, MpdV0::ESigmaType type);
    virtual Bool_t         PassDstTrack(MpdTrack &track) const;
    virtual Bool_t         PassMiniDstTrack(MpdMiniTrack &track) const;
    virtual ~MpdV0DaughterCutBasic();

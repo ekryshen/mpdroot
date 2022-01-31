@@ -12,7 +12,7 @@
 
 #include <vector>
 
-namespace MpdCommonV0 {
+namespace MpdV0 {
 Double_t GetMass(EParticleType type)
 {
    switch (type) {

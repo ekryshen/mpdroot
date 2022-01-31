@@ -22,15 +22,18 @@
 #include "MpdMiniMcTrack.h"
 #include "MpdV0Particle.h"
 #include "MpdV0Track.h"
+#include "MpdMiniTrack.h"
+
+#include <type_traits>
 
 #include <iostream>
 using std::cout;
 using std::endl;
 
-MpdV0Matcher::MpdV0Matcher(MpdCommonV0::EParticleType pidHypo, EMatchType type)
+MpdV0Matcher::MpdV0Matcher(MpdV0::EParticleType pidHypo, EMatchType type)
    : fWrite(kFALSE), fFirst(kFALSE), fPidHipo(pidHypo), fMethod(type), fMomThreshold(0.1), fMpdEvent(nullptr),
-     fMiniEvents(nullptr), fMiniTracks(nullptr), fMcTracks(nullptr), fV0s(nullptr), fFormat(EFormat::kDst),
-     fLinks(nullptr)
+     fMiniEvents(nullptr), fMiniTracks(nullptr), fMiniMcTracks(nullptr), fMcTracks(nullptr), fV0s(nullptr),
+     fFormat(EFormat::kDst), fLinks(nullptr)
 {
 }
 
@@ -80,6 +83,7 @@ InitStatus MpdV0Matcher::Init()
    fMpdEvent             = (MpdEvent *)mngr->GetObject("MPDEvent.");
    fMiniEvents           = (TClonesArray *)mngr->GetObject("Event");
    fMiniTracks           = (TClonesArray *)mngr->GetObject("Track");
+   fMiniMcTracks         = (TClonesArray *)mngr->GetObject("McTrack");
    fMcTracks             = (TClonesArray *)mngr->GetObject("MCTrack");
    if (mngr->GetObject("MpdV0")) {
       fV0s = (TClonesArray *)mngr->GetObject("MpdV0");
@@ -108,7 +112,7 @@ InitStatus MpdV0Matcher::Init()
       LOG(ERROR) << "No MpdEvent/MiniDstEvent in tree";
       return kFATAL;
    }
-   fMcV0sPid = MpdCommonV0::GetPdgs(fPidHipo);
+   fMcV0sPid = MpdV0::GetPdgs(fPidHipo);
    return kSUCCESS;
 }
 
@@ -126,29 +130,28 @@ void MpdV0Matcher::Exec(Option_t *option)
    } break;
    case EMatchType::kMatchByFirstDaughter: {
       switch (fFormat) {
-      case EFormat::kDst: MatchDstByDaugher(0); break;
-      case EFormat::kMiniDst: MatchMiniDstByDaughter(0); break;
+      case EFormat::kDst: MatchByDaughter<MpdTrack, MpdMCTrack>(0); break;
+      case EFormat::kMiniDst: MatchByDaughter<MpdMiniTrack, MpdMiniMcTrack>(0); break;
       }
    } break;
    case EMatchType::kMatchBySecondDaughet: {
       switch (fFormat) {
-      case EFormat::kDst: MatchDstByDaugher(1); break;
-      case EFormat::kMiniDst: MatchMiniDstByDaughter(1); break;
+      case EFormat::kDst: MatchByDaughter<MpdTrack, MpdMCTrack>(1); break;
+      case EFormat::kMiniDst: MatchByDaughter<MpdMiniTrack, MpdMiniMcTrack>(1); break;
       }
    } break;
    case EMatchType::kMatchByBothDaughters: {
       switch (fFormat) {
-      case EFormat::kDst: MatchDstByDaughers(); break;
-      case EFormat::kMiniDst: MatchMiniDstByDaughters(); break;
+      case EFormat::kDst: MatchByDaughters<MpdTrack, MpdMCTrack>(); break;
+      case EFormat::kMiniDst: MatchByDaughters<MpdMiniTrack, MpdMiniMcTrack>(); break;
       }
    }
    }
 }
 
-void MpdV0Matcher::MatchDstByDaugher(Int_t dau)
+template <class T1, class T2>
+void MpdV0Matcher::MatchByDaughter(Int_t dau)
 {
-   TClonesArray *tracks = fMpdEvent->GetGlobalTracks();
-   cout << "Matching " << fV0s->GetEntriesFast() << endl;
 
    for (int i = 0; i < fV0s->GetEntriesFast(); i++) {
       if (fLinks->GetLink(i) >= 0) continue;  // this track is already matched !
@@ -158,75 +161,32 @@ void MpdV0Matcher::MatchDstByDaugher(Int_t dau)
       Int_t dauIndex = -1;
       if (dau == 0) dauIndex = track->GetPositiveDaughterIndex();
       if (dau == 1) dauIndex = track->GetNegativeDaugterIndex();
-      MpdTrack *recotrack = (MpdTrack *)tracks->UncheckedAt(dauIndex);
-      Int_t     mcId      = recotrack->GetID();
-      if (mcId < 0) { // no MC particle assigned to daughter, try another
+      T1 *recotrack = GetRecoTrack<T1>(dauIndex);
+      T2 *mctrack   = GetMcTrack<T1, T2>(recotrack);
+      if (mctrack == nullptr) { // no MC particle assigned to daughter, try another
          if (dau == 0) {
             dauIndex  = track->GetNegativeDaugterIndex();
-            recotrack = (MpdTrack *)tracks->UncheckedAt(dauIndex);
-            mcId      = recotrack->GetID();
+            recotrack = GetRecoTrack<T1>(dauIndex);
+            mctrack   = GetMcTrack<T1, T2>(recotrack);
          } else {
             dauIndex  = track->GetPositiveDaughterIndex();
-            recotrack = (MpdTrack *)tracks->UncheckedAt(dauIndex);
-            mcId      = recotrack->GetID();
+            recotrack = GetRecoTrack<T1>(dauIndex);
+            mctrack   = GetMcTrack<T1, T2>(recotrack);
          }
-         if (mcId < 0) { // still no MC, mark track as bad
+         if (mctrack == nullptr) { // still no MC, mark track as bad
             fLinks->SetLink(i, -2);
             continue;
          }
       }
-      MpdMCTrack *mctrack = (MpdMCTrack *)fMcTracks->UncheckedAt(mcId);
-      if (mctrack->GetMotherId() < 0) { // primary or some "strange" particle cannot match
+      Int_t mcTrackid = GetMotherIndex(mctrack);
+      if (mcTrackid < 0) { // primary or some "strange" particle cannot match
          fLinks->SetLink(i, -2);
          continue;
       }
-      MpdMCTrack *motherTrack = (MpdMCTrack *)fMcTracks->UncheckedAt(mctrack->GetMotherId());
-      if (motherTrack->GetPdgCode() == track->GetPdg()) {
-         fLinks->SetLink(i, mctrack->GetMotherId()); // yeay this is our V0
-      } else {
-         fLinks->SetLink(i, -2); // cannot match this is not our V0
-      }
-   }
-}
-
-void MpdV0Matcher::MatchMiniDstByDaughter(Int_t dau)
-{
-   TClonesArray *tracks = fMpdEvent->GetGlobalTracks();
-   cout << "Matching " << fV0s->GetEntriesFast() << endl;
-
-   for (int i = 0; i < fV0s->GetEntriesFast(); i++) {
-      if (fLinks->GetLink(i) >= 0) continue;  // this track is already matched !
-      if (fLinks->GetLink(i) == -2) continue; // this track is marked as bad !
-      MpdV0Track *track = (MpdV0Track *)fV0s->UncheckedAt(i);
-      if (!IsGoodV0(track->GetPdg())) continue; // this track should not be matched by this task
-      Int_t dauIndex = -1;
-      if (dau == 0) dauIndex = track->GetPositiveDaughterIndex();
-      if (dau == 1) dauIndex = track->GetNegativeDaugterIndex();
-      MpdTrack *recotrack = (MpdTrack *)tracks->UncheckedAt(dauIndex);
-      Int_t     mcId      = recotrack->GetID();
-      if (mcId < 0) { // no MC particle assigned to daughter, try another
-         if (dau == 0) {
-            dauIndex  = track->GetNegativeDaugterIndex();
-            recotrack = (MpdTrack *)tracks->UncheckedAt(dauIndex);
-            mcId      = recotrack->GetID();
-         } else {
-            dauIndex  = track->GetPositiveDaughterIndex();
-            recotrack = (MpdTrack *)tracks->UncheckedAt(dauIndex);
-            mcId      = recotrack->GetID();
-         }
-         if (mcId < 0) { // still no MC, mark track as bad
-            fLinks->SetLink(i, -2);
-            continue;
-         }
-      }
-      MpdMCTrack *mctrack = (MpdMCTrack *)fMcTracks->UncheckedAt(mcId);
-      if (mctrack->GetMotherId() < 0) { // primary or some "strange" particle cannot match
-         fLinks->SetLink(i, -2);
-         continue;
-      }
-      MpdMCTrack *motherTrack = (MpdMCTrack *)fMcTracks->UncheckedAt(mctrack->GetMotherId());
-      if (motherTrack->GetPdgCode() == track->GetPdg()) {
-         fLinks->SetLink(i, mctrack->GetMotherId()); // yeay this is our V0
+      T2 *  motherTrack = GetSimTrack<T2>(mcTrackid);
+      Int_t pdg         = GetPdgCode<T2>(motherTrack);
+      if (pdg == track->GetPdg()) {
+         fLinks->SetLink(i, mcTrackid); // yeay this is our V0
       } else {
          fLinks->SetLink(i, -2); // cannot match this is not our V0
       }
@@ -267,47 +227,45 @@ Bool_t MpdV0Matcher::IsGoodV0(Int_t pid) const
 
 MpdV0Matcher::~MpdV0Matcher() {}
 
-void MpdV0Matcher::MatchDstByDaughers()
+template <class T1, class T2>
+void MpdV0Matcher::MatchByDaughters()
 {
    TClonesArray *tracks = fMpdEvent->GetGlobalTracks();
-   cout << "Matching " << fV0s->GetEntriesFast() << endl;
 
    for (int i = 0; i < fV0s->GetEntriesFast(); i++) {
       if (fLinks->GetLink(i) >= 0) continue;  // this track is already matched !
       if (fLinks->GetLink(i) == -2) continue; // this track is marked as bad !
       MpdV0Track *track = (MpdV0Track *)fV0s->UncheckedAt(i);
       if (!IsGoodV0(track->GetPdg())) continue; // this track should not be matched by this task
-      Int_t     dauIndex1  = track->GetPositiveDaughterIndex();
-      Int_t     dauIndex2  = track->GetNegativeDaugterIndex();
-      MpdTrack *recotrack1 = (MpdTrack *)tracks->UncheckedAt(dauIndex1);
-      MpdTrack *recotrack2 = (MpdTrack *)tracks->UncheckedAt(dauIndex2);
-      Int_t     mcId1      = recotrack1->GetID();
-      Int_t     mcId2      = recotrack1->GetID();
-      if (mcId1 < 0 || mcId2 < 0) {
+      Int_t dauIndex1  = track->GetPositiveDaughterIndex();
+      Int_t dauIndex2  = track->GetNegativeDaugterIndex();
+      T1 *  recotrack1 = GetRecoTrack<T1>(dauIndex1);
+      T1 *  recotrack2 = GetRecoTrack<T1>(dauIndex2);
+      T2 *  simtrack1  = GetMcTrack<T1, T2>(recotrack1);
+      T2 *  simtrack2  = GetMcTrack<T1, T2>(recotrack2);
+      if (simtrack1 == nullptr || simtrack2 == nullptr) {
          fLinks->SetLink(i, -2);
          continue;
       }
-      MpdMCTrack *mctrack1 = (MpdMCTrack *)fMcTracks->UncheckedAt(mcId1);
-      MpdMCTrack *mctrack2 = (MpdMCTrack *)fMcTracks->UncheckedAt(mcId2);
-      if (mctrack1->GetMotherId() != mctrack2->GetMotherId()) { // different mothers
+      Int_t mother1 = GetMother<T2>(simtrack1);
+      Int_t mother2 = GetMother<T2>(simtrack2);
+      if (mother2 != mother1) { // different mothers
          fLinks->SetLink(i, -2);
          continue;
       }
-      if (mctrack1->GetMotherId() < 0) { // primary or some "strange" particle cannot match
+      if (mother1 < 0) { // primary or some "strange" particle cannot match
          fLinks->SetLink(i, -2);
          continue;
       }
-      if (mctrack2->GetMotherId() < 0) { // primary or some "strange" particle cannot match
+      if (mother2 < 0) { // primary or some "strange" particle cannot match
          fLinks->SetLink(i, -2);
          continue;
       }
-      MpdMCTrack *motherTrack = (MpdMCTrack *)fMcTracks->UncheckedAt(mctrack1->GetMotherId());
-      if (motherTrack->GetPdgCode() == track->GetPdg()) {
-         fLinks->SetLink(i, mctrack1->GetMotherId()); // yeay this is our V0
+      T2 *motherV0 = GetSimTrack<T2>(mother1);
+      if (GetPdgCode<T2>(motherV0) == track->GetPdg()) {
+         fLinks->SetLink(i, GetMother<T2>(simtrack1)); // yeay this is our V0
       } else {
          fLinks->SetLink(i, -2); // cannot match this is not our V0
       }
    }
 }
-
-void MpdV0Matcher::MatchMiniDstByDaughters() {}

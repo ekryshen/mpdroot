@@ -18,7 +18,7 @@
 
 MpdV0DaughterCutBasic::MpdV0DaughterCutBasic()
    : MpdV0DaughterCut(), fCharge(1), fDcaXY2(0), fDcaZ(0), fSigmaLow(-2), fSigmaHigh(2), fNHitsTpcLow(0),
-     fNHitsTpcHigh(56), fSigmaType(MpdCommonV0::ESigmaType::kPionSigma)
+     fNHitsTpcHigh(56), fSigmaType(MpdV0::ESigmaType::kPionSigma)
 {
 }
 
@@ -34,7 +34,7 @@ void MpdV0DaughterCutBasic::SetDcaMinCut(Double_t dcaXY, Double_t dcaZ)
    fDcaZ   = dcaZ;
 }
 
-void MpdV0DaughterCutBasic::SetSigmaCut(Double_t low, Double_t high, MpdCommonV0::ESigmaType type)
+void MpdV0DaughterCutBasic::SetSigmaCut(Double_t low, Double_t high, MpdV0::ESigmaType type)
 {
    fSigmaLow  = low;
    fSigmaHigh = high;
@@ -49,15 +49,15 @@ Bool_t MpdV0DaughterCutBasic::PassDstTrack(MpdTrack &track) const
    if (track.GetNofHits() < fNHitsTpcLow) return kFALSE;
    if (track.GetNofHits() > fNHitsTpcHigh) return kFALSE;
    switch (fSigmaType) {
-   case MpdCommonV0::ESigmaType::kPionSigma: {
+   case MpdV0::ESigmaType::kPionSigma: {
       if (track.GetNSigmaPion() < fSigmaLow) return kFALSE;
       if (track.GetNSigmaPion() > fSigmaHigh) return kFALSE;
    } break;
-   case MpdCommonV0::ESigmaType::kKaonSigma: {
+   case MpdV0::ESigmaType::kKaonSigma: {
       if (track.GetNSigmaKaon() < fSigmaLow) return kFALSE;
       if (track.GetNSigmaKaon() > fSigmaHigh) return kFALSE;
    } break;
-   case MpdCommonV0::ESigmaType::kProtonSigma: {
+   case MpdV0::ESigmaType::kProtonSigma: {
       if (track.GetNSigmaProton() < fSigmaLow) return kFALSE;
       if (track.GetNSigmaProton() > fSigmaHigh) return kFALSE;
    } break;
@@ -75,15 +75,15 @@ Bool_t MpdV0DaughterCutBasic::PassMiniDstTrack(MpdMiniTrack &track) const
    if (track.nHits() < fNHitsTpcLow) return kFALSE;
    if (track.nHits() > fNHitsTpcHigh) return kFALSE;
    switch (fSigmaType) {
-   case MpdCommonV0::ESigmaType::kPionSigma: {
+   case MpdV0::ESigmaType::kPionSigma: {
       if (track.nSigmaPion() < fSigmaLow) return kFALSE;
       if (track.nSigmaPion() > fSigmaHigh) return kFALSE;
    } break;
-   case MpdCommonV0::ESigmaType::kKaonSigma: {
+   case MpdV0::ESigmaType::kKaonSigma: {
       if (track.nSigmaKaon() < fSigmaLow) return kFALSE;
       if (track.nSigmaKaon() > fSigmaHigh) return kFALSE;
    } break;
-   case MpdCommonV0::ESigmaType::kProtonSigma: {
+   case MpdV0::ESigmaType::kProtonSigma: {
       if (track.nSigmaProton() < fSigmaLow) return kFALSE;
       if (track.nSigmaProton() > fSigmaHigh) return kFALSE;
    } break;

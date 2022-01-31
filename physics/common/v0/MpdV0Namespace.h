@@ -14,7 +14,7 @@
 #include <RtypesCore.h>
 #include <vector>
 
-namespace MpdCommonV0 {
+namespace MpdV0 {
 enum class EParticleType { k0Short, kLambda, kAntiLambda, kPdgHypo };
 /**
  * return Pdg code for given enum, for pdgHypo return codes for all supported V0s

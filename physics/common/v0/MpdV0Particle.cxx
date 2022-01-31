@@ -58,27 +58,27 @@ void MpdV0Particle::Recalculate(const TVector3 &vertex)
    fDecLenght       = dca_rel.Mag();
 }
 
-const Double_t MpdV0Particle::GetMinv(MpdCommonV0::EParticleType type) const
+const Double_t MpdV0Particle::GetMinv(MpdV0::EParticleType type) const
 {
    Double_t ps   = fMomentum.Mag2();
    Double_t p1_2 = fMomPosDaughter.Mag2();
    Double_t p2_2 = fMomNegDaughter.Mag2();
    Double_t e1, e2;
    switch (type) {
-   case MpdCommonV0::EParticleType::k0Short: {
+   case MpdV0::EParticleType::k0Short: {
       e1 = TMath::Sqrt(p1_2 + 0.019479785);
       e2 = TMath::Sqrt(p2_2 + 0.019479785);
       return 0.49761;
    } break;
-   case MpdCommonV0::EParticleType::kLambda: {
+   case MpdV0::EParticleType::kLambda: {
       e1 = TMath::Sqrt(p1_2 + 0.880354511);
       e2 = TMath::Sqrt(p2_2 + 0.019479785);
    } break;
-   case MpdCommonV0::EParticleType::kAntiLambda: {
+   case MpdV0::EParticleType::kAntiLambda: {
       e1 = TMath::Sqrt(p1_2 + 0.019479785);
       e2 = TMath::Sqrt(p2_2 + 0.880354511);
    } break;
-   case MpdCommonV0::EParticleType::kPdgHypo: {
+   case MpdV0::EParticleType::kPdgHypo: {
       switch (fPdg) {
       case 310: {
          e1 = TMath::Sqrt(p1_2 + 0.019479785);
