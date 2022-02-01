@@ -37,6 +37,6 @@ MpdMiniFHCalHit.cxx
 Set(HEADERS)
 Set(LINKDEF MpdMiniEventLinkDef.h)
 Set(LIBRARY_NAME MpdMiniEvent)
-Set(DEPENDENCIES Base)
+Set(DEPENDENCIES Base MpdMCStack)
 
 GENERATE_LIBRARY()
