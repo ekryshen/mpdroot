@@ -72,6 +72,12 @@ public:
 
    /// Fill ECal-related information
    void isUseECal(Bool_t flag) { fIsUseECal = flag; }
+   /// Fill all MC particles that are reconstructed
+   void isUseMatched(Bool_t flag) { fStoreMatched = flag; }
+   /// Fill all MC particles that are parent of other needed MC particles
+   void isUseParent(Bool_t flag) { fStoreParents = flag; }
+   /// Fill/not fill parents from trivial processes e.g. p->n n->p, x->x gamma->x work only with useParent
+   void isStoreTrivialDecays(Bool_t flag) { fTrivDecay = flag; };
 
    ///  Set how to fill nSigma(e,pi,K,p)
    /// \par 0 use values from MpdDst (default)
@@ -87,7 +93,12 @@ private:
 
    /// Store/Not store ECal information
    Bool_t fIsUseECal;
-
+   /// Store/Not secondary mc tracks that were reconstructed
+   Bool_t fStoreMatched;
+   /// store parents of written particles
+   Bool_t fStoreParents;
+   // store parents that are stable particles
+   Bool_t fTrivDecay;
    /// Pointer to event header
    FairMCEventHeader *fEventHeaders;
    /// Pointer to MpdEvent
@@ -137,6 +148,8 @@ private:
    std::vector<std::pair<Int_t, UShort_t>> fMcTrk2MiniMcTrk;
    /// Mat for keeping MC track to barrel ECal cluster correpsondence
    std::map<Int_t, Int_t> fMcTrk2EcalCluster;
+   // map of reconstructed mc tracks
+   std::vector<bool> fMapRec;
 
    /// How to fill nSigma(e,pi,K,p)
    /// \par 0 use values from MpdDst (default)
@@ -167,6 +180,9 @@ private:
    /// Fill FHCal information
    void fillFHCalHits();
 
+   // marks matched mc tracks
+   void findMatchedMcTracks();
+
    /// Return index of miniMcTrack that corresponds to McTrack (-1 not found)
    Int_t miniMcIdxFromMcIdx(Int_t mcIdx);
 
@@ -183,6 +199,9 @@ private:
 
    /// Fill covariance matrix if needed
    void fillCovMatrix(MpdTpcKalmanTrack *, MpdMiniTrackCovMatrix *);
+
+   /// find parents (and grandparents of mc particle with given index and mark them in fMapRec
+   void findMcParent(Int_t index);
 
    /// Check if the event event is okay (reasonabler reconstruction)
    Bool_t isGoodEvent();

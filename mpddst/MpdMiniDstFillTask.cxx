@@ -31,6 +31,12 @@
 //_________________
 
 MpdMiniDstFillTask::MpdMiniDstFillTask()
+   : fIsUseCovMatrix(kTRUE), fIsUseECal(kTRUE), fStoreMatched(kFALSE), fStoreParents(kFALSE), fTrivDecay(kTRUE),
+     fEventHeaders(nullptr), fEvents(nullptr), fVertices(nullptr), fTpcTracks(nullptr), fTofHits(nullptr),
+     fTofMatching(nullptr), fMCTracks(nullptr), fGenTracks(nullptr), fEmcClusters(nullptr), fZdcDigits(nullptr),
+     fMiniDst(nullptr), fBField(0.5), // mag. field in T (MUST be changed to the real magnetic field
+     fOutputFile(nullptr), fTTree(nullptr), fSplit(99), fCompression(9), fBufferSize(65536 * 4), fMiniArrays(nullptr),
+     fNSigmaDedxEstimator(0)
 {
    // Default constructor
    /* empty */
@@ -38,15 +44,9 @@ MpdMiniDstFillTask::MpdMiniDstFillTask()
 
 //_________________
 
-MpdMiniDstFillTask::MpdMiniDstFillTask(TString name)
-   : fIsUseCovMatrix(kTRUE), fIsUseECal(kTRUE), fEventHeaders(nullptr), fEvents(nullptr), fVertices(nullptr),
-     fTpcTracks(nullptr), fTofHits(nullptr), fTofMatching(nullptr), fMCTracks(nullptr), fGenTracks(nullptr),
-     fEmcClusters(nullptr), fZdcDigits(nullptr), fMiniDst(new MpdMiniDst()),
-     fBField(0.5), // mag. field in T (MUST be changed to the real magnetic field
-     fOutputFile(nullptr), fTTree(nullptr), fSplit(99), fCompression(9), fBufferSize(65536 * 4), fMiniArrays(nullptr),
-     fNSigmaDedxEstimator(0)
+MpdMiniDstFillTask::MpdMiniDstFillTask(TString name) : MpdMiniDstFillTask()
 {
-
+   fMiniDst = new MpdMiniDst();
    // Standard constructor
    TString truncatedInFileName = name;
    Ssiz_t  lastOccurence       = name.Last('/');
@@ -69,7 +69,7 @@ MpdMiniDstFillTask::~MpdMiniDstFillTask()
    // Destructor
    if (!fMcTrk2MiniMcTrk.empty()) fMcTrk2MiniMcTrk.clear();
    if (!fMcTrk2EcalCluster.empty()) fMcTrk2EcalCluster.clear();
-   delete fMiniDst;
+   if (fMiniDst) delete fMiniDst;
 }
 
 //_________________
@@ -198,10 +198,9 @@ void MpdMiniDstFillTask::Exec(Option_t *option)
       fillEvent();
       if (fZdcDigits) fillFHCalHits();
       fillBTofHits();
+      findMatchedMcTracks();
       fillMcTracks();
-      if (fIsUseECal) {
-         fillECalClusters();
-      }
+      if (fIsUseECal) fillECalClusters();
       fillTracks();
 
       if (fVerbose != 0) {
@@ -439,10 +438,6 @@ void MpdMiniDstFillTask::fillMcTracks()
    TClonesArray *miniMcTracks = fMiniArrays[MpdMiniArrays::McTrack];
    miniMcTracks->Delete();
 
-   // Fill McTracks if exist
-   Bool_t isEmcTrack      = kFALSE;
-   Bool_t isGenLevelTrack = kFALSE;
-
    if (!fMCTracks) return;
 
    // Loop over MC tracks
@@ -454,95 +449,69 @@ void MpdMiniDstFillTask::fillMcTracks()
       // MC track must exist
       if (!mcTrack) continue;
 
-      // Clean variables
-      isEmcTrack      = kFALSE;
-      isGenLevelTrack = kFALSE;
-
       // Check if MC track is a generator level track
+      Bool_t isGenLevelTrack = kFALSE;
       if (mcTrack->GetMotherId() == -1) isGenLevelTrack = kTRUE;
-      // {
-      //   std::cout << "McTrk: " << iMcTrk << " pdgCode: " << mcTrack->GetPdgCode()
-      // 		<< " px/py/pz: " << Form("%4.2f/%4.2f/%4.2f",
-      // 					 mcTrack->GetPx(),
-      // 					 mcTrack->GetPy(),
-      // 					 mcTrack->GetPz())
-      // 		<< " MothId: " << mcTrack->GetMotherId()
-      // 		<< std::endl;
-      // }
 
-      if (fIsUseECal && fEmcClusters) {
-         // Check if MC track that was used in ECal clusters
-         for (Int_t iCluster = 0; iCluster < fEmcClusters->GetEntriesFast(); iCluster++) {
-            // Retrieve barrel ECal cluster
-            MpdEmcClusterKI *cluster = (MpdEmcClusterKI *)fEmcClusters->UncheckedAt(iCluster);
+      // Check if generator level or ECal track or need to be stored
+      if (!fMapRec[iMcTrk]) continue;
 
-            if (!cluster) continue;
+      // Create new MiniMcTrack
+      MpdMiniMcTrack *miniMcTrack = new ((*miniMcTracks)[miniMcTracks->GetEntriesFast()]) MpdMiniMcTrack();
 
-            // Loop over tracks in the cluster
-            for (Int_t iTrk = 0; iTrk < cluster->GetNumberOfTracks(); iTrk++) {
-               Int_t   id   = -1;
-               Float_t eDep = -1.;
-               cluster->GetMCTrack(iTrk, id, eDep);
-               if (id == iMcTrk) {
-                  isEmcTrack                 = kTRUE;
-                  fMcTrk2EcalCluster[iMcTrk] = iCluster;
-                  break;
-               }
-            } // for (Int_t iTrk=0; iTrk < cluster->GetNumberOfTracks(); iTrk++)
-         }    // for (Int_t iCluster = 0; iCluster < fEmcClusters->GetEntriesFast(); iCluster++)
-      }       // if ( fIsUseECal )
+      if (!miniMcTrack) {
+         std::cout << "[WARNING] MpdMiniDstFillTask::fillTracks - No miniMcTrack has been found" << std::endl;
+         continue;
+      }
 
-      // Check if generator level or ECal track
-      if (isGenLevelTrack || isEmcTrack) {
+      // Set McTrack information
+      miniMcTrack->setId(iMcTrk);
+      miniMcTrack->setPdgId(mcTrack->GetPdgCode());
+      miniMcTrack->setPx(mcTrack->GetPx());
+      miniMcTrack->setPy(mcTrack->GetPy());
+      miniMcTrack->setPz(mcTrack->GetPz());
+      miniMcTrack->setEnergy(mcTrack->GetEnergy());
+      miniMcTrack->setMotherId(mcTrack->GetMotherId());
 
-         // Create new MiniMcTrack
-         MpdMiniMcTrack *miniMcTrack = new ((*miniMcTracks)[miniMcTracks->GetEntriesFast()]) MpdMiniMcTrack();
+      // Assume that there is no branch with GenTracks ...
+      miniMcTrack->setX(-1.);
+      miniMcTrack->setY(-1.);
+      miniMcTrack->setZ(-1.);
+      miniMcTrack->setT(-1.);
 
-         if (!miniMcTrack) {
-            std::cout << "[WARNING] MpdMiniDstFillTask::fillTracks - No miniMcTrack has been found" << std::endl;
-            continue;
-         }
+      if (fGenTracks && isGenLevelTrack) {
+         for (Int_t iGenTrack = 0; iGenTrack < fGenTracks->GetEntriesFast(); iGenTrack++) {
+            MpdGenTrack *genTrack = (MpdGenTrack *)fGenTracks->UncheckedAt(iGenTrack);
+            if (genTrack->GetIsUsed()) continue;
 
-         // Set McTrack information
-         miniMcTrack->setId(iMcTrk);
-         miniMcTrack->setPdgId(mcTrack->GetPdgCode());
-         miniMcTrack->setPx(mcTrack->GetPx());
-         miniMcTrack->setPy(mcTrack->GetPy());
-         miniMcTrack->setPz(mcTrack->GetPz());
-         miniMcTrack->setEnergy(mcTrack->GetEnergy());
+            Double_t absMomDiff = TMath::Abs(genTrack->GetMomentum().Mag() - mcTrack->GetP());
+            if (absMomDiff < DBL_EPSILON) {
+               genTrack->SetIsUsed(kTRUE);
 
-         // Assume that there is no branch with GenTracks ...
-         miniMcTrack->setX(-1.);
-         miniMcTrack->setY(-1.);
-         miniMcTrack->setZ(-1.);
-         miniMcTrack->setT(-1.);
+               TLorentzVector spaceTime = genTrack->GetCoordinates();
+               miniMcTrack->setX(spaceTime.X());
+               miniMcTrack->setY(spaceTime.Y());
+               miniMcTrack->setZ(spaceTime.Z());
+               miniMcTrack->setT(spaceTime.T());
+            } // if (absMomDiff < DBL_EPSILON)
+         }    // for (Int_t iGenTrack = 0; iGenTrack < fGenTracks->GetEntriesFast(); iGenTrack++)
+      }       // if (fGenTracks)
 
-         if (isGenLevelTrack) {
-            miniMcTrack->setIsFromGenerator(kTRUE);
-         }
+      // Store indices
+      fMcTrk2MiniMcTrk.push_back(std::make_pair(iMcTrk, (UShort_t)miniMcTracks->GetEntriesFast() - 1));
+   } // for (Int_t iMcTrk = 0; iMcTrk < fMCTracks->GetEntriesFast(); iMcTrk++)
 
-         if (fGenTracks && isGenLevelTrack) {
-            for (Int_t iGenTrack = 0; iGenTrack < fGenTracks->GetEntriesFast(); iGenTrack++) {
-               MpdGenTrack *genTrack = (MpdGenTrack *)fGenTracks->UncheckedAt(iGenTrack);
-               if (genTrack->GetIsUsed()) continue;
+   // fix mother indexes
+   for (int iMiniTrack = 0; iMiniTrack < miniMcTracks->GetEntriesFast(); iMiniTrack++) {
 
-               Double_t absMomDiff = TMath::Abs(genTrack->GetMomentum().Mag() - mcTrack->GetP());
-               if (absMomDiff < DBL_EPSILON) {
-                  genTrack->SetIsUsed(kTRUE);
-
-                  TLorentzVector spaceTime = genTrack->GetCoordinates();
-                  miniMcTrack->setX(spaceTime.X());
-                  miniMcTrack->setY(spaceTime.Y());
-                  miniMcTrack->setZ(spaceTime.Z());
-                  miniMcTrack->setT(spaceTime.T());
-               } // if (absMomDiff < DBL_EPSILON)
-            }    // for (Int_t iGenTrack = 0; iGenTrack < fGenTracks->GetEntriesFast(); iGenTrack++)
-         }       // if (fGenTracks)
-
-         // Store indices
-         fMcTrk2MiniMcTrk.push_back(std::make_pair(iMcTrk, (UShort_t)miniMcTracks->GetEntriesFast() - 1));
-      } // if ( isGenLevelTrack || isEmcTrack )
-   }    // for (Int_t iMcTrk = 0; iMcTrk < fMCTracks->GetEntriesFast(); iMcTrk++)
+      MpdMiniMcTrack *track = (MpdMiniMcTrack *)miniMcTracks->UncheckedAt(iMiniTrack);
+      if (track->getMotherId() < 0) continue; // this is particle without parents
+      Int_t newIndex = miniMcIdxFromMcIdx(track->getMotherId());
+      if (newIndex >= 0)
+         track->setMotherId(newIndex);
+      else
+         track->setMotherId(-2); // set -2 for particles that are not primary but doesn't have parents
+   }
 }
 
 //_________________
@@ -1415,4 +1384,83 @@ std::vector<Double_t> MpdMiniDstFillTask::nSigmaDedx(Double_t p, Double_t dEdx)
    retVect.push_back((dEdx - dedxMean) / dedxSigma);
 
    return retVect;
+}
+
+void MpdMiniDstFillTask::findMatchedMcTracks()
+{
+   if (!fMCTracks) return;
+   fMapRec.resize(fMCTracks->GetEntriesFast());
+   std::fill(fMapRec.begin(), fMapRec.end(), false);
+   /// mark tracks from E-cal as good
+   if (fIsUseECal && fEmcClusters) {
+      // Check if MC track that was used in ECal clusters
+      for (Int_t iMcTrk = 0; iMcTrk < fMCTracks->GetEntriesFast(); iMcTrk++) {
+         for (Int_t iCluster = 0; iCluster < fEmcClusters->GetEntriesFast(); iCluster++) {
+            // Retrieve barrel ECal cluster
+            MpdEmcClusterKI *cluster = (MpdEmcClusterKI *)fEmcClusters->UncheckedAt(iCluster);
+
+            if (!cluster) continue;
+
+            // Loop over tracks in the cluster
+            for (Int_t iTrk = 0; iTrk < cluster->GetNumberOfTracks(); iTrk++) {
+               Int_t   id   = -1;
+               Float_t eDep = -1.;
+               cluster->GetMCTrack(iTrk, id, eDep);
+               if (id == iMcTrk) {
+                  fMapRec[iMcTrk]            = true;
+                  fMcTrk2EcalCluster[iMcTrk] = iCluster;
+                  break;
+               }
+            } // for (Int_t iTrk=0; iTrk < cluster->GetNumberOfTracks(); iTrk++)
+         }    // for (Int_t iCluster = 0; iCluster < fEmcClusters->GetEntriesFast(); iCluster++)
+      }       // loop over MC tracks
+   }
+
+   // store all primary particles
+   for (Int_t iMcTrk = 0; iMcTrk < fMCTracks->GetEntriesFast(); iMcTrk++) {
+      MpdMCTrack *mcTrack = (MpdMCTrack *)fMCTracks->UncheckedAt(iMcTrk);
+      if (mcTrack->GetMotherId() == -1) fMapRec[iMcTrk] = true;
+   }
+
+   // store particles matched with kalman, also secondaries
+   if (fStoreMatched) {
+
+      for (Int_t iKalmanTrk = 0; iKalmanTrk < fTpcTracks->GetEntriesFast(); iKalmanTrk++) {
+         // Retrieve i-th TpcKalmanTrack
+         MpdTpcKalmanTrack *kalTrack = (MpdTpcKalmanTrack *)fTpcTracks->UncheckedAt(iKalmanTrk);
+         int                id       = kalTrack->GetTrackID();
+         fMapRec[id]                 = true;
+      }
+   }
+
+   // store parents of required MC particles
+   if (fStoreParents) {
+      for (Int_t iMcTrack = 0; iMcTrack < fMapRec.size(); iMcTrack++) {
+         if (fMapRec[iMcTrack]) {
+            findMcParent(iMcTrack);
+         }
+      }
+   }
+}
+
+void MpdMiniDstFillTask::findMcParent(Int_t index)
+{
+   MpdMCTrack *track       = (MpdMCTrack *)fMCTracks->UncheckedAt(index);
+   Int_t       motherIndex = track->GetMotherId();
+   if (motherIndex < 0) return;
+   if (motherIndex > fMCTracks->GetEntriesFast()) return;
+   std::cout << "TD" << fTrivDecay << std::endl;
+   if (!fTrivDecay) { // reject "trivial decays:
+      MpdMCTrack *mother = (MpdMCTrack *)fMCTracks->UncheckedAt(motherIndex);
+      std::cout << "check triv " << mother->GetPdgCode() << std::endl;
+      if (mother->GetPdgCode() == 2212) return;                // proton
+      if (mother->GetPdgCode() == 2112) return;                // neutron
+      if (mother->GetPdgCode() == -2212) return;               // anti-proton
+      if (mother->GetPdgCode() == -2112) return;               // anti-neutron
+      if (mother->GetPdgCode() == 22) return;                  // photon
+      if (mother->GetPdgCode() == track->GetPdgCode()) return; // pdg not changed
+      std::cout << "accepted" << std::endl;
+   }
+   fMapRec[motherIndex] = true;
+   findMcParent(motherIndex);
 }
