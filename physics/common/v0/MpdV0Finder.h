@@ -8,14 +8,18 @@
  *      JINR,  Laboratory of High Energy Physics
  */
 
-#ifndef MPDROOT_PHYSICS_COMMON_V0_MPDV0FINDERBASIC_H_
-#define MPDROOT_PHYSICS_COMMON_V0_MPDV0FINDERBASIC_H_
+#ifndef MPDROOT_PHYSICS_COMMON_V0_MPDV0FINDER_H_
+#define MPDROOT_PHYSICS_COMMON_V0_MPDV0FINDER_H_
 
 #include <FairTask.h>
 #include <Rtypes.h>
 #include <RtypesCore.h>
-#include <memory>
-#include <MpdHelix.h>
+#include <TString.h>
+#include <utility>
+#include <vector>
+
+class MpdV0CandidateMonitor;
+class MpdV0DaughterMonitor;
 
 class MpdV0CandidateCut;
 class MpdV0DaughterCut;
@@ -26,7 +30,7 @@ class MpdV0DaughterCut;
 
 class MpdEvent;
 
-class MpdV0FinderBasic : public FairTask {
+class MpdV0Finder : public FairTask {
 protected:
    enum class EFormat { kDst, kMiniDst };
    Bool_t                                   fInit;
@@ -46,18 +50,24 @@ protected:
    MpdV0DaughterCut *                       fPositiveDaughterCut;
    MpdV0DaughterCut *                       fNegativeDaughterCut;
    MpdV0CandidateCut *                      fCandicateCut;
+   MpdV0DaughterMonitor *                   fDauMon1;
+   MpdV0DaughterMonitor *                   fDauMon2;
+   MpdV0CandidateMonitor *                  fV0Mon;
 
 public:
-   MpdV0FinderBasic(Int_t pidMom = 3122, Int_t pidFirstDau = 211, Int_t pidSecDau = 2212);
+   MpdV0Finder(TString name = "LambdaFinder", Int_t pidMom = 3122, Int_t pidFirstDau = 211, Int_t pidSecDau = 2212);
    void         SaveV0s(Bool_t write) { fWrite = write; };
+   void         SetDaugherMonitor(const MpdV0DaughterMonitor &mon);
+   void         SetV0Monitor(const MpdV0CandidateMonitor &mon);
    virtual void Exec(Option_t *option);
-   virtual ~MpdV0FinderBasic();
+   virtual ~MpdV0Finder();
    void SetPositiveDaughterCut(const MpdV0DaughterCut &cut);
    void SetNegativeDaughterCut(const MpdV0DaughterCut &cut);
    void SetCandicateCut(const MpdV0CandidateCut &cut);
-   MpdV0FinderBasic(const MpdV0FinderBasic &other);
-   MpdV0FinderBasic &operator=(const MpdV0FinderBasic &other);
-   ClassDef(MpdV0FinderBasic, 1)
+   MpdV0Finder(const MpdV0Finder &other);
+   MpdV0Finder &operator=(const MpdV0Finder &other);
+   virtual void FinishTask();
+   ClassDef(MpdV0Finder, 1)
 };
 
-#endif /* MPDROOT_PHYSICS_COMMON_V0_MPDV0FINDERBASIC_H_ */
+#endif /* MPDROOT_PHYSICS_COMMON_V0_MPDV0FINDER_H_ */

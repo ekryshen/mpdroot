@@ -8,35 +8,44 @@
  *      JINR,  Laboratory of High Energy Physics
  */
 
-#include "MpdV0FinderBasic.h"
+#include "MpdV0Finder.h"
 
 #include <FairRootManager.h>
 #include <TClonesArray.h>
+#include <TDirectory.h>
+#include <TFile.h>
+#include <TNamed.h>
 
 #include "FairLogger.h"
 #include "MpdEvent.h"
 #include "MpdV0CandidateCut.h"
 #include "MpdV0DaughterCut.h"
+#include "MpdV0CandidateMonitor.h"
+#include "MpdV0DaughterMonitor.h"
 
-MpdV0FinderBasic::MpdV0FinderBasic(Int_t pidMom, Int_t pidFirstDau, Int_t pidSecDau)
-   : FairTask(), fInit(kFALSE), fWrite(kFALSE), fFirstV0(kFALSE), fPidDauPos(pidSecDau), fPidDauNeg(pidFirstDau),
+MpdV0Finder::MpdV0Finder(TString name, Int_t pidMom, Int_t pidFirstDau, Int_t pidSecDau)
+   : FairTask(name), fInit(kFALSE), fWrite(kFALSE), fFirstV0(kFALSE), fPidDauPos(pidSecDau), fPidDauNeg(pidFirstDau),
      fPidV0(pidMom), fFormat(EFormat::kDst), fMpdEvent(nullptr), fMiniEvents(nullptr), fMiniTracks(nullptr),
-     fV0s(nullptr), fPositiveDaughterCut(nullptr), fNegativeDaughterCut(nullptr), fCandicateCut(nullptr)
+     fV0s(nullptr), fPositiveDaughterCut(nullptr), fNegativeDaughterCut(nullptr), fCandicateCut(nullptr),
+     fDauMon1(nullptr), fDauMon2(nullptr), fV0Mon(nullptr)
 {
 }
 
-MpdV0FinderBasic::~MpdV0FinderBasic()
+MpdV0Finder::~MpdV0Finder()
 {
    if (fPositiveDaughterCut) delete fPositiveDaughterCut;
    if (fNegativeDaughterCut) delete fNegativeDaughterCut;
    if (fCandicateCut) delete fCandicateCut;
+   if (fDauMon1) delete fDauMon1;
+   if (fDauMon2) delete fDauMon2;
+   if (fV0Mon) delete fV0Mon;
 }
 
-MpdV0FinderBasic::MpdV0FinderBasic(const MpdV0FinderBasic &other)
+MpdV0Finder::MpdV0Finder(const MpdV0Finder &other)
    : FairTask(), fInit(kFALSE), fWrite(other.fWrite), fFirstV0(other.fFirstV0), fPidDauPos(other.fPidDauPos),
      fPidDauNeg(other.fPidDauNeg), fPidV0(other.fPidV0), fFormat(other.fFormat), fMpdEvent(nullptr),
      fMiniEvents(nullptr), fMiniTracks(nullptr), fV0s(nullptr), fPositiveDaughterCut(nullptr),
-     fNegativeDaughterCut(nullptr), fCandicateCut(nullptr)
+     fNegativeDaughterCut(nullptr), fCandicateCut(nullptr), fDauMon1(nullptr), fDauMon2(nullptr), fV0Mon(nullptr)
 {
    if (other.fPositiveDaughterCut) {
       fPositiveDaughterCut = (MpdV0DaughterCut *)other.fPositiveDaughterCut->Clone();
@@ -47,9 +56,18 @@ MpdV0FinderBasic::MpdV0FinderBasic(const MpdV0FinderBasic &other)
    if (other.fCandicateCut) {
       fCandicateCut = (MpdV0CandidateCut *)other.fCandicateCut->Clone();
    }
+   if (other.fDauMon1) {
+      fDauMon1 = other.fDauMon1->MakeCopy();
+   }
+   if (other.fDauMon2) {
+      fDauMon2 = other.fDauMon1->MakeCopy();
+   }
+   if (other.fV0Mon) {
+      fV0Mon = other.fV0Mon->MakeCopy();
+   }
 }
 
-void MpdV0FinderBasic::Exec(Option_t *option)
+void MpdV0Finder::Exec(Option_t *option)
 {
    if (fFirstV0) fV0s->Clear();
    fPositiveDaughters.clear();
@@ -60,7 +78,7 @@ void MpdV0FinderBasic::Exec(Option_t *option)
    }
 }
 
-InitStatus MpdV0FinderBasic::Init()
+InitStatus MpdV0Finder::Init()
 {
    if (fInit) {
       LOG(ERROR) << "Task already initalized";
@@ -99,29 +117,34 @@ InitStatus MpdV0FinderBasic::Init()
       LOG(ERROR) << "No MpdEvent/MiniDstEvent in tree";
       return kFATAL;
    }
+   if (fDauMon1) {
+      fDauMon1->Init();
+      fDauMon2->Init();
+   }
+   if (fV0Mon) fV0Mon->Init();
    fInit = kTRUE;
    return kSUCCESS;
 }
 
-void MpdV0FinderBasic::SetPositiveDaughterCut(const MpdV0DaughterCut &cut)
+void MpdV0Finder::SetPositiveDaughterCut(const MpdV0DaughterCut &cut)
 {
    if (fPositiveDaughterCut) delete fPositiveDaughterCut;
    fPositiveDaughterCut = (MpdV0DaughterCut *)cut.Clone();
 }
 
-void MpdV0FinderBasic::SetNegativeDaughterCut(const MpdV0DaughterCut &cut)
+void MpdV0Finder::SetNegativeDaughterCut(const MpdV0DaughterCut &cut)
 {
    if (fNegativeDaughterCut) delete fNegativeDaughterCut;
    fNegativeDaughterCut = (MpdV0DaughterCut *)cut.Clone();
 }
 
-void MpdV0FinderBasic::SetCandicateCut(const MpdV0CandidateCut &cut)
+void MpdV0Finder::SetCandicateCut(const MpdV0CandidateCut &cut)
 {
    if (fCandicateCut) delete fCandicateCut;
    fCandicateCut = (MpdV0CandidateCut *)cut.Clone();
 }
 
-MpdV0FinderBasic &MpdV0FinderBasic::operator=(const MpdV0FinderBasic &other)
+MpdV0Finder &MpdV0Finder::operator=(const MpdV0Finder &other)
 {
    if (this == &other) return *this;
    fFormat     = other.fFormat;
@@ -146,5 +169,51 @@ MpdV0FinderBasic &MpdV0FinderBasic::operator=(const MpdV0FinderBasic &other)
    if (other.fCandicateCut) {
       fCandicateCut = (MpdV0CandidateCut *)other.fCandicateCut->Clone();
    }
+
+   if (other.fDauMon1) {
+      fDauMon1 = other.fDauMon1->MakeCopy();
+   }
+   if (other.fDauMon2) {
+      fDauMon2 = other.fDauMon1->MakeCopy();
+   }
+   if (other.fV0Mon) {
+      fV0Mon = other.fV0Mon->MakeCopy();
+   }
    return *this;
+}
+
+void MpdV0Finder::SetDaugherMonitor(const MpdV0DaughterMonitor &mon)
+{
+   if (fDauMon1) {
+      delete fDauMon1;
+      delete fDauMon2;
+   }
+   fDauMon1 = mon.MakeCopy();
+   fDauMon2 = mon.MakeCopy();
+}
+
+void MpdV0Finder::SetV0Monitor(const MpdV0CandidateMonitor &mon)
+{
+   if (fV0Mon) delete fV0Mon;
+   fV0Mon = mon.MakeCopy();
+}
+
+void MpdV0Finder::FinishTask()
+{
+   if (fDauMon1 != nullptr || fV0Mon != nullptr) {
+      TDirectory *dir = (TDirectory *)gFile;
+      dir->mkdir(GetName(), "V0Monitors");
+      dir->cd(GetName());
+      if (fDauMon1) {
+         std::vector<TH1 *> vec1 = fDauMon1->GetHistograms("PosDau");
+         std::vector<TH1 *> vec2 = fDauMon2->GetHistograms("NegDau");
+         for (auto i : vec1) i->Write();
+         for (auto i : vec2) i->Write();
+      }
+      if (fV0Mon) {
+         std::vector<TH1 *> vec = fV0Mon->GetHistograms("V0Mon");
+         for (auto i : vec) i->Write();
+      }
+      dir->cd();
+   }
 }
