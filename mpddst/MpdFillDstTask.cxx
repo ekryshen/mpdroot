@@ -83,7 +83,7 @@ InitStatus MpdFillDstTask::Init()
    fHistZdc2En         = (TH2F *)manager->GetObject("HistZdc2En");             // EL
    fZdcSkeletonesSaved = 0;
    if (fPID == nullptr) {
-      fPID = new MpdPid(0, 0, 0, 1, "DEFAULT", "CF", "pi+ka+el+pr");
+      fPID = new MpdPid(0, 0, 0, 0.1, "DEFAULT", "CF", "pi+ka+el+pr");
       // PID with cluster finder
       // 	fPID->Init("DEFAULT","CF","");
    }
@@ -476,16 +476,16 @@ MpdTrack *MpdFillDstTask::AddPrimaryTrack()
 void MpdFillDstTask::FillTrackDCA(MpdTrack *track, TVector3 *recoVertex, TVector3 *mcVertex)
 {
    MpdHelix helix = track->GetHelix();
-   Double_t path_at_mcVertex;
+   // Double_t path_at_mcVertex;
    Double_t path_at_recoVertex;
-   path_at_mcVertex   = helix.pathLength(*mcVertex);
+   // path_at_mcVertex   = helix.pathLength(*mcVertex);
    path_at_recoVertex = helix.pathLength(*recoVertex);
-   TVector3 DCA_MC    = helix.at(path_at_mcVertex);
-   TVector3 DCA_RECO  = helix.at(path_at_recoVertex);
+   // TVector3 DCA_MC    = helix.at(path_at_mcVertex);
+   TVector3 DCA_RECO = helix.at(path_at_recoVertex);
    // set dca global as dca to MC vertex DW
-   track->SetDCAGlobalX(DCA_MC.X() - mcVertex->X());
-   track->SetDCAGlobalY(DCA_MC.Y() - mcVertex->Y());
-   track->SetDCAGlobalZ(DCA_MC.Z() - mcVertex->Z());
+   //  track->SetDCAGlobalX(DCA_MC.X() - mcVertex->X());
+   //  track->SetDCAGlobalY(DCA_MC.Y() - mcVertex->Y());
+   //  track->SetDCAGlobalZ(DCA_MC.Z() - mcVertex->Z());
    // set dca as dca to reconstructed vertex DW
    track->SetDCAX(DCA_RECO.X() - recoVertex->X());
    track->SetDCAY(DCA_RECO.Y() - recoVertex->Y());
