@@ -14,11 +14,12 @@
 #include <FairTask.h>
 #include <RtypesCore.h>
 #include <TMatrixDfwd.h>
+#include <TVector3.h>
 #include <TMatrixDSymfwd.h>
 #include <vector>
 
-#include "MpdV0FinderBasic.h"
 #include "KFPTrackVector.h"
+#include "MpdV0Finder.h"
 
 class MpdTpcKalmanTrack;
 
@@ -26,7 +27,7 @@ class MpdMiniTrack;
 
 class KFParticleTopoReconstructor;
 
-class MpdV0FinderKFPackage : public MpdV0FinderBasic {
+class MpdV0FinderKFPackage : public MpdV0Finder {
 protected:
    KFParticleTopoReconstructor *fKFFinder;
    TClonesArray *               fMiniCovMatrix;

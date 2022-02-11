@@ -50,6 +50,7 @@ void MpdV0Matcher::MatchV0ByMomentum()
       PrepareMomentumMatchinMiniDst();
    } break;
    }
+   LOG(debug) << "momentum matching";
    Int_t matched = 0;
    for (int i = 0; i < fV0s->GetEntriesFast(); i++) {
       if (fLinks->GetLink(i) >= 0) continue;  // this track is already matched !
@@ -74,6 +75,7 @@ void MpdV0Matcher::MatchV0ByMomentum()
       fLinks->SetLink(i, minIndex);
       if (minIndex >= 0) matched++;
    }
+   LOG(debug) << "matched" << matched;
 }
 
 InitStatus MpdV0Matcher::Init()
@@ -124,6 +126,7 @@ void MpdV0Matcher::Exec(Option_t *option)
          fLinks->PushBack(-1);
       }
    }
+   LOG(debug) << "Total V0 candidates: " << fV0s->GetEntriesFast();
    switch (fMethod) {
    case EMatchType::kMatchByMomentum: {
       MatchV0ByMomentum();
@@ -231,7 +234,8 @@ template <class T1, class T2>
 void MpdV0Matcher::MatchByDaughters()
 {
    TClonesArray *tracks = fMpdEvent->GetGlobalTracks();
-
+   LOG(debug) << "mother matching" << fV0s->GetEntriesFast();
+   int matched = 0;
    for (int i = 0; i < fV0s->GetEntriesFast(); i++) {
       if (fLinks->GetLink(i) >= 0) continue;  // this track is already matched !
       if (fLinks->GetLink(i) == -2) continue; // this track is marked as bad !
@@ -249,6 +253,7 @@ void MpdV0Matcher::MatchByDaughters()
       }
       Int_t mother1 = GetMother<T2>(simtrack1);
       Int_t mother2 = GetMother<T2>(simtrack2);
+
       if (mother2 != mother1) { // different mothers
          fLinks->SetLink(i, -2);
          continue;
@@ -264,8 +269,10 @@ void MpdV0Matcher::MatchByDaughters()
       T2 *motherV0 = GetSimTrack<T2>(mother1);
       if (GetPdgCode<T2>(motherV0) == track->GetPdg()) {
          fLinks->SetLink(i, GetMother<T2>(simtrack1)); // yeay this is our V0
+         matched++;
       } else {
          fLinks->SetLink(i, -2); // cannot match this is not our V0
       }
    }
+   LOG(debug) << "matched no" << matched << endl;
 }

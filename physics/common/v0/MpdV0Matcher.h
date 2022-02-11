@@ -96,7 +96,7 @@ protected:
       if constexpr (std::is_same<T, MpdMCTrack>::value) {
          return val->GetPdgCode();
       } else {
-         return val->id();
+         return val->pdgId();
       }
    }
    template <class T>
@@ -117,7 +117,9 @@ protected:
          } else
             return nullptr;
       } else {
-         if (reco->mcTrackIndex() != 0) return GetMCtrackMiniDst(reco->mcTrackIndex());
+         if (reco->mcTrackIndex() != 0) {
+            return GetMCtrackMiniDst(reco->mcTrackIndex());
+         }
          return nullptr;
       }
    }
@@ -129,7 +131,7 @@ protected:
    inline MpdMCTrack *    GetMCTrackDst(Int_t index) const { return (MpdMCTrack *)fMcTracks->UncheckedAt(index); };
    inline MpdMiniMcTrack *GetMCtrackMiniDst(Int_t index) const
    {
-      return (MpdMiniMcTrack *)fMiniTracks->UncheckedAt(index);
+      return (MpdMiniMcTrack *)fMiniMcTracks->UncheckedAt(index);
    }
    void               MatchV0ByMomentum();
    void               MatchByMc();

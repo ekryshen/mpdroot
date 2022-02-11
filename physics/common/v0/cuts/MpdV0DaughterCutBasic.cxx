@@ -12,6 +12,7 @@
 
 #include <TMathBase.h>
 #include <TVector3.h>
+#include <iostream>
 
 #include "MpdTrack.h"
 #include "MpdMiniTrack.h"
@@ -71,6 +72,7 @@ Bool_t MpdV0DaughterCutBasic::PassDstTrack(MpdTrack &track) const
 
 Bool_t MpdV0DaughterCutBasic::PassMiniDstTrack(MpdMiniTrack &track) const
 {
+
    if (track.charge() != fCharge) return kFALSE;
    if (track.nHits() < fNHitsTpcLow) return kFALSE;
    if (track.nHits() > fNHitsTpcHigh) return kFALSE;

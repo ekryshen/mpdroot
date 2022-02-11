@@ -11,11 +11,11 @@
 #ifndef MPDROOT_PHYSICS_COMMON_V0_MPDV0FINDERHELIX_H_
 #define MPDROOT_PHYSICS_COMMON_V0_MPDV0FINDERHELIX_H_
 
-#include "MpdV0FinderBasic.h"
 #include "MpdHelix.h"
 #include <vector>
+#include "MpdV0Finder.h"
 
-class MpdV0FinderHelix : public MpdV0FinderBasic {
+class MpdV0FinderHelix : public MpdV0Finder {
 public:
    class NestedHelix : public MpdHelix {
    public:
@@ -33,7 +33,8 @@ protected:
    virtual InitStatus       Init();
 
 public:
-   MpdV0FinderHelix(Int_t pidMom = 3122, Int_t pidFirstDau = 211, Int_t pidSecDau = 2212);
+   MpdV0FinderHelix(TString name = "LambdaFinder", Int_t pidMom = 3122, Int_t pidFirstDau = 211,
+                    Int_t pidSecDau = 2212);
    virtual ~MpdV0FinderHelix(){};
    MpdV0FinderHelix(const MpdV0FinderHelix &other) = default;
    MpdV0FinderHelix &operator=(const MpdV0FinderHelix &other) = default;

@@ -36,7 +36,7 @@
 #include "KFPTrack.h"
 
 MpdV0FinderKFPackage::MpdV0FinderKFPackage(Int_t pidMom, Int_t pidFirstDau, Int_t pidSecDau)
-   : MpdV0FinderBasic(pidMom, pidFirstDau, pidSecDau), fKFFinder(nullptr), fMiniCovMatrix(nullptr)
+   : MpdV0Finder(pidMom, pidFirstDau, pidSecDau), fKFFinder(nullptr), fMiniCovMatrix(nullptr)
 {
 }
 
@@ -123,7 +123,7 @@ InitStatus MpdV0FinderKFPackage::Init()
    if (FairRootManager::Instance()->GetObject("Event") != nullptr) { // minist file
       fMiniCovMatrix = (TClonesArray *)FairRootManager::Instance()->GetObject("TrackCovMatrix");
    }
-   return MpdV0FinderBasic ::Init();
+   return MpdV0Finder ::Init();
 }
 std::vector<float> MpdV0FinderKFPackage::GetCovMatrixMini(Int_t index, Double_t *newParams)
 {

@@ -10,6 +10,7 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_SOURCE_DIR}/mpddst/MpdMiniEvent
   ${CMAKE_SOURCE_DIR}/physics/common/v0
   ${CMAKE_SOURCE_DIR}/physics/common/v0/cuts
+    ${CMAKE_SOURCE_DIR}/physics/common/v0/monitors
   ${CMAKE_SOURCE_DIR}/external/nicafemto/features
   ${CMAKE_SOURCE_DIR}/external/kfparticle/KFParticle
 )
@@ -36,7 +37,13 @@ set(SRCS
 	cuts/MpdV0CandidateCutBasic.cxx
 	cuts/MpdV0CandidateCutKalman.cxx
 	
-	MpdV0FinderBasic.cxx
+	monitors/MpdV0CandidateMonitor.cxx
+	monitors/MpdV0DaughterMonitor.cxx
+	monitors/MpdV0Monitor.cxx
+	monitors/MpdV0StandardCandidateMonitor.cxx
+	monitors/MpdV0StandardDaughterMonitor.cxx
+	
+	MpdV0Finder.cxx
     MpdV0FinderHelix.cxx
     MpdV0FinderKFPackage.cxx
     MpdV0Matcher.cxx

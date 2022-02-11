@@ -19,14 +19,20 @@
 #pragma link C++ class MpdV0DaughterCutBasic + ;
 #pragma link C++ class MpdV0CandidateCutKalman + ;
 
-#pragma link C++ class MpdV0FinderBasic + ;
+#pragma link C++ class MpdV0Finder + ;
 #pragma link C++ class MpdV0FinderHelix + ;
 #pragma link C++ class MpdV0FinderKFPackage + ;
 #pragma link C++ class MpdV0Matcher + ;
 
-#pragma link C++ namespace MpdCommonV0;
+#pragma link C++ namespace MpdV0;
 #pragma link C++ enum MpdCommonV0::EParticleType;
 #pragma link C++ enum MpdCommonV0::ESigmaType;
+
+#pragma link C++ class MpdV0CandidateMonitor + ;
+#pragma link C++ class MpdV0StandardCandidateMonitor + ;
+#pragma link C++ class MpdV0DaughterMonitor + ;
+#pragma link C++ class MpdV0StandardDaughterMonitor + ;
+#pragma link C++ class MpdV0Monitor + ;
 
 #pragma link C++ class MpdV0Particle + ;
 #pragma link C++ class MpdV0Track + ;
