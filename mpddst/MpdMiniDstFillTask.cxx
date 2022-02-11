@@ -1449,17 +1449,14 @@ void MpdMiniDstFillTask::findMcParent(Int_t index)
    Int_t       motherIndex = track->GetMotherId();
    if (motherIndex < 0) return;
    if (motherIndex > fMCTracks->GetEntriesFast()) return;
-   std::cout << "TD" << fTrivDecay << std::endl;
    if (!fTrivDecay) { // reject "trivial decays:
       MpdMCTrack *mother = (MpdMCTrack *)fMCTracks->UncheckedAt(motherIndex);
-      std::cout << "check triv " << mother->GetPdgCode() << std::endl;
       if (mother->GetPdgCode() == 2212) return;                // proton
       if (mother->GetPdgCode() == 2112) return;                // neutron
       if (mother->GetPdgCode() == -2212) return;               // anti-proton
       if (mother->GetPdgCode() == -2112) return;               // anti-neutron
       if (mother->GetPdgCode() == 22) return;                  // photon
       if (mother->GetPdgCode() == track->GetPdgCode()) return; // pdg not changed
-      std::cout << "accepted" << std::endl;
    }
    fMapRec[motherIndex] = true;
    findMcParent(motherIndex);
