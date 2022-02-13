@@ -32,7 +32,7 @@ MpdPtTask::~MpdPtTask()
 // -------------------------------------------------------------------
 InitStatus MpdPtTask::Init()
 {
-  cout<<"\n-I- [MpdEvPlTask::Init] " <<endl;  
+  cout<<"\n-I- [MpdPtTask::Init] " <<endl;  
   
   FairRootManager *manager = FairRootManager::Instance();
 
@@ -56,7 +56,7 @@ InitStatus MpdPtTask::Init()
 void MpdPtTask::Exec(Option_t * option)
 {
   fEventCounter++;
-  cout<<"-I- [MpdEvPlTask::Exec] " << "{" << fEventCounter << "}" <<endl;
+  cout<<"-I- [MpdPtTask::Exec] " << "{" << fEventCounter << "}" <<endl;
     
   //MpdEvent *mpdEvent = fDstEvent; // one event by one event
   //event->Dump(); 
