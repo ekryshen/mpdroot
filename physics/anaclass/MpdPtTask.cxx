@@ -1,6 +1,6 @@
 // skelet
 
-#ifndef ROOT_MpdEvPlTask
+#ifndef ROOT_MpdPtTask
 #include "MpdPtTask.h"
 #endif
 
@@ -130,9 +130,8 @@ void MpdPtTask::Reset()
 // -------------------------------------------------------------------
 void MpdPtTask::Finish()
 {
-  //cout<<"\n-I- [MpdEvPlTask::Finish] "<< endl;
+  //cout<<"\n-I- [MpdPtTask::Finish] "<< endl;
   
-  //TFile fileOut("MinvRho0.root","recreate");
   Double_t scale = 1./ (Double_t) fEventCounter;
   
   fhistPt->Scale(scale); // scale to total number of events
