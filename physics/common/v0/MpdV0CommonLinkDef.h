@@ -18,6 +18,7 @@
 #pragma link C++ class MpdV0DaughterCut + ;
 #pragma link C++ class MpdV0DaughterCutBasic + ;
 #pragma link C++ class MpdV0CandidateCutKalman + ;
+#pragma link C++ class MpdV0FinderCut + ;
 
 #pragma link C++ class MpdV0Finder + ;
 #pragma link C++ class MpdV0FinderHelix + ;

@@ -10,9 +10,6 @@
 
 #include "MpdV0DaughterCut.h"
 
-#include "MpdMiniEvent.h"
+#include <TClonesArray.h>
 
-void MpdV0DaughterCut::SetMiniDstEventInfo(MpdMiniEvent &event)
-{
-   fVertex = event.primaryVertex();
-}
+#include "MpdMiniEvent.h"

@@ -45,10 +45,6 @@ void MpdV0FinderKFPackage::ExecDst(Option_t *option) {}
 void MpdV0FinderKFPackage::ExecMiniDst(Option_t *option)
 {
    fKFFinder->Clear();
-   MpdMiniEvent *event = static_cast<MpdMiniEvent *>(fMiniEvents->UncheckedAt(0));
-   fEventVertex        = event->primaryVertex();
-   fPositiveDaughterCut->SetMiniDstEventInfo(*event);
-   fNegativeDaughterCut->SetMiniDstEventInfo(*event);
    KFPVertex kfVertex;
    kfVertex.SetXYZ(fEventVertex.X(), fEventVertex.Y(), fEventVertex.Z());
    kfVertex.SetCovarianceMatrix(0, 0, 0, 0, 0, 0);

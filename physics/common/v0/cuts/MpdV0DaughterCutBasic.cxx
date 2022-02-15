@@ -90,9 +90,9 @@ Bool_t MpdV0DaughterCutBasic::PassMiniDstTrack(MpdMiniTrack &track) const
       if (track.nSigmaProton() > fSigmaHigh) return kFALSE;
    } break;
    }
-   Double_t dcaZ = track.origin().z() - fVertex.Z();
-   Double_t dcaX = track.origin().x() - fVertex.X();
-   Double_t dcaY = track.origin().y() - fVertex.Y();
+   Double_t dcaZ = track.origin().z() - GetVertex().Z();
+   Double_t dcaX = track.origin().x() - GetVertex().X();
+   Double_t dcaY = track.origin().y() - GetVertex().Y();
 
    if (TMath::Abs(dcaZ) < fDcaZ) return kFALSE;
    if (dcaX * dcaX + dcaY * dcaY < fDcaXY2) return kFALSE;

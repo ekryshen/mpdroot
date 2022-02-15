@@ -30,7 +30,6 @@ protected:
    std::vector<NestedHelix> fSecondHelix;
    virtual void             ExecMiniDst(Option_t *option);
    virtual void             ExecDst(Option_t *option);
-   virtual InitStatus       Init();
 
 public:
    MpdV0FinderHelix(TString name = "LambdaFinder", Int_t pidMom = 3122, Int_t pidFirstDau = 211,

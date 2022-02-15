@@ -31,6 +31,8 @@ public:
    void                  SetDCAAxis(Int_t bins, Double_t min, Double_t max) { SetXaxis1d(0, bins, min, max); };
    void                  SetTpcDeDxXaxis(Int_t bins, Double_t min, Double_t max) { SetXaxis2d(0, bins, min, max); };
    void                  SetTpcDeDxYaxis(Int_t bins, Double_t min, Double_t max) { SetYaxis2d(0, bins, min, max); };
+   void                  SetTofPAxis(Int_t bins, Double_t min, Double_t max) { SetXaxis2d(1, bins, min, max); }
+   void                  SetTofM2Axis(Int_t bins, Double_t min, Double_t max) { SetYaxis2d(1, bins, min, max); }
    virtual void          Init();
    virtual void          FillDstTrack(const MpdTrack &track, Bool_t status);
    virtual void          FillMiniDstTrack(const MpdMiniTrack &track, Bool_t status);

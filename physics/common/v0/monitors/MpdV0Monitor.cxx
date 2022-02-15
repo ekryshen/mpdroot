@@ -9,9 +9,13 @@
  */
 
 #include "MpdV0Monitor.h"
+#include <TH2D.h>
 #include <iostream>
 
-MpdV0Monitor::MpdV0Monitor() : fMpdEvent(nullptr), fMiniEvent(nullptr), fInit(kFALSE) {}
+MpdV0Monitor::MpdV0Monitor()
+   : fMpdEvent(nullptr), fMiniEvent(nullptr), fMiniTracks(nullptr), fMiniTofData(nullptr), fInit(kFALSE)
+{
+}
 
 void MpdV0Monitor::MakeHistogram1d(TString name, TString xlabel, Int_t histoId)
 {
@@ -38,7 +42,8 @@ void MpdV0Monitor::MakeHistogram2d(TString name, TString xlabel, TString ylabel,
                axisConfX.Z(), axisConfY.X(), axisConfY.Y(), axisConfY.Z());
 }
 
-MpdV0Monitor::MpdV0Monitor(Int_t d1, Int_t d2) : fMpdEvent(nullptr), fMiniEvent(nullptr), fInit(kFALSE)
+MpdV0Monitor::MpdV0Monitor(Int_t d1, Int_t d2)
+   : fMpdEvent(nullptr), fMiniEvent(nullptr), fMiniTracks(nullptr), fMiniTofData(nullptr), fInit(kFALSE)
 {
    fHistogram1dXaxis.resize(d1);
    fHistograms1dPassed.resize(d1);
@@ -59,7 +64,8 @@ MpdV0Monitor::MpdV0Monitor(Int_t d1, Int_t d2) : fMpdEvent(nullptr), fMiniEvent(
    }
 }
 
-MpdV0Monitor::MpdV0Monitor(const MpdV0Monitor &other) : fInit(other.fInit), fMpdEvent(nullptr), fMiniEvent(nullptr)
+MpdV0Monitor::MpdV0Monitor(const MpdV0Monitor &other)
+   : fInit(other.fInit), fMpdEvent(nullptr), fMiniEvent(nullptr), fMiniTracks(nullptr), fMiniTofData(nullptr)
 {
 
    auto copyStuff = [](std::vector<TH1 *> &this_vec, const std::vector<TH1 *> &other_vec) {

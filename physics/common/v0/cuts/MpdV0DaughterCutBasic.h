@@ -18,13 +18,13 @@
 
 class MpdV0DaughterCutBasic : public MpdV0DaughterCut {
 protected:
-   Int_t                   fCharge;
-   Double_t                fDcaXY2;
-   Double_t                fDcaZ;
-   Double_t                fSigmaLow;
-   Double_t                fSigmaHigh;
-   Double_t                fNHitsTpcLow;
-   Double_t                fNHitsTpcHigh;
+   Int_t             fCharge;
+   Double_t          fDcaXY2;
+   Double_t          fDcaZ;
+   Double_t          fSigmaLow;
+   Double_t          fSigmaHigh;
+   Double_t          fNHitsTpcLow;
+   Double_t          fNHitsTpcHigh;
    MpdV0::ESigmaType fSigmaType;
 
 public:

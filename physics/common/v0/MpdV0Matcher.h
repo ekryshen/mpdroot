@@ -140,9 +140,9 @@ protected:
 
 public:
    MpdV0Matcher(MpdV0::EParticleType pidHypo = MpdV0::EParticleType::kPdgHypo,
-                EMatchType           type    = EMatchType::kMatchByMomentum);
+                EMatchType           type    = EMatchType::kMatchByBothDaughters);
    void SetPidHypo(MpdV0::EParticleType pidHypo) { fPidHipo = pidHypo; };
-   void SetMethod(EMatchType type) { fMethod = type; };
+   void SetMatchingMethod(EMatchType type) { fMethod = type; };
    void Write(Bool_t write) { fWrite = write; }
    /**
     * set maximum momentum difference (in percent) between found V0 and matched MC V0, if this value is bigger

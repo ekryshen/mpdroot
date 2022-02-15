@@ -41,6 +41,7 @@ protected:
    MpdEvent *                               fMpdEvent;
    TClonesArray *                           fMiniEvents;
    TClonesArray *                           fMiniTracks;
+   TClonesArray *                           fMiniTofData;
    TClonesArray *                           fV0s;
    std::vector<std::pair<TObject *, Int_t>> fPositiveDaughters;
    std::vector<std::pair<TObject *, Int_t>> fNegativeDaughters;
@@ -53,6 +54,8 @@ protected:
    MpdV0DaughterMonitor *                   fDauMon1;
    MpdV0DaughterMonitor *                   fDauMon2;
    MpdV0CandidateMonitor *                  fV0Mon;
+   void                                     SetDstData();
+   void                                     SetMiniDstData();
 
 public:
    MpdV0Finder(TString name = "LambdaFinder", Int_t pidMom = 3122, Int_t pidFirstDau = 211, Int_t pidSecDau = 2212);

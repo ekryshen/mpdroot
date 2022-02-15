@@ -11,20 +11,27 @@
 #ifndef MPDROOT_PHYSICS_COMMON_V0_MONITORS_MPDV0MONITOR_H_
 #define MPDROOT_PHYSICS_COMMON_V0_MONITORS_MPDV0MONITOR_H_
 
+#include <Rtypes.h>
 #include <RtypesCore.h>
+#include <TClonesArray.h>
 #include <TH1.h>
-#include <TH2.h>
+#include <TObjArray.h>
 #include <TString.h>
 #include <TVector3.h>
-#include <utility>
+#include <vector>
+
+#include "MpdMiniBTofPidTraits.h"
 
 class MpdEvent;
 class MpdMiniEvent;
+class MpdMiniTrack;
 
 class MpdV0Monitor : public TObject {
 private:
-   MpdEvent *            fMpdEvent;  //!
-   MpdMiniEvent *        fMiniEvent; //!
+   MpdEvent *            fMpdEvent;    //!
+   MpdMiniEvent *        fMiniEvent;   //!
+   TClonesArray *        fMiniTracks;  //!
+   TClonesArray *        fMiniTofData; //!
    std::vector<TH1 *>    fHistograms1dPassed;
    std::vector<TH1 *>    fHistograms1dFailed;
    std::vector<TH1 *>    fHistograms2dPassed;
@@ -60,19 +67,45 @@ protected:
    {
       fHistogram2dYaxis[histoID].SetXYZ(bins, min, max);
    };
-   void          MakeHistogram1d(TString name, TString xlabel, Int_t histoId);
-   void          MakeHistogram2d(TString name, TString xlabel, TString ylabel, Int_t histoId);
+   /**
+    * makes 1 dimensional histogram, should be called in Init
+    * @param name name of histogram
+    * @param xlabel label of X-axis
+    * @param histoId - position of histogram in array with 1D histograms
+    */
+   void MakeHistogram1d(TString name, TString xlabel, Int_t histoId);
+   /**
+    * makes 2D histogram, should be called in Init
+    * @param name name of histogram
+    * @param xlabel label of X-axis
+    * @param ylabel label of Y-axis
+    * @param histoId - position of histogram in array of 2D histograms
+    */
+   void MakeHistogram2d(TString name, TString xlabel, TString ylabel, Int_t histoId);
+   /**
+    * @return MpdEvent, works only for DST
+    */
    MpdEvent *    GetEvent() const { return fMpdEvent; };
    MpdMiniEvent *GetMiniEvent() const { return fMiniEvent; };
-   void          PushHistogram(std::vector<TH1 *> vec, TH1 *histo, TString name) const;
+   MpdMiniTrack *GetMiniTracks(Int_t index) const { return (MpdMiniTrack *)fMiniTracks->UncheckedAt(index); };
+
+   MpdMiniBTofPidTraits *GetTofPidTraits(Int_t index) const
+   {
+      return (MpdMiniBTofPidTraits *)fMiniTofData->UncheckedAt(index);
+   }
 
 public:
    MpdV0Monitor();
    MpdV0Monitor(Int_t d1, Int_t d2);
    MpdV0Monitor(const MpdV0Monitor &other);
-   virtual void       Init() = 0;
-   virtual void       SetMiniEvent(MpdMiniEvent *ev) { fMiniEvent = ev; };
-   virtual void       SetEvent(MpdEvent *ev) { fMpdEvent = ev; }
+   virtual void Init() = 0;
+   virtual void SetMiniEventData(MpdMiniEvent *ev, TClonesArray *tracks, TClonesArray *tof)
+   {
+      fMiniEvent   = ev;
+      fMiniTracks  = tracks;
+      fMiniTofData = tof;
+   };
+   virtual void       SetEventData(MpdEvent *ev) { fMpdEvent = ev; }
    std::vector<TH1 *> GetHistograms(TString name) const;
    virtual ~MpdV0Monitor();
    ClassDef(MpdV0Monitor, 1)

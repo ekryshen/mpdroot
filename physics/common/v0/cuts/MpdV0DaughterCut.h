@@ -11,22 +11,23 @@
 #ifndef MPDROOT_PHYSICS_COMMON_V0_MPDV0DAUGHTERCUT_H_
 #define MPDROOT_PHYSICS_COMMON_V0_MPDV0DAUGHTERCUT_H_
 
+#include <Rtypes.h>
 #include <RtypesCore.h>
 #include <TVector3.h>
+
+#include "MpdV0FinderCut.h"
 
 class MpdMiniEvent;
 
 class MpdMiniTrack;
 class MpdTrack;
+class TClonesArray;
 
-class MpdV0DaughterCut : public TObject {
-protected:
-   TVector3 fVertex;
+class MpdV0DaughterCut : public MpdV0FinderCut {
 
 public:
    MpdV0DaughterCut(){};
    virtual ~MpdV0DaughterCut(){};
-   void           SetMiniDstEventInfo(MpdMiniEvent &event);
    virtual Bool_t PassDstTrack(MpdTrack &track) const         = 0;
    virtual Bool_t PassMiniDstTrack(MpdMiniTrack &track) const = 0;
    MpdV0DaughterCut(const MpdV0DaughterCut &other)            = default;

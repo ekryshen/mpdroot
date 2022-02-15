@@ -18,25 +18,19 @@
 #include <TString.h>
 #include <TVector3.h>
 #include <utility>
+#include <iostream>
 
-#include "/opt/FairGroup/FairSoftInst_21/include/fairlogger/Logger.h"
-#include "../../../mpdbase/MpdEvent.h"
-#include "../../../mpdbase/MpdTrack.h"
-#include "../../../mpddst/MpdMiniEvent/MpdMiniEvent.h"
-#include "../../../mpddst/MpdMiniEvent/MpdMiniTrack.h"
-#include "cuts/MpdV0CandidateCut.h"
-#include "cuts/MpdV0DaughterCut.h"
-#include "monitors/MpdV0CandidateMonitor.h"
-#include "monitors/MpdV0DaughterMonitor.h"
+#include "FairLogger.h"
+#include "MpdEvent.h"
+#include "MpdTrack.h"
+#include "MpdMiniEvent.h"
+#include "MpdMiniTrack.h"
+#include "MpdV0CandidateCut.h"
+#include "MpdV0DaughterCut.h"
+#include "MpdV0CandidateMonitor.h"
+#include "MpdV0DaughterMonitor.h"
 #include "MpdV0Particle.h"
 #include "MpdV0Track.h"
-
-InitStatus MpdV0FinderHelix::Init()
-{
-   InitStatus stat = MpdV0Finder::Init();
-   if (stat != kSUCCESS) return stat;
-   return kSUCCESS;
-}
 
 void MpdV0FinderHelix::ExecMiniDst(Option_t *option)
 {
@@ -45,16 +39,7 @@ void MpdV0FinderHelix::ExecMiniDst(Option_t *option)
    Double_t      field  = event->bField();
    fFirstHelix.clear();
    fSecondHelix.clear();
-   fPositiveDaughterCut->SetMiniDstEventInfo(*event);
-   fNegativeDaughterCut->SetMiniDstEventInfo(*event);
    std::pair<TObject *, Int_t> data;
-   if (fDauMon1) {
-      fDauMon1->SetMiniEvent((MpdMiniEvent *)fMiniEvents->UncheckedAt(0));
-      fDauMon2->SetMiniEvent((MpdMiniEvent *)fMiniEvents->UncheckedAt(0));
-   }
-   if (fV0Mon) {
-      fV0Mon->SetMiniEvent((MpdMiniEvent *)fMiniEvents->UncheckedAt(0));
-   }
 
    for (int i = 0; i < fMiniTracks->GetEntriesFast(); i++) {
       MpdMiniTrack *track = (MpdMiniTrack *)fMiniTracks->UncheckedAt(i);
@@ -119,7 +104,7 @@ void MpdV0FinderHelix::ExecMiniDst(Option_t *option)
          }
       }
    }
-   LOG(debug) << "Found daughters: " << fPositiveDaughters.size() << " " << fNegativeDaughters.size();
+   LOG(debug) << "Found V0s: " << fV0s->GetEntriesFast();
 }
 
 void MpdV0FinderHelix::ExecDst(Option_t *option)
@@ -128,13 +113,8 @@ void MpdV0FinderHelix::ExecDst(Option_t *option)
    fFirstHelix.clear();
    fSecondHelix.clear();
    std::pair<TObject *, Int_t> data;
-   if (fDauMon1) {
-      fDauMon1->SetEvent(fMpdEvent);
-      fDauMon2->SetEvent(fMpdEvent);
-   }
-   if (fV0Mon) {
-      fV0Mon->SetEvent(fMpdEvent);
-   }
+   TVector3                    vertices(fMpdEvent->GetPrimaryVerticesX(), fMpdEvent->GetPrimaryVerticesY(),
+                     fMpdEvent->GetPrimaryVerticesZ());
    for (int i = 0; i < tracks->GetEntriesFast(); i++) {
       MpdTrack *track = (MpdTrack *)tracks->UncheckedAt(i);
       data.first      = track;
@@ -160,6 +140,7 @@ void MpdV0FinderHelix::ExecDst(Option_t *option)
    MpdV0Track candidate;
    TVector3   vertex(fMpdEvent->GetPrimaryVerticesX(), fMpdEvent->GetPrimaryVerticesY(),
                    fMpdEvent->GetPrimaryVerticesZ());
+
    for (int i = 0; i < fPositiveDaughters.size(); i++) {
       std::pair<TObject *, Int_t> data1;
       data1            = fPositiveDaughters[i];
@@ -205,6 +186,7 @@ void MpdV0FinderHelix::ExecDst(Option_t *option)
          }
       }
    }
+   LOG(debug) << "Found V0s: " << fV0s->GetEntriesFast();
 }
 
 MpdV0FinderHelix::MpdV0FinderHelix(TString name, Int_t pidMom, Int_t pidFirstDau, Int_t pidSecDau)

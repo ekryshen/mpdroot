@@ -18,6 +18,7 @@
 
 #include "FairLogger.h"
 #include "MpdEvent.h"
+#include "MpdMiniEvent.h"
 #include "MpdV0CandidateCut.h"
 #include "MpdV0DaughterCut.h"
 #include "MpdV0CandidateMonitor.h"
@@ -26,8 +27,8 @@
 MpdV0Finder::MpdV0Finder(TString name, Int_t pidMom, Int_t pidFirstDau, Int_t pidSecDau)
    : FairTask(name), fInit(kFALSE), fWrite(kFALSE), fFirstV0(kFALSE), fPidDauPos(pidSecDau), fPidDauNeg(pidFirstDau),
      fPidV0(pidMom), fFormat(EFormat::kDst), fMpdEvent(nullptr), fMiniEvents(nullptr), fMiniTracks(nullptr),
-     fV0s(nullptr), fPositiveDaughterCut(nullptr), fNegativeDaughterCut(nullptr), fCandicateCut(nullptr),
-     fDauMon1(nullptr), fDauMon2(nullptr), fV0Mon(nullptr)
+     fMiniTofData(nullptr), fV0s(nullptr), fPositiveDaughterCut(nullptr), fNegativeDaughterCut(nullptr),
+     fCandicateCut(nullptr), fDauMon1(nullptr), fDauMon2(nullptr), fV0Mon(nullptr)
 {
 }
 
@@ -44,7 +45,7 @@ MpdV0Finder::~MpdV0Finder()
 MpdV0Finder::MpdV0Finder(const MpdV0Finder &other)
    : FairTask(), fInit(kFALSE), fWrite(other.fWrite), fFirstV0(other.fFirstV0), fPidDauPos(other.fPidDauPos),
      fPidDauNeg(other.fPidDauNeg), fPidV0(other.fPidV0), fFormat(other.fFormat), fMpdEvent(nullptr),
-     fMiniEvents(nullptr), fMiniTracks(nullptr), fV0s(nullptr), fPositiveDaughterCut(nullptr),
+     fMiniEvents(nullptr), fMiniTracks(nullptr), fMiniTofData(nullptr), fV0s(nullptr), fPositiveDaughterCut(nullptr),
      fNegativeDaughterCut(nullptr), fCandicateCut(nullptr), fDauMon1(nullptr), fDauMon2(nullptr), fV0Mon(nullptr)
 {
    if (other.fPositiveDaughterCut) {
@@ -73,8 +74,16 @@ void MpdV0Finder::Exec(Option_t *option)
    fPositiveDaughters.clear();
    fNegativeDaughters.clear();
    switch (fFormat) {
-   case EFormat::kDst: ExecDst(option); break;
-   case EFormat::kMiniDst: ExecMiniDst(option);
+   case EFormat::kDst: {
+
+      SetDstData();
+      ExecDst(option);
+      break;
+   }
+   case EFormat::kMiniDst: {
+      SetMiniDstData();
+      ExecMiniDst(option);
+   }
    }
 }
 
@@ -88,6 +97,7 @@ InitStatus MpdV0Finder::Init()
    fMpdEvent             = (MpdEvent *)mngr->GetObject("MPDEvent.");
    fMiniEvents           = (TClonesArray *)mngr->GetObject("Event");
    fMiniTracks           = (TClonesArray *)mngr->GetObject("Track");
+   fMiniTofData          = (TClonesArray *)mngr->GetObject("BTofPidTraits");
    if (mngr->GetObject("MpdV0")) {
       fFirstV0 = kFALSE;
       fV0s     = (TClonesArray *)mngr->GetObject("MpdV0");
@@ -147,10 +157,11 @@ void MpdV0Finder::SetCandicateCut(const MpdV0CandidateCut &cut)
 MpdV0Finder &MpdV0Finder::operator=(const MpdV0Finder &other)
 {
    if (this == &other) return *this;
-   fFormat     = other.fFormat;
-   fMpdEvent   = nullptr;
-   fMiniEvents = nullptr;
-   fMiniTracks = nullptr;
+   fFormat      = other.fFormat;
+   fMpdEvent    = nullptr;
+   fMiniEvents  = nullptr;
+   fMiniTracks  = nullptr;
+   fMiniTofData = nullptr;
    if (fV0s) {
       delete fV0s;
       fV0s = nullptr;
@@ -196,6 +207,33 @@ void MpdV0Finder::SetV0Monitor(const MpdV0CandidateMonitor &mon)
 {
    if (fV0Mon) delete fV0Mon;
    fV0Mon = mon.MakeCopy();
+}
+
+void MpdV0Finder::SetDstData()
+{
+   if (fDauMon1) {
+      fDauMon1->SetEventData(fMpdEvent);
+      fDauMon2->SetEventData(fMpdEvent);
+   }
+   if (fV0Mon) fV0Mon->SetEventData(fMpdEvent);
+   fNegativeDaughterCut->SetEventData(fMpdEvent);
+   fPositiveDaughterCut->SetEventData(fMpdEvent);
+   fCandicateCut->SetEventData(fMpdEvent);
+}
+
+void MpdV0Finder::SetMiniDstData()
+{
+   MpdMiniEvent *event = static_cast<MpdMiniEvent *>(fMiniEvents->UncheckedAt(0));
+   if (fDauMon1) {
+      fDauMon1->SetMiniEventData(event, fMiniTracks, fMiniTofData);
+      fDauMon2->SetMiniEventData(event, fMiniTracks, fMiniTofData);
+   }
+   if (fV0Mon) {
+      fV0Mon->SetMiniEventData(event, fMiniTracks, fMiniTofData);
+   }
+
+   fPositiveDaughterCut->SetMiniEventData(event, fMiniTracks, fMiniTofData);
+   fNegativeDaughterCut->SetMiniEventData(event, fMiniTracks, fMiniTofData);
 }
 
 void MpdV0Finder::FinishTask()

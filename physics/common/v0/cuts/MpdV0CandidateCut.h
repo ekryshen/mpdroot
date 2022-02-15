@@ -13,7 +13,8 @@
 
 #include <Rtypes.h>
 #include <RtypesCore.h>
-#include <TObject.h>
+
+#include "MpdV0FinderCut.h"
 
 class KFParticleTopoReconstructor;
 
@@ -22,7 +23,7 @@ class MpdV0Track;
 /**
  * abstract class for rejecting bad V0 candidates
  */
-class MpdV0CandidateCut : public TObject {
+class MpdV0CandidateCut : public MpdV0FinderCut {
 
 public:
    MpdV0CandidateCut(){};
