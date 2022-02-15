@@ -44,13 +44,14 @@ Float_t MpdTrack::GetEta() const
 // -------------------------------------------------------------------
 ClassImp(MpdTrack);
 
-MpdHelix MpdTrack::GetHelix() const
+MpdHelix MpdTrack::GetHelix(Double_t fieldBz) const
 {
-   TVector3    mom(GetPx(), GetPy(), GetPz());
-   TVector3    pos(GetFirstPointX(), GetFirstPointY(), GetFirstPointZ());
-   Double_t    charge = GetCharge();
-   Double_t    Bz     = 0.5;
-   FairRunAna *run    = FairRunAna::Instance();
+   TVector3 mom(GetPx(), GetPy(), GetPz());
+   TVector3 pos(GetFirstPointX(), GetFirstPointY(), GetFirstPointZ());
+   Double_t charge = GetCharge();
+   if (fieldBz != 0) return MpdHelix(mom, pos, charge, fieldBz);
+   Double_t    Bz  = 0.5;
+   FairRunAna *run = FairRunAna::Instance();
    if (run) {
       FairField *field = run->GetField();
       if (field) Bz = FairRunAna::Instance()->GetField()->GetBz(0, 0, 0) * 0.1;
