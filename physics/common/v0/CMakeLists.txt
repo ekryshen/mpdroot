@@ -36,6 +36,7 @@ set(SRCS
 	cuts/MpdV0CandidateCut.cxx
 	cuts/MpdV0CandidateCutBasic.cxx
 	cuts/MpdV0CandidateCutKalman.cxx
+	cuts/MpdV0FinderCut.cxx
 	
 	monitors/MpdV0CandidateMonitor.cxx
 	monitors/MpdV0DaughterMonitor.cxx
