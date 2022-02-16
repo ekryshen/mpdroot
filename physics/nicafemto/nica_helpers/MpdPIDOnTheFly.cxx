@@ -41,7 +41,6 @@ void MpdPIDOnTheFly::Exec(Option_t *opt)
       for (int i = 0; i < tracks->GetEntriesFast(); i++) {
          MpdTrack *track = (MpdTrack *)tracks->UncheckedAt(i);
          FillTrackPID(track);
-         FillTrackDCA(track, fEventVector, fMCVector);
       }
    } else { // this is minidst
       for (int i = 0; i < fMiniTrack->GetEntriesFast(); i++) {
