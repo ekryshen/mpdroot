@@ -53,6 +53,7 @@ set(SRCS
 	MpdV0Track.cxx
 	MpdV0Namespace.cxx
 	MpdSimpleLinks.cxx
+	MpdDCAOnTheFly.cxx
 )
 
 Set(LINKDEF MpdV0CommonLinkDef.h)

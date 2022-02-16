@@ -25,6 +25,7 @@
 #pragma link C++ class MpdV0FinderKFPackage + ;
 #pragma link C++ class MpdV0Matcher + ;
 
+#pragma link C++ class MpdDCAOnTheFly + ;
 #pragma link C++ namespace MpdV0;
 #pragma link C++ enum MpdCommonV0::EParticleType;
 #pragma link C++ enum MpdCommonV0::ESigmaType;
