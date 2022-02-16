@@ -40,6 +40,7 @@ void MpdV0FinderHelix::ExecMiniDst(Option_t *option)
    fFirstHelix.clear();
    fSecondHelix.clear();
    std::pair<TObject *, Int_t> data;
+   TVector3                    center(0, 0, 0);
 
    for (int i = 0; i < fMiniTracks->GetEntriesFast(); i++) {
       MpdMiniTrack *track = (MpdMiniTrack *)fMiniTracks->UncheckedAt(i);
@@ -47,14 +48,14 @@ void MpdV0FinderHelix::ExecMiniDst(Option_t *option)
       data.second         = i;
       if (fPositiveDaughterCut->PassMiniDstTrack(*track)) {
          fPositiveDaughters.push_back(data);
-         fFirstHelix.push_back(NestedHelix(track->gMom(), track->gDCA(vertex), track->charge(), field * 0.1));
+         fFirstHelix.push_back(NestedHelix(track->gMom(), track->gDCA(center), track->charge(), field * 0.1));
          if (fDauMon1) fDauMon1->FillMiniDstTrack(*track, kTRUE);
       } else {
          if (fDauMon1) fDauMon1->FillMiniDstTrack(*track, kFALSE);
       }
       if (fNegativeDaughterCut->PassMiniDstTrack(*track)) {
          fNegativeDaughters.push_back(data);
-         fSecondHelix.push_back(NestedHelix(track->gMom(), track->gDCA(vertex), track->charge(), field * 0.1));
+         fSecondHelix.push_back(NestedHelix(track->gMom(), track->gDCA(center), track->charge(), field * 0.1));
          if (fDauMon2) fDauMon2->FillMiniDstTrack(*track, kTRUE);
       } else {
          if (fDauMon2) fDauMon2->FillMiniDstTrack(*track, kFALSE);
@@ -73,20 +74,19 @@ void MpdV0FinderHelix::ExecMiniDst(Option_t *option)
       NestedHelix &h1 = fFirstHelix[i];
       for (int j = 0; j < fNegativeDaughters.size(); j++) {
          std::pair<TObject *, Int_t> data2;
+         data2 = fNegativeDaughters[j];
          if (data1.second == data2.second) continue;
-         data2                = fNegativeDaughters[j];
+
          MpdMiniTrack *track2 = (MpdMiniTrack *)data2.first;
          Double_t      p2Tot  = track2->gMom().Mag();
          candidate.SetNegativeDaughterIndex(data2.second);
 
-         NestedHelix &             h2 = fSecondHelix[j];
-         std::pair<double, double> s  = h1.pathLengths(h2);
-         if (s.first < 0) s.first += h1.period();
-         if (s.second < 0) s.second += h2.period();
-         TVector3 pos1 = h1.at(s.first);
-         TVector3 mom1 = h1.cat(s.first) * p1Tot;
-         TVector3 pos2 = h2.at(s.second);
-         TVector3 mom2 = h2.cat(s.second) * p2Tot;
+         NestedHelix &             h2   = fSecondHelix[j];
+         std::pair<double, double> s    = h1.pathLengths(h2);
+         TVector3                  pos1 = h1.at(s.first);
+         TVector3                  mom1 = h1.cat(s.first) * p1Tot;
+         TVector3                  pos2 = h2.at(s.second);
+         TVector3                  mom2 = h2.cat(s.second) * p2Tot;
          candidate.SetMomPositiveDaughter(mom1);
          candidate.SetMomNegativeDaughter(mom2);
          candidate.SetDecayPoint((pos1 + pos2) * 0.5);
@@ -153,22 +153,21 @@ void MpdV0FinderHelix::ExecDst(Option_t *option)
 
       for (int j = 0; j < fNegativeDaughters.size(); j++) {
          std::pair<TObject *, Int_t> data2;
+         data2 = fNegativeDaughters[j];
          if (data1.second == data2.second) continue;
-         data2            = fNegativeDaughters[j];
+
          MpdTrack *track2 = (MpdTrack *)data2.first;
          Double_t  pt2    = track2->GetPt();
          Double_t  pz2    = track2->GetPz();
          Double_t  p2Tot  = TMath::Sqrt(pt2 * pt2 + pz2 * pz2);
          candidate.SetNegativeDaughterIndex(data2.second);
 
-         NestedHelix &             h2 = fSecondHelix[j];
-         std::pair<double, double> s  = h1.pathLengths(h2);
-         if (s.first < 0) s.first += h1.period();
-         if (s.second < 0) s.second += h2.period();
-         TVector3 pos1 = h1.at(s.first);
-         TVector3 mom1 = h1.cat(s.first) * p1Tot;
-         TVector3 pos2 = h2.at(s.second);
-         TVector3 mom2 = h2.cat(s.second) * p2Tot;
+         NestedHelix &             h2   = fSecondHelix[j];
+         std::pair<double, double> s    = h1.pathLengths(h2);
+         TVector3                  pos1 = h1.at(s.first);
+         TVector3                  mom1 = h1.cat(s.first) * p1Tot;
+         TVector3                  pos2 = h2.at(s.second);
+         TVector3                  mom2 = h2.cat(s.second) * p2Tot;
          candidate.SetMomPositiveDaughter(mom1);
          candidate.SetMomNegativeDaughter(mom2);
          candidate.SetDecayPoint((pos1 + pos2) * 0.5);
