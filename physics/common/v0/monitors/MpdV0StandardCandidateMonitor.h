@@ -31,6 +31,8 @@ public:
    void SetCosAxis(Int_t bins) { SetXaxis1d(1, bins, -1, 1); }
    void SetArmenterosAlphaAxis(Int_t bins, Double_t min, Double_t max) { SetXaxis2d(0, bins, min, max); }
    void SetArmenterosPtAxis(Int_t bins, Double_t min, Double_t max) { SetYaxis2d(0, bins, min, max); }
+   void SetDecayLenghtMonitor(Int_t bins, Double_t min, Double_t max) { SetXaxis1d(2, bins, min, max); };
+   void SetDau1to2(Int_t bins, Double_t min, Double_t max) { SetXaxis1d(3, bins, min, max); };
    void Init();
    void Fill(const MpdV0Particle &particle, Bool_t status);
    MpdV0CandidateMonitor *MakeCopy() const { return new MpdV0StandardCandidateMonitor(*this); }
