@@ -3,38 +3,39 @@
 # The extension is already found.  Any number of sources could be listed here.
 
 set(INCLUDE_DIRECTORIES
- ${BASE_INCLUDE_DIRECTORIES}
- ${CMAKE_SOURCE_DIR}/mpdbase
- ${CMAKE_SOURCE_DIR}/mpdpid
+  ${BASE_INCLUDE_DIRECTORIES}
+  ${CMAKE_SOURCE_DIR}/mpdbase
+  ${CMAKE_SOURCE_DIR}/mpdpid
 )
 
-Set(SYSTEM_INCLUDE_DIRECTORIES
- ${ROOT_INCLUDE_DIR}
+set(SYSTEM_INCLUDE_DIRECTORIES
+  ${ROOT_INCLUDE_DIR}
 )
 
 include_directories(${INCLUDE_DIRECTORIES})
 
 set(LINK_DIRECTORIES
- ${ROOT_LIBRARY_DIR}
- ${FAIRROOT_LIBRARY_DIR}
+  ${ROOT_LIBRARY_DIR}
+  ${FAIRROOT_LIBRARY_DIR}
 )
- 
-link_directories(${LINK_DIRECTORIES} )
+
+link_directories(${LINK_DIRECTORIES})
 
 # List of source files
 set(SRCS
-MpdPid.cxx
-MpdPidQA.cxx
+  MpdPid.cxx
+  MpdPidQA.cxx
 )
 
 # List of header files
-Set(HEADERS
-MpdPidUtils.h
-MpdPid.h
-MpdPidQA.h
+set(HEADERS
+  MpdPid.h
+  MpdPidQA.h
+  MpdPidUtils.h
 )
-Set(LINKDEF MpdPidLinkDef.h)
-Set(LIBRARY_NAME MpdPid)
-Set(DEPENDENCIES Hist)
+
+set(LINKDEF MpdPidLinkDef.h)
+set(LIBRARY_NAME MpdPid)
+set(DEPENDENCIES Hist)
 
 GENERATE_LIBRARY()

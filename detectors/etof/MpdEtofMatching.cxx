@@ -27,7 +27,6 @@
 #include "MpdTofGeoUtils.h"
 #include "MpdEtofGeoUtils.h"
 #include "MpdEtof.h"
-//#include "LMatchingFilter.h"
 #include "MpdTofMatchingQA.h"
 
 #include "MpdEtofMatching.h"

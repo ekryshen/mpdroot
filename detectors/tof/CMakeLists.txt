@@ -9,7 +9,7 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_SOURCE_DIR}/kalman
 )
 
-Set(SYSTEM_INCLUDE_DIRECTORIES
+set(SYSTEM_INCLUDE_DIRECTORIES
   ${ROOT_INCLUDE_DIR}
 )
 
@@ -42,9 +42,29 @@ set(SRCS
   MpdTofT0.cxx
 )
 
-set(HEADERS)
-Set(LINKDEF TofLinkDef.h)
-Set(LIBRARY_NAME Tof)
-Set(DEPENDENCIES MpdMCStack Kalman)
+set(HEADERS
+  IntervalTree.h
+  MpdTof.h
+  MpdTofBayesPid.h
+  MpdTofContFact.h
+  MpdTofGeo.h
+  MpdTofGeoPar.h
+  MpdTofGeoUtils.h
+  MpdTofHit.h
+  MpdTofHitProducer.h
+  MpdTofHitProducerIdeal.h
+  MpdTofHitProducerQA.h
+  MpdTofMatching.h
+  MpdTofMatchingData.h
+  MpdTofMatchingQA.h
+  MpdTOFpid.h
+  MpdTofPoint.h
+  MpdTofT0.h
+  MpdTofUtils.h
+)
+
+set(LINKDEF TofLinkDef.h)
+set(LIBRARY_NAME Tof)
+set(DEPENDENCIES MpdMCStack Kalman)
 
 GENERATE_LIBRARY()
