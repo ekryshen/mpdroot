@@ -120,7 +120,7 @@ build_tests:ubuntu:
   allow_failure: false
 
 deploy:centos7:
-  image: git.jinr.ru:5005/nica/docker-images/centos7/fair:latest
+  image: git.jinr.ru:5005/nica/docker-images/centos7/fair:apr21p1_v18.6.4
   environment:
     name: centos7
   tags:
