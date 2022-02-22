@@ -37,6 +37,7 @@ protected:
    Bool_t                                   fWrite;
    Bool_t                                   fFirstV0;
    Int_t                                    fPidDauPos, fPidDauNeg, fPidV0;
+   TString                                  fExternalPath;
    EFormat                                  fFormat;
    MpdEvent *                               fMpdEvent;
    TClonesArray *                           fMiniEvents;
@@ -56,12 +57,18 @@ protected:
    MpdV0CandidateMonitor *                  fV0Mon;
    void                                     SetDstData();
    void                                     SetMiniDstData();
+   void                                     SaveData();
 
 public:
    MpdV0Finder(TString name = "LambdaFinder", Int_t pidMom = 3122, Int_t pidFirstDau = 211, Int_t pidSecDau = 2212);
-   void         SaveV0s(Bool_t write) { fWrite = write; };
-   void         SetDaugherMonitor(const MpdV0DaughterMonitor &mon);
-   void         SetV0Monitor(const MpdV0CandidateMonitor &mon);
+   void SaveV0s(Bool_t write) { fWrite = write; };
+   void SetDaugherMonitor(const MpdV0DaughterMonitor &mon);
+   void SetV0Monitor(const MpdV0CandidateMonitor &mon);
+   /**
+    * by default the QA histograms are stored in the output tree, this method allow to save the QA in other file
+    * @param filename path to the root files with histograms
+    */
+   void         SetOutput(TString filename) { fExternalPath = filename; }
    virtual void Exec(Option_t *option);
    virtual ~MpdV0Finder();
    void SetPositiveDaughterCut(const MpdV0DaughterCut &cut);

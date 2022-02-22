@@ -44,9 +44,10 @@ MpdV0Finder::~MpdV0Finder()
 
 MpdV0Finder::MpdV0Finder(const MpdV0Finder &other)
    : FairTask(), fInit(kFALSE), fWrite(other.fWrite), fFirstV0(other.fFirstV0), fPidDauPos(other.fPidDauPos),
-     fPidDauNeg(other.fPidDauNeg), fPidV0(other.fPidV0), fFormat(other.fFormat), fMpdEvent(nullptr),
-     fMiniEvents(nullptr), fMiniTracks(nullptr), fMiniTofData(nullptr), fV0s(nullptr), fPositiveDaughterCut(nullptr),
-     fNegativeDaughterCut(nullptr), fCandicateCut(nullptr), fDauMon1(nullptr), fDauMon2(nullptr), fV0Mon(nullptr)
+     fPidDauNeg(other.fPidDauNeg), fPidV0(other.fPidV0), fExternalPath(other.fExternalPath), fFormat(other.fFormat),
+     fMpdEvent(nullptr), fMiniEvents(nullptr), fMiniTracks(nullptr), fMiniTofData(nullptr), fV0s(nullptr),
+     fPositiveDaughterCut(nullptr), fNegativeDaughterCut(nullptr), fCandicateCut(nullptr), fDauMon1(nullptr),
+     fDauMon2(nullptr), fV0Mon(nullptr)
 {
    if (other.fPositiveDaughterCut) {
       fPositiveDaughterCut = (MpdV0DaughterCut *)other.fPositiveDaughterCut->Clone();
@@ -104,9 +105,9 @@ InitStatus MpdV0Finder::Init()
    } else {
       fFirstV0 = kTRUE;
       fV0s     = new TClonesArray("MpdV0Track");
+      mngr->Register("MpdV0", "V0", fV0s, fWrite);
    }
 
-   mngr->Register("MpdV0", "V0", fV0s, fWrite);
    if (!fPositiveDaughterCut) {
       LOG(ERROR) << "Lack cut for first daughter";
       return kFATAL;
@@ -236,7 +237,7 @@ void MpdV0Finder::SetMiniDstData()
    fNegativeDaughterCut->SetMiniEventData(event, fMiniTracks, fMiniTofData);
 }
 
-void MpdV0Finder::FinishTask()
+void MpdV0Finder::SaveData()
 {
    if (fDauMon1 != nullptr || fV0Mon != nullptr) {
       TDirectory *dir = (TDirectory *)gFile;
@@ -253,5 +254,18 @@ void MpdV0Finder::FinishTask()
          for (auto i : vec) i->Write();
       }
       dir->cd();
+   }
+}
+
+void MpdV0Finder::FinishTask()
+{
+   if (fExternalPath.Length() != 0) { // write to external root file
+      TDirectory *dir = (TDirectory *)gFile;
+      TFile *     f   = new TFile(fExternalPath, "recreate");
+      SaveData();
+      f->Close();
+      dir->cd();
+   } else { // write here
+      SaveData();
    }
 }
