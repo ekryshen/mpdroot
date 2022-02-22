@@ -54,7 +54,7 @@ void MpdV0Matcher::MatchV0ByMomentum()
    Int_t matched = 0;
    for (int i = 0; i < fV0s->GetEntriesFast(); i++) {
       if (fLinks->GetLink(i) >= 0) continue;  // this track is already matched !
-      if (fLinks->GetLink(i) == -2) continue; // this track is marked as bad !
+      if (fLinks->GetLink(i) == -1) continue; // this track is marked as bad !
       MpdV0Track *track = (MpdV0Track *)fV0s->UncheckedAt(i);
       if (track->GetPdg() != fMcV0sPid[i]) continue; // this v0 has different pid hypo then our v0
       if (!IsGoodV0(track->GetPdg())) continue;
@@ -71,7 +71,7 @@ void MpdV0Matcher::MatchV0ByMomentum()
          }
       }
       momDiff = TMath::Sqrt(momDiff);
-      if (momDiff > fMomThreshold) minIndex = -2; // mark as bad v0
+      if (momDiff > fMomThreshold) minIndex = -1; // mark as bad v0
       fLinks->SetLink(i, minIndex);
       if (minIndex >= 0) matched++;
    }
@@ -97,12 +97,12 @@ InitStatus MpdV0Matcher::Init()
    /**
     * sprawdzic czy to jest pierwszy tak - tzn. czy branch istnieje żeby czyścić pamięć i reallokować indexy
     */
-   if (mngr->CheckBranch("MpdV0Links") == 0) {
+   if (mngr->GetObject("MpdV0Links") == nullptr) {
       fFirst = kTRUE;
       fLinks = new MpdSimpleLinks<Int_t>();
       mngr->Register("MpdV0Links", "V0", fLinks, fWrite);
    } else {
-
+      fFirst = kFALSE;
       fLinks = (MpdSimpleLinks<Int_t> *)mngr->GetObject("MpdV0Links");
    }
 
@@ -120,10 +120,10 @@ InitStatus MpdV0Matcher::Init()
 
 void MpdV0Matcher::Exec(Option_t *option)
 {
-   fLinks->Clear();
-   if (fFirst) { // set links to -1
+   if (fFirst) { // set links to -2
+      fLinks->Clear();
       for (int i = 0; i < fV0s->GetEntriesFast(); i++) {
-         fLinks->PushBack(-1);
+         fLinks->PushBack(-2);
       }
    }
    LOG(debug) << "Total V0 candidates: " << fV0s->GetEntriesFast();
@@ -158,7 +158,7 @@ void MpdV0Matcher::MatchByDaughter(Int_t dau)
 
    for (int i = 0; i < fV0s->GetEntriesFast(); i++) {
       if (fLinks->GetLink(i) >= 0) continue;  // this track is already matched !
-      if (fLinks->GetLink(i) == -2) continue; // this track is marked as bad !
+      if (fLinks->GetLink(i) == -1) continue; // this track is marked as bad !
       MpdV0Track *track = (MpdV0Track *)fV0s->UncheckedAt(i);
       if (!IsGoodV0(track->GetPdg())) continue; // this track should not be matched by this task
       Int_t dauIndex = -1;
@@ -177,13 +177,13 @@ void MpdV0Matcher::MatchByDaughter(Int_t dau)
             mctrack   = GetMcTrack<T1, T2>(recotrack);
          }
          if (mctrack == nullptr) { // still no MC, mark track as bad
-            fLinks->SetLink(i, -2);
+            fLinks->SetLink(i, -1);
             continue;
          }
       }
       Int_t mcTrackid = GetMotherIndex(mctrack);
       if (mcTrackid < 0) { // primary or some "strange" particle cannot match
-         fLinks->SetLink(i, -2);
+         fLinks->SetLink(i, -1);
          continue;
       }
       T2 *  motherTrack = GetSimTrack<T2>(mcTrackid);
@@ -191,7 +191,7 @@ void MpdV0Matcher::MatchByDaughter(Int_t dau)
       if (pdg == track->GetPdg()) {
          fLinks->SetLink(i, mcTrackid); // yeay this is our V0
       } else {
-         fLinks->SetLink(i, -2); // cannot match this is not our V0
+         fLinks->SetLink(i, -1); // cannot match this is not our V0
       }
    }
 }
@@ -234,11 +234,11 @@ template <class T1, class T2>
 void MpdV0Matcher::MatchByDaughters()
 {
    TClonesArray *tracks = fMpdEvent->GetGlobalTracks();
-   LOG(debug) << "mother matching" << fV0s->GetEntriesFast();
+   LOG(debug) << "mother matching" << fV0s->GetEntriesFast() << " " << GetName();
    int matched = 0;
    for (int i = 0; i < fV0s->GetEntriesFast(); i++) {
       if (fLinks->GetLink(i) >= 0) continue;  // this track is already matched !
-      if (fLinks->GetLink(i) == -2) continue; // this track is marked as bad !
+      if (fLinks->GetLink(i) == -1) continue; // this track is marked as bad !
       MpdV0Track *track = (MpdV0Track *)fV0s->UncheckedAt(i);
       if (!IsGoodV0(track->GetPdg())) continue; // this track should not be matched by this task
       Int_t dauIndex1  = track->GetPositiveDaughterIndex();
@@ -248,22 +248,22 @@ void MpdV0Matcher::MatchByDaughters()
       T2 *  simtrack1  = GetMcTrack<T1, T2>(recotrack1);
       T2 *  simtrack2  = GetMcTrack<T1, T2>(recotrack2);
       if (simtrack1 == nullptr || simtrack2 == nullptr) {
-         fLinks->SetLink(i, -2);
+         fLinks->SetLink(i, -1);
          continue;
       }
       Int_t mother1 = GetMother<T2>(simtrack1);
       Int_t mother2 = GetMother<T2>(simtrack2);
 
       if (mother2 != mother1) { // different mothers
-         fLinks->SetLink(i, -2);
+         fLinks->SetLink(i, -1);
          continue;
       }
       if (mother1 < 0) { // primary or some "strange" particle cannot match
-         fLinks->SetLink(i, -2);
+         fLinks->SetLink(i, -1);
          continue;
       }
       if (mother2 < 0) { // primary or some "strange" particle cannot match
-         fLinks->SetLink(i, -2);
+         fLinks->SetLink(i, -1);
          continue;
       }
       T2 *motherV0 = GetSimTrack<T2>(mother1);
@@ -271,7 +271,7 @@ void MpdV0Matcher::MatchByDaughters()
          fLinks->SetLink(i, GetMother<T2>(simtrack1)); // yeay this is our V0
          matched++;
       } else {
-         fLinks->SetLink(i, -2); // cannot match this is not our V0
+         fLinks->SetLink(i, -1); // cannot match this is not our V0
       }
    }
    LOG(debug) << "matched no" << matched << endl;
