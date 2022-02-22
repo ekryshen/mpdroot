@@ -59,6 +59,7 @@ public:
    Double_t        GetLambdaMass() const { return GetMinv(MpdV0::EParticleType::kLambda); };
    Double_t        GetAntiLambdaMass() const { return GetMinv(MpdV0::EParticleType::kAntiLambda); };
    Double_t        GetK0Mass() const { return GetMinv(MpdV0::EParticleType::k0Short); };
+   Double_t        GetHypoMass() const { return GetMinv(MpdV0::EParticleType::kPdgHypo); };
 
    void SetPdg(Int_t pid) { fPdg = pid; }
    void SetAlphaArm(Double_t alpha) { fAplhaArm = alpha; }

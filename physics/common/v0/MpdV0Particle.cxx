@@ -14,8 +14,8 @@
 #include <iostream>
 
 MpdV0Particle::MpdV0Particle()
-   : fDau1to2(0), fAplhaArm(0), fPtArm(0), fCosAngle(0), fDecLenght(0), fPosDaugherIndex(-1),
-     fNegDaughterIndex(-1), fPdg(0)
+   : fDau1to2(0), fAplhaArm(0), fPtArm(0), fCosAngle(0), fDecLenght(0), fPosDaugherIndex(-1), fNegDaughterIndex(-1),
+     fPdg(0)
 {
 }
 
@@ -68,7 +68,6 @@ const Double_t MpdV0Particle::GetMinv(MpdV0::EParticleType type) const
    case MpdV0::EParticleType::k0Short: {
       e1 = TMath::Sqrt(p1_2 + 0.019479785);
       e2 = TMath::Sqrt(p2_2 + 0.019479785);
-      return 0.49761;
    } break;
    case MpdV0::EParticleType::kLambda: {
       e1 = TMath::Sqrt(p1_2 + 0.880354511);
