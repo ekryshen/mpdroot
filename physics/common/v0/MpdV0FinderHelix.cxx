@@ -62,7 +62,8 @@ void MpdV0FinderHelix::ExecMiniDst(Option_t *option)
       }
    }
 
-   LOG(debug) << "Potential daughters in Helix V0 Finder " << fFirstHelix.size() << " " << fSecondHelix.size();
+   LOG(debug) << "Potential daughters in Helix V0 Finder " << ClassName() << "::" << GetName() << " "
+              << fFirstHelix.size() << " " << fSecondHelix.size();
 
    MpdV0Track candidate;
    for (int i = 0; i < fPositiveDaughters.size(); i++) {
@@ -104,7 +105,7 @@ void MpdV0FinderHelix::ExecMiniDst(Option_t *option)
          }
       }
    }
-   LOG(debug) << "Found V0s: " << fV0s->GetEntriesFast();
+   LOG(debug) << ClassName() << "::" << GetName() << "Found V0s: " << fV0s->GetEntriesFast();
 }
 
 void MpdV0FinderHelix::ExecDst(Option_t *option)
@@ -135,7 +136,8 @@ void MpdV0FinderHelix::ExecDst(Option_t *option)
       }
    }
 
-   LOG(debug) << "Potential daughters in Helix V0 Finder " << fFirstHelix.size() << " " << fSecondHelix.size();
+   LOG(debug) << "Potential daughters in Helix V0 Finder " << ClassName() << "::" << GetName() << " "
+              << fFirstHelix.size() << " " << fSecondHelix.size();
 
    MpdV0Track candidate;
    TVector3   vertex(fMpdEvent->GetPrimaryVerticesX(), fMpdEvent->GetPrimaryVerticesY(),
@@ -185,7 +187,7 @@ void MpdV0FinderHelix::ExecDst(Option_t *option)
          }
       }
    }
-   LOG(debug) << "Found V0s: " << fV0s->GetEntriesFast();
+   LOG(debug) << ClassName() << "::" << GetName() << "Found V0s: " << fV0s->GetEntriesFast();
 }
 
 MpdV0FinderHelix::MpdV0FinderHelix(TString name, Int_t pidMom, Int_t pidFirstDau, Int_t pidSecDau)
