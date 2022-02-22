@@ -25,7 +25,7 @@ protected:
    MpdV0::EParticleType fType;
 
 public:
-   MpdV0StandardCandidateMonitor(MpdV0::EParticleType type = MpdV0::EParticleType::kLambda);
+   MpdV0StandardCandidateMonitor(MpdV0::EParticleType type = MpdV0::EParticleType::kPdgHypo);
    MpdV0StandardCandidateMonitor(const MpdV0StandardCandidateMonitor &other) = default;
    void SetMinvAxis(Int_t bins, Double_t min, Double_t max) { SetXaxis1d(0, bins, min, max); }
    void SetCosAxis(Int_t bins) { SetXaxis1d(1, bins, -1, 1); }
@@ -34,6 +34,7 @@ public:
    void SetDecayLenghtMonitor(Int_t bins, Double_t min, Double_t max) { SetXaxis1d(2, bins, min, max); };
    void SetDau1to2(Int_t bins, Double_t min, Double_t max) { SetXaxis1d(3, bins, min, max); };
    void Init();
+   void SetType(MpdV0::EParticleType type) { fType = type; };
    void Fill(const MpdV0Particle &particle, Bool_t status);
    MpdV0CandidateMonitor *MakeCopy() const { return new MpdV0StandardCandidateMonitor(*this); }
    virtual ~MpdV0StandardCandidateMonitor();

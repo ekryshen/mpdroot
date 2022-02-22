@@ -40,8 +40,11 @@ void MpdV0StandardCandidateMonitor::Fill(const MpdV0Particle &particle, Bool_t s
    case MpdV0::EParticleType::kAntiLambda: {
       mass = particle.GetAntiLambdaMass();
    } break;
-   default: {
+   case MpdV0::EParticleType::kLambda: {
       mass = particle.GetLambdaMass();
+   } break;
+   case MpdV0::EParticleType::kPdgHypo: {
+      mass = particle.GetHypoMass();
    } break;
    }
 
