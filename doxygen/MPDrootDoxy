@@ -864,7 +864,9 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = ../detectors/bbc/ \
+INPUT                  = ../core/mpdBase/ \
+                         ../core/mpdField/ \
+                         ../detectors/bbc/ \
                          ../detectors/bmd/ \
                          ../detectors/emc/ \
                          ../detectors/etof/ \
@@ -881,9 +883,7 @@ INPUT                  = ../detectors/bbc/ \
                          ../lhetrack/ \
                          ../macro/ \
                          ../mcstack/ \
-                         ../core/mpdBase/ \
                          ../mpddst/ \
-                         ../mpdfield/ \
                          ../mpdpid/ \
                          ../passive/ \
                          ../physics/ \

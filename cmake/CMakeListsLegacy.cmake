@@ -212,7 +212,7 @@ Generate_Version_Info()
 # the project's entire directory structure.
 add_subdirectory (passive)
 add_subdirectory (core/mpdBase)
-add_subdirectory (mpdfield)
+add_subdirectory (core/mpdField)
 add_subdirectory (kalman) #MpdBase MpdField
 add_subdirectory (shield_pack)
 # automatically loaded with generators add_subdirectory (generators/unigen_format)
