@@ -59,7 +59,6 @@ set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
 # cause another cmake executable to run. The same process will walk through
 # the project's entire directory structure.
 # LEVEL 1
-add_subdirectory (clustering) # INDEPENDENT
 add_subdirectory (detectors/bmd) # INDEPENDENT
 add_subdirectory (detectors/emc) # INDEPENDENT
 add_subdirectory (detectors/etof) # INDEPENDENT

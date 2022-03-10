@@ -43,7 +43,6 @@ void mpdloadlibs()
   //gSystem->Load("libSft");
 
   // Reconstruction
-  gSystem->Load("libCluster");
   gSystem->Load("libKalman");
   gSystem->Load("libLHETrack");
   gSystem->Load("libMpdPid");

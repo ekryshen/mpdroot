@@ -6,9 +6,9 @@ set(INCLUDE_DIRECTORIES
   ${BASE_INCLUDE_DIRECTORIES}
   ${CMAKE_CURRENT_LIST_DIR}
   ${CMAKE_CURRENT_LIST_DIR}/emcClustering
+  ${CMAKE_CURRENT_LIST_DIR}/emcClustering/clustering
   ${CMAKE_CURRENT_LIST_DIR}/emcKI
   ${CMAKE_CURRENT_LIST_DIR}/hitmaker
-  ${CMAKE_SOURCE_DIR}/clustering
   ${CMAKE_SOURCE_DIR}/mcstack
   ${CMAKE_SOURCE_DIR}/detectors/tpc
   ${CMAKE_SOURCE_DIR}/kalman
@@ -47,6 +47,11 @@ set(SRCS
   MpdEmcMatch.cxx
   MpdEmcMatching.cxx
   MpdEmcPoint.cxx
+
+  emcClustering/clustering/ClusterElement.cxx
+  emcClustering/clustering/Cluster.cxx
+  emcClustering/clustering/ClusterCollection.cxx
+  emcClustering/clustering/ClManager.cxx
 
   emcClustering/EmcCLinfo.cxx
   emcClustering/EmcClManager.cxx

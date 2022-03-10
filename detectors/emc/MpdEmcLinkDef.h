@@ -18,16 +18,21 @@
 #pragma link C++ class MpdEmcClusterKI+;
 #pragma link C++ class MpdEmcHitCreation+;
 #pragma link C++ class MpdEmcClusterCreation+;
-#pragma link C++ class MpdEmcClusterizerKI + ;
-#pragma link C++ class MpdEmcTrackExtrap + ;
-#pragma link C++ class MpdEmcSimParams + ;
-#pragma link C++ class MpdEmcMatchingKI + ;
-#pragma link C++ class MpdEmcCalibParams + ;
+#pragma link C++ class MpdEmcClusterizerKI+;
+#pragma link C++ class MpdEmcTrackExtrap+;
+#pragma link C++ class MpdEmcSimParams+;
+#pragma link C++ class MpdEmcMatchingKI+;
+#pragma link C++ class MpdEmcCalibParams+;
 
 #pragma link C++ class MpdEmcHitProducerA+;
 #pragma link C++ class MpdEmcHitA+;
 #pragma link C++ class MpdEmcHitCont+;
 #pragma link C++ class MpdEmcGeoParWrapper+;
+
+#pragma link C++ class ClusterElement+;
+#pragma link C++ class Cluster;
+#pragma link C++ class ClusterCollection;
+#pragma link C++ class ClManager;
 
 #pragma link C++ class EmcClManager+;
 #pragma link C++ class EmcClusterElement+;

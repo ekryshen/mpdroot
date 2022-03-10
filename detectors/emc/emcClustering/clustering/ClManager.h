@@ -7,7 +7,8 @@
 #include <TObject.h>
 #include <TString.h>
 #include <TArrayD.h>
-#include <ClusterCollection.h>
+
+#include "ClusterCollection.h"
 
 typedef std::map<Int_t,ClusterCollection*> CL_SSET; 
 
