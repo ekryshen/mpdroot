@@ -881,7 +881,7 @@ INPUT                  = ../detectors/bbc/ \
                          ../lhetrack/ \
                          ../macro/ \
                          ../mcstack/ \
-                         ../mpdbase/ \
+                         ../core/mpdBase/ \
                          ../mpddst/ \
                          ../mpdfield/ \
                          ../mpdpid/ \

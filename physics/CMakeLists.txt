@@ -7,7 +7,7 @@ add_subdirectory(photons)
 # The extension is already found. Any number of sources could be listed here.
 set(INCLUDE_DIRECTORIES
  ${BASE_INCLUDE_DIRECTORIES}
-  ${CMAKE_SOURCE_DIR}/mpdbase
+  ${CMAKE_SOURCE_DIR}/core/mpdBase
   ${CMAKE_SOURCE_DIR}/kalman
   ${CMAKE_SOURCE_DIR}/physics
 )

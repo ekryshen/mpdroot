@@ -14,7 +14,7 @@ add_subdirectory(unigen_format)
 set(INCLUDE_DIRECTORIES
  ${BASE_INCLUDE_DIRECTORIES}
   ${CMAKE_SOURCE_DIR}/config
-  ${CMAKE_SOURCE_DIR}/mpdbase
+  ${CMAKE_SOURCE_DIR}/core/mpdBase
   ${CMAKE_SOURCE_DIR}/mpddst/mcDst
   ${CMAKE_SOURCE_DIR}/generators
   ${CMAKE_SOURCE_DIR}/generators/unigen_format

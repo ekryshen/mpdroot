@@ -211,7 +211,7 @@ Generate_Version_Info()
 # cause another cmake executable to run. The same process will walk through
 # the project's entire directory structure.
 add_subdirectory (passive)
-add_subdirectory (mpdbase)
+add_subdirectory (core/mpdBase)
 add_subdirectory (mpdfield)
 add_subdirectory (kalman) #MpdBase MpdField
 add_subdirectory (shield_pack)

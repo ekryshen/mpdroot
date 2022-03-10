@@ -69,7 +69,7 @@ add_subdirectory (detectors/tof) # INDEPENDENT
 add_subdirectory (detectors/zdc) # INDEPENDENT
 add_subdirectory (generators) # INDEPENDENT
 add_subdirectory (mcstack) # INDEPENDENT
-add_subdirectory (mpdbase) # INDEPENDENT
+add_subdirectory (core/mpdBase) # INDEPENDENT
 add_subdirectory (mpddst) # Base
 add_subdirectory (mpdfield) # INDEPENDENT
 add_subdirectory (mpdpid) # INDEPENDENT
