@@ -866,6 +866,7 @@ WARN_LOGFILE           =
 
 INPUT                  = ../core/mpdBase/ \
                          ../core/mpdField/ \
+                         ../core/mpdPid/ \
                          ../detectors/bbc/ \
                          ../detectors/bmd/ \
                          ../detectors/emc/ \
@@ -884,7 +885,6 @@ INPUT                  = ../core/mpdBase/ \
                          ../macro/ \
                          ../mcstack/ \
                          ../mpddst/ \
-                         ../mpdpid/ \
                          ../passive/ \
                          ../physics/ \
                          ../shield_pack/

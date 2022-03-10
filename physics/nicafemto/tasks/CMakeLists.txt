@@ -7,14 +7,9 @@ ${BASE_INCLUDE_DIRECTORIES}
 ${CMAKE_SOURCE_FAIRMCSTACK}
 ${CMAKE_SOURCE_DIR}/detectors/tpc
 ${CMAKE_SOURCE_DIR}/core/mpdBase
-${CMAKE_SOURCE_DIR}/mpdpid
+${CMAKE_SOURCE_DIR}/core/mpdPid
 ${CMAKE_SOURCE_DIR}/kalman
 ${CMAKE_SOURCE_DIR}/lhetrack
-${CMAKE_SOURCE_DIR}/base/event
-${CMAKE_SOURCE_DIR}/base/field 
-${CMAKE_SOURCE_DIR}/base/steer
-${CMAKE_SOURCE_DIR}/base/sim
-${CMAKE_SOURCE_DIR}/base/source
 ${CMAKE_SOURCE_DIR}/mpddst
 ${CMAKE_SOURCE_DIR}/mpddst/mcDst
 ${CMAKE_SOURCE_DIR}/mpddst/MpdMiniEvent

@@ -28,7 +28,7 @@
   includePath        += "-I${VMCWORKDIR}/detectors/tof ";
   includePath        += "-I${VMCWORKDIR}/mpddata ";
   includePath        += "-I${VMCWORKDIR}/core/mpdBase ";
-  includePath        += "-I${VMCWORKDIR}/mpdpid ";
+  includePath        += "-I${VMCWORKDIR}/core/mpdPid ";
   /*
   includePath        += "-I${ALICE_ROOT}/RAW ";
   includePath        += "-I${ALICE_ROOT}/FASTSIM ";

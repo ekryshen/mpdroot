@@ -42,7 +42,7 @@
 #----------------------------------------------------------------------------------
 /kalman/                       @zinchenk
 
-/mpdpid/                       @zinchenk @amudrokh
+/core/mpdPid/                       @zinchenk @amudrokh
 
 
 # Analysis

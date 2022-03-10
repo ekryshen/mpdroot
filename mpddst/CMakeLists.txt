@@ -9,12 +9,12 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_SOURCE_DIR}/mcstack
   ${CMAKE_SOURCE_DIR}/core/mpdBase
   ${CMAKE_SOURCE_DIR}/core/mpdField
+  ${CMAKE_SOURCE_DIR}/core/mpdPid
   ${CMAKE_SOURCE_DIR}/detectors/tpc
   ${CMAKE_SOURCE_DIR}/detectors/tof
   ${CMAKE_SOURCE_DIR}/detectors/emc/emcKI
   ${CMAKE_SOURCE_DIR}/kalman
   ${CMAKE_SOURCE_DIR}/lhetrack
-  ${CMAKE_SOURCE_DIR}/mpdpid
   ${CMAKE_SOURCE_DIR}/detectors/zdc
   ${CMAKE_SOURCE_DIR}/mpddst
   ${CMAKE_SOURCE_DIR}/mpddst/MpdMiniEvent
