@@ -18,68 +18,67 @@
 #include "MpdFieldPar.h"
 
 // ------   Constructor   --------------------------------------------------
-MpdMultiFieldPar::MpdMultiFieldPar(const char* name, const char* title, const char* context) 
-  : MpdMapPar(name, title, context) 
+MpdMultiFieldPar::MpdMultiFieldPar(const char *name, const char *title, const char *context)
+   : MpdMapPar(name, title, context)
 {
-  
-  fParArray=new TObjArray();
+
+   fParArray = new TObjArray();
 }
 
 //-----------------------------------------------------------------------
-MpdMultiFieldPar::MpdMultiFieldPar() { }
+MpdMultiFieldPar::MpdMultiFieldPar() {}
 
 //-----------------------------------------------------------------------
-MpdMultiFieldPar::~MpdMultiFieldPar() { }
+MpdMultiFieldPar::~MpdMultiFieldPar() {}
 
 //-----------------------------------------------------------------------
-void MpdMultiFieldPar::putParams(FairParamList* list)
+void MpdMultiFieldPar::putParams(FairParamList *list)
 {
-  if ( ! list ) return;
-  list->addObject("List of Field par", fParArray);
-  list->add("Field Type", fType);
+   if (!list) return;
+   list->addObject("List of Field par", fParArray);
+   list->add("Field Type", fType);
 }
 
 //-----------------------------------------------------------------------
-Bool_t MpdMultiFieldPar::getParams(FairParamList* l)
+Bool_t MpdMultiFieldPar::getParams(FairParamList *l)
 {
-  if (!l->fillObject("list of fields Par",fParArray))return kFALSE;
-  if ( ! l->fill("Field Type", &fType) ) return kFALSE;
-  
-  return kTRUE;
-} 
+   if (!l->fillObject("list of fields Par", fParArray)) return kFALSE;
+   if (!l->fill("Field Type", &fType)) return kFALSE;
+
+   return kTRUE;
+}
 
 //-----------------------------------------------------------------------
-void MpdMultiFieldPar:: SetParameters(FairField* field)
-{	 
-  fType=5;
-  FairRuntimeDb *rtdb=FairRuntimeDb::instance();
-  FairRun *fRun= FairRun::Instance();
-  MpdMultiField *fmField = (MpdMultiField *)field;
-  TObjArray *fArray=fmField->GetFieldList();
-  TIterator *Iter=fArray->MakeIterator();
-  Iter->Reset();
-  FairField* fField = NULL;
-  Int_t Type=-1;
-  while( (fField = (FairField*)Iter->Next() ) ) {
-    Type=fField->GetType();
-    if(Type==0) {
-      MpdConstField *fc= (MpdConstField *)fField;
-      MpdConstPar *cp = (MpdConstPar*) rtdb->getContainer("MpdConstPar");
-      cp->SetParameters(fc);
-      cp->setInputVersion(fRun->GetRunId(),1);
-      fParArray->AddLast(cp);
-    }
-    
-    else if(Type==1) {
-      MpdFieldMap *fm= (MpdFieldMap*)fField;
-      MpdFieldPar* fmp = (MpdFieldPar*) rtdb->getContainer("MpdFieldPar");
-      fmp->SetParameters(fm);
-      fmp->setInputVersion(fRun->GetRunId(),1);
-      fParArray->AddLast(fmp);
-    } 
-  }
-  delete  Iter;
-}                      
+void MpdMultiFieldPar::SetParameters(FairField *field)
+{
+   fType                  = 5;
+   FairRuntimeDb *rtdb    = FairRuntimeDb::instance();
+   FairRun       *fRun    = FairRun::Instance();
+   MpdMultiField *fmField = (MpdMultiField *)field;
+   TObjArray     *fArray  = fmField->GetFieldList();
+   TIterator     *Iter    = fArray->MakeIterator();
+   Iter->Reset();
+   FairField *fField = NULL;
+   Int_t      Type   = -1;
+   while ((fField = (FairField *)Iter->Next())) {
+      Type = fField->GetType();
+      if (Type == 0) {
+         MpdConstField *fc = (MpdConstField *)fField;
+         MpdConstPar   *cp = (MpdConstPar *)rtdb->getContainer("MpdConstPar");
+         cp->SetParameters(fc);
+         cp->setInputVersion(fRun->GetRunId(), 1);
+         fParArray->AddLast(cp);
+      }
+
+      else if (Type == 1) {
+         MpdFieldMap *fm  = (MpdFieldMap *)fField;
+         MpdFieldPar *fmp = (MpdFieldPar *)rtdb->getContainer("MpdFieldPar");
+         fmp->SetParameters(fm);
+         fmp->setInputVersion(fRun->GetRunId(), 1);
+         fParArray->AddLast(fmp);
+      }
+   }
+   delete Iter;
+}
 
 ClassImp(MpdMultiFieldPar)
-  

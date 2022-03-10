@@ -12,36 +12,32 @@
 
 class FairParamList;
 
-class MpdMultiFieldPar : public MpdMapPar
-{
-  
- public:
-  
-  /** Standard constructor  **/
-  MpdMultiFieldPar(const char* name, const char* title, const char* context);
-  
-  /** default constructor  **/
-  MpdMultiFieldPar();
-  
-  /** Destructor **/
-  ~MpdMultiFieldPar();
-  
-  void putParams(FairParamList* list);
-  
-  /** Get parameters **/
-  Bool_t getParams(FairParamList* list);
-  
-  /** Set parameters from FairField  **/
-  void SetParameters(FairField* field);
-  
-  TObjArray *GetParArray(){return fParArray; }
-  
- protected:
-  
-  TObjArray *fParArray;
-  
-  ClassDef(MpdMultiFieldPar,1);
-  
+class MpdMultiFieldPar : public MpdMapPar {
+
+public:
+   /** Standard constructor  **/
+   MpdMultiFieldPar(const char *name, const char *title, const char *context);
+
+   /** default constructor  **/
+   MpdMultiFieldPar();
+
+   /** Destructor **/
+   ~MpdMultiFieldPar();
+
+   void putParams(FairParamList *list);
+
+   /** Get parameters **/
+   Bool_t getParams(FairParamList *list);
+
+   /** Set parameters from FairField  **/
+   void SetParameters(FairField *field);
+
+   TObjArray *GetParArray() { return fParArray; }
+
+protected:
+   TObjArray *fParArray;
+
+   ClassDef(MpdMultiFieldPar, 1);
 };
 
 #endif

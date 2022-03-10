@@ -11,29 +11,27 @@
 #include "FairFieldFactory.h"
 #include "MpdFieldPar.h"
 
-class  MpdSolenoidPar;
-class  MpdDipolePar  ;
-class  MpdTransPar   ;
-class  MpdConstPar   ;
-class  MpdMultiFieldPar ;
+class MpdSolenoidPar;
+class MpdDipolePar;
+class MpdTransPar;
+class MpdConstPar;
+class MpdMultiFieldPar;
 
-class MpdFieldCreator : public FairFieldFactory
-{
- 
- public:
-  MpdFieldCreator();
-  virtual ~MpdFieldCreator();
-  virtual FairField* createFairField();
-  virtual void SetParm();
-  ClassDef(MpdFieldCreator,1);
+class MpdFieldCreator : public FairFieldFactory {
 
- protected:
-   
-  MpdFieldPar* fFieldPar;
-  MpdSolenoidPar    *fSPar;
-  MpdDipolePar      *fDPar;
-  MpdTransPar       *fTPar;
-  MpdConstPar       *fCPar;
-  MpdMultiFieldPar  *fMPar;
+public:
+   MpdFieldCreator();
+   virtual ~MpdFieldCreator();
+   virtual FairField *createFairField();
+   virtual void       SetParm();
+   ClassDef(MpdFieldCreator, 1);
+
+protected:
+   MpdFieldPar      *fFieldPar;
+   MpdSolenoidPar   *fSPar;
+   MpdDipolePar     *fDPar;
+   MpdTransPar      *fTPar;
+   MpdConstPar      *fCPar;
+   MpdMultiFieldPar *fMPar;
 };
-#endif 
+#endif

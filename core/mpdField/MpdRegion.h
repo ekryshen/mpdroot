@@ -9,22 +9,17 @@
 #include "TObject.h"
 
 class MpdRegion : public TObject {
-  
- public:
-  
-  /** Default constructor **/
-  MpdRegion( Double_t Zmin, Double_t Zmax);
-  /** Destructor **/
-  virtual ~MpdRegion();
-  Bool_t IsInside(Double_t Z);
-  ClassDef(MpdRegion,1) 
-   
-    protected:
-  Double_t fZmin;
-  Double_t fZmax;
+
+public:
+   /** Default constructor **/
+   MpdRegion(Double_t Zmin, Double_t Zmax);
+   /** Destructor **/
+   virtual ~MpdRegion();
+   Bool_t IsInside(Double_t Z);
+   ClassDef(MpdRegion, 1)
+
+      protected : Double_t fZmin;
+   Double_t fZmax;
 };
 
 #endif
-
-
-

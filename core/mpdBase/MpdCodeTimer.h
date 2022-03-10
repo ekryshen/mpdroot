@@ -15,45 +15,45 @@
 #include <TMap.h>
 class TStopwatch;
 
-class MpdCodeTimer : public FairTask
-{
- public:
-  // KG public cpnstructor for TStreamer reading
-  MpdCodeTimer(const char *name="MpdCodeTimer", const char *title="MPD Task"); ///< Ctor
-  static MpdCodeTimer* Instance(); ///< get singleton instance
-  static MpdCodeTimer* Instance(const char *name, const char *title="MPD Task"); ///< get singleton instance
-  static MpdCodeTimer* Active() { return (MpdCodeTimer*) FairRun::Instance()->GetTask("Code timer"); } ///< get singleton instance
-  virtual void Exec(Option_t * option);
+class MpdCodeTimer : public FairTask {
+public:
+   // KG public cpnstructor for TStreamer reading
+   MpdCodeTimer(const char *name = "MpdCodeTimer", const char *title = "MPD Task"); ///< Ctor
+   static MpdCodeTimer *Instance();                                                 ///< get singleton instance
+   static MpdCodeTimer *Instance(const char *name, const char *title = "MPD Task"); ///< get singleton instance
+   static MpdCodeTimer *Active()
+   {
+      return (MpdCodeTimer *)FairRun::Instance()->GetTask("Code timer");
+   } ///< get singleton instance
+   virtual void Exec(Option_t *option);
 
-  //void Init(Int_t counter);
+   // void Init(Int_t counter);
 
-  void Reset();
-  void Register();
-  void Start(const TString classname, const TString method);
-  void Stop(const TString classname, const TString method);
-  void Print();
+   void Reset();
+   void Register();
+   void Start(const TString classname, const TString method);
+   void Stop(const TString classname, const TString method);
+   void Print();
 
- protected:
+protected:
+   virtual InitStatus Init();
+   virtual InitStatus ReInit();
+   virtual void       Finish();
+   virtual ~MpdCodeTimer(); ///< Destructor
 
-  virtual InitStatus Init();
-  virtual InitStatus ReInit();
-  virtual void Finish();
-  virtual ~MpdCodeTimer(); ///< Destructor
+private:
+   // automatic deleting when application exit
+   static void DestroyInstance()
+   {
+      if (fgCT) delete fgCT;
+   }
+   void Print(TStopwatch *sw, Option_t *opt); // print info from TStopwatch
 
- private:
-  // automatic deleting when application exit
-  static void DestroyInstance (){
-      if (fgCT)
-          delete fgCT;
-  }
-  void Print(TStopwatch *sw, Option_t *opt); // print info from TStopwatch 
+   static MpdCodeTimer *fgCT; //! pointer to Singleton instance, may be ! required to exclude recursion
 
-  static MpdCodeTimer* fgCT; //! pointer to Singleton instance, may be ! required to exclude recursion
+private:
+   TMap fTimeMap; // class-method map
 
- private:
-  TMap fTimeMap; // class-method map
-
-  ClassDef(MpdCodeTimer,1);
-
+   ClassDef(MpdCodeTimer, 1);
 };
 #endif

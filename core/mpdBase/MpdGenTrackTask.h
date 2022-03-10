@@ -9,18 +9,15 @@ using namespace std;
 
 class MpdGenTrackTask : public FairTask {
 public:
-    
-    MpdGenTrackTask();    
-    virtual InitStatus Init();      
-    virtual ~MpdGenTrackTask();
-    
-    TClonesArray* GetTracksInfo() {
-        return fTracksInfo;
-    }
+   MpdGenTrackTask();
+   virtual InitStatus Init();
+   virtual ~MpdGenTrackTask();
+
+   TClonesArray *GetTracksInfo() { return fTracksInfo; }
 
 private:
-    TClonesArray* fTracksInfo;
-    
-    ClassDef(MpdGenTrackTask, 1);
+   TClonesArray *fTracksInfo;
+
+   ClassDef(MpdGenTrackTask, 1);
 };
-#endif 
+#endif

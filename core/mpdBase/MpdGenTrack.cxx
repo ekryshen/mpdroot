@@ -1,14 +1,9 @@
 #include "MpdGenTrack.h"
 
-MpdGenTrack::MpdGenTrack() :
-fImp(-1.) {
+MpdGenTrack::MpdGenTrack() : fImp(-1.)
+{
 
-  isUsed = kFALSE;    
-    
+   isUsed = kFALSE;
 }
 
-MpdGenTrack::~MpdGenTrack() {
-
-
-
-}
+MpdGenTrack::~MpdGenTrack() {}

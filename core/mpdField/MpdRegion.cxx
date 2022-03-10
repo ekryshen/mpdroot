@@ -9,20 +9,22 @@
 #include "MpdRegion.h"
 
 // -------------   Default constructor  ----------------------------------
-MpdRegion::MpdRegion( Double_t Zmin, Double_t Zmax)
-  :TObject()
+MpdRegion::MpdRegion(Double_t Zmin, Double_t Zmax) : TObject()
 {
-  fZmin=Zmin;
-  fZmax=Zmax;
+   fZmin = Zmin;
+   fZmax = Zmax;
 }
 
 // ------------   Destructor   --------------------------------------------
-MpdRegion::~MpdRegion() { }
+MpdRegion::~MpdRegion() {}
 
 // ------------   Check if inside this region-------------------------------
-Bool_t MpdRegion::IsInside(Double_t Z){
-  if( Z>=fZmin && Z<=fZmax ) return kTRUE;
-  else return kFALSE;
+Bool_t MpdRegion::IsInside(Double_t Z)
+{
+   if (Z >= fZmin && Z <= fZmax)
+      return kTRUE;
+   else
+      return kFALSE;
 }
 
 ClassImp(MpdRegion)
