@@ -36,6 +36,6 @@ set(HEADERS
 
 set(LINKDEF MpdPidLinkDef.h)
 set(LIBRARY_NAME MpdPid)
-set(DEPENDENCIES Hist)
+set(DEPENDENCIES Hist Base)
 
 GENERATE_LIBRARY()
