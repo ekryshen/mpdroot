@@ -12,14 +12,12 @@
     
   cout << "Setting include path ..." << endl;
   TString includePath = "-I${ROOT_INCLUDE_DIR} ";
-  includePath        += "-I${VMCWORKDIR}/base ";
   includePath        += "-I${VMCWORKDIR}/core/mpdBase ";
   includePath        += "-I${VMCWORKDIR}/detectors/etof ";
   includePath        += "-I${VMCWORKDIR}/detectors/tof ";
   includePath        += "-I${VMCWORKDIR}/detectors/tpc ";
   includePath        += "-I${VMCWORKDIR}/kalman ";
   includePath        += "-I${VMCWORKDIR}/lhetrack ";
-  includePath        += "-I${VMCWORKDIR}/mpddata ";
   includePath        += "-I${VMCWORKDIR}/simulation/mcStack ";
   /*
   includePath        += "-I${ALICE_ROOT}/RAW ";

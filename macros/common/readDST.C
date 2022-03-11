@@ -46,7 +46,7 @@ void readDST(TString in = "") {
              << "  Eta = "  << pDSTtrack->GetEta()
              << endl;
              */
-            /* See mpddata/MpdTrack.h for more methods */
+            /* See core/mpdBase/MpdTrack.h for more methods */
 
         } // track loop
     } // event loop

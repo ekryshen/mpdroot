@@ -21,7 +21,6 @@
   includePath        += "-I${VMCWORKDIR}/detectors/zdc ";
   includePath        += "-I${VMCWORKDIR}/kalman ";
   includePath        += "-I${VMCWORKDIR}/lhetrack ";
-  includePath        += "-I${VMCWORKDIR}/mpddata ";
   includePath        += "-I${VMCWORKDIR}/simulation/mcStack ";
   /*
   includePath        += "-I${ALICE_ROOT}/RAW ";
