@@ -78,6 +78,7 @@ add_subdirectory (shield_pack) # INDEPENDENT
 add_subdirectory (detectors/tpc) # tof
 add_subdirectory (kalman) # mpdfield
 add_subdirectory (physics) # mpdbase mpddst
+add_subdirectory (simulation/mcDst)
 add_subdirectory (simulation/mcStack) # MpdGen
 # LEVEL 3
 add_subdirectory (eventdisplay) # emc xml2 TODO - remove dependencies on root configuration

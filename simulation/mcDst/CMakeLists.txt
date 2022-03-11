@@ -1,30 +1,30 @@
 set(INCLUDE_DIRECTORIES
-${BASE_INCLUDE_DIRECTORIES}
-${CMAKE_SOURCE_DIR}/mpddst/mcDst
+  ${BASE_INCLUDE_DIRECTORIES}
+  ${CMAKE_CURRENT_LIST_DIR}
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
- ${ROOT_INCLUDE_DIR}
+  ${ROOT_INCLUDE_DIR}
 )
 
 include_directories(${INCLUDE_DIRECTORIES})
 
 set(LINK_DIRECTORIES
- ${ROOT_LIBRARY_DIR}
- ${FAIRROOT_LIBRARY_DIR}
+  ${ROOT_LIBRARY_DIR}
+  ${FAIRROOT_LIBRARY_DIR}
 )
- 
+
 link_directories(${LINK_DIRECTORIES})
 
 # List of source files
 set(SRCS
-MpdMcRun.cxx
-MpdMcPIDConverter.cxx
-MpdMcParticle.cxx
-MpdMcEvent.cxx
-MpdMcDstReader.cxx
-MpdMcDst.cxx
-MpdMcArrays.cxx
+  MpdMcRun.cxx
+  MpdMcPIDConverter.cxx
+  MpdMcParticle.cxx
+  MpdMcEvent.cxx
+  MpdMcDstReader.cxx
+  MpdMcDst.cxx
+  MpdMcArrays.cxx
 )
 
 Set(HEADERS)

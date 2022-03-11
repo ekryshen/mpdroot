@@ -11,10 +11,10 @@ ${CMAKE_SOURCE_DIR}/detectors/tpc
 ${CMAKE_SOURCE_DIR}/kalman
 ${CMAKE_SOURCE_DIR}/lhetrack
 ${CMAKE_SOURCE_DIR}/mpddst
-${CMAKE_SOURCE_DIR}/mpddst/mcDst
 ${CMAKE_SOURCE_DIR}/mpddst/MpdMiniEvent
 ${CMAKE_SOURCE_DIR}/generators/unigen_format
 ${CMAKE_SOURCE_DIR}/physics/nicafemto/format
+${CMAKE_SOURCE_DIR}/simulation/mcDst
 ${CMAKE_SOURCE_DIR}/simulation/mcStack
 ${NICAFEMTO_FEATURES}
 ${NICAFEMTO_MPDHELPERS}

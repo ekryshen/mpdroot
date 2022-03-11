@@ -1,7 +1,6 @@
 # Create a library called "libMpdDst" which includes the source files given in the array.
 # The extension is already found. Any number of sources could be listed here.
 
-add_subdirectory(mcDst)
 add_subdirectory(MpdMiniEvent)
 
 set(INCLUDE_DIRECTORIES

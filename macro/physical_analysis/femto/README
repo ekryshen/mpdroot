@@ -12,7 +12,7 @@ User classes to be added to the project should be located in the MpdFemtoMakerUs
 2. Data formats we use
 Input for the package must be prepared in the McDst-format (if working with Monte-Carlo) or the MpdMiniDst-format when processing dst-files with reconstructed data.
 All necessary program codes to be used for it are implemented in the MpdRoot software. To get more information on it, please look at 
-the mpddst/mcDst and mpddst/MpdMiniEvent directories. The codes for all the formats we use are in the most recent actual state being updated to the latest versions available.
+the simulation/mcDst and mpddst/MpdMiniEvent directories. The codes for all the formats we use are in the most recent actual state being updated to the latest versions available.
 A small routine that does convertion from the vHLLE+UrQMD model to the format is called createMcDstFromVHLLE.C("input", "output") in the  macro/physical_analysis/mcDst directory.
 
 3. Data storage to be used for production

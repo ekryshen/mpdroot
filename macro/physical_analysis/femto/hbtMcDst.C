@@ -2,7 +2,7 @@
  * A macro that illustrates how to work with the MpdFemto package
  * It allows to construct 1d and 3d weighted correlation functions
  * IMPORTANT POINT: Input file passed as first argument must be written into the McDst-format
- * ($VMCWORKDIR/mpddst/mcDst)
+ * ($VMCWORKDIR/simulation/mcDst)
  * ($VMCWORKDIR/macro/physical_analysis/createMcDstFromVHLLE.C)
  */
 

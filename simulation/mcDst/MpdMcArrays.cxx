@@ -5,26 +5,28 @@
 #include "MpdMcArrays.h"
 
 //________________
-McArrays::McArrays() {
-  /* emtpy */
+McArrays::McArrays()
+{
+   /* emtpy */
 }
 
 //________________
-McArrays::~McArrays() {
-  /* emtpy */
+McArrays::~McArrays()
+{
+   /* emtpy */
 }
 
 // Array names
 //________________
-const char* McArrays::mcArrayNames[NAllMcArrays] = { "Event", "Particle" };
+const char *McArrays::mcArrayNames[NAllMcArrays] = {"Event", "Particle"};
 
 // Array types
 //________________
-const char* McArrays::mcArrayTypes[NAllMcArrays] = { "McEvent", "McParticle" };
+const char *McArrays::mcArrayTypes[NAllMcArrays] = {"McEvent", "McParticle"};
 
 // Array sizes
 // These are intial sizes. Automatically resized if too small.
 // Choosing too large initial values gives a performance penalty when reading
 // only selected UDst branches
 //_________________
-int McArrays::mcArraySizes[NAllMcArrays] = { 1, 1000 };
+int McArrays::mcArraySizes[NAllMcArrays] = {1, 1000};

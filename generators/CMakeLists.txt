@@ -15,9 +15,9 @@ set(INCLUDE_DIRECTORIES
   ${BASE_INCLUDE_DIRECTORIES}
   ${CMAKE_SOURCE_DIR}/config
   ${CMAKE_SOURCE_DIR}/core/mpdBase
-  ${CMAKE_SOURCE_DIR}/mpddst/mcDst
   ${CMAKE_SOURCE_DIR}/generators
   ${CMAKE_SOURCE_DIR}/generators/unigen_format
+  ${CMAKE_SOURCE_DIR}/simulation/mcDst
   ${CMAKE_SOURCE_DIR}/simulation/mcStack
 )
 
