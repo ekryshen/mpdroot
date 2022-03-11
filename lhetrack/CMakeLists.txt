@@ -1,25 +1,25 @@
 # Create a library called "libLHETrack" 
 
 set(INCLUDE_DIRECTORIES
- ${BASE_INCLUDE_DIRECTORIES}
-  ${CMAKE_SOURCE_DIR}/mcstack
+  ${BASE_INCLUDE_DIRECTORIES}
   ${CMAKE_SOURCE_DIR}/core/mpdBase
   ${CMAKE_SOURCE_DIR}/core/mpdField 
+  ${CMAKE_SOURCE_DIR}/detectors/sts
   ${CMAKE_SOURCE_DIR}/detectors/tpc
   ${CMAKE_SOURCE_DIR}/kalman
-  ${CMAKE_SOURCE_DIR}/detectors/sts
   ${CMAKE_SOURCE_DIR}/lhetrack
+  ${CMAKE_SOURCE_DIR}/simulation/mcStack
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
- ${ROOT_INCLUDE_DIR}
+  ${ROOT_INCLUDE_DIR}
 )
 
 include_directories(${INCLUDE_DIRECTORIES})
 
 set(LINK_DIRECTORIES
- ${ROOT_LIBRARY_DIR}
- ${FAIRROOT_LIBRARY_DIR}
+  ${ROOT_LIBRARY_DIR}
+  ${FAIRROOT_LIBRARY_DIR}
 )
 
 link_directories(${LINK_DIRECTORIES})
@@ -29,13 +29,13 @@ set(SRCS
 #TpcLheTrackFinder.cxx
 #TpcLheSegments.cxx
 #TpcLheHit.cxx
-#TpcLheTrackCuts.cxx      
+#TpcLheTrackCuts.cxx
 #TpcLheCMPoint.cxx
-#TpcLheTrack.cxx          
-#TpcLheCMTrack.cxx        
+#TpcLheTrack.cxx
+#TpcLheCMTrack.cxx
 #TpcLheTrackFitter.cxx
-#TpcLheHitsMaker.cxx      
-#TpcLhePoint.cxx 
+#TpcLheHitsMaker.cxx
+#TpcLhePoint.cxx
 #TpcLheKalmanFilter.cxx
 #TpcLheKalmanTrack.cxx
 MpdTpcKalmanFilter.cxx
@@ -65,13 +65,13 @@ set(HEADERS
 #TpcLheTrackFinder.h
 #TpcLheSegments.h
 #TpcLheHit.h
-#TpcLheTrackCuts.h      
+#TpcLheTrackCuts.h
 #TpcLheCMPoint.h
-#TpcLheTrack.h          
-#TpcLheCMTrack.h        
+#TpcLheTrack.h
+#TpcLheCMTrack.h
 #TpcLheTrackFitter.h
-#TpcLheHitsMaker.h      
-#TpcLhePoint.h 
+#TpcLheHitsMaker.h
+#TpcLhePoint.h
 #TpcLheKalmanFilter.h
 #TpcLheKalmanTrack.h
 MpdTpcKalmanFilter.h

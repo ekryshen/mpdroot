@@ -217,7 +217,7 @@ add_subdirectory (kalman) #MpdBase MpdField
 add_subdirectory (shield_pack)
 # automatically loaded with generators add_subdirectory (generators/unigen_format)
 add_subdirectory (generators) # MpdMcDst
-add_subdirectory (mcstack) # MpdGen
+add_subdirectory (simulation/mcStack) # MpdGen
 add_subdirectory (core/mpdPid) # MpdMCStack MpdBase
 add_subdirectory (lhetrack) # MpdBase Kalman Sts Tof
 add_subdirectory (mpddst) # MpdBase LHETrack MpdPid

@@ -12,53 +12,51 @@ add_subdirectory(genFactory)
 add_subdirectory(unigen_format)
 
 set(INCLUDE_DIRECTORIES
- ${BASE_INCLUDE_DIRECTORIES}
+  ${BASE_INCLUDE_DIRECTORIES}
   ${CMAKE_SOURCE_DIR}/config
   ${CMAKE_SOURCE_DIR}/core/mpdBase
   ${CMAKE_SOURCE_DIR}/mpddst/mcDst
   ${CMAKE_SOURCE_DIR}/generators
   ${CMAKE_SOURCE_DIR}/generators/unigen_format
-  ${CMAKE_SOURCE_DIR}/mcstack
+  ${CMAKE_SOURCE_DIR}/simulation/mcStack
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
   ${ROOT_INCLUDE_DIR}
   ${FAIRROOT_LIBRARY_DIR}
-#  ${GEANT3_INCLUDE_DIR}
 )
 
 include_directories(${INCLUDE_DIRECTORIES})
-#Include_Directories(SYSTEM ${SYSTEM_INCLUDE_DIRECTORIES})
 
 set(LINK_DIRECTORIES
- ${ROOT_LIBRARY_DIR}
- ${FAIRROOT_LIBRARY_DIR}
+  ${ROOT_LIBRARY_DIR}
+  ${FAIRROOT_LIBRARY_DIR}
 )
- 
+
 link_directories(${LINK_DIRECTORIES})
 
 # List of source files
 set(SRCS
-MpdMCEventHeader.cxx
-MpdLAQGSMGenerator.cxx
-MpdHypYPtGenerator.cxx
-MpdRainGenerator.cxx
-MpdPHSDGenerator.cxx
-MpdUrqmdGenerator.cxx
-MpdGetNumEvents.cxx
-MpdHistoGenerator.cxx
-Mpd3fdGenerator.cxx
-MpdVHLLEGenerator.cxx
-MpdFreezoutGenerator.cxx
-MpdEPOSGenerator.cxx
-MpdDCMSMMGenerator.cxx
-MpdPHQMDGenerator.cxx
-MpdMcDstGenerator.cxx
-MpdDecayer.cxx
-MpdTPythia8Generator.cxx
-MpdSmashGenerator.cxx
-MpdDecayerPyt8.cxx
-MpdUnigenGenerator.cxx
+  MpdMCEventHeader.cxx
+  MpdLAQGSMGenerator.cxx
+  MpdHypYPtGenerator.cxx
+  MpdRainGenerator.cxx
+  MpdPHSDGenerator.cxx
+  MpdUrqmdGenerator.cxx
+  MpdGetNumEvents.cxx
+  MpdHistoGenerator.cxx
+  Mpd3fdGenerator.cxx
+  MpdVHLLEGenerator.cxx
+  MpdFreezoutGenerator.cxx
+  MpdEPOSGenerator.cxx
+  MpdDCMSMMGenerator.cxx
+  MpdPHQMDGenerator.cxx
+  MpdMcDstGenerator.cxx
+  MpdDecayer.cxx
+  MpdTPythia8Generator.cxx
+  MpdSmashGenerator.cxx
+  MpdDecayerPyt8.cxx
+  MpdUnigenGenerator.cxx
 )
 
 Set(HEADERS)
@@ -68,4 +66,3 @@ Set(LIBRARY_NAME MpdGen)
 Set(DEPENDENCIES Base UniGenFormat EGPythia8)
 
 GENERATE_LIBRARY()
-

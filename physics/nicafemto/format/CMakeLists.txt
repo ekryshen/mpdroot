@@ -4,18 +4,18 @@
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 Set(INCLUDE_DIRECTORIES
 ${BASE_INCLUDE_DIRECTORIES}
-${CMAKE_SOURCE_DIR}/detectors/tpc
 ${CMAKE_SOURCE_DIR}/mpddata
 ${CMAKE_SOURCE_DIR}/core/mpdBase
 ${CMAKE_SOURCE_DIR}/core/mpdPid
+${CMAKE_SOURCE_DIR}/detectors/tpc
 ${CMAKE_SOURCE_DIR}/kalman
-${CMAKE_SOURCE_DIR}/mcstack
 ${CMAKE_SOURCE_DIR}/lhetrack
 ${CMAKE_SOURCE_DIR}/mpddst
 ${CMAKE_SOURCE_DIR}/mpddst/mcDst
 ${CMAKE_SOURCE_DIR}/mpddst/MpdMiniEvent
 ${CMAKE_SOURCE_DIR}/generators/unigen_format
 ${CMAKE_SOURCE_DIR}/physics/nicafemto/format
+${CMAKE_SOURCE_DIR}/simulation/mcStack
 ${NICAFEMTO_FEATURES}
 ${NICAFEMTO_MPDHELPERS}
 ${CMAKE_SOURCE_DIR}/external/nicafemto/nicagenerators

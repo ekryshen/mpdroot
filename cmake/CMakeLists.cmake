@@ -71,7 +71,6 @@ add_subdirectory (detectors/sts) # INDEPENDENT
 add_subdirectory (detectors/tof) # INDEPENDENT
 add_subdirectory (detectors/zdc) # INDEPENDENT
 add_subdirectory (generators) # INDEPENDENT
-add_subdirectory (mcstack) # INDEPENDENT
 add_subdirectory (mpddst) # Base
 add_subdirectory (passive) # INDEPENDENT
 add_subdirectory (shield_pack) # INDEPENDENT
@@ -79,6 +78,7 @@ add_subdirectory (shield_pack) # INDEPENDENT
 add_subdirectory (detectors/tpc) # tof
 add_subdirectory (kalman) # mpdfield
 add_subdirectory (physics) # mpdbase mpddst
+add_subdirectory (simulation/mcStack) # MpdGen
 # LEVEL 3
 add_subdirectory (eventdisplay) # emc xml2 TODO - remove dependencies on root configuration
 add_subdirectory (lhetrack) # mpdbase kalman

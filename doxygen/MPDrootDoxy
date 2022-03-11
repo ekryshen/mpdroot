@@ -883,10 +883,10 @@ INPUT                  = ../core/mpdBase/ \
                          ../kalman/ \
                          ../lhetrack/ \
                          ../macro/ \
-                         ../mcstack/ \
                          ../mpddst/ \
                          ../passive/ \
                          ../physics/ \
+                         ../simulation/mcStack/ \
                          ../shield_pack/
 
 # This tag can be used to specify the character encoding of the source files

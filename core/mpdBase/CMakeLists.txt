@@ -47,6 +47,6 @@ set(HEADERS
 
 set(LINKDEF MpdBaseLinkDef.h)
 set(LIBRARY_NAME MpdBase)
-set(DEPENDENCIES)
+set(DEPENDENCIES MpdGen)
 
 GENERATE_LIBRARY()

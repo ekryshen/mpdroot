@@ -13,22 +13,16 @@
   cout << "Setting include path ..." << endl;
   TString includePath = "-I${ROOT_INCLUDE_DIR} ";
   includePath        += "-I${Boost_INCLUDE_DIRS} ";
-  includePath        += "-I${VMCWORKDIR}/base ";
-  includePath        += "-I${VMCWORKDIR}/base/event ";
-  includePath        += "-I${VMCWORKDIR}/base/source ";
-  includePath        += "-I${VMCWORKDIR}/base/steer ";
-  includePath        += "-I${VMCWORKDIR}/base/field ";
-  includePath        += "-I${VMCWORKDIR}/base/sim ";
+  includePath        += "-I${VMCWORKDIR}/core/mpdBase ";
+  includePath        += "-I${VMCWORKDIR}/core/mpdPid ";
+  includePath        += "-I${VMCWORKDIR}/detectors/etof ";
+  includePath        += "-I${VMCWORKDIR}/detectors/tof ";
   includePath        += "-I${VMCWORKDIR}/detectors/tpc ";
   includePath        += "-I${VMCWORKDIR}/detectors/zdc ";
   includePath        += "-I${VMCWORKDIR}/kalman ";
   includePath        += "-I${VMCWORKDIR}/lhetrack ";
-  includePath        += "-I${VMCWORKDIR}/mcstack ";
-  includePath        += "-I${VMCWORKDIR}/detectors/etof ";
-  includePath        += "-I${VMCWORKDIR}/detectors/tof ";
   includePath        += "-I${VMCWORKDIR}/mpddata ";
-  includePath        += "-I${VMCWORKDIR}/core/mpdBase ";
-  includePath        += "-I${VMCWORKDIR}/core/mpdPid ";
+  includePath        += "-I${VMCWORKDIR}/simulation/mcStack ";
   /*
   includePath        += "-I${ALICE_ROOT}/RAW ";
   includePath        += "-I${ALICE_ROOT}/FASTSIM ";

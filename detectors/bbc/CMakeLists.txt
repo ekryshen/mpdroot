@@ -3,8 +3,8 @@
 # The extension is already found.  Any number of sources could be listed here.
 
 set(INCLUDE_DIRECTORIES
-  ${CMAKE_SOURCE_DIR}/mcstack
   ${CMAKE_CURRENT_LIST_DIR}
+  ${CMAKE_SOURCE_DIR}/simulation/mcStack
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES

@@ -9,10 +9,10 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_LIST_DIR}/emcClustering/clustering
   ${CMAKE_CURRENT_LIST_DIR}/emcKI
   ${CMAKE_CURRENT_LIST_DIR}/hitmaker
-  ${CMAKE_SOURCE_DIR}/mcstack
+  ${CMAKE_SOURCE_DIR}/core/mpdBase
   ${CMAKE_SOURCE_DIR}/detectors/tpc
   ${CMAKE_SOURCE_DIR}/kalman
-  ${CMAKE_SOURCE_DIR}/core/mpdBase
+  ${CMAKE_SOURCE_DIR}/simulation/mcStack
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
