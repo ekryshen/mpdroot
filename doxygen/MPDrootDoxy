@@ -865,6 +865,7 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = ../core/mpdBase/ \
+                         ../core/mpdDst/ \
                          ../core/mpdField/ \
                          ../core/mpdPid/ \
                          ../detectors/bbc/ \
@@ -883,7 +884,6 @@ INPUT                  = ../core/mpdBase/ \
                          ../kalman/ \
                          ../lhetrack/ \
                          ../macro/ \
-                         ../mpddst/ \
                          ../passive/ \
                          ../physics/ \
                          ../simulation/mcStack/ \

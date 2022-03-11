@@ -16,7 +16,7 @@ ClassImp(McParticle);
 McParticle::McParticle()
    : TObject(), fIndex(0), fPdg(0), fStatus(0), fParent(0), fParentDecay(0), fMate(0), fDecay(0), fChild{}, fPx(0),
      fPy(0), fPz(0), fX(0), fY(0), fZ(0), fT(0), fE(0)
-{  // Default constructor
+{ // Default constructor
    /* empty */
 }
 
@@ -205,7 +205,7 @@ const McParticle &McParticle::operator=(const TParticle &right)
 //_________________
 
 McParticle::~McParticle()
-{  // Destructor
+{ // Destructor
    /* empty */
 }
 

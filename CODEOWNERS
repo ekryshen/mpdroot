@@ -47,7 +47,7 @@
 
 # Analysis
 #----------------------------------------------------------------------------------
-/mpddst/MpdMiniEvent/          @gnigmat
+/core/mpdDst/MpdMiniEvent/          @gnigmat
 
 
 # QA

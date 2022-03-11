@@ -60,6 +60,7 @@ set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
 # the project's entire directory structure.
 # LEVEL 1
 add_subdirectory (core/mpdBase) # INDEPENDENT
+add_subdirectory (core/mpdDst) # Base
 add_subdirectory (core/mpdField) # INDEPENDENT
 add_subdirectory (core/mpdPid) # INDEPENDENT
 add_subdirectory (detectors/bmd) # INDEPENDENT
@@ -71,7 +72,6 @@ add_subdirectory (detectors/sts) # INDEPENDENT
 add_subdirectory (detectors/tof) # INDEPENDENT
 add_subdirectory (detectors/zdc) # INDEPENDENT
 add_subdirectory (generators) # INDEPENDENT
-add_subdirectory (mpddst) # Base
 add_subdirectory (passive) # INDEPENDENT
 add_subdirectory (shield_pack) # INDEPENDENT
 # LEVEL 2

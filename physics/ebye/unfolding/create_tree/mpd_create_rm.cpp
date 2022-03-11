@@ -73,14 +73,14 @@ using namespace std;
 R__ADD_INCLUDE_PATH($VMCWORKDIR)
 #include "/*add_your_path*/mpdroot/macro/mpd/mpdloadlibs.C"
 
-#include "/*add_your_path*/mpdroot/mpddst/MpdMiniEvent/MpdMiniDstReader.h"
-#include "/*add_your_path*/mpdroot/mpddst/MpdMiniEvent/MpdMiniDst.h"
-#include "/*add_your_path*/fairSoft/mpdroot/mpddst/MpdMiniEvent/MpdMiniEvent.h"
-#include "/*add_your_path*/mpdroot/mpddst/MpdMiniEvent/MpdMiniTrack.h"
-#include "/*add_your_path*/mpdroot/mpddst/MpdMiniEvent/MpdMiniMcEvent.h"
-#include "/*add_your_path*/mpdroot/mpddst/MpdMiniEvent/MpdMiniMcTrack.h"
+#include "/*add_your_path*/mpdroot/core/mpdDst/MpdMiniEvent/MpdMiniDstReader.h"
+#include "/*add_your_path*/mpdroot/core/mpdDst/MpdMiniEvent/MpdMiniDst.h"
+#include "/*add_your_path*/fairSoft/mpdroot/core/mpdDst/MpdMiniEvent/MpdMiniEvent.h"
+#include "/*add_your_path*/mpdroot/core/mpdDst/MpdMiniEvent/MpdMiniTrack.h"
+#include "/*add_your_path*/mpdroot/core/mpdDst/MpdMiniEvent/MpdMiniMcEvent.h"
+#include "/*add_your_path*/mpdroot/core/mpdDst/MpdMiniEvent/MpdMiniMcTrack.h"
 
-R__LOAD_LIBRARY(/*add_your_path*/mpdroot/mpddst/MpdMiniEvent/libMpdMiniDst)
+R__LOAD_LIBRARY(/*add_your_path*/mpdroot/core/mpdDst/MpdMiniEvent/libMpdMiniDst)
 
 int NumbOne_winds = 10; // number of pseudorapidity intervals for N, pT and PTN unfolding
 int Numb_winds = 10; // number of pseudorapidity intervals for NFNB unfolding

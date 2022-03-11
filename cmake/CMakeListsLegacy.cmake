@@ -221,7 +221,7 @@ add_subdirectory (simulation/mcDst)
 add_subdirectory (simulation/mcStack) # MpdGen
 add_subdirectory (core/mpdPid) # MpdMCStack MpdBase
 add_subdirectory (lhetrack) # MpdBase Kalman Sts Tof
-add_subdirectory (mpddst) # MpdBase LHETrack MpdPid
+add_subdirectory (core/mpdDst) # MpdBase LHETrack MpdPid
 
 add_subdirectory (detectors/tof) # MpdMCStack Kalman
 add_subdirectory (detectors/tpc) # Tof

@@ -6,12 +6,12 @@ Set(INCLUDE_DIRECTORIES
 ${BASE_INCLUDE_DIRECTORIES}
 ${CMAKE_SOURCE_FAIRMCSTACK}
 ${CMAKE_SOURCE_DIR}/core/mpdBase
+${CMAKE_SOURCE_DIR}/core/mpdDst
+${CMAKE_SOURCE_DIR}/core/mpdDst/MpdMiniEvent
 ${CMAKE_SOURCE_DIR}/core/mpdPid
 ${CMAKE_SOURCE_DIR}/detectors/tpc
 ${CMAKE_SOURCE_DIR}/kalman
 ${CMAKE_SOURCE_DIR}/lhetrack
-${CMAKE_SOURCE_DIR}/mpddst
-${CMAKE_SOURCE_DIR}/mpddst/MpdMiniEvent
 ${CMAKE_SOURCE_DIR}/physics/nicafemto/format/minidst
 ${CMAKE_SOURCE_DIR}/physics/nicafemto/format/combined
 ${CMAKE_SOURCE_DIR}/physics/nicafemto/format/minidstV0

@@ -2,9 +2,9 @@
 
 set(INCLUDE_DIRECTORIES
   ${BASE_INCLUDE_DIRECTORIES}
+  ${CMAKE_SOURCE_DIR}/core/mpdDst/MpdMiniEvent
   ${CMAKE_SOURCE_DIR}/physics/femto/MpdFemtoMaker
   ${CMAKE_SOURCE_DIR}/physics/femto/MpdFemtoMakerUser
-  ${CMAKE_SOURCE_DIR}/mpddst/MpdMiniEvent
   ${CMAKE_SOURCE_DIR}/simulation/mcDst
  )
 

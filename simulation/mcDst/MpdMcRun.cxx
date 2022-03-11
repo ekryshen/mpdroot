@@ -59,7 +59,7 @@ McRun::McRun(const char *generator, const char *comment, const Int_t &aProj, con
 
 //_________________
 McRun::~McRun()
-{  // Destructor
+{ // Destructor
    /* empty */
 }
 
