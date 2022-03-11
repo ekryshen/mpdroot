@@ -213,7 +213,7 @@ Generate_Version_Info()
 add_subdirectory (passive)
 add_subdirectory (core/mpdBase)
 add_subdirectory (core/mpdField)
-add_subdirectory (kalman) #MpdBase MpdField
+add_subdirectory (reconstruction/tracking/kalman) #MpdBase MpdField
 add_subdirectory (shield_pack)
 # automatically loaded with generators add_subdirectory (generators/unigen_format)
 add_subdirectory (generators) # MpdMcDst

@@ -881,11 +881,11 @@ INPUT                  = ../core/mpdBase/ \
                          ../eventdisplay/ \
                          ../gconfig/ \
                          ../generators/ \
-                         ../kalman/ \
                          ../lhetrack/ \
                          ../macro/ \
                          ../passive/ \
                          ../physics/ \
+                         ../reconstruction/tracking/kalman/ \
                          ../simulation/mcStack/ \
                          ../shield_pack/
 

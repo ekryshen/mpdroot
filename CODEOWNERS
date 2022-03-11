@@ -40,7 +40,7 @@
 
 # Reconstruction
 #----------------------------------------------------------------------------------
-/kalman/                       @zinchenk
+/reconstruction/tracking/kalman/                       @zinchenk
 
 /core/mpdPid/                       @zinchenk @amudrokh
 

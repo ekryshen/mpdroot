@@ -8,7 +8,7 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_SOURCE_DIR}/core/mpdField
   ${CMAKE_SOURCE_DIR}/detectors/tof
   ${CMAKE_SOURCE_DIR}/generators
-  ${CMAKE_SOURCE_DIR}/kalman
+  ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
   ${CMAKE_SOURCE_DIR}/simulation/mcStack
 )
 

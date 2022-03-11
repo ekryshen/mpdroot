@@ -76,7 +76,7 @@ add_subdirectory (passive) # INDEPENDENT
 add_subdirectory (shield_pack) # INDEPENDENT
 # LEVEL 2
 add_subdirectory (detectors/tpc) # tof
-add_subdirectory (kalman) # mpdfield
+add_subdirectory (reconstruction/tracking/kalman) # mpdfield
 add_subdirectory (physics) # mpdbase mpddst
 add_subdirectory (simulation/mcDst)
 add_subdirectory (simulation/mcStack) # MpdGen

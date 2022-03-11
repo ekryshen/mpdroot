@@ -8,8 +8,8 @@ add_subdirectory(photons)
 set(INCLUDE_DIRECTORIES
  ${BASE_INCLUDE_DIRECTORIES}
   ${CMAKE_SOURCE_DIR}/core/mpdBase
-  ${CMAKE_SOURCE_DIR}/kalman
   ${CMAKE_SOURCE_DIR}/physics
+  ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
