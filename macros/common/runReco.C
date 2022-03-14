@@ -151,11 +151,11 @@ void runReco(TString inFile = "evetest.root", TString outFile = "mpddst.root", I
     fRun->AddTask(etofHitProd);
     
     // Endcap tracking
-    FairTask* tpcECT = new MpdEctTrackFinderTpc();
+    FairTask* tpcECT = new MpdEctTrackFinderTpc(); // undefined class
     tpcECT->SetVerbose(iVerbose);
     fRun->AddTask(tpcECT);
     
-    MpdEctTrackFinderCpc* tofECT = new MpdEctTrackFinderCpc();
+    MpdEctTrackFinderCpc* tofECT = new MpdEctTrackFinderCpc(); // undefined class
     tofECT->SetVerbose(iVerbose);
     tofECT->SetTpc(kTRUE);
     fRun->AddTask(tofECT);

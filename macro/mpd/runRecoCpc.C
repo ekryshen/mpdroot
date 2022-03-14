@@ -119,17 +119,17 @@ void runRecoCpc(TString inFile = "mc.1k.root")
   fRun->AddTask(etofHitProd);
 
   // Endcap tracking
-  //*
+  /* undefined class
   FairTask* tpcECT = new MpdEctTrackFinderTpc();
   fRun->AddTask(tpcECT);
-  //*/
+  */
 
   //MpdEctTrackFinderTof* tofECT = new MpdEctTrackFinderTof();
-  //*
+  /* undefined class
   MpdEctTrackFinderCpc* tofECT = new MpdEctTrackFinderCpc();
   tofECT->SetTpc(kTRUE);
   fRun->AddTask(tofECT);
-  //*/
+  */
 
   // TOF matching
   MpdTofMatching* tofMatch = new MpdTofMatching("TOF matching");

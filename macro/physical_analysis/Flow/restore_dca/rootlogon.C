@@ -18,8 +18,8 @@
   includePath        += "-I${VMCWORKDIR}/detectors/etof ";
   includePath        += "-I${VMCWORKDIR}/detectors/tof ";
   includePath        += "-I${VMCWORKDIR}/detectors/tpc ";
-  includePath        += "-I${VMCWORKDIR}/lhetrack ";
   includePath        += "-I${VMCWORKDIR}/reconstruction/tracking/kalman ";
+  includePath        += "-I${VMCWORKDIR}/reconstruction/tracking/lhetrack ";
   includePath        += "-I${VMCWORKDIR}/simulation/mcStack ";
   /*
   includePath        += "-I${ALICE_ROOT}/RAW ";

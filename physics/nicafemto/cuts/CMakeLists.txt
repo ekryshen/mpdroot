@@ -5,8 +5,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 Set(INCLUDE_DIRECTORIES
   ${CMAKE_SOURCE_FAIRMCSTACK}
   ${CMAKE_SOURCE_DIR}/detectors/tpc
-  ${CMAKE_SOURCE_DIR}/lhetrack
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
+  ${CMAKE_SOURCE_DIR}/reconstruction/tracking/lheTrack
   ${NICAFEMTO_FEATURES}
   ${NICAFEMTO_DATA}
   ${NICAFEMTO_CUTS}

@@ -10,9 +10,9 @@ Set(INCLUDE_DIRECTORIES
   ${CMAKE_SOURCE_DIR}/core/mpdDst/MpdMiniEvent
   ${CMAKE_SOURCE_DIR}/core/mpdPid
   ${CMAKE_SOURCE_DIR}/detectors/tpc
-  ${CMAKE_SOURCE_DIR}/lhetrack
   ${CMAKE_SOURCE_DIR}/physics/nicafemto/nica_helpers
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
+  ${CMAKE_SOURCE_DIR}/reconstruction/tracking/lheTrack
   ${CMAKE_SOURCE_DIR}/simulation/mcDst
   ${NICAFEMTO_FEATURES}
   ${NICAFEMTO_DATA}

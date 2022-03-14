@@ -88,8 +88,8 @@ void recoTPC_ECT()
   //CbmTask* trackMS = new TpcLheHitsMaker("Tracking routine");
   //fRun->AddTask(trackMS);
 
-  FairTask* reco = new MpdEctTrackFinderTpc();
-  fRun->AddTask(reco);
+  /* unknown class FairTask* reco = new MpdEctTrackFinderTpc();
+  fRun->AddTask(reco); */
   
   // Number of events to process
   Int_t nEvents = 100; //1; //50; //250; //90;

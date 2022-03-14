@@ -27,9 +27,9 @@
 #include "MpdFfdHitProducer.h"
 #include "MpdTofHitProducer.h"
 #include "MpdEtofHitProducer.h"
-#include "MpdEctTrackFinderTpc.h"
-#include "MpdEctTrackFinderTof.h"
-#include "MpdEctTrackFinderCpc.h"
+// #include "MpdEctTrackFinderTpc.h"
+// non-existing file #include "MpdEctTrackFinderTof.h"
+// non-existing file #include "MpdEctTrackFinderCpc.h"
 #include "MpdTofMatching.h"
 #include "MpdZdcDigiProducer.h"
 #include "MpdEtofMatching.h"
@@ -161,7 +161,7 @@ void reco(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outFile
     tpcECT->SetVerbose(iVerbose);
     fRun->AddTask(tpcECT);
     
-    MpdEctTrackFinderCpc* tofECT = new MpdEctTrackFinderCpc();
+    MpdEctTrackFinderCpc* tofECT = new MpdEctTrackFinderCpc(); // undefined class
     tofECT->SetVerbose(iVerbose);
     tofECT->SetTpc(kTRUE);
     fRun->AddTask(tofECT);

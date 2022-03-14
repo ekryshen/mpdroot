@@ -126,12 +126,14 @@ void fullReco(TString inFile = "evetest.root")
   fRun->AddTask(etofHitProd);
 
   // Endcap tracking
-  FairTask* tpcECT = new MpdEctTrackFinderTpc();
-  fRun->AddTask(tpcECT);
+  /* unknown class FairTask* tpcECT = new MpdEctTrackFinderTpc();
+  fRun->AddTask(tpcECT); */
 
+  /* undefined class
   MpdEctTrackFinderTof* tofECT = new MpdEctTrackFinderTof();
   tofECT->SetTpc(kTRUE);
   fRun->AddTask(tofECT);
+  */
 
   // TOF matching
   MpdTofMatching* tofMatch = new MpdTofMatching("TOF matching");

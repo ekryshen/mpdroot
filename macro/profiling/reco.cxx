@@ -24,9 +24,9 @@
 #include "MpdKfPrimaryVertexFinder.h"
 #include "MpdTofHitProducer.h"
 #include "MpdEtofHitProducer.h"
-#include "MpdEctTrackFinderTpc.h"
-#include "MpdEctTrackFinderTof.h"
-#include "MpdEctTrackFinderCpc.h"
+// #include "MpdEctTrackFinderTpc.h"
+// non-existing #include "MpdEctTrackFinderTof.h"
+// non-existing #include "MpdEctTrackFinderCpc.h"
 #include "MpdTofMatching.h"
 #include "MpdZdcDigiProducer.h"
 #include "MpdEtofMatching.h"
@@ -149,11 +149,11 @@ void reco(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outFile
     fRun->AddTask(etofHitProd);
 
     // Endcap tracking
-    FairTask* tpcECT = new MpdEctTrackFinderTpc();
+    FairTask* tpcECT = new MpdEctTrackFinderTpc(); // undefined class
     tpcECT->SetVerbose(iVerbose);
     fRun->AddTask(tpcECT);
 
-    MpdEctTrackFinderCpc* tofECT = new MpdEctTrackFinderCpc();
+    MpdEctTrackFinderCpc* tofECT = new MpdEctTrackFinderCpc(); // undefined class
     tofECT->SetVerbose(iVerbose);
     tofECT->SetTpc(kTRUE);
     fRun->AddTask(tofECT);
