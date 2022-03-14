@@ -215,8 +215,8 @@ add_subdirectory (core/mpdBase)
 add_subdirectory (core/mpdField)
 add_subdirectory (reconstruction/tracking/kalman) #MpdBase MpdField
 add_subdirectory (shield_pack)
-# automatically loaded with generators add_subdirectory (generators/unigen_format)
-add_subdirectory (generators) # MpdMcDst
+# automatically loaded with generators add_subdirectory (simulation/generators/unigenFormat)
+add_subdirectory (simulation/generators) # MpdMcDst
 add_subdirectory (simulation/mcDst)
 add_subdirectory (simulation/mcStack) # MpdGen
 add_subdirectory (core/mpdPid) # MpdMCStack MpdBase

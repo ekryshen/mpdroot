@@ -2,7 +2,7 @@ set(PACKAGE MpdGeneralGenerator) # this line comes after last add_subdirectory
 # Create a library called "libMpdGeneralGenerator"
 set(INCLUDE_DIRECTORIES
   ${BASE_INCLUDE_DIRECTORIES}
-  ${CMAKE_SOURCE_DIR}/generators
+  ${CMAKE_SOURCE_DIR}/simulation/generators
   ${CMAKE_SOURCE_DIR}/gconfig
   ${CMAKE_CURRENT_SOURCE_DIR}
 )

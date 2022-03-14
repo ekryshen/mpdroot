@@ -1,0 +1,31 @@
+set(INCLUDE_DIRECTORIES
+  ${BASE_INCLUDE_DIRECTORIES}
+  ${CMAKE_CURRENT_LIST_DIR}
+)
+
+Set(SYSTEM_INCLUDE_DIRECTORIES
+  ${ROOT_INCLUDE_DIR}
+)
+
+include_directories(${INCLUDE_DIRECTORIES})
+
+set(LINK_DIRECTORIES
+  ${ROOT_LIBRARY_DIR}
+)
+
+link_directories(${LINK_DIRECTORIES})
+
+set(SRCS
+  UEvent.cxx
+  UParticle.cxx
+  URun.cxx
+)
+
+Set(HEADERS)
+
+Set(HEADERS)
+Set(LINKDEF UniGenLinkDef.h)
+Set(LIBRARY_NAME UniGenFormat)
+Set(DEPENDENCIES Core)
+
+GENERATE_LIBRARY()

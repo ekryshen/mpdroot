@@ -880,12 +880,12 @@ INPUT                  = ../core/mpdBase/ \
                          ../detectors/zdc/ \
                          ../eventdisplay/ \
                          ../gconfig/ \
-                         ../generators/ \
                          ../macro/ \
                          ../passive/ \
                          ../physics/ \
                          ../reconstruction/tracking/kalman/ \
                          ../reconstruction/tracking/lheTrack/ \
+                         ../simulation/generators/ \
                          ../simulation/mcStack/ \
                          ../shield_pack/
 

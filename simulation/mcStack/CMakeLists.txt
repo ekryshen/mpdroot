@@ -5,7 +5,7 @@
 set(INCLUDE_DIRECTORIES
   ${BASE_INCLUDE_DIRECTORIES}
   ${CMAKE_CURRENT_LIST_DIR}
-  ${CMAKE_SOURCE_DIR}/generators
+  ${CMAKE_SOURCE_DIR}/simulation/generators
 )
 
 include_directories( ${INCLUDE_DIRECTORIES})

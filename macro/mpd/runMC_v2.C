@@ -39,7 +39,7 @@ R__ADD_INCLUDE_PATH($VMCWORKDIR)
 #include "macro/mpd/geometry_stage1.C"
 //#include "macro/mpd/geometry_v2.C"
 R__LOAD_LIBRARY(libMpdGenFactory);
-#include "generators/genFactory/MpdGeneratorsFactory.h"
+#include "simulation/generators/genFactory/MpdGeneratorsFactory.h"
 
 // inFile - input file with generator data, default: auau.09gev.mbias.98k.ftn14
 // nStartEvent - for compatibility, any number

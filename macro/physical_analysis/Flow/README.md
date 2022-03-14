@@ -398,7 +398,7 @@ line 90
 
         fX = fY = fZ = fT = fB = fPhi = fEP = 0.;
 
-In new version of mpdroot such rotation procedure has been implemented already, so `mpdroot/generators/MpdUrqmdGenerator.cxx` requires only 1 modification:  
+In new version of mpdroot such rotation procedure has been implemented already, so `mpdroot/simulation/generators/MpdUrqmdGenerator.cxx` requires only 1 modification:  
 line 215 (after line `FairMCEventHeader* event = primGen->GetEvent();`):
 
         event->SetEP(phi);
