@@ -73,7 +73,7 @@ add_subdirectory (detectors/tof) # INDEPENDENT
 add_subdirectory (detectors/zdc) # INDEPENDENT
 add_subdirectory (simulation/generators) # INDEPENDENT
 add_subdirectory (passive) # INDEPENDENT
-add_subdirectory (shield_pack) # INDEPENDENT
+add_subdirectory (simulation/generators/shieldPack) # INDEPENDENT
 # LEVEL 2
 add_subdirectory (detectors/tpc) # tof
 add_subdirectory (reconstruction/tracking/kalman) # mpdfield
