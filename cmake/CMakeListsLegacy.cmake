@@ -210,7 +210,7 @@ Generate_Version_Info()
 # Recurse into the given subdirectories. This does not actually
 # cause another cmake executable to run. The same process will walk through
 # the project's entire directory structure.
-add_subdirectory (passive)
+add_subdirectory (core/mpdPassive)
 add_subdirectory (core/mpdBase)
 add_subdirectory (core/mpdField)
 add_subdirectory (reconstruction/tracking/kalman) #MpdBase MpdField

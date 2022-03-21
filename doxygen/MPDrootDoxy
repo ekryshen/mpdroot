@@ -867,6 +867,7 @@ WARN_LOGFILE           =
 INPUT                  = ../core/mpdBase/ \
                          ../core/mpdDst/ \
                          ../core/mpdField/ \
+                         ../core/mpdPassive/ \
                          ../core/mpdPid/ \
                          ../detectors/bbc/ \
                          ../detectors/bmd/ \
@@ -881,7 +882,6 @@ INPUT                  = ../core/mpdBase/ \
                          ../eventdisplay/ \
                          ../gconfig/ \
                          ../macro/ \
-                         ../passive/ \
                          ../physics/ \
                          ../reconstruction/tracking/kalman/ \
                          ../reconstruction/tracking/lheTrack/ \
