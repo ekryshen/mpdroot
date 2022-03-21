@@ -1,8 +1,8 @@
 /********************************************************************************
  *    Copyright (C) 2014 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    *
  *                                                                              *
- *              This software is distributed under the terms of the             * 
- *         GNU Lesser General Public Licence version 3 (LGPL) version 3,        *  
+ *              This software is distributed under the terms of the             *
+ *         GNU Lesser General Public Licence version 3 (LGPL) version 3,        *
  *                  copied verbatim in the file "LICENSE"                       *
  ********************************************************************************/
 //*-- AUTHOR : Denis Bertini
@@ -17,13 +17,13 @@
 /////////////////////////////////////////////////////////////
 #include "FairPassiveContFact.h"
 
-#include "FairGeoPassivePar.h"          // for FairGeoPassivePar
-#include "FairRuntimeDb.h"              // for FairRuntimeDb
+#include "FairGeoPassivePar.h" // for FairGeoPassivePar
+#include "FairRuntimeDb.h"     // for FairRuntimeDb
 
-#include "TList.h"                      // for TList
-#include "TString.h"                    // for TString
+#include "TList.h"   // for TList
+#include "TString.h" // for TString
 
-#include <string.h>                     // for strcmp, NULL
+#include <string.h> // for strcmp, NULL
 
 class FairParSet;
 
@@ -31,41 +31,37 @@ using namespace std;
 
 ClassImp(FairPassiveContFact)
 
-static FairPassiveContFact gFairPassiveContFact;
+   static FairPassiveContFact gFairPassiveContFact;
 
-FairPassiveContFact::FairPassiveContFact()
-  : FairContFact()
+FairPassiveContFact::FairPassiveContFact() : FairContFact()
 {
-  // Constructor (called when the library is loaded)
-  fName="FairPassiveContFact";
-  fTitle="Factory for parameter containers in libPassive";
-  setAllContainers();
-  FairRuntimeDb::instance()->addContFactory(this);
+   // Constructor (called when the library is loaded)
+   fName  = "FairPassiveContFact";
+   fTitle = "Factory for parameter containers in libPassive";
+   setAllContainers();
+   FairRuntimeDb::instance()->addContFactory(this);
 }
 
 void FairPassiveContFact::setAllContainers()
 {
-  /** Creates the Container objects with all accepted contexts and adds them to
-   *  the list of containers for the STS library.*/
+   /** Creates the Container objects with all accepted contexts and adds them to
+    *  the list of containers for the STS library.*/
 
-  FairContainer* p= new FairContainer("FairGeoPassivePar",
-                                      "Passive Geometry Parameters",
-                                      "TestDefaultContext");
-  p->addContext("TestNonDefaultContext");
+   FairContainer *p = new FairContainer("FairGeoPassivePar", "Passive Geometry Parameters", "TestDefaultContext");
+   p->addContext("TestNonDefaultContext");
 
-  containers->Add(p);
+   containers->Add(p);
 }
 
-FairParSet* FairPassiveContFact::createContainer(FairContainer* c)
+FairParSet *FairPassiveContFact::createContainer(FairContainer *c)
 {
-  /** Calls the constructor of the corresponding parameter container.
-   * For an actual context, which is not an empty string and not the default context
-   * of this container, the name is concatinated with the context. */
-  const char* name=c->GetName();
-  FairParSet* p=NULL;
-  if (strcmp(name,"FairGeoPassivePar")==0) {
-    p=new FairGeoPassivePar(c->getConcatName().Data(),c->GetTitle(),c->getContext());
-  }
-  return p;
+   /** Calls the constructor of the corresponding parameter container.
+    * For an actual context, which is not an empty string and not the default context
+    * of this container, the name is concatinated with the context. */
+   const char *name = c->GetName();
+   FairParSet *p    = NULL;
+   if (strcmp(name, "FairGeoPassivePar") == 0) {
+      p = new FairGeoPassivePar(c->getConcatName().Data(), c->GetTitle(), c->getContext());
+   }
+   return p;
 }
-

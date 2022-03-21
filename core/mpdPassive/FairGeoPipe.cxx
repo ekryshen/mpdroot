@@ -1,8 +1,8 @@
 /********************************************************************************
  *    Copyright (C) 2014 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    *
  *                                                                              *
- *              This software is distributed under the terms of the             * 
- *         GNU Lesser General Public Licence version 3 (LGPL) version 3,        *  
+ *              This software is distributed under the terms of the             *
+ *         GNU Lesser General Public Licence version 3 (LGPL) version 3,        *
  *                  copied verbatim in the file "LICENSE"                       *
  ********************************************************************************/
 //*-- AUTHOR : Ilse Koenig
@@ -16,43 +16,39 @@
 /////////////////////////////////////////////////////////////
 #include "FairGeoPipe.h"
 
-#include "FairGeoInterface.h"           // for FairGeoInterface
-#include "FairGeoLoader.h"              // for FairGeoLoader
+#include "FairGeoInterface.h" // for FairGeoInterface
+#include "FairGeoLoader.h"    // for FairGeoLoader
 
-#include "TList.h"                      // for TList
-#include "TString.h"                    // for TString
+#include "TList.h"   // for TList
+#include "TString.h" // for TString
 
-#include <string.h>                     // for strcpy
+#include <string.h> // for strcpy
 
 class FairGeoBuilder;
 class TObject;
 
 ClassImp(FairGeoPipe)
 
-FairGeoPipe::FairGeoPipe()
-  : FairGeoSet()
+   FairGeoPipe::FairGeoPipe()
+   : FairGeoSet()
 {
-  // Constructor
-  fName="pipe";
-  strcpy(modName,"p");
-  strcpy(eleName,"p");
-  maxSectors=0;
-  maxModules=1;
+   // Constructor
+   fName = "pipe";
+   strcpy(modName, "p");
+   strcpy(eleName, "p");
+   maxSectors = 0;
+   maxModules = 1;
 }
-Bool_t  FairGeoPipe::create ( FairGeoBuilder* build )
+Bool_t FairGeoPipe::create(FairGeoBuilder *build)
 {
-  Bool_t rc = FairGeoSet::create( build );
-  if ( rc ) {
-    FairGeoLoader* loader=FairGeoLoader::Instance();
-    FairGeoInterface* GeoInterface =loader->getGeoInterface();
+   Bool_t rc = FairGeoSet::create(build);
+   if (rc) {
+      FairGeoLoader    *loader       = FairGeoLoader::Instance();
+      FairGeoInterface *GeoInterface = loader->getGeoInterface();
 
-    GeoInterface->getMasterNodes()->Add( static_cast<TObject*>( getVolume("pipeCentral") ) );
-  }
-  return rc;
-}
-
-FairGeoPipe::~FairGeoPipe()
-{
-
+      GeoInterface->getMasterNodes()->Add(static_cast<TObject *>(getVolume("pipeCentral")));
+   }
+   return rc;
 }
 
+FairGeoPipe::~FairGeoPipe() {}

@@ -3,14 +3,14 @@
 #include "TString.h"
 #include <string.h>
 
-FairGeoCradle::FairGeoCradle()
-  : FairGeoSet() {
+FairGeoCradle::FairGeoCradle() : FairGeoSet()
+{
 
-    fName="cradle";
-    strcpy(modName,"c");
-    strcpy(eleName,"c");
-    maxSectors=0;
-    maxModules=1;
+   fName = "cradle";
+   strcpy(modName, "c");
+   strcpy(eleName, "c");
+   maxSectors = 0;
+   maxModules = 1;
 }
 
 ClassImp(FairGeoCradle)
