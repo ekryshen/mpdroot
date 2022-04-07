@@ -467,6 +467,10 @@ void MpdTpcDigitizerAZ::SignalShaping()
       }
       fft[0] = TVirtualFFT::FFT(1, &nbins, "R2C ES K");
       // fft[0] = TVirtualFFT::FFT(1, &nbins, "R2C EX K");
+      if (fft[0] == nullptr) {
+         LOG(FATAL) << "[MpdTpcDigitizerAZ::SignalShaping] No FFTW library found (fft[0]==nullptr). Exit.";
+         exit(1);
+      }
       fft[0]->SetPoints(reFilt);
       fft[0]->Transform();
       fft[0]->GetPointsComplex(reFilt, imFilt);
@@ -505,6 +509,10 @@ void MpdTpcDigitizerAZ::SignalShaping()
          // Inverse Fourier transform
          if (!fft[1]) fft[1] = TVirtualFFT::FFT(1, &nbins, "C2R ES K");
          // if (!fft[1]) fft[1] = TVirtualFFT::FFT(1, &nbins, "C2R EX K");
+         if (fft[1] == nullptr) {
+            LOG(FATAL) << "[MpdTpcDigitizerAZ::SignalShaping] No FFTW library found (fft[1]==nullptr). Exit.";
+            exit(1);
+         }
          fft[1]->SetPointsComplex(reTot, imTot);
          fft[1]->Transform();
          fft[1]->GetPoints(reTot);
