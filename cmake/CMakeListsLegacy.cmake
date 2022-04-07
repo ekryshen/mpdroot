@@ -235,7 +235,7 @@ add_subdirectory (detectors/mcord)
 add_subdirectory (physics) #MpdBase MpdMCStack Kalman MpdPid LHETrack
 add_subdirectory (eventdisplay) #Emc
 
-#add_subdirectory (macro)
+add_subdirectory (macro)
 #add_subdirectory (detectors/bbc)
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/macro/nica_scheduler/CMakeLists.txt")
