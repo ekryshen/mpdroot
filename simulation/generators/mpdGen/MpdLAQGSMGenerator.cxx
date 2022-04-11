@@ -107,8 +107,8 @@ void MpdLAQGSMGenerator::Init(const char *light_particles_filename)
       if (gSystem->OpenDirectory(dd + "/mpdgenerators"))
          dd += "/mpdgenerators";
       else {
-         if (gSystem->OpenDirectory(dd + "/simulation/generators"))
-            dd += "/simulation/generators";
+         if (gSystem->OpenDirectory(dd + "/simulation/generators/mpdGen"))
+            dd += "/simulation/generators/mpdGen";
          else
             dd = gSystem->WorkingDirectory();
       }
@@ -347,8 +347,8 @@ Bool_t MpdLAQGSMGenerator::ReadEvent(FairPrimaryGenerator *primGen)
 
    // Define track variables to be read from file
    Int_t iCharge = 0, iLeptonic = 0, iStrange = 0, iBarionic = 0, iCode = 0, io1 = 0, io2 = 0, io3 = 0 //,
-      // A=0,
-      // Z=0
+                                                                                                       // A=0,
+                                                                                                       // Z=0
       ;
    Float_t px = 0., py = 0., pz = 0., pz1 = 0, pza1 = 0,
            //    Ekin = 0,
@@ -600,7 +600,7 @@ Int_t MpdLAQGSMGenerator::RegisterIons(Int_t Max_Event_Number)
             sscanf(&(ss[p_num]), "%g%g%g%g%g%g", &px, &py, &pz, &pz1, &pza1, &mass);
             // if(iCharge>20)
             //	cout << "format 2 " << px << " " << py << " " << pz << " " << pz1 << " " << pza1 << " "<< mass << " " <<
-            //fQGSM_format_ID << endl;
+            // fQGSM_format_ID << endl;
          }
 
          if (iBarionic > 1) { // ion
@@ -641,7 +641,7 @@ Int_t MpdLAQGSMGenerator::RegisterIons(Int_t Max_Event_Number)
 
                   if (CreateNucleus(Z, mass, PDG, buf_ionName)) {
                      //	      FairParticle *pa=new FairParticle(buf_ionName,Z, iBarionic, abs(iStrange),
-                     //mass,Z,0,2.6e-10);
+                     // mass,Z,0,2.6e-10);
                      /*
                      TParticle *tpa= new TParticle();
                      if (tpa) {
@@ -968,4 +968,4 @@ Bool_t MpdLAQGSMGenerator::CreateNucleus(Int_t Z, Float_t mass, Int_t pdgCode, c
 }
 // ------------------------------------------------------------------------
 
-ClassImp(MpdLAQGSMGenerator)
+ClassImp(MpdLAQGSMGenerator);

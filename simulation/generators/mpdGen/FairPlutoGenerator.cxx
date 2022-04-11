@@ -1,9 +1,8 @@
 // -------------------------------------------------------------------------
-// -----                MpdPlutoGenerator source file                  -----
+// -----                FairPlutoGenerator source file                  -----
 // -----          Created 13/07/04  by V. Friese / D.Bertini           -----
-// -----      Modified from FairPlutoGenerator for MPD by V. Zhezher   -----
 // -------------------------------------------------------------------------
-#include "MpdPlutoGenerator.h"
+#include "FairPlutoGenerator.h"
 
 #include "FairPrimaryGenerator.h"
 
@@ -17,47 +16,54 @@
 
 #include <iostream>
 
-const Double_t kProtonMass   = 0.938271998;
-const Double_t kElectronMass = 0.00051098892;
-
 // -----   Default constructor   ------------------------------------------
-MpdPlutoGenerator::MpdPlutoGenerator()
-   : FairGenerator(), iEvent(0), fEkin(0), fFileName(NULL), fInputFile(NULL), fInputTree(NULL), fParticles(NULL)
+FairPlutoGenerator::FairPlutoGenerator()
+   : FairGenerator(), iEvent(0), fFileName(NULL), fInputFile(NULL), fInputTree(NULL), fParticles(NULL)
 {
+   /*
+   iEvent     = 0;
+   fInputFile = NULL;
+   fInputTree = NULL;
+   */
 }
 // ------------------------------------------------------------------------
 
 // -----   Standard constructor   -----------------------------------------
-MpdPlutoGenerator::MpdPlutoGenerator(const Char_t *fileName, Double_t ekin = 25.0)
+FairPlutoGenerator::FairPlutoGenerator(const Char_t *fileName)
    : FairGenerator(), iEvent(0), fFileName(fileName), fInputFile(new TFile(fileName)), fInputTree(NULL),
      fParticles(new TClonesArray("PParticle", 100))
 {
-   fEkin      = ekin;
+   /*
+   iEvent     = 0;
+   fFileName  = fileName;
+   fInputFile = new TFile(fFileName);
+   */
    fInputTree = (TTree *)fInputFile->Get("data");
+   //  fParticles = new TClonesArray("PParticle",100);
    fInputTree->SetBranchAddress("Particles", &fParticles);
 }
 // ------------------------------------------------------------------------
 
 // -----   Destructor   ---------------------------------------------------
-MpdPlutoGenerator::~MpdPlutoGenerator()
+FairPlutoGenerator::~FairPlutoGenerator()
 {
    CloseInput();
 }
 // ------------------------------------------------------------------------
 
 // -----   Public method ReadEvent   --------------------------------------
-Bool_t MpdPlutoGenerator::ReadEvent(FairPrimaryGenerator *primGen)
+Bool_t FairPlutoGenerator::ReadEvent(FairPrimaryGenerator *primGen)
 {
 
    // Check for input file
    if (!fInputFile) {
-      cout << "-E MpdPlutoGenerator: Input file nor open!" << endl;
+      cout << "-E FairPlutoGenerator: Input file nor open!" << endl;
       return kFALSE;
    }
 
    // Check for number of events in input file
    if (iEvent > fInputTree->GetEntries()) {
-      cout << "-E MpdPlutoGenerator: No more events in input file!" << endl;
+      cout << "-E FairPlutoGenerator: No more events in input file!" << endl;
       CloseInput();
       return kFALSE;
    }
@@ -79,7 +85,7 @@ Bool_t MpdPlutoGenerator::ReadEvent(FairPrimaryGenerator *primGen)
 
       // Check if particle type is known to database
       if (!pdgType) {
-         cout << "-W MpdPlutoGenerator: Unknown type " << part->ID() << ", skipping particle." << endl;
+         cout << "-W FairPlutoGenerator: Unknown type " << part->ID() << ", skipping particle." << endl;
          continue;
       }
 
@@ -93,23 +99,8 @@ Bool_t MpdPlutoGenerator::ReadEvent(FairPrimaryGenerator *primGen)
       Double_t vy     = vertex.y();
       Double_t vz     = vertex.z();
 
-      // ---> Calculate beta and gamma for Lorentztransformation
-      Double_t eBeam   = fEkin + kProtonMass;
-      Double_t pBeam   = TMath::Sqrt(eBeam * eBeam - kProtonMass * kProtonMass);
-      Double_t betaCM  = pBeam / (eBeam + kProtonMass);
-      Double_t gammaCM = TMath::Sqrt(1. / (1. - betaCM * betaCM));
-
-      // AZ Double_t mass = kElectronMass;
-      Double_t mass = dataBase->GetParticle(pdgType)->Mass();
-      Double_t e    = sqrt(mass * mass + px * px + py * py + pz * pz);
-      pz            = gammaCM * (pz - betaCM * e);
-
       // Give track to PrimaryGenerator
-      // primGen->AddTrack(pdgType, px, py, pz, vx, vy, vz);
-      // AZ - keep track of parents
-      Int_t parentIndx = part->GetParentIndex();
-      primGen->AddTrack(pdgType, px, py, pz, vx, vy, vz, -parentIndx - 10);
-      // AZ
+      primGen->AddTrack(pdgType, px, py, pz, vx, vy, vz);
 
    } //  Loop over particle in event
 
@@ -117,24 +108,11 @@ Bool_t MpdPlutoGenerator::ReadEvent(FairPrimaryGenerator *primGen)
 }
 // ------------------------------------------------------------------------
 
-// -----   Public method SkipEvents   --------------------------------------
-
-Bool_t MpdPlutoGenerator::SkipEvents(Int_t count)
-{
-   if (count <= 0) return kTRUE;
-
-   iEvent = count;
-
-   std::cout << "-I MpdPlutoGenerator: Skipped " << count << " Events!" << std::endl;
-
-   return kTRUE;
-}
-
 // -----   Private method CloseInput   ------------------------------------
-void MpdPlutoGenerator::CloseInput()
+void FairPlutoGenerator::CloseInput()
 {
    if (fInputFile) {
-      cout << "-I MpdPlutoGenerator: Closing input file " << fFileName << endl;
+      cout << "-I FairPlutoGenerator: Closing input file " << fFileName << endl;
       fInputFile->Close();
       delete fInputFile;
    }
@@ -142,4 +120,4 @@ void MpdPlutoGenerator::CloseInput()
 }
 // ------------------------------------------------------------------------
 
-ClassImp(MpdPlutoGenerator)
+ClassImp(FairPlutoGenerator);

@@ -313,4 +313,5 @@ Bool_t MpdPHQMDGenerator::SkipEvents(int n)
    return kTRUE;
 };
 // ---------------------------------------------------------------------
+
 ClassImp(MpdPHQMDGenerator);

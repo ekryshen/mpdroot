@@ -77,4 +77,4 @@ Bool_t MpdHypYPtGenerator::ReadEvent(FairPrimaryGenerator *primGen)
 }
 // ------------------------------------------------------------------------
 
-ClassImp(MpdHypYPtGenerator)
+ClassImp(MpdHypYPtGenerator);

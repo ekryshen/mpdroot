@@ -106,4 +106,5 @@ MpdMcDstGenerator::~MpdMcDstGenerator()
 
    delete fGenTracks;
 }
+
 ClassImp(MpdMcDstGenerator);

@@ -76,8 +76,10 @@ add_subdirectory (detectors/mcord) # INDEPENDENT
 add_subdirectory (detectors/sts) # INDEPENDENT
 add_subdirectory (detectors/tof) # INDEPENDENT
 add_subdirectory (detectors/zdc) # INDEPENDENT
-add_subdirectory (simulation/generators) # INDEPENDENT
+add_subdirectory (simulation/generators/genFactory) # INDEPENDENT
+add_subdirectory (simulation/generators/mpdGen)
 add_subdirectory (simulation/generators/mpdGeneralGenerator) # INDEPENDENT
+add_subdirectory (simulation/generators/unigenFormat) # INDEPENDENT
 add_subdirectory (simulation/generators/shieldPack) # INDEPENDENT
 # LEVEL 2
 add_subdirectory (detectors/tpc) # tof

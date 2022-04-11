@@ -5,7 +5,7 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_SOURCE_DIR}/macro/mpd # needed to load loadlibs.C
   ${CMAKE_SOURCE_DIR}/simulation/generators/shieldPack/THadgen
   ${CMAKE_SOURCE_DIR}/simulation/generators/shieldPack/hadgen
-  ${CMAKE_SOURCE_DIR}/simulation/generators
+  ${CMAKE_SOURCE_DIR}/simulation/generators/mpdGen
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES

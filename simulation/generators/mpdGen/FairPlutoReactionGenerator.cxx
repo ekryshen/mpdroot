@@ -92,4 +92,4 @@ Bool_t FairPlutoReactionGenerator::ReadEvent(FairPrimaryGenerator *primGen)
 }
 // ------------------------------------------------------------------------
 
-ClassImp(FairPlutoReactionGenerator)
+ClassImp(FairPlutoReactionGenerator);

@@ -38,4 +38,5 @@ void MpdMCEventHeader::Register()
    FairRootManager::Instance()->Register("MCEventHeader.", "Event", this, kTRUE);
 }
 // ---------------------------------------------------------------------
-ClassImp(MpdMCEventHeader)
+
+ClassImp(MpdMCEventHeader);

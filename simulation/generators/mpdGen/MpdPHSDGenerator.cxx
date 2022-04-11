@@ -181,4 +181,5 @@ Bool_t MpdPHSDGenerator::SkipEvents(int n)
    return kTRUE;
 };
 // ---------------------------------------------------------------------
+
 ClassImp(MpdPHSDGenerator);

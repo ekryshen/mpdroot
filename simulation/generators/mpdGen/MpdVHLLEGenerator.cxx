@@ -80,4 +80,5 @@ Bool_t MpdVHLLEGenerator::ReadEvent(FairPrimaryGenerator *primGen)
 
    return kTRUE;
 }
+
 ClassImp(MpdVHLLEGenerator);

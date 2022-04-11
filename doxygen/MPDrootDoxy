@@ -884,7 +884,10 @@ INPUT                  = ../core/mpdBase/ \
                          ../physics/ \
                          ../reconstruction/tracking/kalman/ \
                          ../reconstruction/tracking/lheTrack/ \
-                         ../simulation/generators/ \
+                         ../simulation/generators/genFactory \
+                         ../simulation/generators/mpdGen \
+                         ../simulation/generators/mpdGeneralGenerator \
+                         ../simulation/generators/unigenFormat \
                          ../simulation/generators/shieldPack/ \
                          ../simulation/mcStack/ \
                          ../tools/eventDisplay/

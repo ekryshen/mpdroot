@@ -34,4 +34,4 @@ Bool_t MpdRainGenerator::ReadEvent(FairPrimaryGenerator *primGen)
    return kTRUE;
 }
 
-ClassImp(MpdRainGenerator)
+ClassImp(MpdRainGenerator);

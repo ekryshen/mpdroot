@@ -418,9 +418,8 @@ void MpdDecayer::PrintPDG(TParticlePDG *pdg, std::ofstream &fout)
         << std::setw(12)
         << pdg->Width()
         //<< std::setw(12) << 0.0 // Broad
-        << std::setw(12)
-        << 4 * pdg->Width() // Broad
-                            //<< std::setw(12) << 8*pdg->Width() // Broad
+        << std::setw(12) << 4 * pdg->Width() // Broad
+                                             //<< std::setw(12) << 8*pdg->Width() // Broad
         << std::scientific
         //<< " " << std::setw(13) << pdg->Lifetime()
         << std::setw(13) << pdg->Lifetime() << std::setw(3) << 0 // MWID
