@@ -34,7 +34,19 @@ set(SRCS
   MpdZdcPoint.cxx
 )
 
-Set(HEADERS)
+Set(HEADERS
+  MpdZdc.h
+  MpdZdcContFact.h
+  MpdZdcDigi.h
+  MpdZdcDigiPar.h
+  MpdZdcDigiProducer.h
+  MpdZdcDigiScheme.h
+  MpdZdcGeo.h
+  MpdZdcGeoPar.h
+  MpdZdcPoint.h
+  MpdZdcPsdDigiPar.h
+  MpdZdcPsdGeoPar.h
+)
 Set(LINKDEF MpdZdcLinkDef.h)
 Set(LIBRARY_NAME Zdc)
 Set(DEPENDENCIES MpdMCStack)
