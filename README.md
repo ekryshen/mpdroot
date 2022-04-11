@@ -2,7 +2,7 @@
 The main framework for the MPD experiment at NICA.  
 http://mpdroot.jinr.ru/  
 
-<img src="eventdisplay/evepic.png" width="600">
+<img src="tools/eventDisplay/eventPic.png" width="600">
 
 Based on:  
 [FairSoft](https://github.com/FairRootGroup/FairSoft) 

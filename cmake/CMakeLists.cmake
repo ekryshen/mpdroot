@@ -56,9 +56,6 @@ set(BASE_INCLUDE_DIRECTORIES ${BASE_INCLUDE_DIR})
 set(BASE_LIBRARY_DIRECTORIES ${BASE_LIBRARY_DIR})
 # END this is for compatibility with legacy, remove later
 
-set(MPDROOT TRUE) # this 2 lines are necessary to build eventdisplay
-add_definitions(-DMPDROOT)
-
 set(CMAKE_INSTALL_LIBDIR "lib")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
 
@@ -88,7 +85,7 @@ add_subdirectory (physics) # mpdbase mpddst
 add_subdirectory (simulation/mcDst)
 add_subdirectory (simulation/mcStack) # MpdGen
 # LEVEL 3
-add_subdirectory (eventdisplay) # emc xml2 TODO - remove dependencies on root configuration
+add_subdirectory (tools/eventDisplay) # emc xml2 TODO - remove dependencies on root configuration
 add_subdirectory (reconstruction/tracking/lheTrack) # mpdbase kalman
 
 INSTALL(DIRECTORY gconfig/ DESTINATION gconfig)

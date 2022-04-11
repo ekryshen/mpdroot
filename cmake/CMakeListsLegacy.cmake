@@ -191,8 +191,6 @@ set(BASE_INCLUDE_DIRECTORIES ${BASE_INCLUDE_DIRECTORIES} ${SIMPATH}/include/root
 include_directories(${SIMPATH}/include/root  ${SIMPATH}/include/vmc ${Eigen3_INCLUDE_DIRS})
 find_package(FairLogger)
 SET(PATH ${EXECUTABLE_OUTPUT_PATH} ${PATH})
-set(MPDROOT TRUE)
-add_definitions(-DMPDROOT)
 
 # Set the library version in the main CMakeLists.txt
 SET(FAIRROOT_MAJOR_VERSION 0)
@@ -233,7 +231,7 @@ add_subdirectory (detectors/sts)
 add_subdirectory (detectors/bmd)
 add_subdirectory (detectors/mcord)
 add_subdirectory (physics) #MpdBase MpdMCStack Kalman MpdPid LHETrack
-add_subdirectory (eventdisplay) #Emc
+add_subdirectory (tools/eventDisplay) #Emc
 
 add_subdirectory (macro)
 #add_subdirectory (detectors/bbc)
