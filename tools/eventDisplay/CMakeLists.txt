@@ -94,3 +94,6 @@ Set(DEPENDENCIES Emc Geane Base Eve Geom EG Physics Ged Gui Graf3d Tree Core ${M
 Set(LIBRARY_NAME EventDisplay)
 
 GENERATE_LIBRARY()
+
+INSTALL(FILES config/coloring.xsd DESTINATION etc)
+INSTALL(FILES config/eventDisplay.xml DESTINATION etc)
