@@ -1,8 +1,3 @@
-if(NOT DEFINED PROJECT_NAME)
-    project (TShield)
-    set(NOT_BUILD_GeneralGenerator "TRUE")
-endif()
-
 set(TSHIELD_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 include(cmake/TShieldConfig.cmake)
 
@@ -11,6 +6,3 @@ add_subdirectory (shield)
 add_subdirectory (THadgen)
 add_subdirectory (TShield)
 add_subdirectory (TShieldGenerator)
-if(NOT NOT_BUILD_GeneralGenerator)
-    add_subdirectory (MpdGeneralGenerator)
-endif()

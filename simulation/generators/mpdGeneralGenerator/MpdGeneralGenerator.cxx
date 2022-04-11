@@ -44,4 +44,4 @@ Bool_t MpdGeneralGenerator::ReadEvent(FairPrimaryGenerator *primGen)
 }
 // ------------------------------------------------------------------------
 
-ClassImp(MpdGeneralGenerator)
+ClassImp(MpdGeneralGenerator);
