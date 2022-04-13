@@ -234,6 +234,7 @@ add_subdirectory (detectors/bmd)
 add_subdirectory (detectors/mcord)
 add_subdirectory (physics) #MpdBase MpdMCStack Kalman MpdPid LHETrack
 add_subdirectory (tools/eventDisplay) #Emc
+add_subdirectory (tools/database) # INDEPENDENT
 
 add_subdirectory (macro)
 #add_subdirectory (detectors/bbc)

@@ -81,6 +81,7 @@ add_subdirectory (simulation/generators/mpdGen)
 add_subdirectory (simulation/generators/mpdGeneralGenerator) # INDEPENDENT
 add_subdirectory (simulation/generators/unigenFormat) # INDEPENDENT
 add_subdirectory (simulation/generators/shieldPack) # INDEPENDENT
+add_subdirectory (tools/database) # INDEPENDENT
 # LEVEL 2
 add_subdirectory (detectors/tpc) # tof
 add_subdirectory (reconstruction/tracking/kalman) # mpdfield
