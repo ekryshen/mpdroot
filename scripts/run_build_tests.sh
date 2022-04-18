@@ -75,10 +75,10 @@ function assign_vmc_generator_pairs() {
   # Each pair is one test suite for which vmc,generator test template is executed
   NO_VMC_GEN_PAIRS=4
   INFILE_DEFAULT="auau.09gev.mbias.98k.ftn14"
-  vmc[0]="GEANT3"; generator[0]="HADGEN"; inFile[0]=$INFILE_DEFAULT;
-  vmc[1]="GEANT4"; generator[1]="HADGEN"; inFile[1]=$INFILE_DEFAULT;
-  vmc[2]="GEANT4"; generator[2]="BOX";    inFile[2]=$INFILE_DEFAULT;
-  vmc[3]="GEANT4"; generator[3]="UNIGEN"; inFile[3]="$CI_PROJECT_DIR/input/tests/dcmqgsm_bibi_9.2gev_local_1.mcini.root";
+  vmc[0]="GEANT4"; generator[0]="BOX"; inFile[0]=$INFILE_DEFAULT;
+  vmc[1]="GEANT4"; generator[1]="UNIGEN"; inFile[1]="$CI_PROJECT_DIR/input/tests/dcmqgsm_bibi_9.2gev_local_1.mcini.root";
+  vmc[2]="GEANT3"; generator[2]="BOX";    inFile[2]=$INFILE_DEFAULT;
+  vmc[3]="GEANT3"; generator[3]="UNIGEN"; inFile[3]="$CI_PROJECT_DIR/input/tests/dcmqgsm_bibi_9.2gev_local_1.mcini.root";
 }
 
 
