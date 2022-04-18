@@ -38,4 +38,3 @@
 #pragma link C++ struct MapDVectorValue++;
 
 #endif
-

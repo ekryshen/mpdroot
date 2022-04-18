@@ -81,7 +81,16 @@ add_subdirectory (simulation/generators/mpdGen)
 add_subdirectory (simulation/generators/mpdGeneralGenerator) # INDEPENDENT
 add_subdirectory (simulation/generators/unigenFormat) # INDEPENDENT
 add_subdirectory (simulation/generators/shieldPack) # INDEPENDENT
-add_subdirectory (tools/database) # INDEPENDENT
+
+Execute_Process(COMMAND ${ROOT_CONFIG_EXECUTABLE} --has-pgsql OUTPUT_VARIABLE ROOT_HAS_PGSQL)
+String(STRIP ${ROOT_HAS_PGSQL} ROOT_HAS_PGSQL)
+if(ROOT_HAS_PGSQL)
+  message("${BoldWhite}\nROOT was built with PGSQL support. Database part will be built.${ColourReset}\n")  
+  add_subdirectory (tools/database) # INDEPENDENT
+else()
+  message("${BoldRed}\nROOT was not built with PGSQL support. Database part will not work.${ColourReset}\n")  
+endif()
+
 # LEVEL 2
 add_subdirectory (detectors/tpc) # tof
 add_subdirectory (reconstruction/tracking/kalman) # mpdfield

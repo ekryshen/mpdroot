@@ -234,7 +234,15 @@ add_subdirectory (detectors/bmd)
 add_subdirectory (detectors/mcord)
 add_subdirectory (physics) #MpdBase MpdMCStack Kalman MpdPid LHETrack
 add_subdirectory (tools/eventDisplay) #Emc
-add_subdirectory (tools/database) # INDEPENDENT
+
+Execute_Process(COMMAND ${ROOT_CONFIG_EXECUTABLE} --has-pgsql OUTPUT_VARIABLE ROOT_HAS_PGSQL)
+String(STRIP ${ROOT_HAS_PGSQL} ROOT_HAS_PGSQL)
+if(ROOT_HAS_PGSQL)
+  message("${BoldWhite}\nROOT was built with PGSQL support. Database part will be built.${BoldWhite}\n")  
+  add_subdirectory (tools/database) # INDEPENDENT
+else()
+  message("${BoldRed}\nROOT was not built with PGSQL support. Database part will not work.${ColourReset}\n")  
+endif()
 
 add_subdirectory (macro)
 #add_subdirectory (detectors/bbc)
