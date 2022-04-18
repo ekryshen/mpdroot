@@ -39,7 +39,7 @@ R__ADD_INCLUDE_PATH($VMCWORKDIR)
 #include "macro/mpd/geometry_stage1.C"
 //#include "macro/mpd/geometry_v2.C"
         
-#define HADGEN  // Choose generator: URQMD VHLLE FLUID PART ION BOX HSD LAQGSM  SMASH
+#define BOX  // Choose generator: URQMD VHLLE FLUID PART ION BOX HSD LAQGSM  SMASH
 #define GEANT3  // Choose: GEANT3 GEANT4
 
 // inFile - input file with generator data, default: auau.09gev.mbias.98k.ftn14
