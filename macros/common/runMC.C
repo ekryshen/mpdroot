@@ -37,7 +37,6 @@ enum EGenerators
 {
    BOX = 1,
    FLUID,
-   HADGEN,
    HSD,
    ION,
    LAQGSM,
@@ -65,7 +64,7 @@ enum EVMCType
 // flag_store_FairRadLenPoint
 // FieldSwitcher: 0 - corresponds to the ConstantField (0, 0, 5) kG (It is used by default); 1 - corresponds to the
 // FieldMap ($VMCWORKDIR/input/B-field_v2.dat)
-void runMC(EGenerators generator = EGenerators::HADGEN, EVMCType vmc = EVMCType::GEANT3, Int_t nStartSeed = 0,
+void runMC(EGenerators generator = EGenerators::BOX, EVMCType vmc = EVMCType::GEANT3, Int_t nStartSeed = 0,
            TString inFile = "auau.04gev.0_3fm.10k.f14.gz", TString outFile = "evetest.root", Int_t nStartEvent = 0,
            Int_t nEvents = 2, Bool_t flag_store_FairRadLenPoint = kFALSE, Int_t FieldSwitcher = 0)
 {
@@ -133,19 +132,6 @@ void runMC(EGenerators generator = EGenerators::HADGEN, EVMCType vmc = EVMCType:
       // fluidGen->SetPsiRP(0.); // set fixed Reaction Plane angle [rad] instead of random
       // fluidGen->SetProtonNumberCorrection(79./197.); // Z/A Au for Theseus 2018-03-17-bc2a06d
       primGen->AddGenerator(fluidGen);
-      break;
-   }
-   case EGenerators::HADGEN:
-   {
-      THadgen *hadGen = new THadgen();
-      if (nStartSeed != 0) // I don't want to start from random seed
-        hadGen->SetRandomSeed(nStartSeed);
-      else
-        hadGen->SetRandomSeed(clock() + time(0));
-      hadGen->SetParticleFromPdgCode(0, 196.9665, 79);
-      hadGen->SetEnergy(6.5E3);
-      MpdGeneralGenerator *generalHad = new MpdGeneralGenerator(hadGen);
-      primGen->AddGenerator(generalHad);
       break;
    }
    case EGenerators::HSD: // HSD/PHSD generator

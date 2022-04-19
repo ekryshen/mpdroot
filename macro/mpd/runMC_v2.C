@@ -49,7 +49,7 @@ R__LOAD_LIBRARY(libMpdGenFactory);
 // FieldSwitcher: 0 - corresponds to the ConstantField (0, 0, 5) kG (It is used by default); 1 - corresponds to the FieldMap ($VMCWORKDIR/input/B-field_v2.dat)
 void runMC_v2(TString inFile = "auau.04gev.0_3fm.10k.f14.gz", TString outFile = "evetest.root", Int_t nStartEvent = 0, Int_t nEvents = 10,
         Bool_t flag_store_FairRadLenPoint = kFALSE, Int_t FieldSwitcher = 0,
-        MpdGeneratorType GenType = MpdGeneratorType::HADGEN /*Choose generator: URQMD VHLLE FLUID PART ION BOX HSD LAQGSM HADGEN CUSTOM*/, Bool_t useGeant4 = false)
+        MpdGeneratorType GenType = MpdGeneratorType::BOX /*Choose generator: URQMD VHLLE FLUID PART ION BOX HSD LAQGSM CUSTOM*/, Bool_t useGeant4 = false)
 {
     TStopwatch timer;
     timer.Start();
@@ -98,37 +98,6 @@ void runMC_v2(TString inFile = "auau.04gev.0_3fm.10k.f14.gz", TString outFile = 
         
         switch (Gen.genType)
         {
-            case MpdGeneratorType::URQMD:
-            case MpdGeneratorType::VHLLE:
-            case MpdGeneratorType::FLUID:
-            case MpdGeneratorType::HSD:
-            case MpdGeneratorType::LAQGSM:
-            {
-                shared_ptr<MpdFactoryMadeGenerator> fmgen = genFactory->create(Gen);
-                if (fmgen.get() == NULL)
-                {
-                    cout << "unable to create generator" << endl;
-                    exit(1);
-                }
-                fmGens.push_back(fmgen->getptr());
-                shared_ptr<FairGenerator> g = fmgen->GetGeneratorPtr();
-                primGen->AddGenerator(g.get());
-            }
-            break;
-            case MpdGeneratorType::PART:
-            {
-                // ------- Particle Generator
-                FairParticleGenerator* partGen = new FairParticleGenerator(211, 10, 1, 0, 3, 1, 0, 0);
-                primGen->AddGenerator(partGen);
-            }
-            break;
-            case MpdGeneratorType::ION:
-            {
-                // ------- Ion Generator
-                FairIonGenerator *fIongen = new FairIonGenerator(79, 197, 79, 1, 0., 0., 25, 0., 0., -1.);
-                primGen->AddGenerator(fIongen);
-            }
-            break;
             case MpdGeneratorType::BOX:
             {
                 gRandom->SetSeed(0);
@@ -141,14 +110,35 @@ void runMC_v2(TString inFile = "auau.04gev.0_3fm.10k.f14.gz", TString outFile = 
                 primGen->AddGenerator(boxGen);
             }
             break;
-            case MpdGeneratorType::HADGEN:
+            case MpdGeneratorType::FLUID:
+            case MpdGeneratorType::HSD:
+            case MpdGeneratorType::LAQGSM:
+            case MpdGeneratorType::URQMD:
+            case MpdGeneratorType::VHLLE:
             {
-                THadgen* hadGen = new THadgen();
-                hadGen->SetRandomSeed(clock() + time(0));
-                hadGen->SetParticleFromPdgCode(0, 196.9665, 79);
-                hadGen->SetEnergy(6.5E3);
-                MpdGeneralGenerator* generalHad = new MpdGeneralGenerator(hadGen);
-                primGen->AddGenerator(generalHad);
+                shared_ptr<MpdFactoryMadeGenerator> fmgen = genFactory->create(Gen);
+                if (fmgen.get() == NULL)
+                {
+                    cout << "unable to create generator" << endl;
+                    exit(1);
+                }
+                fmGens.push_back(fmgen->getptr());
+                shared_ptr<FairGenerator> g = fmgen->GetGeneratorPtr();
+                primGen->AddGenerator(g.get());
+            }
+            break;
+            case MpdGeneratorType::ION:
+            {
+                // ------- Ion Generator
+                FairIonGenerator *fIongen = new FairIonGenerator(79, 197, 79, 1, 0., 0., 25, 0., 0., -1.);
+                primGen->AddGenerator(fIongen);
+            }
+            break;
+            case MpdGeneratorType::PART:
+            {
+                // ------- Particle Generator
+                FairParticleGenerator* partGen = new FairParticleGenerator(211, 10, 1, 0, 3, 1, 0, 0);
+                primGen->AddGenerator(partGen);
             }
             break;
             case MpdGeneratorType::CUSTOM:

@@ -183,15 +183,6 @@ void runMC(TString inFile = "auau.04gev.0_3fm.10k.f14.gz", TString outFile = "ev
         nEvents = MpdGetNumEvents::GetNumQGSMEvents(inFile.Data()) - nStartEvent;
 
 #else
-#ifdef HADGEN
-    THadgen* hadGen = new THadgen();
-    hadGen->SetRandomSeed(clock() + time(0));
-    hadGen->SetParticleFromPdgCode(0, 196.9665, 79);
-    hadGen->SetEnergy(6.5E3);
-    MpdGeneralGenerator* generalHad = new MpdGeneralGenerator(hadGen);
-    primGen->AddGenerator(generalHad);
-
-#else
 #ifdef SMASH
     MpdSmashGenerator* smashGen = new MpdSmashGenerator(inFile);
 
@@ -205,7 +196,6 @@ void runMC(TString inFile = "auau.04gev.0_3fm.10k.f14.gz", TString outFile = "ev
         nEvents = smashGen->GetNeventsInTree() - nStartEvent;
     cout << "runMC: MpdSmashGenerator: nEvents = " << nEvents << endl;
 
-#endif
 #endif
 #endif
 #endif

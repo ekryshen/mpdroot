@@ -888,7 +888,6 @@ INPUT                  = ../core/mpdBase/ \
                          ../simulation/generators/mpdGen \
                          ../simulation/generators/mpdGeneralGenerator \
                          ../simulation/generators/unigenFormat \
-                         ../simulation/generators/shieldPack/ \
                          ../simulation/mcStack/ \
                          ../tools/eventDisplay/
 

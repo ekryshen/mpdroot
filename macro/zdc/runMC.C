@@ -45,9 +45,7 @@ using namespace std;
 void runMC(TString inFile = "auau.04gev.0_3fm.10k.f14", TString outFile = "$VMCWORKDIR/macro/mpd/test/evetest.root", Int_t nStartEvent = 0, Int_t nEvents = 1, Int_t nSkip = 0,Bool_t flag_store_FairRadLenPoint = kFALSE, Int_t FieldSwitcher = 0) {
 
 #define LAQGSM
-//#define SHIELD
 //#define URQMD
-//#define HADGEN
     TStopwatch timer;
     timer.Start();
     gDebug = 0;
@@ -176,69 +174,6 @@ void runMC(TString inFile = "auau.04gev.0_3fm.10k.f14", TString outFile = "$VMCW
         nEvents = MpdGetNumEvents::GetNumPHSDEvents(dataFile.Data()) - nStartEvent;
 
 #else
-#ifdef SHIELD
-    // ------- SHIELD Generator
-    /*
-    TString dataFile;
-    if (inFile.Contains("/"))
-        dataFile = inFile;
-    else {
-        dataFile = find_path_to_URQMD_files();
-        dataFile += "/../../QGSM/"; //  nc-farm
-        dataFile += inFile;
-    }
-    if (!CheckFileExist(dataFile)) return;
-    */
-
-    TString dataFile;
-    dataFile = inFile;
-    if (!CheckFileExist(dataFile)) return;
-
-    Bool_t use_collider_system = kTRUE;
-
-    //Double_t collider_energy = 6.631;
-    Double_t collider_energy = 62.482;
-    //=6.631 sqrt(s)=(2+2) (GeV)
-    //=11.418 sqrt(s)=(2.5+2.5)
-    //=24.184 sqrt(s)=(3.5+3.5)
-    //=41.205 sqrt(s)=(4.5+4.5)
-    //=62.482 sqrt(s)=(5.5+5.5)
-
-    FairShieldGenerator* shieldGen = new FairShieldGenerator(inFile,use_collider_system,collider_energy);
-    primGen->AddGenerator(shieldGen);
-
-/*
-    //TString inFile = inDir + "FOR038_au" + sEn + "au_100ev_" + sfileNum +  ".dat";  
-    nEvents = 40;
-    //inFile = "FOR038_au6.631au_test.dat";  
-    //inFile = "FOR038_au6.631au_test_3.dat";  
-    //inFile = "FOR038_au6.631au_10000_notfull.dat";	
-    //inFile = "FOR038_au6.631au_10ev.dat";  
-    //inFile = "/hera/cbm/users/marina/shield/shield_code/au62.482au/test.dat";  
-    inFile = "/hera/cbm/users/marina/shield/shield_code/au62.482au/test_40ev.dat";  
-
-    Bool_t use_collider_system = kTRUE;
-
-    //Double_t collider_energy = 6.631;
-    Double_t collider_energy = 62.482;
-    //=6.631 sqrt(s)=(2+2) (GeV)
-    //=11.418 sqrt(s)=(2.5+2.5) 
-    //=24.184 sqrt(s)=(3.5+3.5) 
-    //=41.205 sqrt(s)=(4.5+4.5) 
-    //=62.482 sqrt(s)=(5.5+5.5)
-	cout <<"marina 1" <<endl; 
-    FairShieldGenerator* shieldGen = new FairShieldGenerator(inFile,use_collider_system,collider_energy);
-        cout <<"marina 2" <<endl;
-    primGen->AddGenerator(shieldGen);
-        cout <<"marina 3" <<endl;
-    //if (nStartEvent > 0) guGen->SkipEvents(nStartEvent);
-*/
-    // if nEvents is equal 0 then all events (start with nStartEvent) of the given file should be processed
-    /*
-    if (nEvents == 0)
-        nEvents = MpdGetNumEvents::GetNumQGSMEvents(dataFile.Data()) - nStartEvent;
-    */
-#else
 #ifdef LAQGSM
     // ------- LAQGSM Generator
 /*
@@ -277,7 +212,6 @@ void runMC(TString inFile = "auau.04gev.0_3fm.10k.f14", TString outFile = "$VMCW
     //if (nEvents == 0)
     //nEvents = MpdGetNumEvents::GetNumQGSMEvents(dataFile.Data()) - nStartEvent;
 
-
 /*
     TString dataFile;
     dataFile = inFile;
@@ -291,21 +225,6 @@ void runMC(TString inFile = "auau.04gev.0_3fm.10k.f14", TString outFile = "$VMCW
     if (nEvents == 0)
         nEvents = MpdGetNumEvents::GetNumQGSMEvents(dataFile.Data()) - nStartEvent;
 */
-
-#else
-#ifdef HADGEN
-    THadgen* hadGen = new THadgen();
-    //hadGen->SetRandomSeed(clock() + time(0));
-    hadGen->SetNuclid(79);
-    hadGen->SetParticleFromPdgCode(0, 196.9665, 79);
-    //hadGen->SetEnergy(6.5E3);
-    hadGen->SetEnergy(6.5);
-    MpdGeneralGenerator* generalHad = new MpdGeneralGenerator(hadGen);
-    hadGen->FileOut("shield_out.txt");
-    primGen->AddGenerator(generalHad);
-
-#endif
-#endif
 #endif
 #endif
 #endif

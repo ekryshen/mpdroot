@@ -80,7 +80,6 @@ add_subdirectory (simulation/generators/genFactory) # INDEPENDENT
 add_subdirectory (simulation/generators/mpdGen)
 add_subdirectory (simulation/generators/mpdGeneralGenerator) # INDEPENDENT
 add_subdirectory (simulation/generators/unigenFormat) # INDEPENDENT
-add_subdirectory (simulation/generators/shieldPack) # INDEPENDENT
 
 Execute_Process(COMMAND ${ROOT_CONFIG_EXECUTABLE} --has-pgsql OUTPUT_VARIABLE ROOT_HAS_PGSQL)
 String(STRIP ${ROOT_HAS_PGSQL} ROOT_HAS_PGSQL)

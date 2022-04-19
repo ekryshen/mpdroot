@@ -43,7 +43,7 @@ bool CheckFileExist(TString fileName){
     return true;
 }
 
-#define LAQGSM  // Choose generator: URQMD VHLLE FLUID PART ION BOX HSD LAQGSM HADGEN
+#define LAQGSM  // Choose generator: URQMD VHLLE FLUID PART ION BOX HSD LAQGSM
 #define GEANT3  // Choose: GEANT3 GEANT4
 
 // inFile - input file with generator data, default: auau.09gev.mbias.98k.ftn14

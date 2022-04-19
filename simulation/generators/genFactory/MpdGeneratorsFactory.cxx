@@ -12,7 +12,6 @@
 #include "FairBoxGenerator.h"
 #include "MpdPHSDGenerator.h"
 #include "MpdLAQGSMGenerator.h"
-#include "THadgen.h"
 #include "MpdGetNumEvents.h"
 #include "mpdloadlibs.C"
 
@@ -26,7 +25,6 @@ MpdGeneratorsFactory::MpdGeneratorsFactory()
    // add<MpdBOXGenCreator>(MpdGeneratorType::BOX);
    add<MpdHSDGenCreator>(MpdGeneratorType::HSD);
    add<MpdLAQGSMGenCreator>(MpdGeneratorType::LAQGSM);
-   // add<MpdHADGENGenCreator>(MpdGeneratorType::HADGEN);
 }
 
 MpdGeneratorsFactory::~MpdGeneratorsFactory()
@@ -156,13 +154,3 @@ std::function<Int_t(FairRunSim *fRun)> MpdLAQGSMGenCreator::postActions(TString 
       return (TDatabasePDG::Instance())->WritePDGTable(Pdg_table_name.Data());
    };
 }
-
-/*FairGenerator * MpdHADGENGenCreator::create (TString &, Int_t &, Int_t &)
-{
-   THadgen* hadGen = new THadgen();
-   hadGen->SetRandomSeed(clock() + time(0));
-   hadGen->SetParticleFromPdgCode(0, 196.9665, 79);
-   hadGen->SetEnergy(6.5E3);
-   MpdGeneralGenerator* generalHad = new MpdGeneralGenerator(hadGen);
-   return generalHad;
-}*/

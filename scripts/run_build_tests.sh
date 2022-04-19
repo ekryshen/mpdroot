@@ -70,7 +70,7 @@ main() {
 function assign_vmc_generator_pairs() {
 
   # definition of pairs (VMC, GENERATOR) for which tests are generated.
-  # MPD generators: HADGEN BOX FLUID HSD ION LAQGSM MCDST PART SMASH UNIGEN URQMD VHLLE
+  # MPD generators: BOX FLUID HSD ION LAQGSM MCDST PART SMASH UNIGEN URQMD VHLLE
   # MPD vmcs : GEANT3 GEANT4
   # Each pair is one test suite for which vmc,generator test template is executed
   NO_VMC_GEN_PAIRS=4

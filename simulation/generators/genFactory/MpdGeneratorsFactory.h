@@ -22,7 +22,6 @@ class MpdFLUIDGenCreator;
 // class MpdBOXGenCreator;
 class MpdHSDGenCreator;
 class MpdLAQGSMGenCreator;
-// class MpdHADGENGenCreator;
 class MpdFactoryMadeGenerator;
 
 class MpdGeneratorsFactory {
@@ -110,11 +109,5 @@ public:
    virtual FairGenerator                         *create(TString &inFile, Int_t &nStartEvent, Int_t &nEvents) override;
    virtual std::function<Int_t(FairRunSim *fRun)> postActions(TString &inFile) override;
 };
-
-/*class MpdHADGENGenCreator : public MpdGenericGenCreator
-{
-public:
-   virtual FairGenerator * create (TString &, Int_t &, Int_t &) override;
-};*/
 
 #endif

@@ -216,7 +216,6 @@ add_subdirectory (simulation/generators/genFactory) # INDEPENDENT
 add_subdirectory (simulation/generators/mpdGen)
 add_subdirectory (simulation/generators/mpdGeneralGenerator) # INDEPENDENT
 add_subdirectory (simulation/generators/unigenFormat) # INDEPENDENT
-add_subdirectory (simulation/generators/shieldPack)
 add_subdirectory (simulation/mcDst)
 add_subdirectory (simulation/mcStack) # MpdGen
 add_subdirectory (core/mpdPid) # MpdMCStack MpdBase

@@ -3,8 +3,6 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_LIST_DIR}
   ${CMAKE_SOURCE_DIR} # needed to find gconfig/basiclibs.C
   ${CMAKE_SOURCE_DIR}/macro/mpd # needed to load loadlibs.C
-  ${CMAKE_SOURCE_DIR}/simulation/generators/shieldPack/THadgen
-  ${CMAKE_SOURCE_DIR}/simulation/generators/shieldPack/hadgen
   ${CMAKE_SOURCE_DIR}/simulation/generators/mpdGen
 )
 
