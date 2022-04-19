@@ -1,52 +1,35 @@
-# Source files (*.cxx)
-#SRCS=runMC.cxx
-SRCS=reco.cxx
+# Source files (*.C)
+#SRCS=runMC.C
+SRCS=reco.C
 
 # Compiler
 CC=g++
 
-OBJECTS=$(patsubst %.cxx, %, $(SRCS))
+OBJECTS=$(patsubst %.C, %, $(SRCS))
 
 ROOTCONFIG := root-config
 
 CFLAGS := $(shell $(ROOTCONFIG) --cflags)
-CFLAGS += -I$(VMCWORKDIR)/mcstack
-CFLAGS += -I$(VMCWORKDIR)/passive
-CFLAGS += -I$(VMCWORKDIR)/mpdfield
-CFLAGS += -I$(VMCWORKDIR)/generators
-CFLAGS += -I$(VMCWORKDIR)/mpdbase
-CFLAGS += -I$(VMCWORKDIR)/tpc
-CFLAGS += -I$(VMCWORKDIR)/tof
-CFLAGS += -I$(VMCWORKDIR)/etof
-CFLAGS += -I$(VMCWORKDIR)/emc
-CFLAGS += -I$(VMCWORKDIR)/zdc
-CFLAGS += -I$(VMCWORKDIR)/sts
-CFLAGS += -I$(VMCWORKDIR)/cpc
-CFLAGS += -I$(VMCWORKDIR)/strawendcap
-CFLAGS += -I$(VMCWORKDIR)/ffd
-CFLAGS += -I$(VMCWORKDIR)/sft
-CFLAGS += -I$(VMCWORKDIR)/clustering
-CFLAGS += -I$(VMCWORKDIR)/kalman
-CFLAGS += -I$(VMCWORKDIR)/lhetrack
-CFLAGS += -I$(VMCWORKDIR)/mpdpid
-CFLAGS += -I$(VMCWORKDIR)/mpddst
+CFLAGS += -I$(VMCWORKDIR)/include
 CFLAGS += -I${FAIRROOTPATH}/include
 CFLAGS += -I$(SIMPATH)/include
 CFLAGS += -I$(ROOT_INCLUDE_PATH)
 CFLAGS += -I$(ROOT_INCLUDE_DIR)
-CFLAGS += --std=c++11 -g -O0
+ROOT_PATH = -I$(ROOT_INCLUDE_PATH) -I$(ROOT_INCLUDE_DIR)
+CFLAGS += -g -O0
 
 LDFLAGS := $(shell $(ROOTCONFIG) --ldflags)
 LDFLAGS += -lEG $(shell $(ROOTCONFIG) --glibs)
 LDFLAGS += -L$(VMCWORKDIR)/build/lib
 LDFLAGS += -L$(ROOT_LIBRARY_DIR) -L$(FAIRROOTPATH)/lib
-LDFLAGS += -lCluster -lKalman -lLHETrack -lMpdPid -lMpdDst
-LDFLAGS += -ltpc -lTof -lEtof -lEmc -lStrawendcap  -lZdc -lSts -lFfd -lCpc -lStrawECT
-LDFLAGS += -lMpdBase -lMCStack -lPassive -lMpdField -lMpdGen
+LDFLAGS += -lKalman -lLHETrack -lMpdPid -lMpdDst
+LDFLAGS += -ltpc -lTof -lEtof -lEmc -lZdc -lSts -lFfd
+LDFLAGS += -lMpdBase -lPassive -lMpdField -lMpdGen
 LDFLAGS += -lBase -lGeoBase -lParBase -lTrkBase -lGeane -lFairTools
 
 
-all:	$(OBJECTS)
+all:
+	$(OBJECTS)
 
 $(OBJECTS): % : $(SRCS)
 	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
