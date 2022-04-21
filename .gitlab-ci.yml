@@ -63,7 +63,7 @@ check_permissions:
 
 # nicadist images and execution of new pipelines 
 # cannot place into separate .yml file, due to ongoing mutation of Gitlab parsing bug 5078
-.build_nica_template: &build_nica
+.build_template: &build
   image: git.jinr.ru:5005/nica/nicadist/$OS_TYPE:alibuild-dev
   stage: build
   before_script:
@@ -85,17 +85,17 @@ check_permissions:
   allow_failure: true
   <<: *only-default
 
-build_nica:c7:
+build:c7:
   variables:
     OS_TYPE: "c7"
-  <<: *build_nica
+  <<: *build
 
-build_nica:c8:
+build:c8:
   variables:
     OS_TYPE: "c8"
-  <<: *build_nica
+  <<: *build
 
-.test_build_nica_template: &build_tests_nica
+.test_build_template: &build_tests
   image: git.jinr.ru:5005/nica/nicadist/$OS_TYPE:alibuild-dev
   stage: test
   before_script:
@@ -117,25 +117,25 @@ build_nica:c8:
   allow_failure: true
   <<: *only-default
 
-build_tests_nica:c7:
+build_tests:c7:
   variables:
     OS_TYPE: "c7"
     REPORT_NAME: "report_c7"
-  needs: ["build_nica:c7"]
+  needs: ["build:c7"]
   dependencies:
-    - build_nica:c7
+    - build:c7
   retry: 1       # retry script if it failed (sometimes if fails due to some unexpected particle). Maximum 2 retries.
-  <<: *build_tests_nica
+  <<: *build_tests
 
-build_tests_nica:c8:
+build_tests:c8:
   variables:
     OS_TYPE: "c8"
     REPORT_NAME: "report_c8"
-  needs: ["build_nica:c8"]
+  needs: ["build:c8"]
   dependencies:
-    - build_nica:c8
+    - build:c8
   retry: 1       # retry script if it failed (sometimes if fails due to some unexpected particle). Maximum 2 retries.
-  <<: *build_tests_nica
+  <<: *build_tests
 
 .deploy_template: &deploy
   stage: deploy
