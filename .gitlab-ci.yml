@@ -5,11 +5,7 @@ stages:
  - codeOwners_Permissions
 
 before_script:
- - export SIMPATH=/cvmfs/nica.jinr.ru/$OS_TYPE/fairsoft/mpd
- - export FAIRROOTPATH=/cvmfs/nica.jinr.ru/$OS_TYPE/fairroot/mpd
- - sed -i "s/\/opt\/fairsoft\/install/\/cvmfs\/nica.jinr.ru\/$OS_TYPE\/fairsoft\/mpd/g" SetEnv.sh
- - sed -i "s/\/opt\/fairroot\/install/\/cvmfs\/nica.jinr.ru\/$OS_TYPE\/fairroot\/mpd/g" SetEnv.sh
- - source ./SetEnv.sh
+ - echo "Running global before script..."
 
 variables:
  GIT_SUBMODULE_STRATEGY: recursive
