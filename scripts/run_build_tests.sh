@@ -5,16 +5,12 @@
 # First commit Slavomir Hnatic, 12.2021
 
 # NOTE: This governor is not easy to modify
-#       Do not complain as other frameworks are more difficult
-#       (if in doubt have a look at Boost::test)
 
 ##########################################################################################################
 ########################################### Functionality ################################################
 ###                                                                                                    ###
 ###  1. INPUT PARAMETERS                                                                               ###
 ###                                                                                                    ###
-###     -t ...optional. If this option is passed then old type build tests are executed. Otherwise     ###
-###           the script defaults to running build tests for the new build system.                     ###
 ###     -r ...REPORT_NAME. Assigns REPORT_FILENAME=$REPORT_NAME.xml (default = report.xml)             ###
 ###                                                                                                    ###
 ###  2. OUTPUT                                                                                         ###
@@ -32,9 +28,6 @@
 ###  2.  Add new test suite (after the "for" cycle in function generate_tests)                         ###
 ###       - you might need to create workdir for your newly created tests (in function run_tests)      ###
 ###                                                                                                    ###
-###      ALWAYS MAKE SURE YOU KNOW WHAT YOU ARE DOING, IF IN DOUBT ASK SUPPORT TO ADD TEST FOR YOU     ###
-###      BY CREATING A GITLAB ISSUE ON https://git.jinr.ru/nica/mpdroot/-/issues)                      ###
-###                                                                                                    ###
 ##########################################################################################################
 
 
@@ -43,23 +36,16 @@ main() {
 
  # assign parameters
  MPDROOT_MACROS=$CI_PROJECT_DIR/macros
- while getopts t:r: flag
+ while getopts r: flag
  do
     case "${flag}" in
-         t) OLD_BUILD_TYPE=${OPTARG};;
          r) REPORT_NAME=${OPTARG};;
     esac
  done
  [[ $REPORT_NAME ]] && REPORT_FILENAME="$REPORT_NAME.xml" || REPORT_FILENAME="report.xml"
 
- if [[ $OLD_BUILD_TYPE ]]; then
-  [[ $OS_TYPE == "centos7" ]] && source /opt/rh/devtoolset-7/enable
-  source build/config.sh
-  generate_old_tests
- else
-  assign_vmc_generator_pairs
-  generate_tests
- fi
+ assign_vmc_generator_pairs
+ generate_tests
 
  run_tests
  write_test_report
@@ -107,22 +93,6 @@ function generate_tests() {
  TESTS_VMC_GEN=$TEST_COUNTER
 
 }
-
-
-function generate_old_tests() {
-
-  IFS=
-  echo "Generating old style tests"
-
-  tests[0]='root -b -q -l '"'"'$CI_PROJECT_DIR/macro/mpd/runMC.C("auau.09gev.mbias.98k.ftn14","$VMCWORKDIR/macro/mpd/evetest.root",0,2)'"'"' | tee output_0.txt'
-  names[0]="runMC"
-  suitename[0]="Old build"
-  tests[1]='root -b -q -l '"'"'$CI_PROJECT_DIR/macro/mpd/reco.C'"'"' | tee output_1.txt'
-  names[1]="reco"
-  suitename[1]=${suitename[0]}
-
-}
-
 
 function run_tests() {
 
