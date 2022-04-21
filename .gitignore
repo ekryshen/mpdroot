@@ -68,8 +68,8 @@ macro/mpd/match.dat
 macro/mpd/mpddst.MiniDst.root
 macro/mpd/mpddst.root
 
-doxygen/html/*
-doxygen/latex/*
+tools/doxygen/html/*
+tools/doxygen/latex/*
 
 # Don't put to git files from macros except for given few
 /macros/*

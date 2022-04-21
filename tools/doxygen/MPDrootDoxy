@@ -879,8 +879,6 @@ INPUT                  = ../core/mpdBase/ \
                          ../detectors/tof/ \
                          ../detectors/tpc/ \
                          ../detectors/zdc/ \
-                         ../gconfig/ \
-                         ../macro/ \
                          ../physics/ \
                          ../reconstruction/tracking/kalman/ \
                          ../reconstruction/tracking/lheTrack/ \
@@ -889,6 +887,7 @@ INPUT                  = ../core/mpdBase/ \
                          ../simulation/generators/mpdGeneralGenerator \
                          ../simulation/generators/unigenFormat \
                          ../simulation/mcStack/ \
+                         ../tools/database/ \
                          ../tools/eventDisplay/
 
 # This tag can be used to specify the character encoding of the source files
