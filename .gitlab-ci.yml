@@ -23,69 +23,6 @@ variables:
     - dev
     - tags
 
-.build_template: &build
-  image: git.jinr.ru:5005/nica/docker-images/$OS_TYPE/base:latest
-  stage: build
-  tags:
-    - docker
-    - cvmfs
-  artifacts:
-    paths:
-      - build
-  script:
-    - test $OS_TYPE = "centos7" && source /opt/rh/devtoolset-7/enable
-    - mkdir build && cd build && cmake "$CI_PROJECT_DIR"
-    - make -j 5
-  allow_failure: false
-  <<: *only-default
-
-build:centos:
-  variables:
-    OS_TYPE: "centos7"
-  <<: *build
-
-build:ubuntu:
-  variables:
-    OS_TYPE: "ubuntu"
-  <<: *build
-
-.test_build_template: &build_tests
-  image: git.jinr.ru:5005/nica/docker-images/$OS_TYPE/base:latest
-  stage: test
-  tags:
-    - docker
-    - cvmfs
-  artifacts:
-    when: always
-    paths:
-      - macro/mpd/evetest.root
-    reports:
-      junit: $REPORT_NAME.xml
-  script:
-      - scripts/run_build_tests.sh -t old -r $REPORT_NAME
-      - (if grep -q "failure" $REPORT_NAME.xml; then $(exit -1); else $(exit 0); fi);
-  retry: 1      # retry script if it failed (sometimes it fails due to some unexpected particle)
-  allow_failure: false
-  <<: *only-default
-
-build_tests:centos:
-  needs: ["build:centos"]
-  variables:
-    OS_TYPE: "centos7"
-    REPORT_NAME: report_centos
-  dependencies:
-    - build:centos
-  <<: *build_tests
-
-build_tests:ubuntu:
-  needs: ["build:ubuntu"]
-  variables:
-    OS_TYPE: "ubuntu"
-    REPORT_NAME: "report_ubuntu"
-  dependencies:
-    - build:ubuntu
-  <<: *build_tests
-
 codeOwners:
     image: git.jinr.ru:5005/nica/nicadist/c7:alibuild-dev
     stage: codeOwners_Permissions
@@ -105,7 +42,7 @@ codeOwners:
         - scripts/check_clangFormatting.sh
 
 check_permissions:
-  image: git.jinr.ru:5005/nica/docker-images/centos7/base:latest
+  image: git.jinr.ru:5005/nica/nicadist/c7:alibuild-dev
   dependencies: []
   variables:
     OS_TYPE: "centos7"
