@@ -1,12 +1,11 @@
 #include "TpcLhePoint.h"
 
-ClassImp(TpcLhePoint)
+ClassImp(TpcLhePoint);
 
    //________________________________________________________________________
    TpcLhePoint::TpcLhePoint()
 {
    // Default constructor.
-
    SetX(0.);
    SetY(0.);
    SetZ(0.);
@@ -19,7 +18,6 @@ ClassImp(TpcLhePoint)
 //________________________________________________________________________
 TpcLhePoint::TpcLhePoint(Double_t pos[3], Double_t err[3])
 {
-
    SetX((Double_t)pos[0]);
    SetY((Double_t)pos[1]);
    SetZ((Double_t)pos[2]);
@@ -32,7 +30,6 @@ TpcLhePoint::TpcLhePoint(Double_t pos[3], Double_t err[3])
 //________________________________________________________________________
 TpcLhePoint::TpcLhePoint(Double_t x, Double_t y, Double_t z)
 {
-
    SetX(x);
    SetY(y);
    SetZ(z);

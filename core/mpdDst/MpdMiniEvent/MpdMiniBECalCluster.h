@@ -6,7 +6,7 @@
  * in the barrel Electromagnetic Calorimeter (ECal)
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI), Pavel Batyuk (JINR)
- * \email nigmatkulov@gmail.com; ganigmatkulov@mephi.ru; pavel.batyuk@jinr.ru
+ * email: nigmatkulov@gmail.com; ganigmatkulov@mephi.ru; pavel.batyuk@jinr.ru
  * \date June 1, 2020
  */
 
@@ -221,7 +221,7 @@ protected:
    /// Number of local maxima in parent cluster before unfolding
    UChar_t fNExLM;
 
-   ClassDef(MpdMiniBECalCluster, 1)
+   ClassDef(MpdMiniBECalCluster, 1);
 };
 
 #endif // #define MpdMiniBECalCluster_h

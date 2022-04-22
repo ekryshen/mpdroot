@@ -557,4 +557,4 @@ int MpdWebScreenshots::start_server(void *ptr)
    return 0;
 }
 
-ClassImp(MpdWebScreenshots)
+ClassImp(MpdWebScreenshots);

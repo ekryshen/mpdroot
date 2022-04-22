@@ -5,7 +5,7 @@
  * The class stores information about tracks reconstructed in TPC
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
- * \email nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
+ * email: nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
  * \date May 01, 2020
  */
 
@@ -303,7 +303,7 @@ protected:
    /// (-1 if no match)
    Short_t fMcTrackId;
 
-   ClassDef(MpdMiniTrack, 3)
+   ClassDef(MpdMiniTrack, 3);
 };
 
 #endif // #define MpdMiniTrack_h

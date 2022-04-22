@@ -8,7 +8,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoModelBPLCMS3DCorrFctnKt_h
@@ -144,7 +144,7 @@ protected:
   /// Use denominator (default true)
   bool mIsUseDenominator;
 
-  ClassDef(MpdFemtoModelBPLCMS3DCorrFctnKt, 2)
+  ClassDef(MpdFemtoModelBPLCMS3DCorrFctnKt, 2);
 };
 
 #endif // MpdFemtoModelBPLCMS3DCorrFctnKt_h

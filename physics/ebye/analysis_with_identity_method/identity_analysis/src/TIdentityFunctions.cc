@@ -5,7 +5,7 @@
 
 using namespace std;
 
-ClassImp(TIdentityFunctions)
+ClassImp(TIdentityFunctions);
 
 TIdentityFunctions::TIdentityFunctions()
 {

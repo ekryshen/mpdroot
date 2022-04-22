@@ -6,7 +6,7 @@
  * and detectors and fill MpdMiniDst structure.
  *
  * \author Pavel Batyuk (JINR), Grigory Nigmatkulov (NRNU MEPhI)
- * \email pavel.batyuk@jinr.ru ; nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
+ * email: pavel.batyuk@jinr.ru ; nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
  * \date Aug 01, 2019
  **/
 
@@ -191,7 +191,7 @@ private:
    /// values for electron, pion, kaon and proton
    std::vector<Double_t> nSigmaDedx(Double_t p, Double_t dEdx);
 
-   ClassDef(MpdMiniDstFillTask, 0)
+   ClassDef(MpdMiniDstFillTask, 0);
 };
 
 #endif // MpdMiniDstFillTask_h

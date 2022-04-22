@@ -68,4 +68,4 @@ void MpdBoxSetEditor::TimeWindow()
    Update();
 }
 
-ClassImp(MpdBoxSetEditor)
+ClassImp(MpdBoxSetEditor);

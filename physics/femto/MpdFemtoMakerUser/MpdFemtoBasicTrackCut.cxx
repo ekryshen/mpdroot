@@ -15,7 +15,7 @@
 #include "TString.h"
 #include "TMath.h"
 
-ClassImp(MpdFemtoBasicTrackCut)
+ClassImp(MpdFemtoBasicTrackCut);
 
 //_________________
 MpdFemtoBasicTrackCut::MpdFemtoBasicTrackCut() :

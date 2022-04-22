@@ -7,7 +7,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoBasicPairCut_h
@@ -85,7 +85,7 @@ class MpdFemtoBasicPairCut : public MpdFemtoBasePairCut {
     mEta[0] = lo;
     mEta[1] = hi;
   }
-  /// Set cut on \Delta \Eta (min, max)
+  /// Set cut on \f$\Delta \Eta\f$ (min, max)
   void setDEta(const float& lo, const float& hi) {
       mDEta[0] = lo;
       mDEta[1] = hi;  
@@ -126,7 +126,7 @@ class MpdFemtoBasicPairCut : public MpdFemtoBasePairCut {
     mAverageSeparation[0] = lo;
     mAverageSeparation[1] = hi;
   }
-  /// Set cut on R=\sqrt( dEta^2 + dPhi^2) (low)
+  /// Set cut on \f$R=\sqrt( dEta^2 + dPhi^2)\f$ (low)
   void setRValue(const float& lo) {
     mRValueLo = lo;
   }
@@ -178,11 +178,11 @@ class MpdFemtoBasicPairCut : public MpdFemtoBasePairCut {
   /// Average spatial separation between two tracks estimated over several
   /// points in TPC (see MpdFemtoMaker/MpdFemtoPair for more details)
   float mAverageSeparation[2];
-  /// R = \sqrt( dEta^2 + dPhi^2)
+  /// R = \f$\sqrt(dEta^2 + dPhi^2)\f$
   float mRValueLo;
   /// Minimal azimuthal angle between two tracks estimated over several radial points in TPC
   float mDPhiStarMin[2];
-  /// Minimal and maximal value of \Delta \Eta
+  /// Minimal and maximal value of \f$\Delta \Eta\f$
   float mDEta[2];
   /// Number of pairs that passed cut
   long mNPairsPassed;
@@ -193,7 +193,7 @@ class MpdFemtoBasicPairCut : public MpdFemtoBasePairCut {
 
  protected:
 
-  ClassDef(MpdFemtoBasicPairCut, 2)
+  ClassDef(MpdFemtoBasicPairCut, 2);
 };
 
 #endif

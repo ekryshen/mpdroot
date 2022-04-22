@@ -8,7 +8,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoBaseCorrFctn_h
@@ -111,7 +111,7 @@ class MpdFemtoBaseCorrFctn {
 
  private:
 
-  ClassDef(MpdFemtoBaseCorrFctn, 0)
+  ClassDef(MpdFemtoBaseCorrFctn, 0);
 };
 
 #endif // #define MpdFemtoBaseCorrFctn_h

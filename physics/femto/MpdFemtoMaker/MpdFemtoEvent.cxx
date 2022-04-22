@@ -17,7 +17,7 @@
 #include "MpdFemtoBaseXiCut.h"
 #include "MpdFemtoBaseKinkCut.h"
 
-ClassImp(MpdFemtoEvent)
+ClassImp(MpdFemtoEvent);
 
 //_________________
 MpdFemtoEvent::MpdFemtoEvent() :

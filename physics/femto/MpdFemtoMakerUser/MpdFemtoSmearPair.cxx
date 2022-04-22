@@ -8,7 +8,7 @@
 // ROOT headers
 #include "TMath.h"
 
-ClassImp(MpdFemtoSmearPair)
+ClassImp(MpdFemtoSmearPair);
 
 //_________________
 MpdFemtoSmearPair::MpdFemtoSmearPair() :

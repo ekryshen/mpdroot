@@ -27,7 +27,7 @@
 class FairGeoBuilder;
 class TObject;
 
-ClassImp(FairGeoPipe)
+ClassImp(FairGeoPipe);
 
    FairGeoPipe::FairGeoPipe()
    : FairGeoSet()

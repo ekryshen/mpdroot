@@ -6,7 +6,7 @@
 #include "MpdMiniMessMgr.h"
 #include "MpdMiniMcEvent.h"
 
-ClassImp(MpdMiniMcEvent)
+ClassImp(MpdMiniMcEvent);
 
    //_________________
    MpdMiniMcEvent::MpdMiniMcEvent()

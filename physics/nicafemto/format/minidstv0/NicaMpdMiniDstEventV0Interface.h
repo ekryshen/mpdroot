@@ -29,7 +29,7 @@ public:
   virtual Int_t GetTotalTrackNo() const;
   virtual TClonesArray* GetV0Links() const { return fV0Links->GetArray(); };
   virtual ~NicaMpdMiniDstEventV0Interface();
-  ClassDef(NicaMpdMiniDstEventV0Interface, 1)
+  ClassDef(NicaMpdMiniDstEventV0Interface, 1);
 };
 
 

@@ -250,4 +250,4 @@ TEveTrackList *MpdGlobalTrackDraw::GetTrGroup(TParticle *P)
    return fTrList;
 }
 
-ClassImp(MpdGlobalTrackDraw)
+ClassImp(MpdGlobalTrackDraw);

@@ -15,7 +15,7 @@
 #include "TH1D.h"
 #include "TString.h"
 
-ClassImp(MpdFemtoModelQinvCorrFctn)
+ClassImp(MpdFemtoModelQinvCorrFctn);
 
 //_________________
 MpdFemtoModelQinvCorrFctn::MpdFemtoModelQinvCorrFctn() :

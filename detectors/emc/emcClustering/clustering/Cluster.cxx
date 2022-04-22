@@ -12,7 +12,7 @@
 using std::cout;
 using std::endl;
 
-ClassImp(Cluster)
+ClassImp(Cluster);
 
    //_____________________________________________________________________________
    Cluster::Cluster()

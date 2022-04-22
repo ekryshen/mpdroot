@@ -7,7 +7,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoReactionPlaneAnalysis_h
@@ -97,7 +97,7 @@ protected:
   /// Reaction plane angle of the current event
   double mCurrentRP;
 
-  ClassDef(MpdFemtoReactionPlaneAnalysis, 0)
+  ClassDef(MpdFemtoReactionPlaneAnalysis, 0);
 };
 
 #endif // #define MpdFemtoReactionPlaneAnalysis_h

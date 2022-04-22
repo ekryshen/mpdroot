@@ -12,7 +12,7 @@
 #include "MpdMiniMessMgr.h"
 #include "MpdMiniBECalCluster.h"
 
-ClassImp(MpdMiniBECalCluster)
+ClassImp(MpdMiniBECalCluster);
 
    //_________________
    MpdMiniBECalCluster::MpdMiniBECalCluster()

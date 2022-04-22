@@ -24,7 +24,7 @@ class MpdSplittedPairsCut : public NicaTwoTrackCut {
   virtual Bool_t Pass(NicaTwoTrack *pair);
   void AcceptSplitted() { fReject = kFALSE; };
   virtual ~MpdSplittedPairsCut();
-  ClassDef(MpdSplittedPairsCut, 1)
+  ClassDef(MpdSplittedPairsCut, 1);
 };
 
 #endif /* MPDROOT_NICA_MPD_CUTS_PAIRCUTS_COMMON_MPDSPLITTEDPAIRSCUT_H_ */

@@ -16,7 +16,7 @@ class MpdDcaMonitor : public NicaPropertyMonitorXY {
   virtual void Update(Bool_t passed, TObject *obj);
   NicaCutMonitor *MakeCopy() const { return new MpdDcaMonitor(*this); };
   virtual ~MpdDcaMonitor();
-  ClassDef(MpdDcaMonitor, 1)
+  ClassDef(MpdDcaMonitor, 1);
 };
 
 #endif /* MPDDCAMONITOR_H_ */

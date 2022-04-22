@@ -13,4 +13,4 @@ FairGeoCradle::FairGeoCradle() : FairGeoSet()
    maxModules = 1;
 }
 
-ClassImp(FairGeoCradle)
+ClassImp(FairGeoCradle);

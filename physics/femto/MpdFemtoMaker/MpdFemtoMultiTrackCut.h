@@ -7,7 +7,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoMultiTrackCut_h
@@ -58,7 +58,7 @@ class MpdFemtoMultiTrackCut : public MpdFemtoBaseTrackCut {
   /// Pointer to a track cut collection
   MpdFemtoTrackCutCollection* mCutCollection;
 
-  ClassDef(MpdFemtoMultiTrackCut, 0)
+  ClassDef(MpdFemtoMultiTrackCut, 0);
 };
 
 #endif // #define MpdFemtoMultiTrackCut_h

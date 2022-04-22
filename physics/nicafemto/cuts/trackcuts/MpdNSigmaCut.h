@@ -32,7 +32,7 @@ public:
 	static Int_t SigmaKaon(){return 1;};
 	static Int_t SigmaProton(){return 2;};
 	static Int_t SigmaElectron(){return 3;};
-	ClassDef(MpdNSigmaCut,1)
+	ClassDef(MpdNSigmaCut,1);
 };
 
 #endif /* INTERFACES_MPDROOT_CUTS_TRACKCUTS_MPDNSIGMACUT_H_ */

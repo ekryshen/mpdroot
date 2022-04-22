@@ -494,4 +494,4 @@ void TpcLheTrackFitter::Finish()
    printf("\n\n  *** Finish ***");
 }
 
-ClassImp(TpcLheTrackFitter)
+ClassImp(TpcLheTrackFitter);

@@ -22,7 +22,7 @@ public:
    void ConstructGeometry();
    void ConstructASCIIGeometry();
 
-   ClassDef(FairPipe, 1) // PNDPIPE
+   ClassDef(FairPipe, 1); // PNDPIPE
 };
 
 #endif // PIPE_H

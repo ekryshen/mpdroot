@@ -94,4 +94,4 @@ FairModule *FairMagnet::CloneModule() const
    return new FairMagnet(*this);
 }
 
-ClassImp(FairMagnet)
+ClassImp(FairMagnet);

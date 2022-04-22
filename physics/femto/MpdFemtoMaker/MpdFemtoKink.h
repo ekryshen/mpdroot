@@ -6,7 +6,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoKink_h
@@ -166,7 +166,7 @@ class MpdFemtoKink {
   /// Decay point z of the kink
   float mPositionZ;
 
-  ClassDef(MpdFemtoKink, 1)
+  ClassDef(MpdFemtoKink, 1);
 };
 
 #endif // #define MpdFemtoKink_h

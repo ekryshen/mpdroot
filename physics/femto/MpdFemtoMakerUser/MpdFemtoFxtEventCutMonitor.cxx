@@ -13,7 +13,7 @@
 #include <cstdio>
 #include <cmath>
 
-ClassImp(MpdFemtoFxtEventCutMonitor)
+ClassImp(MpdFemtoFxtEventCutMonitor);
 
 //_________________
 MpdFemtoFxtEventCutMonitor::MpdFemtoFxtEventCutMonitor() :

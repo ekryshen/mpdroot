@@ -16,7 +16,7 @@ class MpdFemtoPairCut : public NicaTwoTrackCut {
   MpdFemtoPairCut(Int_t size = 1);
   virtual Bool_t Init(Int_t task_id);
   virtual ~MpdFemtoPairCut();
-  ClassDef(MpdFemtoPairCut, 1)
+  ClassDef(MpdFemtoPairCut, 1);
 };
 }  // namespace MpdFemtoMiniDst
 

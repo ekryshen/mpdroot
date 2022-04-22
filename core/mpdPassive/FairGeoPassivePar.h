@@ -33,7 +33,7 @@ private:
    FairGeoPassivePar(const FairGeoPassivePar &);
    FairGeoPassivePar &operator=(const FairGeoPassivePar &);
 
-   ClassDef(FairGeoPassivePar, 1)
+   ClassDef(FairGeoPassivePar, 1);
 };
 
 #endif /* !PNDGEOPASSIVEPAR_H */

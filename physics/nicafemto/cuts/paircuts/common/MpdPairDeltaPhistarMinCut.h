@@ -21,7 +21,7 @@ public:
   virtual Bool_t Pass(NicaTwoTrack* pair);
   virtual NicaPackage* Report() const;
   virtual ~MpdPairDeltaPhistarMinCut();
-  ClassDef(MpdPairDeltaPhistarMinCut, 1)
+  ClassDef(MpdPairDeltaPhistarMinCut, 1);
 };
 
 

@@ -27,7 +27,7 @@ class MpdPairSharedPadsCut : public MpdModularTpcPairCut {
   static Int_t OverlappedPads() { return 0; }
   static Int_t SharedPads() { return 1; };
   virtual ~MpdPairSharedPadsCut();
-  ClassDef(MpdPairSharedPadsCut, 1)
+  ClassDef(MpdPairSharedPadsCut, 1);
 };
 }  // namespace MpdPadsFormat
 

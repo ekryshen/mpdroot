@@ -30,4 +30,4 @@ void MpdMCPointDraw::RemoveEveElementList()
    return;
 }
 
-ClassImp(MpdMCPointDraw)
+ClassImp(MpdMCPointDraw);

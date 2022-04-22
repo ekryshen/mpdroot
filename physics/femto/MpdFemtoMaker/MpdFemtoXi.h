@@ -6,7 +6,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoXi_h
@@ -384,7 +384,7 @@ class MpdFemtoXi : public MpdFemtoV0 {
   float mMomBacAtDca2DecayPointY;
   float mMomBacAtDca2DecayPointZ;
 
-  ClassDef(MpdFemtoXi, 1)
+  ClassDef(MpdFemtoXi, 1);
 };
 
 #endif // #define MpdFemtoXi_h

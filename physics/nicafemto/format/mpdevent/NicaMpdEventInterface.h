@@ -43,7 +43,7 @@ public:
 	virtual TLorentzVector GetVertexError()const;
 	virtual TLorentzVector GetVertex()const;
 	virtual ~NicaMpdEventInterface();
-	ClassDef(NicaMpdEventInterface,1)
+	ClassDef(NicaMpdEventInterface,1);
 };
 
 #endif /* INTERFACES_MPDROOT_FORMAT_NICAMPDEVENTINTERFACE_H_ */

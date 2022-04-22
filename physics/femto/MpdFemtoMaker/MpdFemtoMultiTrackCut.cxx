@@ -7,7 +7,7 @@
 #include "MpdFemtoMultiTrackCut.h"
 #include "MpdFemtoTrackCutCollection.h"
 
-ClassImp(MpdFemtoMultiTrackCut)
+ClassImp(MpdFemtoMultiTrackCut);
 
 //_________________
 MpdFemtoMultiTrackCut::MpdFemtoMultiTrackCut() {

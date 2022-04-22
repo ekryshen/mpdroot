@@ -8,7 +8,7 @@
 // MpdFemtoMaker headers
 #include "MpdFemtoXi.h"
 
-ClassImp(MpdFemtoXi)
+ClassImp(MpdFemtoXi);
 
 //_________________
 MpdFemtoXi::MpdFemtoXi() :

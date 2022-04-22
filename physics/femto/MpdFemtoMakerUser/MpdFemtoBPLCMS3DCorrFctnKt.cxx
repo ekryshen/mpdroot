@@ -12,7 +12,7 @@
 // C++ headers
 #include <cmath>
 
-ClassImp(MpdFemtoBPLCMS3DCorrFctnKt)
+ClassImp(MpdFemtoBPLCMS3DCorrFctnKt);
 
 //_________________
 MpdFemtoBPLCMS3DCorrFctnKt::MpdFemtoBPLCMS3DCorrFctnKt(const char* title, const int& nBins,

@@ -37,7 +37,7 @@ public:
     void  Register(); // Register what do you want to write to file
     void  SetOption(Option_t *option=" ") {fOption = option;  fOption.ToLower();}
 
-  ClassDef(MpdRoInvMassTask,0)
+  ClassDef(MpdRoInvMassTask,0);
 };
 
 #endif

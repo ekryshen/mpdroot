@@ -24,7 +24,7 @@ class MpdSharedPadsCut : public MpdFemtoPairCut {
   }
   Bool_t Pass(NicaTwoTrack *pair);
   virtual ~MpdSharedPadsCut();
-  ClassDef(MpdSharedPadsCut, 1)
+  ClassDef(MpdSharedPadsCut, 1);
 };
 }  // namespace MpdHbtDst
 #endif /* MPDROOT_NICA_MPD_CUTS_PAIRCUTS_MINIDST_MPDSHAREDPADSCUT_H_ */

@@ -42,7 +42,7 @@ public:
   void PrintHitMaps() const;
   virtual void CopyData(NicaTrack* other);
   virtual ~NicaMpdTrack();
-  ClassDef(NicaMpdTrack, 1)
+  ClassDef(NicaMpdTrack, 1);
 };
 
 #endif /* NICAMPDTRACK_H_ */

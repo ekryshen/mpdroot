@@ -5,7 +5,7 @@
  * the Barrel Time-of-Flight detector
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI), Pavel Batyuk (JINR)
- * \email ganigmatkulov@mephi.ru ; nigmatkulov@gmail.com ; pavel.batyuk@jinr.ru
+ * email: ganigmatkulov@mephi.ru ; nigmatkulov@gmail.com ; pavel.batyuk@jinr.ru
  * \date May 01, 2020
  */
 

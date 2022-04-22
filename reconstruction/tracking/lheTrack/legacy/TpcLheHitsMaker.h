@@ -69,7 +69,7 @@ public:
    void PrintTracks(Int_t n);
    // void GetStripPoints();
 
-   ClassDef(TpcLheHitsMaker, 1) // TpcLheHitsMaker
+   ClassDef(TpcLheHitsMaker, 1); // TpcLheHitsMaker
 };
 
 #endif

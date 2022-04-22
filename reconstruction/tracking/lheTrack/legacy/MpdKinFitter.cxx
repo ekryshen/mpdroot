@@ -339,4 +339,4 @@ void MpdKinFitter::CalculateFdFdx(TMatrixD mtr, Double_t m0, Double_t *mD)
 }
 //__________________________________________________________________________
 
-ClassImp(MpdKinFitter)
+ClassImp(MpdKinFitter);

@@ -32,7 +32,7 @@ public:
 	Int_t GetStatus()const{return ((UParticle*)fRawObject)->GetStatus();};
 	Bool_t IsPrimary()const{return kTRUE;};
 	virtual ~NicaUnigenTrackInterface();
-	ClassDef(NicaUnigenTrackInterface,1)
+	ClassDef(NicaUnigenTrackInterface,1);
 };
 
 #endif /* NICAROOT_DATAFORMAT_FORMATS_NICAUNIGENTRACKINTERFACE_H_ */

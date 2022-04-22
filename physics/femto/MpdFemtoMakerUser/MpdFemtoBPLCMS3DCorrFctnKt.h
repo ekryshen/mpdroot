@@ -7,7 +7,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoBPLCMS3DCorrFctnKt_h
@@ -110,7 +110,7 @@ class MpdFemtoBPLCMS3DCorrFctnKt : public MpdFemtoBaseCorrFctn {
   /// kT range
   float mKtRange[2];
 
-  ClassDef(MpdFemtoBPLCMS3DCorrFctnKt, 1)
+  ClassDef(MpdFemtoBPLCMS3DCorrFctnKt, 1);
 };
 
 #endif // #ifndef MpdFemtoBPLCMS3DCorrFctnKt_h

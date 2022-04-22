@@ -7,7 +7,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoQinvCorrFctnKt_h
@@ -90,7 +90,7 @@ private:
   /// kT bin width
   double mKtStep;
 
-  ClassDef(MpdFemtoQinvCorrFctnKt, 2)
+  ClassDef(MpdFemtoQinvCorrFctnKt, 2);
 };
 
 #endif // #define MpdFemtoQinvCorrFctnKt_h

@@ -10,7 +10,7 @@ public:
    FairCradle();
    virtual ~FairCradle();
    virtual void ConstructGeometry();
-   ClassDef(FairCradle, 0)
+   ClassDef(FairCradle, 0);
 };
 
 #endif // CRADLE_H

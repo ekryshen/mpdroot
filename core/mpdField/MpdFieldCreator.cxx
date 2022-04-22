@@ -114,4 +114,4 @@ FairField *MpdFieldCreator::createFairField()
    }
 }
 
-ClassImp(MpdFieldCreator)
+ClassImp(MpdFieldCreator);

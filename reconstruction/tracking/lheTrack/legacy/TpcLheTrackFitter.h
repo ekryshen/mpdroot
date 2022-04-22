@@ -67,7 +67,7 @@ public:
    // void SaveHistograms();
    static TpcLheTrackFitter *Instance();
 
-   ClassDef(TpcLheTrackFitter, 1) // TpcLheTrackFitter
+   ClassDef(TpcLheTrackFitter, 1); // TpcLheTrackFitter
 };
 
 #endif

@@ -19,7 +19,7 @@
 #include "TMatrixTLazy.h"
 
 #ifdef __ROOT__
-ClassImp(MpdFemtoMiniDstReader)
+ClassImp(MpdFemtoMiniDstReader);
 #endif
 
 //_________________

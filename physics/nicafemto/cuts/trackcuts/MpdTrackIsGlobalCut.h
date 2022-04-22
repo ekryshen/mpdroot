@@ -20,7 +20,7 @@ public:
   virtual Bool_t Init(Int_t task_id);
   virtual Bool_t Pass(NicaTrack* track);
   virtual ~MpdTrackIsGlobalCut();
-  ClassDef(MpdTrackIsGlobalCut, 1)
+  ClassDef(MpdTrackIsGlobalCut, 1);
 };
 
 

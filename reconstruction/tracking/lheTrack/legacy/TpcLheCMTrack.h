@@ -49,7 +49,7 @@ public:
    void SetPointsUsage();
    void Clear();
 
-   ClassDef(TpcLheCMTrack, 1) //
+   ClassDef(TpcLheCMTrack, 1); //
 };
 
 #endif

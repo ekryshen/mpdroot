@@ -47,7 +47,7 @@ public:
    void SetYerr(Double_t f) { fError.SetY(f); }
    void SetZerr(Double_t f) { fError.SetZ(f); }
 
-   ClassDef(TpcLhePoint, 1) //
+   ClassDef(TpcLhePoint, 1); //
 };
 
 #endif

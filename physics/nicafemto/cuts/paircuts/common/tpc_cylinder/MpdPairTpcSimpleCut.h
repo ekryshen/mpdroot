@@ -22,7 +22,7 @@ class MpdPairTpcSimpleCut : public MpdCylinderTpcPairCut {
  public:
   MpdPairTpcSimpleCut(Int_t size = 1);
   virtual ~MpdPairTpcSimpleCut();
-  ClassDef(MpdPairTpcSimpleCut, 1)
+  ClassDef(MpdPairTpcSimpleCut, 1);
 };
 
 #endif /* MPDROOT_CYLINDERMPDPAIRTPCSIMPLECUT_H_ */

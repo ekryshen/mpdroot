@@ -13,7 +13,7 @@
 #include "MpdMiniMessMgr.h"
 #include "MpdMiniBTofPidTraits.h"
 
-ClassImp(MpdMiniBTofPidTraits)
+ClassImp(MpdMiniBTofPidTraits);
 
    //_________________
    MpdMiniBTofPidTraits::MpdMiniBTofPidTraits()

@@ -16,7 +16,7 @@ class MpdModularTpcPairCut : public MpdTpcPadsPairCut {
   MpdModularTpcPairCut(Int_t size);
   MpdModularTpcPairCut& operator=(const MpdModularTpcPairCut& other);
   virtual ~MpdModularTpcPairCut();
-  ClassDef(MpdModularTpcPairCut, 1)
+  ClassDef(MpdModularTpcPairCut, 1);
 };
 }  // namespace MpdPadsFormat
 

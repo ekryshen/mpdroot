@@ -12,8 +12,8 @@
 
 #include "MpdConvPi0.h"
 #include "TFile.h"
-ClassImp(MpdConvPi0)
 
+ClassImp(MpdConvPi0);
 
 MpdConvPi0::MpdConvPi0(const char *name, const char *outputName):
 MpdAnalysisTask(name,outputName)

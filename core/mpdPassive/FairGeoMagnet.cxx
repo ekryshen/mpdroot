@@ -21,7 +21,7 @@
 
 #include <string.h> // for strcpy
 
-ClassImp(FairGeoMagnet)
+ClassImp(FairGeoMagnet);
 
    FairGeoMagnet::FairGeoMagnet()
    : FairGeoSet()

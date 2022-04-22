@@ -18,7 +18,7 @@ class MpdAlicePairQuality : public MpdTpcPadsPairCut {
   MpdAlicePairQuality();
   Bool_t Pass(NicaTwoTrack *pair);
   virtual ~MpdAlicePairQuality();
-  ClassDef(MpdAlicePairQuality, 1)
+  ClassDef(MpdAlicePairQuality, 1);
 };
 }  // namespace MpdPadsFormat
 #endif /* MPDROOT_NICA_MPD_CUTS_PAIRCUTS_FULL_MPDALICEPAIRQUALITY_H_ */

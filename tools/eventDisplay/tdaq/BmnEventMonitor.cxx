@@ -259,4 +259,5 @@ void BmnEventMonitor::Exec(Option_t *option)
 /** Action after each event**/
 void BmnEventMonitor::Finish() {}
 
-ClassImp(BmnEventMonitor)
+ClassImp(BmnEventMonitor);
+

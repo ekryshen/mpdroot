@@ -30,7 +30,7 @@ public:
    void        addRefNodes();
    void        write(std::fstream &);
    void        print();
-   ClassDef(FairGeoCave, 0) // Class for the geometry of CAVE
+   ClassDef(FairGeoCave, 0); // Class for the geometry of CAVE
 };
 
 #endif /* !PNDGEOCAVE_H */

@@ -51,7 +51,7 @@ public:
   Int_t GetRunId() const { return fRunId; }
   virtual Bool_t SpecifyRunId() { return kFALSE; };
   virtual ~NicaMiniDstSource();
-  ClassDef(NicaMiniDstSource, 1)
+  ClassDef(NicaMiniDstSource, 1);
 };
 
 #endif /* MPDROOT_NICA_MPD_FORMAT_MPDMC_NICAMINIDSTSOURCE_H_ */

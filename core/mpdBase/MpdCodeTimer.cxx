@@ -195,4 +195,4 @@ void MpdCodeTimer::Print(TStopwatch *sw, Option_t *opt)
    }
 }
 
-ClassImp(MpdCodeTimer)
+ClassImp(MpdCodeTimer);

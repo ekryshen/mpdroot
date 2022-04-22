@@ -303,4 +303,4 @@ float MpdFemtoTrack::invBetaDiffProton() const {
   }
 }
 
-ClassImp(MpdFemtoTrack)
+ClassImp(MpdFemtoTrack);

@@ -147,4 +147,4 @@ void MpdKalmanGeoScheme::Reset()
    fPathMap.clear();
 }
 
-ClassImp(MpdKalmanGeoScheme)
+ClassImp(MpdKalmanGeoScheme);

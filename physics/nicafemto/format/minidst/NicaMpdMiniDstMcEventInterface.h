@@ -45,7 +45,7 @@ public:
     virtual Double_t GetPhiError()const{return 0;};
     virtual TLorentzVector GetVertex()const;
     virtual ~NicaMpdMiniDstMcEventInterface();
-    ClassDef(NicaMpdMiniDstMcEventInterface,1)
+    ClassDef(NicaMpdMiniDstMcEventInterface,1);
 };
 
 #endif /* NICAMPDMINIDSTMCEVENTINTERFACE_H_ */

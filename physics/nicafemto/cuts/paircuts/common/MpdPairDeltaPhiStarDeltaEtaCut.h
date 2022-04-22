@@ -33,7 +33,7 @@ public:
   virtual Bool_t Pass(NicaTwoTrack* pair);
   NicaPackage* Report() const;
   virtual ~MpdPairDeltaPhiStarDeltaEtaCut();
-  ClassDef(MpdPairDeltaPhiStarDeltaEtaCut, 1)
+  ClassDef(MpdPairDeltaPhiStarDeltaEtaCut, 1);
 };
 
 class MpdPairDeltaPhiStarDeltaEtaMinCut : public MpdPairDeltaPhiStarDeltaEtaCut {
@@ -42,7 +42,7 @@ public:
   virtual Bool_t Pass(NicaTwoTrack* pair);
   NicaPackage* Report() const;
   virtual ~MpdPairDeltaPhiStarDeltaEtaMinCut() {};
-  ClassDef(MpdPairDeltaPhiStarDeltaEtaMinCut, 1)
+  ClassDef(MpdPairDeltaPhiStarDeltaEtaMinCut, 1);
 };
 
 #endif /* MPDROOT_NICA_MPD_CUTS_PAIRCUTS_COMMON_MPDPAIRDELTAPHISTARDELTAETACUT_H_                                                \

@@ -7,7 +7,7 @@
  * the mathematical model of a helix.
  *
  * \author Grigory Nigmatkulov
- * \email nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
+ * email: nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
  * \date May 01, 2020
  */
 
@@ -150,7 +150,7 @@ protected:
    //// Sin of phase
    Double_t fSinPhase;
 
-   ClassDef(MpdMiniHelix, 1)
+   ClassDef(MpdMiniHelix, 1);
 };
 
 //

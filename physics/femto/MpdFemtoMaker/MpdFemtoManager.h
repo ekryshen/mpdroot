@@ -26,7 +26,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoManager_h
@@ -110,7 +110,7 @@ class MpdFemtoManager {
   /// Pointer to a collection of event writers
   MpdFemtoEventWriterCollection *mEventWriterCollection;
 
-  ClassDef(MpdFemtoManager, 0)
+  ClassDef(MpdFemtoManager, 0);
 };
 
 #endif // MpdFemtoManager_h

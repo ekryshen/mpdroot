@@ -119,7 +119,7 @@ public:
    virtual void Print(); //
    void         PrintHits();
 
-   ClassDef(TpcLheTrack, 1) // STS track class
+   ClassDef(TpcLheTrack, 1); // STS track class
 };
 
 //________________________________________________________________

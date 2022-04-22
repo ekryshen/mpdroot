@@ -234,7 +234,7 @@ public:
     */
    void RemoveAt(Int_t i);
 
-   ClassDef(UEvent, 3)
+   ClassDef(UEvent, 3);
 };
 
 #endif

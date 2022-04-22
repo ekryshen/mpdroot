@@ -10,7 +10,7 @@
 #include "TF1.h"
 
 using namespace std;
-ClassImp(TIdentity2D)
+ClassImp(TIdentity2D);
 
 Int_t TIdentity2D::fNParticles;
 Int_t TIdentity2D::fNMixParticles;

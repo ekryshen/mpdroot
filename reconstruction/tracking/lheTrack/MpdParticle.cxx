@@ -488,4 +488,4 @@ void MpdParticle::Print()
    /// Print particle info
 }
 
-ClassImp(MpdParticle)
+ClassImp(MpdParticle);

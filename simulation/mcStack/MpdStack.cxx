@@ -636,4 +636,4 @@ void MpdStack::SelectTracks()
 }
 // -------------------------------------------------------------------------
 
-ClassImp(MpdStack)
+ClassImp(MpdStack);

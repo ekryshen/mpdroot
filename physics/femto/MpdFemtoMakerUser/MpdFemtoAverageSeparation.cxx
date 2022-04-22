@@ -12,7 +12,7 @@
 #include "TMath.h"
 #include "TString.h"
 
-ClassImp(MpdFemtoAverageSeparation)
+ClassImp(MpdFemtoAverageSeparation);
 
 //_________________
 MpdFemtoAverageSeparation::MpdFemtoAverageSeparation(const char* title,

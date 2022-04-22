@@ -6,7 +6,7 @@
  * The tracks then passed through the full reconstruction chain.
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
- * \email nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
+ * email: nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
  * \date May 01, 2020
  */
 
@@ -173,7 +173,7 @@ private:
    /// Is from generator
    Bool_t fIsFromGen;
 
-   ClassDef(MpdMiniMcTrack, 3)
+   ClassDef(MpdMiniMcTrack, 3);
 };
 
 #endif // #define MpdMiniMcTrack_h

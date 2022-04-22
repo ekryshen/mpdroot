@@ -48,7 +48,7 @@ public:
   virtual TLorentzVector GetVertexError() const;
   virtual TLorentzVector GetVertex() const;
   virtual ~NicaMpdMiniDstEventInterface();
-  ClassDef(NicaMpdMiniDstEventInterface, 1)
+  ClassDef(NicaMpdMiniDstEventInterface, 1);
 };
 
 #endif /* NICAMPDMINIDSTEVENTINTERFACE_H_ */

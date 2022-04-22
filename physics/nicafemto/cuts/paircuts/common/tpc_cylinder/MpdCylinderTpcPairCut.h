@@ -15,7 +15,7 @@ class MpdCylinderTpcPairCut : public NicaTwoTrackCut {
 public:
 	MpdCylinderTpcPairCut(Int_t size);
 	virtual ~MpdCylinderTpcPairCut();
-	ClassDef(MpdCylinderTpcPairCut,1)
+	ClassDef(MpdCylinderTpcPairCut,1);
 };
 
 #endif /* MPDROOT_NICA_MPD_CUTS_PAIRCUTS_FULL_TPC_CYLINDER_MPDCYLINDERTPCPAIRCUT_H_ */

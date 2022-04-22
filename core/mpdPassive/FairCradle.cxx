@@ -18,4 +18,4 @@ void FairCradle::ConstructGeometry()
    }
 }
 
-ClassImp(FairCradle)
+ClassImp(FairCradle);

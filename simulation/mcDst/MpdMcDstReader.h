@@ -99,7 +99,7 @@ private:
    Char_t mStatusArrays[McArrays::NAllMcArrays];
 
    //#ifdef __ROOT__
-   ClassDef(McDstReader, 0)
+   ClassDef(McDstReader, 0);
    //#endif
 };
 

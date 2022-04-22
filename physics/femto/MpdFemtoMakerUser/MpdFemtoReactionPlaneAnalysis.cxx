@@ -21,7 +21,7 @@
 #include "TMath.h"
 #include "TString.h"
 
-ClassImp(MpdFemtoReactionPlaneAnalysis)
+ClassImp(MpdFemtoReactionPlaneAnalysis);
 
 //_________________
 MpdFemtoReactionPlaneAnalysis::MpdFemtoReactionPlaneAnalysis(unsigned int binsVertex,

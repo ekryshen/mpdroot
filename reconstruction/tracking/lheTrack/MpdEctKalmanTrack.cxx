@@ -274,4 +274,4 @@ void MpdEctKalmanTrack::Print(Option_t *opt)
    cout << " -------------------------------------------------------------------- " << endl;
 }
 
-ClassImp(MpdEctKalmanTrack)
+ClassImp(MpdEctKalmanTrack);

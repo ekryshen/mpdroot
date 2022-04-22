@@ -215,4 +215,4 @@ TEveTrackList *MpdMCStack::GetTrGroup(TParticle *P)
    return fTrList;
 }
 
-ClassImp(MpdMCStack)
+ClassImp(MpdMCStack);

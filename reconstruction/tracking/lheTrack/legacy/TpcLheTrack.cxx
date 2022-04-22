@@ -13,7 +13,7 @@ using namespace std;
 //                                                                    //
 ////////////////////////////////////////////////////////////////////////
 
-ClassImp(TpcLheTrack)
+ClassImp(TpcLheTrack);
 
    //______________________________________________________________
    TpcLheTrack::TpcLheTrack()

@@ -6,7 +6,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.comm
+ * email: nigmatkulov@gmail.comm
  */
 
 #ifndef MpdFemtoBaseParticleCut_h
@@ -90,7 +90,7 @@ class MpdFemtoBaseParticleCut : public MpdFemtoCutMonitorHandler {
   /// Pointer to the base analysis
   MpdFemtoBaseAnalysis* mBaseAnalysis; //!<!
 
-  ClassDef(MpdFemtoBaseParticleCut, 0)
+  ClassDef(MpdFemtoBaseParticleCut, 0);
 };
 
 //_________________

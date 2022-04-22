@@ -8,7 +8,7 @@
 // MpdFemtoMaker headers
 #include "MpdFemtoCutMonitorHandler.h"
 
-ClassImp(MpdFemtoCutMonitorHandler)
+ClassImp(MpdFemtoCutMonitorHandler);
 
 //_________________
 MpdFemtoCutMonitorHandler::MpdFemtoCutMonitorHandler() :

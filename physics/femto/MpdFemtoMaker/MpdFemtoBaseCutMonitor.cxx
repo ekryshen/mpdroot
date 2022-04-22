@@ -63,4 +63,4 @@ void MpdFemtoBaseCutMonitor::init() {
   /* empty */
 }
 
-ClassImp(MpdFemtoBaseCutMonitor)
+ClassImp(MpdFemtoBaseCutMonitor);

@@ -166,4 +166,4 @@ void MpdMultiField::Print()
    }
 }
 
-ClassImp(MpdMultiField)
+ClassImp(MpdMultiField);

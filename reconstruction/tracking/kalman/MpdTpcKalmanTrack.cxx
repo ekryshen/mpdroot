@@ -283,4 +283,4 @@ Bool_t MpdTpcKalmanTrack::GetRecoQuality(Double_t dist, Double_t percentage)
       return kFALSE;
 }
 
-ClassImp(MpdTpcKalmanTrack)
+ClassImp(MpdTpcKalmanTrack);

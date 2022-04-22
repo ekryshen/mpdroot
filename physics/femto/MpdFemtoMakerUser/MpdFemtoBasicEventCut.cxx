@@ -14,7 +14,7 @@
 #include "TMath.h"
 #include "TString.h"
 
-ClassImp(MpdFemtoBasicEventCut)
+ClassImp(MpdFemtoBasicEventCut);
 
 //_________________
 MpdFemtoBasicEventCut::MpdFemtoBasicEventCut() :

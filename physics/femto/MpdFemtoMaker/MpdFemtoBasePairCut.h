@@ -7,7 +7,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoBasePairCut_h
@@ -87,7 +87,7 @@ protected:
     /// Pointer to the base analysis
     MpdFemtoBaseAnalysis* mBaseAnalysis; //!<!
 
-    ClassDef(MpdFemtoBasePairCut, 0)
+    ClassDef(MpdFemtoBasePairCut, 0);
 };
 
 //_________________

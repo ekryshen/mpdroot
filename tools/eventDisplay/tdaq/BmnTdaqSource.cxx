@@ -311,4 +311,4 @@ void BmnTdaqSource::Close()
    ERS_LOG("Events/second : " << iEventNumber / timer.totalTime());
 }
 
-ClassImp(BmnTdaqSource)
+ClassImp(BmnTdaqSource);

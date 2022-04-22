@@ -20,7 +20,7 @@ public:
 	static Int_t DeltaDCAz(){return 1;}
 	static Int_t DeltaDCA(){return 2;};
 	virtual ~MpdPairDeltaDCA();
-	ClassDef(MpdPairDeltaDCA,1)
+	ClassDef(MpdPairDeltaDCA,1);
 };
 
 #endif /* MPDROOT_NICA_MPD_CUTS_PAIRCUTS_COMMON_MPDPAIRDELTADCA_H_ */

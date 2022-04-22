@@ -7,7 +7,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoBaseAnalysis_h
@@ -53,7 +53,7 @@ class MpdFemtoBaseAnalysis {
   /// Finish
   virtual void finish() = 0; ///<
 
-  ClassDef(MpdFemtoBaseAnalysis, 0)
+  ClassDef(MpdFemtoBaseAnalysis, 0);
 };
 
 #endif // #define MpdFemtoBaseAnalysis_h

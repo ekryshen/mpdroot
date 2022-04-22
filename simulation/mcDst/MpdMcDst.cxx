@@ -71,4 +71,4 @@ void McDst::printParticles()
    std::cout << std::endl;
 }
 
-ClassImp(McDst)
+ClassImp(McDst);

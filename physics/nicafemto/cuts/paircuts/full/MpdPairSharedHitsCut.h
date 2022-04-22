@@ -18,7 +18,7 @@ class MpdPairSharedHitsCut : public MpdTpcPadsPairCut {
   MpdPairSharedHitsCut();
   Bool_t Pass(NicaTwoTrack *pair);
   virtual ~MpdPairSharedHitsCut();
-  ClassDef(MpdPairSharedHitsCut, 1)
+  ClassDef(MpdPairSharedHitsCut, 1);
 };
 }  // namespace MpdPadsFormat
 

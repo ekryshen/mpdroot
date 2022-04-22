@@ -19,7 +19,7 @@
 // ROOT headers
 #include "TMath.h"
 
-ClassImp(MpdFemtoCoulomb)
+ClassImp(MpdFemtoCoulomb);
 
 //_________________
 MpdFemtoCoulomb::MpdFemtoCoulomb() : mFile(""), mRadius(-1.), mZ1Z2(1.), mEta{}, mCoulomb{}

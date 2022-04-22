@@ -18,7 +18,7 @@ public:
   virtual void Update();
   virtual TString GetFormatName() const { return "NicaMpdMiniDstFullV0Event"; };
   virtual ~NicaMiniDstFullV0Event();
-  ClassDef(NicaMiniDstFullV0Event, 1)
+  ClassDef(NicaMiniDstFullV0Event, 1);
 };
 
 

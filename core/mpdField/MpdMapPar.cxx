@@ -87,4 +87,4 @@ void MpdMapPar::SetParameters(FairField *field)
    fType                                         = fieldMap->GetType();
 }
 
-ClassImp(MpdMapPar)
+ClassImp(MpdMapPar);

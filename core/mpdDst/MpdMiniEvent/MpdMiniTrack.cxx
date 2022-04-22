@@ -12,7 +12,7 @@
 #include "MpdMiniMessMgr.h"
 #include "MpdMiniTrack.h"
 
-ClassImp(MpdMiniTrack)
+ClassImp(MpdMiniTrack);
 
    //_________________
    MpdMiniTrack::MpdMiniTrack()

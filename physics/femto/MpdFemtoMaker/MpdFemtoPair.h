@@ -12,7 +12,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoPair_h
@@ -541,7 +541,7 @@ class MpdFemtoPair {
   /// Set parameters used for track-merging estimation assuming full field
   void setDefaultFullFieldMergingPar();
 
-  /// Calculate the \Delta\phi^{*} between two particles, which is minal across several points
+  /// Calculate the \f$\Delta\phi^{*}\f$ between two particles, which is minal across several points
   /// \param p_a momentum of first particle
   /// \param charge_a charge of the first particle
   /// \param p_b momentum of second particle
@@ -558,7 +558,7 @@ class MpdFemtoPair {
 				     const double& rad_max_in_meters,
 				     const double& magnetic_field);
 
-  /// Calculate the \Delta\phi^{*} between two particles at each radial step between
+  /// Calculate the \f$\Delta\phi^{*}\f$ between two particles at each radial step between
   ///
   /// \param p_a momentum of first particle
   /// \param charge_a charge of the first particle
@@ -576,7 +576,7 @@ class MpdFemtoPair {
 						     const double& rad_max_in_meters,
 						     const double& magnetic_field);
 
-  /// Calculate the \Delta\phi^{*} between two particles.
+  /// Calculate the \f$\Delta\phi^{*}\f$ between two particles.
   /// \param p_a momentum of first particle
   /// \param charge_a charge of the first particle
   /// \param p_b momentum of second particle
@@ -591,23 +591,23 @@ class MpdFemtoPair {
 				  const double& radius_in_meters,
 				  const double& magnetic_field);
 
-  /// Calculate \Delta\phi between two particles.
+  /// Calculate \f$\Delta\phi\f$ between two particles.
   /// \param a Momentum of first particle
   /// \param b Momentum of second particle
   ///
-  /// The calculation returns $\Delta\phi = \phi2 - \phi1$
+  /// The calculation returns \f$\Delta\phi = \phi2 - \phi1\f$
   ///
   static double calculateDPhi(const TVector3& a, const TVector3& b);
 
-  /// Calculate \Delta\eta between two particles.
+  /// Calculate \f$\Delta\eta\f$ between two particles.
   /// \param a Momentum of first particle
   /// \param b Momentum of second particle
   ///
-  /// The calculation returns $\Delta\eta = \eta_2 - \eta_1$
+  /// The calculation returns \f$\Delta\eta = \eta_2 - \eta_1\f$
   ///
   static double calculateDEta(const TVector3& a, const TVector3& b);
 
-  /// Calculate \Delta\eta between two particles.
+  /// Calculate \f$\Delta\eta\f$ between two particles.
   /// \param a Momentum of first particle
   /// \param b Momentum of second particle
   /// \param minRad Radial distance at which the eta value should be taken?
@@ -694,7 +694,7 @@ class MpdFemtoPair {
     mMergingParNotCalculatedV0PosV0Neg = 1;
     mMergingParNotCalculatedV0NegV0Neg = 1;
   }
-  ClassDef(MpdFemtoPair, 0)
+  ClassDef(MpdFemtoPair, 0);
 };
 
 #endif // #define MpdFemtoPair_h

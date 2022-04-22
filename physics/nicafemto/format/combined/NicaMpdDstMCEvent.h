@@ -22,7 +22,7 @@ public:
 	void Update();
 	virtual TString GetFormatName()const{return "NicaMpdDstMCEvent";};
 	virtual ~NicaMpdDstMCEvent();
-	ClassDef(NicaMpdDstMCEvent,1)
+	ClassDef(NicaMpdDstMCEvent,1);
 };
 
 #endif /* INTERFACES_MPDROOT_NICAMPDDSTMCEVENT_H_ */

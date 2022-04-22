@@ -7,7 +7,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 11, 2020
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
 */
 
 #ifndef MpdFemtoBPLCMS3DCorrFctn_h

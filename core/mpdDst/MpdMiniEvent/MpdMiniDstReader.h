@@ -9,7 +9,7 @@
  * SetStatus method.
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
- * \email nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
+ * email: nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
  * \date May 01, 2020
  */
 
@@ -84,7 +84,7 @@ private:
    /// Status of mini arrays
    Char_t fStatusArrays[MpdMiniArrays::NAllMiniArrays];
 
-   ClassDef(MpdMiniDstReader, 0)
+   ClassDef(MpdMiniDstReader, 0);
 };
 
 #endif // #define MpdMiniDstReader_h

@@ -5,7 +5,7 @@
  * Parametrization of a physical helix that uses ROOT classes
  *
  * \author Grigory Nigmatkulov
- * \email nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
+ * email: nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
  * \date May 01, 2020
  */
 
@@ -48,7 +48,7 @@ public:
    /// 3d DCA to 3d point signed relative to rotation
    Double_t geometricSignedDistance(const TVector3 &);
 
-   ClassDef(MpdMiniPhysicalHelix, 1)
+   ClassDef(MpdMiniPhysicalHelix, 1);
 };
 
 #endif // #define MpdMiniPhysicalHelix_h

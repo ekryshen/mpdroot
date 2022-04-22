@@ -20,7 +20,7 @@ class NicaMpdHbtEvent : public NicaExpEvent {
   virtual Bool_t IsCompatible(const NicaEvent *buffered) const;
   virtual NicaPackage *Report() const;
   virtual ~NicaMpdHbtEvent();
-  ClassDef(NicaMpdHbtEvent, 1)
+  ClassDef(NicaMpdHbtEvent, 1);
 };
 
 #endif /* NICAMPDHBTEVENT_H_ */

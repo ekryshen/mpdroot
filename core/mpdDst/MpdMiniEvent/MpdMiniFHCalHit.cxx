@@ -5,7 +5,7 @@
 #include "MpdMiniMessMgr.h"
 #include "MpdMiniFHCalHit.h"
 
-ClassImp(MpdMiniFHCalHit)
+ClassImp(MpdMiniFHCalHit);
 
    //_________________
    MpdMiniFHCalHit::MpdMiniFHCalHit()

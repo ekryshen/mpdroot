@@ -18,7 +18,7 @@ class MpdHelixSep : public MpdTpcPadsPairCut {
   MpdHelixSep();
   virtual Bool_t Pass(NicaTwoTrack *pair);
   virtual ~MpdHelixSep();
-  ClassDef(MpdHelixSep, 1)
+  ClassDef(MpdHelixSep, 1);
 };
 }  // namespace MpdPadsFormat
 

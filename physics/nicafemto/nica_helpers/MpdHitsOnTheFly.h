@@ -27,7 +27,7 @@ class MpdHitsOnTheFly : public FairTask {
   virtual InitStatus Init();
   virtual void Exec(Option_t *opt);
   virtual ~MpdHitsOnTheFly();
-  ClassDef(MpdHitsOnTheFly, 1)
+  ClassDef(MpdHitsOnTheFly, 1);
 };
 
 #endif /* MPDROOT_NICA_MPD_NICA_HELPERS_MPDHITSONTHEFLY_H_ */

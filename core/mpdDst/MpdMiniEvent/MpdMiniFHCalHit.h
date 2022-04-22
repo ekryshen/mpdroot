@@ -6,7 +6,7 @@
  * the Forward Hadronic Calorimeter (FHCal)
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
- * \email nigmatkulov@gmail.com; ganigmatkulov@mephi.ru
+ * email: nigmatkulov@gmail.com; ganigmatkulov@mephi.ru
  * \date June 19, 2020
  */
 
@@ -87,7 +87,7 @@ private:
    // ADC for the hit
    // Float16_t fAdc;
 
-   ClassDef(MpdMiniFHCalHit, 2)
+   ClassDef(MpdMiniFHCalHit, 2);
 };
 
 #endif // #define MpdMiniFHCalHit_h

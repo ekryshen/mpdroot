@@ -20,7 +20,7 @@
 //#include "StarClassLibrary/SystemOfUnits.h"
 //#endif
 
-ClassImp(MpdFemtoPhysicalHelix)
+ClassImp(MpdFemtoPhysicalHelix);
 
 //_________________
 MpdFemtoPhysicalHelix::MpdFemtoPhysicalHelix() {
@@ -61,7 +61,7 @@ MpdFemtoPhysicalHelix::MpdFemtoPhysicalHelix(const TVector3& p,
 //_________________
 MpdFemtoPhysicalHelix::MpdFemtoPhysicalHelix(double c, double d,
 					     double phase, const TVector3& o,
-					     int h) : MpdFemtoHelix(c, d, phase, o, h) {
+					     Int_t h) : MpdFemtoHelix(c, d, phase, o, h) {
   /* no-op */
 }
 

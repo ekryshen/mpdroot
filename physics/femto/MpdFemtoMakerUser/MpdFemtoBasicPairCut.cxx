@@ -15,7 +15,7 @@
 // C++ headers
 #include <limits>
 
-ClassImp(MpdFemtoBasicPairCut)
+ClassImp(MpdFemtoBasicPairCut);
 
 //_________________
 MpdFemtoBasicPairCut::MpdFemtoBasicPairCut() : MpdFemtoBasePairCut() {

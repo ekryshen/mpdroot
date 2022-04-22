@@ -66,7 +66,7 @@ protected:
    /** Hemispheres of a point (for temporary use)  **/
    Double_t fHemiX, fHemiY, fHemiZ; //!
 
-   ClassDef(MpdFieldMapSym3, 1)
+   ClassDef(MpdFieldMapSym3, 1);
 };
 
 #endif

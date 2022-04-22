@@ -28,7 +28,7 @@ public:
 	virtual Bool_t ExistInTree()const;
 	virtual TString GetFormatName() const;
 	virtual ~NicaUnigenEvent();
-	ClassDef(NicaUnigenEvent,1)
+	ClassDef(NicaUnigenEvent,1);
 };
 
 #endif /* NICAUNIGENEVENT_H_ */

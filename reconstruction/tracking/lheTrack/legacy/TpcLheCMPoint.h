@@ -118,7 +118,7 @@ public:
    void SetConfCoord();                        // conformal mapping of coordinates
    void SetAllCoord(const TpcLheCMPoint *hit); //
 
-   ClassDef(TpcLheCMPoint, 1) //
+   ClassDef(TpcLheCMPoint, 1); //
 };
 
 #endif

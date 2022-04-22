@@ -66,4 +66,4 @@ void FairPipe::ConstructASCIIGeometry()
    par->setInputVersion(fRun->GetRunId(), 1);
 }
 
-ClassImp(FairPipe)
+ClassImp(FairPipe);

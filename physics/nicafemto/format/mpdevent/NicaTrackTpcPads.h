@@ -112,7 +112,7 @@ public:
   virtual ~NicaTrackTpcPads();
   NicaTrackTpcPads(const NicaTrackTpcPads& other);
   NicaTrackTpcPads& operator=(const NicaTrackTpcPads& other);
-  ClassDef(NicaTrackTpcPads, 1)
+  ClassDef(NicaTrackTpcPads, 1);
 };
 
 #endif /* MPDROOT_NICA_MPD_FORMAT_MPDEVENT_NICATRACKTPCPADS_H_ */

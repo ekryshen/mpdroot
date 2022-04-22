@@ -204,4 +204,4 @@ void MpdKalmanTrack::PrintNode(Bool_t nNew) const
 
 ///__________________________________________________________________________
 
-ClassImp(MpdKalmanTrack)
+ClassImp(MpdKalmanTrack);

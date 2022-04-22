@@ -193,7 +193,7 @@ public:
    ULong64_t GetSharedHitMap() const { return fSharedHitMap; };
    Int_t     GetNSharedTpcHits() const;
    MpdHelix  GetHelix() const;
-   ClassDef(MpdTrack, 4)
+   ClassDef(MpdTrack, 4);
 };
 
 #endif

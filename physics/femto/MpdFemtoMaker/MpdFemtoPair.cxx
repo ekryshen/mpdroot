@@ -1273,4 +1273,4 @@ double MpdFemtoPair::calculateDEtaStar(const TVector3& a, const TVector3& b,
   return TMath::Abs(etas1 - etas2);
 }
 
-ClassImp(MpdFemtoPair)
+ClassImp(MpdFemtoPair);

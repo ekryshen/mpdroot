@@ -18,7 +18,7 @@ public:
    FairTarget();
    virtual ~FairTarget();
    virtual void ConstructGeometry();
-   ClassDef(FairTarget, 1)
+   ClassDef(FairTarget, 1);
 };
 
 #endif // Target_H

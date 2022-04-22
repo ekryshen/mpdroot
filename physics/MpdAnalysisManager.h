@@ -44,7 +44,7 @@ private:
   MpdAnalysisEvent fEvent ;
   MpdKalmanFilter* fKF          = nullptr ;
 
-  ClassDef(MpdAnalysisManager,0)
+  ClassDef(MpdAnalysisManager,0);
 };
 
 #endif

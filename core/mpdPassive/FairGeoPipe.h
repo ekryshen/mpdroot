@@ -24,7 +24,7 @@ public:
    const char *getModuleName(Int_t) { return modName; }
    const char *getEleName(Int_t) { return eleName; }
    Bool_t      create(FairGeoBuilder *);
-   ClassDef(FairGeoPipe, 0) // Class for geometry of beam pipe
+   ClassDef(FairGeoPipe, 0); // Class for geometry of beam pipe
 };
 
 #endif /* !PNDGEOPIPE_H */

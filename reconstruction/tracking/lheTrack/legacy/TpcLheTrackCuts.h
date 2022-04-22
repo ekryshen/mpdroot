@@ -81,7 +81,7 @@ public:
                                        double *yi, double *xi_prime, double *yi_prime);
    Double_t GetMaxDist(Int_t pl);
 
-   ClassDef(TpcLheTrackCuts, 1) //
+   ClassDef(TpcLheTrackCuts, 1); //
 };
 
 //________________________________________________________________

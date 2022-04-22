@@ -18,7 +18,7 @@
 // C++ headers
 #include <iostream>
 
-ClassImp(MpdFemtoModelQinvCorrFctnKt)
+ClassImp(MpdFemtoModelQinvCorrFctnKt);
 
 //_________________
 MpdFemtoModelQinvCorrFctnKt::MpdFemtoModelQinvCorrFctnKt(const char* title,

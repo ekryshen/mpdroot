@@ -5,7 +5,7 @@
  * The MpdMiniEvent class keeps variables that characterize event.
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
- * \email nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
+ * email: nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
  * \date May 01, 2020
  */
 
@@ -359,7 +359,7 @@ private:
    /// Energy deposit in each of 90 towers 0-44 for eta<0 and 45-89 for eta>0
    Float16_t fFHCalEnergyDeposit[90];
 
-   ClassDef(MpdMiniEvent, 2)
+   ClassDef(MpdMiniEvent, 2);
 };
 
 #endif // #define MpdMiniEvent_h

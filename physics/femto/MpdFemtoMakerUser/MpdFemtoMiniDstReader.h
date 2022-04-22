@@ -8,7 +8,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date September 03, 2020
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoMiniDstReader_h
@@ -74,7 +74,7 @@ class MpdFemtoMiniDstReader : public MpdFemtoBaseEventReader {
   long int mEventsPassed;
 
 #ifdef __ROOT__
-  ClassDef(MpdFemtoMiniDstReader, 1)
+  ClassDef(MpdFemtoMiniDstReader, 1);
 #endif
 };
 

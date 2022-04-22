@@ -50,7 +50,7 @@ public:
 	virtual Double_t GetPhiError()const{return 0;};
 	virtual TLorentzVector GetVertex()const;
 	virtual ~NicaMpdMcEventInterface();
-	ClassDef(NicaMpdMcEventInterface,1)
+	ClassDef(NicaMpdMcEventInterface,1);
 };
 
 #endif /* NICAFAIREVENTINTERFACE_H_ */

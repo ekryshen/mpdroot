@@ -163,4 +163,4 @@ void MpdFieldPar::SetParameters(FairField *field)
    return;
 }
 
-ClassImp(MpdFieldPar)
+ClassImp(MpdFieldPar);

@@ -27,7 +27,7 @@
 // ROOT headers
 #include "TRegexp.h"
 
-ClassImp(MpdMiniDstReader)
+ClassImp(MpdMiniDstReader);
 
    //_________________
    MpdMiniDstReader::MpdMiniDstReader(const Char_t *inFileName)

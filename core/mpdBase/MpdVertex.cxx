@@ -155,4 +155,4 @@ void MpdVertex::Reset()
 }
 // -------------------------------------------------------------------------
 
-ClassImp(MpdVertex)
+ClassImp(MpdVertex);

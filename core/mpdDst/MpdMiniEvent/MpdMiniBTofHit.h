@@ -5,7 +5,7 @@
  * The MpdMiniBTofHit class holds inofmation about hits in Barrel Time-Of-Flight detector
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI), Pavel Batyuk (JINR)
- * \email nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru ; pavel.batyuk@jinr.ru
+ * email: nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru ; pavel.batyuk@jinr.ru
  * \date May 01, 2020
  */
 
@@ -103,7 +103,7 @@ private:
    /// Time since the event start [ns]
    Float_t fTime;
 
-   ClassDef(MpdMiniBTofHit, 2)
+   ClassDef(MpdMiniBTofHit, 2);
 };
 
 #endif // #define MpdMiniBTofHit_h

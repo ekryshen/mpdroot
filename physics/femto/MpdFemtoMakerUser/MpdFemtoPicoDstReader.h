@@ -111,7 +111,7 @@ private:
     StRefMultCorr *mRefMultCorrUtil;
 #endif
 
-    ClassDef(MpdFemtoPicoDstReader, 1)
+    ClassDef(MpdFemtoPicoDstReader, 1);
 
 };
 

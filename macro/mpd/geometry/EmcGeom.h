@@ -34,7 +34,7 @@ public:
 
  ofstream* fGeoFile ;    
 
- ClassDef(EmcGeom,1)
+ ClassDef(EmcGeom,1);
 };
 
 #endif

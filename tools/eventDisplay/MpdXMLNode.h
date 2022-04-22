@@ -44,7 +44,7 @@ public:
     */
    void SetValue(TString val) { SetTitle(val); };
    virtual ~MpdXMLAttrib(){};
-   ClassDef(MpdXMLAttrib, 1)
+   ClassDef(MpdXMLAttrib, 1);
 };
 /**
  * class for representing XML node
@@ -139,7 +139,7 @@ public:
     */
    MpdXMLNode *GetChild(Int_t index) const;
    virtual ~MpdXMLNode();
-   ClassDef(MpdXMLNode, 1)
+   ClassDef(MpdXMLNode, 1);
 };
 
 /**
@@ -181,7 +181,7 @@ public:
     * destroy object (and save xml file if needed and Close was not called)
     */
    virtual ~MpdXMLFile();
-   ClassDef(MpdXMLFile, 1)
+   ClassDef(MpdXMLFile, 1);
 };
 
 #endif /* MPDXLMNODE_H */

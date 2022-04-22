@@ -91,7 +91,7 @@ protected:
 
    friend class ClusterCollection;
 
-   ClassDef(Cluster, 1)
+   ClassDef(Cluster, 1);
 };
 
 #endif /* __CLUSTER_H__ */

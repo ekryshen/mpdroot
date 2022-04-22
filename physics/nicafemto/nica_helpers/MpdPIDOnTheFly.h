@@ -27,7 +27,7 @@ public:
     virtual InitStatus Init();
     virtual void Exec(Option_t *opt);
 	virtual ~MpdPIDOnTheFly();
-	ClassDef(MpdPIDOnTheFly,1)
+	ClassDef(MpdPIDOnTheFly,1);
 };
 
 #endif /* MPDROOT_NICA_MPD_FORMAT_MPDEVENT_MPDPIDONTHEFLY_H_ */

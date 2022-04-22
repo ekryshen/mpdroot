@@ -7,7 +7,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoPicoEventCollectionVectorHideAway_h
@@ -89,7 +89,7 @@ class MpdFemtoPicoEventCollectionVectorHideAway {
   /// Collection vector
   MpdFemtoPicoEventCollectionVector mCollectionVector;
 
-  ClassDef(MpdFemtoPicoEventCollectionVectorHideAway, 0)
+  ClassDef(MpdFemtoPicoEventCollectionVectorHideAway, 0);
 };
 
 #endif // #define MpdFemtoPicoEventCollectionVectorHideAway_h

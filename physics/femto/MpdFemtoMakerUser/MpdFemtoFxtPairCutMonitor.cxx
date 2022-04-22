@@ -13,7 +13,7 @@
 #include <cstdio>
 #include <string>
 
-ClassImp(MpdFemtoFxtPairCutMonitor)
+ClassImp(MpdFemtoFxtPairCutMonitor);
 
 //_________________
 MpdFemtoFxtPairCutMonitor::MpdFemtoFxtPairCutMonitor(const char* name) :

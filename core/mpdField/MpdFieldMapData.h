@@ -65,7 +65,7 @@ private:
    TArrayF *fBy;
    TArrayF *fBz;
 
-   ClassDef(MpdFieldMapData, 1)
+   ClassDef(MpdFieldMapData, 1);
 };
 
 #endif

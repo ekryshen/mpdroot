@@ -13,7 +13,7 @@
 #include "MpdFemtoPicoEventCollectionVector.h"
 #include "MpdFemtoPicoEventCollectionVectorHideAway.h"
 
-ClassImp(MpdFemtoVertexAnalysis)
+ClassImp(MpdFemtoVertexAnalysis);
 
 //_________________
 MpdFemtoVertexAnalysis::MpdFemtoVertexAnalysis(unsigned int bins, float zMin, float zMax) :

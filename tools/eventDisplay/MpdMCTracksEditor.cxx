@@ -36,4 +36,4 @@ MpdMCTracksEditor::MpdMCTracksEditor(const TGWindow *p, Int_t width, Int_t heigh
    fInfoFrame->AddFrame(title1, new TGLayoutHints(kLHintsTop, 0, 0, 2, 0));
 }
 
-ClassImp(MpdMCTracksEditor)
+ClassImp(MpdMCTracksEditor);

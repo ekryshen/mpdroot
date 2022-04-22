@@ -13,7 +13,7 @@
 #include "MpdMiniMessMgr.h"
 #include "MpdMiniEvent.h"
 
-ClassImp(MpdMiniEvent)
+ClassImp(MpdMiniEvent);
 
    //_________________
    MpdMiniEvent::MpdMiniEvent()

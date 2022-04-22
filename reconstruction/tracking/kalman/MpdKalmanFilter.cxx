@@ -2699,4 +2699,4 @@ Double_t *MpdKalmanFilter::ExtrapOneStep(MpdKalmanTrack *track, Double_t step, I
 }
 //__________________________________________________________________________
 
-ClassImp(MpdKalmanFilter)
+ClassImp(MpdKalmanFilter);

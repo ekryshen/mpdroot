@@ -652,4 +652,4 @@ void MpdItsToTpcMatching::Exec(Option_t *option)
 
 //__________________________________________________________________________
 
-ClassImp(MpdItsToTpcMatching)
+ClassImp(MpdItsToTpcMatching);

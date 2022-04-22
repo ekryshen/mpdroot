@@ -11,7 +11,7 @@
 // ROOT headers
 #include "TLorentzVector.h"
 
-ClassImp(MpdFemtoV0)
+ClassImp(MpdFemtoV0);
 
 //_________________
 MpdFemtoV0::MpdFemtoV0() :

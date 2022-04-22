@@ -6,7 +6,7 @@
 #include "MpdMiniMessMgr.h"
 #include "MpdMiniMcTrack.h"
 
-ClassImp(MpdMiniMcTrack)
+ClassImp(MpdMiniMcTrack);
 
    //_________________
    MpdMiniMcTrack::MpdMiniMcTrack()

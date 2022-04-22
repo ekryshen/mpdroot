@@ -13,7 +13,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoVertexMultAnalysis_h
@@ -101,7 +101,7 @@ class MpdFemtoVertexMultAnalysis : public MpdFemtoAnalysis {
   /// Number of events encountered which had too small multiplicity
   unsigned int mUnderFlowMult;
 
-  ClassDef(MpdFemtoVertexMultAnalysis, 0)
+  ClassDef(MpdFemtoVertexMultAnalysis, 0);
 };
 
 #endif // #define MpdFemtoVertexMultAnalysis_h

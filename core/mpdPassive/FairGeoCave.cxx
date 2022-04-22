@@ -29,7 +29,7 @@
 #include <iostream> // for cout
 
 using namespace std;
-ClassImp(FairGeoCave)
+ClassImp(FairGeoCave);
 
    FairGeoCave::FairGeoCave()
    : FairGeoSet(), name("cave")

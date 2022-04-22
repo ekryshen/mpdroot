@@ -11,7 +11,7 @@ class TIdentityBase:public TNamed
   virtual void Run()       = 0;
   virtual void SetFunctionPointers(Double_t (*fun)(Int_t, Double_t)) = 0;
  public:
-  ClassDef(TIdentityBase,0)
+  ClassDef(TIdentityBase,0);
     };   
 #endif
     

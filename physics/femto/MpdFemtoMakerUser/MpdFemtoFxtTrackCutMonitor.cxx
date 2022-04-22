@@ -16,7 +16,7 @@
 // ROOT headers
 #include "TMath.h"
 
-ClassImp(MpdFemtoFxtTrackCutMonitor)
+ClassImp(MpdFemtoFxtTrackCutMonitor);
 
 //_________________
 MpdFemtoFxtTrackCutMonitor::MpdFemtoFxtTrackCutMonitor(const char* name,

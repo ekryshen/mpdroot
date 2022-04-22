@@ -111,7 +111,7 @@ public:
    MpdTrack *AddPrimaryTrack();
    MpdTrack *AddGlobalTrack();
 
-   ClassDef(MpdEvent, 1) // MPDEVENT
+   ClassDef(MpdEvent, 1); // MPDEVENT
 };
 
 #endif

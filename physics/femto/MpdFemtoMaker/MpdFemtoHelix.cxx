@@ -30,7 +30,7 @@ using std::numeric_limits;
 //#include "StarClassLibrary/PhysicalConstants.h"
 //#endif
 
-ClassImp(MpdFemtoHelix)
+ClassImp(MpdFemtoHelix);
 
 const double MpdFemtoHelix::NoSolution = 3.e+33;
 

@@ -7,7 +7,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoTriplet_h
@@ -105,7 +105,7 @@ class MpdFemtoTriplet {
   /// The third particle from triplet
   MpdFemtoParticle* mTrack3;
 
-  ClassDef(MpdFemtoTriplet, 1)
+  ClassDef(MpdFemtoTriplet, 1);
 };
 
 #endif // MpdFemtoTriplet_h

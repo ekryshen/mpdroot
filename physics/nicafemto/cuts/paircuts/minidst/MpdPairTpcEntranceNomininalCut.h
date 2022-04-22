@@ -19,7 +19,7 @@ class MpdPairTpcEntranceNomininalCut : public MpdFemtoPairCut {
   static Int_t XYZ() { return 2; }
   virtual Bool_t Pass(NicaTwoTrack *pair);
   virtual ~MpdPairTpcEntranceNomininalCut();
-  ClassDef(MpdPairTpcEntranceNomininalCut, 1)
+  ClassDef(MpdPairTpcEntranceNomininalCut, 1);
 };
 }  // namespace MpdHbtDst
 

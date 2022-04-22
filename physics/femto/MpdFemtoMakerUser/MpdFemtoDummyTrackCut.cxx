@@ -5,7 +5,7 @@
 #include "MpdFemtoDummyTrackCut.h"
 #include <cstdio>
 
-ClassImp(MpdFemtoDummyTrackCut)
+ClassImp(MpdFemtoDummyTrackCut);
 
 //_________________
 MpdFemtoDummyTrackCut::MpdFemtoDummyTrackCut() :

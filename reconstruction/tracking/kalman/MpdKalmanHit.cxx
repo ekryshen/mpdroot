@@ -110,4 +110,4 @@ void MpdKalmanHit::SetIndex(Int_t indx)
    fIndex[size] = indx;
 }
 
-ClassImp(MpdKalmanHit)
+ClassImp(MpdKalmanHit);

@@ -34,7 +34,7 @@ public:
   void Write(Bool_t wtr = kTRUE) { fWrite = wtr; };
   virtual void Exec(Option_t* opt);
   virtual ~NicaMpdV0Matcher();
-  ClassDef(NicaMpdV0Matcher, 1)
+  ClassDef(NicaMpdV0Matcher, 1);
 };
 
 

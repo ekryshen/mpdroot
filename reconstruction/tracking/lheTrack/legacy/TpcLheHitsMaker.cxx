@@ -464,4 +464,4 @@ void TpcLheHitsMaker::PrintTracks(Int_t ntr)
 
 #endif
 
-ClassImp(TpcLheHitsMaker)
+ClassImp(TpcLheHitsMaker);

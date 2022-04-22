@@ -12,7 +12,7 @@
 // C++ headers
 #include <iostream>
 
-ClassImp(MpdFemtoQinvCorrFctnKt)
+ClassImp(MpdFemtoQinvCorrFctnKt);
 
 //_________________
 MpdFemtoQinvCorrFctnKt::MpdFemtoQinvCorrFctnKt(const char* title,

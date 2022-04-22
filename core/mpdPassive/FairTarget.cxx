@@ -63,4 +63,4 @@ void FairTarget::ConstructGeometry()
    par->setChanged();
    par->setInputVersion(fRun->GetRunId(), 1);
 }
-ClassImp(FairTarget)
+ClassImp(FairTarget);

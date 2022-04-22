@@ -7,7 +7,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoVertexAnalysis_h
@@ -57,7 +57,7 @@ class MpdFemtoVertexAnalysis : public MpdFemtoAnalysis {
   /// Number of events encountered which had too small z-vertex
   unsigned int mUnderFlow;
 
-  ClassDef(MpdFemtoVertexAnalysis, 0)
+  ClassDef(MpdFemtoVertexAnalysis, 0);
 };
 
 #endif

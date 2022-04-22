@@ -15,7 +15,7 @@ class NicaPairAnaDebugger : public NicaTwoTrackAna {
   NicaPairAnaDebugger();
   void ProcessEvent();
   virtual ~NicaPairAnaDebugger();
-  ClassDef(NicaPairAnaDebugger, 1)
+  ClassDef(NicaPairAnaDebugger, 1);
 };
 
 #endif /* NICAPAIRANADEBUGGER_H_ */

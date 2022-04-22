@@ -6,7 +6,7 @@
 #include "MpdFemtoKink.h"
 #include "MpdFemtoTrack.h"
 
-ClassImp(MpdFemtoKink)
+ClassImp(MpdFemtoKink);
 
 //_________________
 MpdFemtoKink::MpdFemtoKink() :

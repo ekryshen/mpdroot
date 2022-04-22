@@ -110,7 +110,7 @@ protected:
    double mCosPhase;
    double mSinPhase;
 #ifdef __ROOT__
-   ClassDef(MpdHelix, 1)
+   ClassDef(MpdHelix, 1);
 #endif
 };
 

@@ -369,7 +369,7 @@ public:
     */
    inline void SetWeight(Double_t weight) { fWeight = weight; }
 
-   ClassDef(UParticle, 1)
+   ClassDef(UParticle, 1);
 };
 
 #endif

@@ -3,7 +3,8 @@
 #define __MPD_TOF_H
 
 //------------------------------------------------------------------------------------------------------------------------
-/// \class MpdTof, version = 8 (14 sectors, 20 detectors, 72 strips)
+/// \class MpdTof
+/// Version = 8 (14 sectors, 20 detectors, 72 strips)
 ///
 /// \brief
 /// \author Sergei Lobastov (LHE, JINR, Dubna)

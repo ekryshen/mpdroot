@@ -9,7 +9,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoHelix_h
@@ -145,7 +145,7 @@ class MpdFemtoHelix {
   double mCosPhase;
   double mSinPhase;
 
-  ClassDef(MpdFemtoHelix, 1)
+  ClassDef(MpdFemtoHelix, 1);
     };
 
 //

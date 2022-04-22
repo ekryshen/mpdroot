@@ -21,7 +21,7 @@ public:
    ~FairGeoTarget() {}
    const char *getModuleName(Int_t) { return modName; }
    const char *getEleName(Int_t) { return eleName; }
-   ClassDef(FairGeoTarget, 0) // Class for geometry of Target
+   ClassDef(FairGeoTarget, 0); // Class for geometry of Target
 };
 
 #endif /* !PNDGEOTARGET_H */

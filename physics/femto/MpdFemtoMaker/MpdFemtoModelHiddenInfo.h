@@ -7,7 +7,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoModelHiddenInfo_h
@@ -463,7 +463,7 @@ class MpdFemtoModelHiddenInfo : public MpdFemtoHiddenInfo {
   /// \param 2 secondary from material
   char mOrigin;
 
-  ClassDef(MpdFemtoModelHiddenInfo, 1)
+  ClassDef(MpdFemtoModelHiddenInfo, 1);
 };
 
 #endif // MpdFemtoModelHiddenInfo_h

@@ -46,7 +46,7 @@ public:
   NicaTrackChargeCut* GetChargeCut() const;
   NicaTrackTpcToFCut* GetTpcTofCut() const;
   virtual ~MpdBasicTrackCut();
-  ClassDef(MpdBasicTrackCut, 1)
+  ClassDef(MpdBasicTrackCut, 1);
 };
 
 #endif /* MPDROOT_NICA_MPD_CUTS_TRACKCUTS_MPDBASICTRACKCUT_H_ */

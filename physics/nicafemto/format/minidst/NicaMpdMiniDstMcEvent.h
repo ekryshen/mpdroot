@@ -22,7 +22,7 @@ public:
     virtual Bool_t ExistInTree()const;
     virtual TString GetFormatName()const;
     virtual ~NicaMpdMiniDstMcEvent();
-    ClassDef(NicaMpdMiniDstMcEvent,1)
+    ClassDef(NicaMpdMiniDstMcEvent,1);
 };
 
 #endif /* NICAMPDMINIDSTMCEVENT_H_ */

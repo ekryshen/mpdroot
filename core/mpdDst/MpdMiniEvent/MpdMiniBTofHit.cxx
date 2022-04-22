@@ -6,7 +6,7 @@
 #include "MpdMiniMessMgr.h"
 #include "MpdMiniBTofHit.h"
 
-ClassImp(MpdMiniBTofHit)
+ClassImp(MpdMiniBTofHit);
 
    //_________________
    MpdMiniBTofHit::MpdMiniBTofHit()

@@ -7,7 +7,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoBasicTrackCut_h
@@ -360,7 +360,7 @@ class MpdFemtoBasicTrackCut : public MpdFemtoBaseTrackCut {
   /// Check kinematics
   bool isGoodKine(const MpdFemtoTrack *t, TLorentzVector vec);
 
-  ClassDef(MpdFemtoBasicTrackCut, 2)
+  ClassDef(MpdFemtoBasicTrackCut, 2);
 };
 
 #endif // MpdFemtoBasicTrackCut_h

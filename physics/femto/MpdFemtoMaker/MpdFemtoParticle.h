@@ -6,7 +6,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoParticle_h
@@ -650,7 +650,7 @@ class MpdFemtoParticle {
   /// Z position of TPC exit point of V0 negative daughter
   float *mTpcV0NegExitPointZ;
 
-  ClassDef(MpdFemtoParticle, 1)
+  ClassDef(MpdFemtoParticle, 1);
 };
 
 #endif // #define MpdFemtoParticle_h

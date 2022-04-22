@@ -90,7 +90,7 @@ public:
    Bool_t IsSortable() const { return kTRUE; }
    Int_t  Compare(const TObject *hit) const; // "Compare" function for sorting
 
-   ClassDef(TpcLheHit, 1) //
+   ClassDef(TpcLheHit, 1); //
 };
 
 #endif

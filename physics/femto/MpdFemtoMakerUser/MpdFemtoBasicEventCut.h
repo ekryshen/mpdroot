@@ -6,7 +6,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoBasicEventCut_h
@@ -189,7 +189,7 @@ class MpdFemtoBasicEventCut : public MpdFemtoBaseEventCut {
   /// Bad run list for 3He+Au at 200 GeV/n (Run14)
   static const std::vector<unsigned int> bad_run_list_he3au200_2014;
 
-  ClassDef(MpdFemtoBasicEventCut, 1)
+  ClassDef(MpdFemtoBasicEventCut, 1);
 };
 
 #endif // MpdFemtoBasicEventCut_h

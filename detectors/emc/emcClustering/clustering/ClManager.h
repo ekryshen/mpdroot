@@ -90,7 +90,7 @@ protected:
 
    TArrayD fCLPars;
 
-   ClassDef(ClManager, 1)
+   ClassDef(ClManager, 1);
 };
 
 #endif /* __CLMANAGER_H__ */

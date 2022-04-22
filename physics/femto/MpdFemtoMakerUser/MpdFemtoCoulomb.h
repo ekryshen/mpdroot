@@ -87,7 +87,7 @@ private:
     /// Number of Eta's in lookup-table
     int mNLines;
 
-    ClassDef(MpdFemtoCoulomb, 0)
+    ClassDef(MpdFemtoCoulomb, 0);
 };
 
 #endif

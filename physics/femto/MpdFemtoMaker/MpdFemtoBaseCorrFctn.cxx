@@ -57,4 +57,4 @@ void MpdFemtoBaseCorrFctn::addSecondParticle(MpdFemtoParticle* /* part */) {
   std::cout << "MpdFemtoBaseCorrFctn::addSecondParticle -- Not implemented" << std::endl;
 }
 
-ClassImp(MpdFemtoBaseCorrFctn)
+ClassImp(MpdFemtoBaseCorrFctn);

@@ -4,7 +4,7 @@
 #include "MpdAnalysisManager.h"
 #include "TFile.h"
 #include <FairRunAna.h>
-ClassImp(MpdAnalysisManager)
+ClassImp(MpdAnalysisManager);
 
 
 MpdAnalysisManager::MpdAnalysisManager(const char* name)

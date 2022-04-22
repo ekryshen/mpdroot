@@ -19,7 +19,7 @@ class MpdStarPairQualityCut : public NicaTwoTrackCut {
   MpdStarPairQualityCut();
   Bool_t Pass(NicaTwoTrack *pair);
   virtual ~MpdStarPairQualityCut();
-  ClassDef(MpdStarPairQualityCut, 1)
+  ClassDef(MpdStarPairQualityCut, 1);
 };
 }  // namespace MpdPadsFormat
 #endif /* MPDROOT_NICA_MPD_CUTS_PAIRCUTS_TPC_MPDSTARQUALITYPAIRCUT_H_ */

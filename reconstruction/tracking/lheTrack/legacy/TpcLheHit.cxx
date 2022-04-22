@@ -5,7 +5,7 @@
 
 using namespace std;
 
-ClassImp(TpcLheHit)
+ClassImp(TpcLheHit);
 
    //________________________________________________________________
    TpcLheHit::TpcLheHit()

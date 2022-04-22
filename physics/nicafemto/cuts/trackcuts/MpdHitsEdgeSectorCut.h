@@ -25,7 +25,7 @@ public:
 	virtual Bool_t Pass(NicaTrack *track);
 	NicaPackage *Report()const;
 	virtual ~MpdHitsEdgeSectorCut();
-	ClassDef(MpdHitsEdgeSectorCut,1)
+	ClassDef(MpdHitsEdgeSectorCut,1);
 };
 
 #endif /* MPDROOT_NICA_MPD_CUTS_TRACKCUTS_MPDHITSEDGESECTORCUT_H_ */

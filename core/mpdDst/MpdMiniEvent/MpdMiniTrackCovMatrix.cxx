@@ -6,7 +6,7 @@
 #include "MpdMiniMessMgr.h"
 #include "MpdMiniTrackCovMatrix.h"
 
-ClassImp(MpdMiniTrackCovMatrix)
+ClassImp(MpdMiniTrackCovMatrix);
 
    //_________________
    MpdMiniTrackCovMatrix::MpdMiniTrackCovMatrix()

@@ -124,4 +124,4 @@ void MpdBoxSetDraw::Reset()
    }
 }
 
-ClassImp(MpdBoxSetDraw)
+ClassImp(MpdBoxSetDraw);

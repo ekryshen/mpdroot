@@ -2817,4 +2817,4 @@ void MpdTpcKalmanFilter::Smooth(MpdTpcKalmanTrack *track, std::vector<std::pair<
 
 //__________________________________________________________________________
 
-ClassImp(MpdTpcKalmanFilter)
+ClassImp(MpdTpcKalmanFilter);

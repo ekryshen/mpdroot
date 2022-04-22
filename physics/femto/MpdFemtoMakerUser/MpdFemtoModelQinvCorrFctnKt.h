@@ -7,7 +7,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoModelQinvCorrFctnKt_h
@@ -127,7 +127,7 @@ class MpdFemtoModelQinvCorrFctnKt : public MpdFemtoBaseCorrFctn {
   /// Use and write denominators
   bool mIsUseDenominator;
 
-  ClassDef(MpdFemtoModelQinvCorrFctnKt, 1)
+  ClassDef(MpdFemtoModelQinvCorrFctnKt, 1);
 };
 
 #endif // #define MpdFemtoModelQinvCorrFctnKt_h

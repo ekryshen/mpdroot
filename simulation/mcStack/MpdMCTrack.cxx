@@ -150,4 +150,4 @@ void MpdMCTrack::SetNPoints(Int_t iDet, Int_t nPoints)
 }
 // -------------------------------------------------------------------------
 
-ClassImp(MpdMCTrack)
+ClassImp(MpdMCTrack);

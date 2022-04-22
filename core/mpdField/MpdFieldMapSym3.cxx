@@ -174,4 +174,4 @@ Bool_t MpdFieldMapSym3::IsInside(Double_t x, Double_t y, Double_t z, Int_t &ix, 
 }
 // ------------------------------------------------------------------------
 
-ClassImp(MpdFieldMapSym3)
+ClassImp(MpdFieldMapSym3);

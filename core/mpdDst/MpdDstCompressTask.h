@@ -51,7 +51,7 @@ public:
    virtual InitStatus Init();
    virtual void       Exec(Option_t *option);
    virtual ~MpdDstCompressTask();
-   ClassDef(MpdDstCompressTask, 1)
+   ClassDef(MpdDstCompressTask, 1);
 };
 
 #endif /* MPDDST_MPDDSTCOMPRESSTASK_H_ */

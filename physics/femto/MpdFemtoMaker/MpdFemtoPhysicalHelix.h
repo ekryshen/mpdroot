@@ -6,7 +6,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoPhysicalHelix_h
@@ -48,7 +48,7 @@ class MpdFemtoPhysicalHelix : public MpdFemtoHelix {
   /// 3d DCA to 3d point signed relative to rotation
   double geometricSignedDistance(const TVector3&);
 
-  ClassDef(MpdFemtoPhysicalHelix, 1)
+  ClassDef(MpdFemtoPhysicalHelix, 1);
 };
 
 #endif

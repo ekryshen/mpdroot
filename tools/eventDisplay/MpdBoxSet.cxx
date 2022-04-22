@@ -8,4 +8,4 @@
 // -----   Standard constructor   ------------------------------------------
 MpdBoxSet::MpdBoxSet(MpdBoxSetDraw *drawer, const char *name, const char *t) : TEveBoxSet(name, t), fDraw(drawer) {}
 
-ClassImp(MpdBoxSet)
+ClassImp(MpdBoxSet);

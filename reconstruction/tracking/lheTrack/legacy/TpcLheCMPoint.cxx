@@ -5,7 +5,7 @@
 
 using namespace std;
 
-ClassImp(TpcLheCMPoint)
+ClassImp(TpcLheCMPoint);
 
    //________________________________________________________________
    TpcLheCMPoint::TpcLheCMPoint()

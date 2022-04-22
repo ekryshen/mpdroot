@@ -13,7 +13,7 @@
 // ROOT headers
 #include "TMath.h"
 
-ClassImp(MpdFemtoParticle)
+ClassImp(MpdFemtoParticle);
 
 float MpdFemtoParticle::mPrimPimPar0 = 9.05632e-01;
 float MpdFemtoParticle::mPrimPimPar1 = -2.26737e-01;

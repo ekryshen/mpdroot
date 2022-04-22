@@ -585,4 +585,4 @@ void MpdKfV0Fitter::Proxim(const MpdKalmanTrack &track0, MpdKalmanTrack &track)
    // cout << " Proxim: " << track0.GetParamNew(0) << " " << track.GetParamNew(0) << " " << tmp << endl;
 }
 
-ClassImp(MpdKfV0Fitter)
+ClassImp(MpdKfV0Fitter);

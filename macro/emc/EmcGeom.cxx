@@ -1,7 +1,7 @@
 #include "EmcGeom.h"
 
 
-ClassImp(EmcGeom)
+ClassImp(EmcGeom);
 
 EmcGeom::EmcGeom() {}
 

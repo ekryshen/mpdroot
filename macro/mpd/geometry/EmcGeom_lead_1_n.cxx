@@ -3,7 +3,7 @@
 #include <string>
 #include <sstream>
 
-ClassImp(EmcGeom)
+ClassImp(EmcGeom);
 
 using namespace emc;
 

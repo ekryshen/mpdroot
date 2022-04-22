@@ -613,4 +613,4 @@ Double_t MpdFieldMap::Interpolate(Double_t dx, Double_t dy, Double_t dz)
    return 0;
 }
 
-ClassImp(MpdFieldMap)
+ClassImp(MpdFieldMap);

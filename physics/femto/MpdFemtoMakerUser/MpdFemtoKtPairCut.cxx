@@ -89,9 +89,7 @@ TList *MpdFemtoKtPairCut::listSettings() {
   return settings;
 }
 
-//_________________
 bool MpdFemtoKtPairCut::pass(const MpdFemtoPair* pair) {
-
   bool isGoodPair = false;
   
   // Apply kT pair cut ( IMPORTANT: a <= x < b )
@@ -113,11 +111,9 @@ bool MpdFemtoKtPairCut::pass(const MpdFemtoPair* pair) {
     // return whether angle is within phi-range
     return (fPhiMin <= rpangle) && (rpangle < fPhiMax);
   */
-
   return isGoodPair;
 }
 
-//_________________
 bool MpdFemtoKtPairCut::pass(const MpdFemtoPair* pair, double aRPAngle) {
   // The same as above, but it is defined with RP Angle as input in
   // all the correlation function classes.

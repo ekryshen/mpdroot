@@ -21,7 +21,7 @@ class MpdTofMonitor : public NicaPropertyMonitorXY {
   }
   NicaCutMonitor *MakeCopy() const { return new MpdTofMonitor(*this); };
   virtual ~MpdTofMonitor();
-  ClassDef(MpdTofMonitor, 1)
+  ClassDef(MpdTofMonitor, 1);
 };
 
 #endif /* MPDROOT_NICA_MPD_CUTMONITORS_MPDTOFMONITOR_H_ */

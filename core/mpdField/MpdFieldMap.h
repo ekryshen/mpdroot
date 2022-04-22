@@ -156,7 +156,7 @@ protected:
    Double_t fHb[2][2];    //! Interpolated field (2-dim)
    Double_t fHc[2];       //! Interpolated field (1-dim)
 
-   ClassDef(MpdFieldMap, 1)
+   ClassDef(MpdFieldMap, 1);
 };
 
 #endif

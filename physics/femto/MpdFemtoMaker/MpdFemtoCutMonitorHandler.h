@@ -9,7 +9,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoCutMonitorHandler_h
@@ -110,7 +110,7 @@ private:
     /// Collection of cut monitors for failed entities
     MpdFemtoCutMonitorCollection* mFailColl;
 
-    ClassDef(MpdFemtoCutMonitorHandler, 0)
+    ClassDef(MpdFemtoCutMonitorHandler, 0);
 };
 
 #endif // #define MpdFemtoCutMonitorHandler_h

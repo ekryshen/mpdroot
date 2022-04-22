@@ -6,7 +6,7 @@
 
 using namespace std;
 
-ClassImp(TpcLheCMTrack)
+ClassImp(TpcLheCMTrack);
 
 #define PR(x) cout << #x " = " << x << "\n";
    //#define PR(x) ;

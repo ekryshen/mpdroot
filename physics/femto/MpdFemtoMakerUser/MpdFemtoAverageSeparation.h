@@ -5,7 +5,7 @@
  *
  * \author Malinina Ludmila (SINP MSU & JINR)
  * \date  Sep 2020, 2020
- * \email lmalinin@cern.ch
+ * email: lmalinin@cern.ch
  */
 
 #ifndef MpdFemtoAverageSeparation_h
@@ -90,9 +90,8 @@ protected:
   int mAvSepBins;
   /// Eta range
   double mAvSepRange[2];
- 
 
-  ClassDef(MpdFemtoAverageSeparation, 1)
+  ClassDef(MpdFemtoAverageSeparation, 1);
 };
 
 #endif // MpdFemtoAverageSeparation_h

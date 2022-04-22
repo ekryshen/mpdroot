@@ -81,4 +81,4 @@ void MpdMultiFieldPar::SetParameters(FairField *field)
    delete Iter;
 }
 
-ClassImp(MpdMultiFieldPar)
+ClassImp(MpdMultiFieldPar);

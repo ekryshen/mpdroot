@@ -23,7 +23,7 @@
 #include "TObject.h"
 #include "TString.h"
 
-ClassImp(MpdFemtoAnalysis)
+ClassImp(MpdFemtoAnalysis);
 
 MpdFemtoBaseEventCut* copyTheCut(MpdFemtoBaseEventCut*);
 MpdFemtoBaseParticleCut* copyTheCut(MpdFemtoBaseParticleCut*);

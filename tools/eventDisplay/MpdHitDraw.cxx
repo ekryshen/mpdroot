@@ -15,4 +15,4 @@ TVector3 MpdHitDraw::GetVector(TObject *obj)
    return TVector3(hit->GetX(), hit->GetY(), hit->GetZ());
 }
 
-ClassImp(MpdHitDraw)
+ClassImp(MpdHitDraw);

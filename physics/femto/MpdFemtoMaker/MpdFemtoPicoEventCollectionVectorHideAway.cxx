@@ -110,4 +110,4 @@ MpdFemtoPicoEventCollection* MpdFemtoPicoEventCollectionVectorHideAway::picoEven
   return picoEventCollection(ix, iy, iz);
 }
 
-ClassImp(MpdFemtoPicoEventCollectionVectorHideAway)
+ClassImp(MpdFemtoPicoEventCollectionVectorHideAway);

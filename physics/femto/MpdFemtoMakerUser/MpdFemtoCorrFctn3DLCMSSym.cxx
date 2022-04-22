@@ -13,7 +13,7 @@
 #include "TH3F.h"
 #include "TString.h"
 
-ClassImp(MpdFemtoCorrFctn3DLCMSSym)
+ClassImp(MpdFemtoCorrFctn3DLCMSSym);
 
 //____________________________
 MpdFemtoCorrFctn3DLCMSSym::MpdFemtoCorrFctn3DLCMSSym(const char* title,

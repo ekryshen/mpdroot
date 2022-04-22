@@ -16,7 +16,7 @@ public:
    /** Destructor **/
    virtual ~MpdRegion();
    Bool_t IsInside(Double_t Z);
-   ClassDef(MpdRegion, 1)
+   ClassDef(MpdRegion, 1);
 
       protected : Double_t fZmin;
    Double_t fZmax;

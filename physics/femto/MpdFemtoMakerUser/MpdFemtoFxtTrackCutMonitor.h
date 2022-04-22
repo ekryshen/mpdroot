@@ -6,7 +6,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoFxtTrackCutMonitor_h
@@ -265,7 +265,7 @@ class MpdFemtoFxtTrackCutMonitor : public MpdFemtoBaseCutMonitor {
   /// Particle mass
   double monMass;
 
-  ClassDef(MpdFemtoFxtTrackCutMonitor, 3)
+  ClassDef(MpdFemtoFxtTrackCutMonitor, 3);
 };
 
 #endif // #define MpdFemtoFxtTrackCutMonitor_h

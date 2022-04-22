@@ -29,7 +29,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoAnalysis_h
@@ -265,7 +265,7 @@ class MpdFemtoAnalysis : public MpdFemtoBaseAnalysis {
   /// Print info
   bool mVerbose;
 
-  ClassDef(MpdFemtoAnalysis, 0)
+  ClassDef(MpdFemtoAnalysis, 0);
 };
 
 //_________________

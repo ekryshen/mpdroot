@@ -27,4 +27,4 @@ Bool_t MpdRegion::IsInside(Double_t Z)
       return kFALSE;
 }
 
-ClassImp(MpdRegion)
+ClassImp(MpdRegion);

@@ -150,4 +150,4 @@ MpdFemtoPicoEvent& MpdFemtoPicoEvent::operator=(const MpdFemtoPicoEvent& pico) {
   return *this;
 }
 
-ClassImp(MpdFemtoPicoEvent)
+ClassImp(MpdFemtoPicoEvent);

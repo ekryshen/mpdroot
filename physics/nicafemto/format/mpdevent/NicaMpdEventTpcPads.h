@@ -14,7 +14,7 @@ class NicaMpdEventTpcPads : public NicaMpdEvent {
 public:
   NicaMpdEventTpcPads();
   virtual ~NicaMpdEventTpcPads();
-  ClassDef(NicaMpdEventTpcPads, 1)
+  ClassDef(NicaMpdEventTpcPads, 1);
 };
 
 #endif /* MPDROOT_NICA_MPD_FORMAT_MPDEVENT_NICAMPDEVENTTPCPADS_H_ */

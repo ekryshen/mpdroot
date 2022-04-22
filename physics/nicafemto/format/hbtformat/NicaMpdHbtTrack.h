@@ -24,7 +24,7 @@ public:
   NicaMpdHbtTrack& operator=(const NicaMpdHbtTrack& other);
   virtual void CopyData(NicaTrack* track);
   virtual ~NicaMpdHbtTrack();
-  ClassDef(NicaMpdHbtTrack, 1)
+  ClassDef(NicaMpdHbtTrack, 1);
 };
 
 #endif /* MPDROOT_NICA_MPD_FORMAT_HBTFORMAT_NICAMPDHBTTRACK_H_ */

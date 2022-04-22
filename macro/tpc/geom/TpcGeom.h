@@ -46,9 +46,9 @@ public:
   
 private:
 
- ofstream* fGeoFile ;    
+ ofstream* fGeoFile ;
 
-    ClassDef(TpcGeom,1)
+    ClassDef(TpcGeom,1);
 };
 
 #endif

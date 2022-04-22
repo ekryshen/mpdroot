@@ -7,7 +7,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoV0_h
@@ -1719,7 +1719,7 @@ class MpdFemtoV0 {
   /// Theoretical information
   mutable MpdFemtoHiddenInfo* mHiddenInfo; //!
 
-  ClassDef(MpdFemtoV0, 1)
+  ClassDef(MpdFemtoV0, 1);
 };
 
 #endif // #define MpdFemtoV0_h

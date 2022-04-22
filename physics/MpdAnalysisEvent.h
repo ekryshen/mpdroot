@@ -32,7 +32,7 @@ public:
   TClonesArray * fZDCEloss1Histo   = nullptr ; ///< ElossZDC1Histo 
   TClonesArray * fZDCEloss2Histo   = nullptr ; ///< ElossZDC2Histo 
 
-  ClassDef(MpdAnalysisEvent,0)
+  ClassDef(MpdAnalysisEvent,0);
 };
 
 #endif

@@ -2,7 +2,7 @@
 #include "TpcGeom.h"
 
 
-ClassImp(TpcGeom)
+ClassImp(TpcGeom);
 
 TpcGeom::TpcGeom() {}
 

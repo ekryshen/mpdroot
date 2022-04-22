@@ -93,7 +93,7 @@ public:
    void   TrackingInfo(char *info);             // information about the tracking
    void   CheckClones();
 
-   ClassDef(TpcLheTrackFinder, 1) //
+   ClassDef(TpcLheTrackFinder, 1); //
 };
 
 //________________________________________________________________

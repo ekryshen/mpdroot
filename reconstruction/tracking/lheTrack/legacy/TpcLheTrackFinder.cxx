@@ -16,7 +16,7 @@
 #include "TObjectTable.h"
 #include "TClonesArray.h"
 
-ClassImp(TpcLheTrackFinder)
+ClassImp(TpcLheTrackFinder);
 
    //________________________________________________________________
    TpcLheTrackFinder::TpcLheTrackFinder()

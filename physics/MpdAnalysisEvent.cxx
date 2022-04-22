@@ -1,5 +1,5 @@
 #include "MpdAnalysisEvent.h"
-ClassImp(MpdAnalysisEvent)
+ClassImp(MpdAnalysisEvent);
 
 MpdAnalysisEvent::~MpdAnalysisEvent(){
   if(fEventHeader){

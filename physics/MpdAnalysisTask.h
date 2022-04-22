@@ -27,7 +27,7 @@ protected:
   TString fOutputName ;
   TList * fOutputList = nullptr;   ///< List of output objects to be written to output file   
 
-  ClassDef(MpdAnalysisTask,0)
+  ClassDef(MpdAnalysisTask,0);
 };
 
 #endif

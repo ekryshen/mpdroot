@@ -1,13 +1,13 @@
 /**
  * \class MpdFemtoDeltaEtaDeltaPhiStarMinKt
- * \brief Two-dimensional plot of $\Delta\eta$ vs. $\Delta\phi^{*}_{min}$
+ * \brief Two-dimensional plot of \f$\Delta\eta\f$ vs. \f$\Delta\phi^{*}_{\min}\f$
  *
- * Two-dimensional distribution of $\Deta\eta$ vs. $\Delta\phi^{*}_{min}$
+ * Two-dimensional distribution of \f$\Delta\eta\f$ vs. \f$\Delta\phi^{*}_{\min}\f$
  * of pairs constructed for real and mixed events
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoDeltaEtaDeltaPhiStarMinKt_h
@@ -142,7 +142,7 @@ protected:
   /// kT range
   double mKtRange[2];
 
-  ClassDef(MpdFemtoDeltaEtaDeltaPhiStarMinKt, 1)
+  ClassDef(MpdFemtoDeltaEtaDeltaPhiStarMinKt, 1);
 };
 
 #endif // MpdFemtoDeltaEtaDeltaPhiStarMinKt_h

@@ -9,7 +9,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoTrack_h
@@ -864,7 +864,7 @@ class MpdFemtoTrack {
   /// Hidden info (to work with MC data)
   MpdFemtoHiddenInfo* mHiddenInfo; //!
 
-  ClassDef(MpdFemtoTrack, 2)
+  ClassDef(MpdFemtoTrack, 2);
 };
 
 #endif // #define MpdFemtoTrack_h

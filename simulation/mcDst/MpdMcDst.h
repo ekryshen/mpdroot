@@ -55,7 +55,7 @@ private:
    static TClonesArray **mcArrays;
 
    //#ifdef __ROOT__
-   ClassDef(McDst, 0)
+   ClassDef(McDst, 0);
    //#endif
 };
 

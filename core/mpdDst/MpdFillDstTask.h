@@ -67,7 +67,7 @@ public:
    // MpdEvent *AddEvent(Option_t * option);
    MpdTrack *AddPrimaryTrack();
 
-   ClassDef(MpdFillDstTask, 0) // fill MpdDst branch
+   ClassDef(MpdFillDstTask, 0); // fill MpdDst branch
 };
 
 #endif

@@ -7,7 +7,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoBaseTrackCut_h
@@ -49,7 +49,7 @@ public:
         return nullptr;
     }
 
-    ClassDef(MpdFemtoBaseTrackCut, 0)
+    ClassDef(MpdFemtoBaseTrackCut, 0);
 };
 
 //_________________

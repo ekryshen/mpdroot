@@ -7,7 +7,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 11, 2020
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 
@@ -48,11 +48,11 @@ class MpdFemtoKtPairCut : public MpdFemtoBasePairCut {
   MpdFemotPairCut* Clone()                            { return clone(); }
   /// Set kT range of the pair
   /// \par lo Low kT value
-  /// \oar hi High kT value
+  /// \par hi High kT value
   void setKtRange(double lo, double hi)               { fKtRange[0] = lo; fKtRange[1] = hi; }
   /// Set kT range of the pair
   /// \par lo Low kT value
-  /// \oar hi High kT value
+  /// \par hi High kT value
   void SetKtRange(double lo, double hi)               { setKtRange(lo, hi); }
   /// Set emsission angle range w.r.t. reaction plane
   /// \par lo Low value of angle

@@ -12,7 +12,7 @@
 #include "MpdFemtoPicoEventCollectionVector.h"
 #include "MpdFemtoPicoEventCollectionVectorHideAway.h"
 
-ClassImp(MpdFemtoLikeSignAnalysis)
+ClassImp(MpdFemtoLikeSignAnalysis);
 
 /// This little function used to apply ParticleCuts (TrackCuts or V0Cuts)
 /// and fill ParticleCollections of picoEvent it is called

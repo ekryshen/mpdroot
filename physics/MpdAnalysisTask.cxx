@@ -1,6 +1,6 @@
 #include "MpdAnalysisTask.h"
 
-ClassImp(MpdAnalysisTask)
+ClassImp(MpdAnalysisTask);
 
 
 MpdAnalysisTask::MpdAnalysisTask(const char *name, const char *outputName):

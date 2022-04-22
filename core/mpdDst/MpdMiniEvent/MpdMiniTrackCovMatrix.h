@@ -5,7 +5,7 @@
  * The class holds parameters of the covariance matrix
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
- * \email nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
+ * email: nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
  * \date May 01, 2020
  */
 
@@ -168,7 +168,7 @@ private:
    /// Off-diagonal elements
    Float_t mCorr[10];
 
-   ClassDef(MpdMiniTrackCovMatrix, 1)
+   ClassDef(MpdMiniTrackCovMatrix, 1);
 };
 
 #endif // #define MpdMiniTrackCovMatrix_h

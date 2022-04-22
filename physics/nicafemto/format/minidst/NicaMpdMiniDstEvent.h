@@ -28,7 +28,7 @@ public:
   virtual Bool_t ExistInTree() const;
   virtual TString GetFormatName() const;
   virtual ~NicaMpdMiniDstEvent();
-  ClassDef(NicaMpdMiniDstEvent, 1)
+  ClassDef(NicaMpdMiniDstEvent, 1);
 };
 
 #endif /* MPDROOT_NICA_MPD_FORMAT_MINIDST_NICAMPDMINIDSTEVENT_H_ */

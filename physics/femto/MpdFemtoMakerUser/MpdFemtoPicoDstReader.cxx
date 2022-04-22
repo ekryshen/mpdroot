@@ -23,7 +23,7 @@
 #include "TVectorT.h"
 #include "TMatrixTLazy.h"
 
-ClassImp(MpdFemtoPicoDstReader)
+ClassImp(MpdFemtoPicoDstReader);
 
 
 //_________________

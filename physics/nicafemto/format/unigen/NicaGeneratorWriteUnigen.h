@@ -28,7 +28,7 @@ public:
 	void AddEvent();
 	void AddParticle();
 	virtual ~NicaGeneratorWriteUnigen();
-	ClassDef(NicaGeneratorWriteUnigen,1)
+	ClassDef(NicaGeneratorWriteUnigen,1);
 };
 
 #endif /* _NICAGENERATORWRITEUNIGEN_H_ */

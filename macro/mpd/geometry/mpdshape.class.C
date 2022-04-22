@@ -80,10 +80,10 @@ protected:
   Int_t fMotherSegment;
   FairGeoRotation* rot;
     
-  ClassDef(Mpdshape,0)
+  ClassDef(Mpdshape,0);
 };
 
-ClassImp(Mpdshape)
+ClassImp(Mpdshape);
 
 #include "FairGeoRotation.h"
 

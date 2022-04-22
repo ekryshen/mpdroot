@@ -409,4 +409,4 @@ int BmnEventPull::Exec()
    return 0;
 }
 
-ClassImp(BmnEventPull)
+ClassImp(BmnEventPull);

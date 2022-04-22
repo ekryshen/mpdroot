@@ -6,7 +6,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoPicoEvent_h
@@ -53,7 +53,7 @@ class MpdFemtoPicoEvent {
   /// First particle collection
   MpdFemtoParticleCollection* mThirdParticleCollection;
 
-  ClassDef(MpdFemtoPicoEvent, 0)
+  ClassDef(MpdFemtoPicoEvent, 0);
 };
 
 #endif // #define MpdFemtoPicoEvent_h

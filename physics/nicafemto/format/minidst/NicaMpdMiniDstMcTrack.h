@@ -16,14 +16,14 @@ class NicaMpdMiniDstMcTrack : public NicaMCTrack{
 public:
     NicaMpdMiniDstMcTrack();
     virtual ~NicaMpdMiniDstMcTrack();
-    ClassDef(NicaMpdMiniDstMcTrack,1)
+    ClassDef(NicaMpdMiniDstMcTrack,1);
 };
 
 class NicaMpdMiniDstMcTrackInterface: public NicaMCTrackInterface{
 public:
     NicaMpdMiniDstMcTrackInterface(){};
     virtual ~NicaMpdMiniDstMcTrackInterface(){};
-    ClassDef(NicaMpdMiniDstMcTrackInterface,1)
+    ClassDef(NicaMpdMiniDstMcTrackInterface,1);
 };
 
 #endif /* MPDROOT_NICA_MPD_FORMAT_MINIDST_NICAMPDMINIDSTMCTRACK_H_ */

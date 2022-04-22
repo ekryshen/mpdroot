@@ -12,7 +12,7 @@
 using std::cout;
 using std::endl;
 
-ClassImp(ClManager)
+ClassImp(ClManager);
 
    //_____________________________________________________________________________
    ClManager::ClManager()

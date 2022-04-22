@@ -13,7 +13,7 @@
 
 #include <iomanip>
 
-ClassImp(TpcLheSegments)
+ClassImp(TpcLheSegments);
 
    //#define TRACKSEG
 

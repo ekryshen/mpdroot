@@ -30,7 +30,7 @@ public:
 	Int_t GetStatus()const;
 	Bool_t IsPrimary();
 	virtual ~NicaMpdTrackInterface();
-	ClassDef(NicaMpdTrackInterface,1)
+	ClassDef(NicaMpdTrackInterface,1);
 };
 
 #endif /* INTERFACES_MPDROOT_FORMAT_NICAMPDTRACKINTERFACE_H_ */

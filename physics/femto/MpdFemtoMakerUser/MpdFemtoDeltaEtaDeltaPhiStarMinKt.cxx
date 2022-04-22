@@ -12,7 +12,7 @@
 #include "TMath.h"
 #include "TString.h"
 
-ClassImp(MpdFemtoDeltaEtaDeltaPhiStarMinKt)
+ClassImp(MpdFemtoDeltaEtaDeltaPhiStarMinKt);
 
 //_________________
 MpdFemtoDeltaEtaDeltaPhiStarMinKt::MpdFemtoDeltaEtaDeltaPhiStarMinKt(const char* title,

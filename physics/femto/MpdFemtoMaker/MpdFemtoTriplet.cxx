@@ -189,4 +189,4 @@ double MpdFemtoTriplet::nominalTpcAverageSeparation() const {
   else return (AveSep3);
 }
 
-ClassImp(MpdFemtoTriplet)
+ClassImp(MpdFemtoTriplet);

@@ -94,7 +94,6 @@ private:
 
    BmnTdaqSource &operator=(const BmnTdaqSource &);
 
-   ClassDef(BmnTdaqSource, 0)
+   ClassDef(BmnTdaqSource, 0);
 };
-
 #endif

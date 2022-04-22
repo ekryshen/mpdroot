@@ -315,4 +315,4 @@ Double_t MpdMotherFitterSimple::Phi(MpdHelix *helix) const
 
 //__________________________________________________________________________
 
-ClassImp(MpdMotherFitterSimple)
+ClassImp(MpdMotherFitterSimple);

@@ -8,7 +8,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoMaker_h
@@ -101,7 +101,7 @@ class MpdFemtoMaker
   /// Debug value
   int mDebug;
 
-  ClassDef(MpdFemtoMaker, 0)
+  ClassDef(MpdFemtoMaker, 0);
 };
 
 #endif // #define MpdFemtoMaker_h

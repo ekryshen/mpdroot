@@ -81,23 +81,23 @@ Bool_t MpdTpc2dCluster::Insert(Int_t row, Int_t col, Int_t bkt, Float_t adc)
 
 //......................................................................
 
-Int_t MpdTpc2dCluster::Row(int i) const
+Int_t MpdTpc2dCluster::Row(Int_t i) const
 {
    return fRowList[i];
 }
-Int_t MpdTpc2dCluster::Col(int i) const
+Int_t MpdTpc2dCluster::Col(Int_t i) const
 {
    return fColList[i];
 }
-Int_t MpdTpc2dCluster::Bkt(int i) const
+Int_t MpdTpc2dCluster::Bkt(Int_t i) const
 {
    return fBktList[i];
 }
-Float_t MpdTpc2dCluster::Adc(int i) const
+Float_t MpdTpc2dCluster::Adc(Int_t i) const
 {
    return fAdcList[i];
 }
-Int_t MpdTpc2dCluster::Sec(int i) const
+Int_t MpdTpc2dCluster::Sec(Int_t i) const
 {
    return fSecList[i];
 }

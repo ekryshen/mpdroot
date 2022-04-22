@@ -6,7 +6,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoBaseEventReader_h
@@ -186,7 +186,7 @@ class MpdFemtoBaseEventReader {
    */
   int mDebug; ///<
 
-  ClassDef(MpdFemtoBaseEventReader, 0)
+  ClassDef(MpdFemtoBaseEventReader, 0);
 };
 
 #endif // #define MpdFemtoBaseEventReader_h

@@ -16,7 +16,7 @@ public:
 	MpdTrackChargeCut();
 	Bool_t Pass(NicaTrack *tr);
 	virtual ~MpdTrackChargeCut();
-	ClassDef(MpdTrackChargeCut,1)
+	ClassDef(MpdTrackChargeCut,1);
 };
 
 #endif /* INTERFACES_MPDROOT_CUTS_TRACKCUTS_MPDTRACKCHARGECUT_H_ */

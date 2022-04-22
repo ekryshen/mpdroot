@@ -30,7 +30,7 @@ public:
   virtual Bool_t ExistInTree() const;
   virtual TString GetFormatName() const;
   virtual ~NicaMpdEvent();
-  ClassDef(NicaMpdEvent, 1)
+  ClassDef(NicaMpdEvent, 1);
 };
 
 #endif /* INTERFACES_MPDROOT_NICAMPDEVENT_H_ */

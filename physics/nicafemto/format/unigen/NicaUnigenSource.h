@@ -57,7 +57,7 @@ public:
     void SetRunId(Int_t runId) { fRunId = runId; }
     Int_t GetRunId() const     { return fRunId;  }
     virtual Bool_t SpecifyRunId(){return kFALSE;}
-    ClassDef(NicaUnigenSource,1)
+    ClassDef(NicaUnigenSource,1);
 };
 
 #endif /* NICAUNIGENSOURCE_H_ */

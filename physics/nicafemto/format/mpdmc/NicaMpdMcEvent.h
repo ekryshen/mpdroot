@@ -36,7 +36,7 @@ public:
 	virtual Bool_t ExistInTree()const;
 	virtual TString GetFormatName()const;
 	virtual ~NicaMpdMcEvent();
-	ClassDef(NicaMpdMcEvent,1)
+	ClassDef(NicaMpdMcEvent,1);
 };
 
 #endif /* NICAFAIREVENT_H_ */

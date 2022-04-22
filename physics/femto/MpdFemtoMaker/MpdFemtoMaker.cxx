@@ -13,7 +13,7 @@
 // MpdFemtoMaker headers
 #include "MpdFemtoMaker.h"
 
-ClassImp(MpdFemtoMaker)
+ClassImp(MpdFemtoMaker);
 
 //_________________
 MpdFemtoMaker::MpdFemtoMaker(const char* name __attribute__ ((unused)),

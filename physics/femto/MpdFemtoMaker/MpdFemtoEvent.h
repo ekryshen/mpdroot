@@ -8,7 +8,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoEvent_h
@@ -909,7 +909,7 @@ class MpdFemtoEvent {
   /// Pointer to the kink collection
   MpdFemtoKinkCollection *mKinkCollection;
 
-  ClassDef(MpdFemtoEvent, 1)
+  ClassDef(MpdFemtoEvent, 1);
 };
 
 #endif // MpdFemtoEvent_h

@@ -1,6 +1,6 @@
 #include "TpcLheTrackCuts.h"
 
-ClassImp(TpcLheTrackCuts)
+ClassImp(TpcLheTrackCuts);
 
    TpcLheTrackCuts *TpcLheTrackCuts::fInstance = 0;
 

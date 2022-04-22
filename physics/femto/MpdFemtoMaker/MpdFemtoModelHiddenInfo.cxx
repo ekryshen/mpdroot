@@ -582,4 +582,4 @@ void MpdFemtoModelHiddenInfo::setEmissionPointNeg(const double& aRx, const doubl
   *mEmissionPointNegT = aT;
 }
 
-ClassImp(MpdFemtoModelHiddenInfo)
+ClassImp(MpdFemtoModelHiddenInfo);

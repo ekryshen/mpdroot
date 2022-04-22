@@ -221,7 +221,7 @@ private:
    /** Mark tracks for output using selection criteria  **/
    void SelectTracks();
 
-   ClassDef(MpdStack, 1)
+   ClassDef(MpdStack, 1);
 };
 
 #endif

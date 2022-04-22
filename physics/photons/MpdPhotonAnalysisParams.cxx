@@ -6,7 +6,7 @@
 
 using namespace std ;
 
-ClassImp(MpdPhotonAnalysisParams)
+ClassImp(MpdPhotonAnalysisParams);
 
 void MpdPhotonAnalysisParams:: ReadFromFile(std::string fname){
   //Read from file in format 

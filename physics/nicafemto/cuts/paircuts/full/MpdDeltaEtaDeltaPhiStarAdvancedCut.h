@@ -23,7 +23,7 @@ class MpdDeltaEtaDeltaPhiStarAdvancedCut : public MpdTpcPadsPairCut {
   static Int_t DeltaEta() { return 1; };
   static Int_t DeltaPhiStarMin() { return 2; };
   virtual ~MpdDeltaEtaDeltaPhiStarAdvancedCut();
-  ClassDef(MpdDeltaEtaDeltaPhiStarAdvancedCut, 1)
+  ClassDef(MpdDeltaEtaDeltaPhiStarAdvancedCut, 1);
 };
 }  // namespace MpdPadsFormat
 #endif /* MPDROOT_NICA_MPD_CUTS_MPDDELTAETADELTAPHISTARCUT_H_ */

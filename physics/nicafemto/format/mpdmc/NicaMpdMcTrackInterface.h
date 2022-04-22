@@ -15,7 +15,7 @@ class NicaMpdMcTrackInterface : public NicaMCTrackInterface{
 public:
 	NicaMpdMcTrackInterface();
 	virtual ~NicaMpdMcTrackInterface();
-	ClassDef(NicaMpdMcTrackInterface,1)
+	ClassDef(NicaMpdMcTrackInterface,1);
 };
 
 #endif /* NICAFAIRTRACKINTERFACE_H_ */

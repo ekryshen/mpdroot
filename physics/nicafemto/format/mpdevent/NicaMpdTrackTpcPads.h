@@ -36,7 +36,7 @@ class NicaMpdTrackTpcPads : public NicaMpdTrack {
   virtual void Update(MpdTrack *track);
   virtual void CopyData(NicaTrack *other);
   virtual ~NicaMpdTrackTpcPads();
-  ClassDef(NicaMpdTrackTpcPads, 1)
+  ClassDef(NicaMpdTrackTpcPads, 1);
 };
 
 #endif /* MPDROOT_NICA_MPD_FORMAT_MPDEVENT_NICAMPDTRACKTPCPADS_H_ */

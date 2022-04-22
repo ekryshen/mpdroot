@@ -9,7 +9,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoSmearPair_h
@@ -106,7 +106,7 @@ private:
   /// Setup
   void setup();
 
-  ClassDef(MpdFemtoSmearPair, 0)
+  ClassDef(MpdFemtoSmearPair, 0);
 };
 
 #endif // #define MpdFemtoSmearPair_h

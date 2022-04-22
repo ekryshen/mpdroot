@@ -930,4 +930,4 @@ Double_t MpdMotherFitterPart::Chi2Vertex(MpdParticle *part, const MpdVertex *vtx
    return chi21(0, 0);
 }
 
-ClassImp(MpdMotherFitterPart)
+ClassImp(MpdMotherFitterPart);

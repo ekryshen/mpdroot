@@ -70,7 +70,7 @@ public:
    TObjArray *GetSegments() { return fSegments; }  //
    Int_t      GetSegm(Int_t theta_s, Int_t phi_s); // returns number of segment
 
-   ClassDef(TpcLheSegments, 1) //
+   ClassDef(TpcLheSegments, 1); //
 };
 
 //_________________________________________________________________

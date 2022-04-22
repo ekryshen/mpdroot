@@ -27,7 +27,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoBaseCutMonitor_h
@@ -106,7 +106,7 @@ class MpdFemtoBaseCutMonitor {
   /// Initialize cut monitor
   virtual void init();
 
-  ClassDef(MpdFemtoBaseCutMonitor, 0)
+  ClassDef(MpdFemtoBaseCutMonitor, 0);
 };
 
 //_________________

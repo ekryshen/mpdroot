@@ -19,7 +19,7 @@ class NicaMpdMcTrack: public NicaMCTrack {
 public:
 	NicaMpdMcTrack();
 	virtual ~NicaMpdMcTrack();
-	ClassDef(NicaMpdMcTrack,1)
+	ClassDef(NicaMpdMcTrack,1);
 };
 
 #endif /* NICAFAIRTRACK_H_ */

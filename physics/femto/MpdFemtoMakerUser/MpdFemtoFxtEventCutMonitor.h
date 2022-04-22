@@ -6,7 +6,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoFxtEventCutMonitor_h
@@ -151,7 +151,7 @@ class MpdFemtoFxtEventCutMonitor : public MpdFemtoBaseCutMonitor {
   TH2F* mBTofMatchedVsRefMult;
 
 
-  ClassDef(MpdFemtoFxtEventCutMonitor, 2)
+  ClassDef(MpdFemtoFxtEventCutMonitor, 2);
 };
 
 #endif // #define MpdFemtoFxtEventCutMonitor_h

@@ -163,6 +163,6 @@ private:
 
   Bool_t fIsNextEvent;
 
-  ClassDef(TIdentity2D, 0)
+  ClassDef(TIdentity2D, 0);
 };
 #endif

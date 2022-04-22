@@ -80,4 +80,4 @@ void MpdConstPar::SetParameters(FairField *field)
    fType                          = fieldConst->GetType();
 }
 
-ClassImp(MpdConstPar)
+ClassImp(MpdConstPar);

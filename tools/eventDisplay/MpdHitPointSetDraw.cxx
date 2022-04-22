@@ -36,4 +36,4 @@ void MpdHitPointSetDraw::RemoveEveElementList()
    return;
 }
 
-ClassImp(MpdHitPointSetDraw)
+ClassImp(MpdHitPointSetDraw);

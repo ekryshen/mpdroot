@@ -79,7 +79,7 @@ protected:
 
    friend class Cluster;
 
-   ClassDef(ClusterElement, 1)
+   ClassDef(ClusterElement, 1);
 };
 
 #endif /* __CLUSTERELEMENT_H__ */

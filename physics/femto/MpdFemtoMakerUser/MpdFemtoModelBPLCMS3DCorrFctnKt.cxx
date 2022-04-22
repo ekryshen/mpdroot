@@ -19,7 +19,7 @@
 // C++ headers
 #include <cmath>
 
-ClassImp(MpdFemtoModelBPLCMS3DCorrFctnKt)
+ClassImp(MpdFemtoModelBPLCMS3DCorrFctnKt);
 
 //_________________
 MpdFemtoModelBPLCMS3DCorrFctnKt::MpdFemtoModelBPLCMS3DCorrFctnKt(const char* title, const int& nBins,

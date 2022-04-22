@@ -20,7 +20,7 @@
 #include "TMatrixDSymEigen.h"
 #include "TVectorT.h"
 
-ClassImp(MpdFemtoMcDstReader)
+ClassImp(MpdFemtoMcDstReader);
 
 //_________________
 MpdFemtoMcDstReader::MpdFemtoMcDstReader() :

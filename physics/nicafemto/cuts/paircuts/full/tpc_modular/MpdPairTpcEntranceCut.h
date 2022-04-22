@@ -20,7 +20,7 @@ class MpdPairTpcEntranceCut : public MpdNominalTpcPairPadsDistanceCut {
   MpdPairTpcEntranceCut();
   virtual Bool_t Pass(NicaTwoTrack *pair);
   virtual ~MpdPairTpcEntranceCut();
-  ClassDef(MpdPairTpcEntranceCut, 1)
+  ClassDef(MpdPairTpcEntranceCut, 1);
 };
 
 class MpdPairTpcEntranceCut2D : public MpdNominalTpcPairPadsDistanceCut {
@@ -30,7 +30,7 @@ class MpdPairTpcEntranceCut2D : public MpdNominalTpcPairPadsDistanceCut {
   static Int_t XY() { return 0; };
   static Int_t Z() { return 1; }
   virtual ~MpdPairTpcEntranceCut2D();
-  ClassDef(MpdPairTpcEntranceCut2D, 1)
+  ClassDef(MpdPairTpcEntranceCut2D, 1);
 };
 }  // namespace MpdPadsFormat
 

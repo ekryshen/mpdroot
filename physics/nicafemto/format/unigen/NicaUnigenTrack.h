@@ -18,7 +18,7 @@ class NicaUnigenTrack: public NicaMCTrack {
 public:
 	NicaUnigenTrack();
 	virtual ~NicaUnigenTrack();
-	ClassDef(NicaUnigenTrack,1)
+	ClassDef(NicaUnigenTrack,1);
 };
 
 #endif /* NICAUNIGENTRACK_H_ */

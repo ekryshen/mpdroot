@@ -46,7 +46,7 @@ public:
 
    /** Screen output **/
    virtual void Print();
-   ClassDef(MpdMultiField, 1)
+   ClassDef(MpdMultiField, 1);
 
       protected :
 

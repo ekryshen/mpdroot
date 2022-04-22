@@ -8,7 +8,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoMcDstReader_h
@@ -155,7 +155,7 @@ class MpdFemtoMcDstReader : public MpdFemtoBaseEventReader {
   TMatrixTSym<double> *mMatrix2;
 
 
-  ClassDef(MpdFemtoMcDstReader, 3)
+  ClassDef(MpdFemtoMcDstReader, 3);
 };
 
 #endif // MpdFemtoMcDstReader_h

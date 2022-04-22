@@ -25,7 +25,7 @@ class MpdTpcPairSeparationCut : public MpdNominalTpcPairPadsDistanceCut {
   static Int_t TpcMinimal() { return 3; };
   static Int_t TpcMaximal() { return 4; };
   virtual ~MpdTpcPairSeparationCut();
-  ClassDef(MpdTpcPairSeparationCut, 1)
+  ClassDef(MpdTpcPairSeparationCut, 1);
 };
 }  // namespace MpdPadsFormat
 #endif /* MPDROOT_NICA_MPD_CUTS_PAIRCUTS_MPDTPCPAIRSEPARATIONCUT_H_ */

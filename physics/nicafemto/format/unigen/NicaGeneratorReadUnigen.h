@@ -37,7 +37,7 @@ public:
 	 */
 	NicaGeneratorReadUnigen(TString name, Bool_t multi_mode=kFALSE);
 	virtual ~NicaGeneratorReadUnigen();
-	ClassDef(NicaGeneratorReadUnigen,1)
+	ClassDef(NicaGeneratorReadUnigen,1);
 };
 
 #endif /* _NICAGENERATORREADUNIGEN_H_ */

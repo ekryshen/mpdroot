@@ -73,4 +73,4 @@ Float_t MpdEmcCluster::ComputeClusterRadius(TVector3 fPos, vector<Float_t> xC, v
    return (sqrt(valRad / fEnergy));
 }
 
-ClassImp(MpdEmcCluster)
+ClassImp(MpdEmcCluster);

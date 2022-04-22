@@ -98,4 +98,4 @@ Double_t MpdV0::GetDist()
    return dist;
 }
 
-ClassImp(MpdV0)
+ClassImp(MpdV0);

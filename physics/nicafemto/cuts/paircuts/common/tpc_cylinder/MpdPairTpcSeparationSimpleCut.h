@@ -33,7 +33,7 @@ public:
 	void SetNSteps(Int_t n){fSteps = n;};
 	virtual Bool_t  Init(Int_t format_id=0);
 	virtual ~MpdPairTpcSeparationSimpleCut();
-	ClassDef(MpdPairTpcSeparationSimpleCut,1)
+	ClassDef(MpdPairTpcSeparationSimpleCut,1);
 };
 
 class MpdPairTcpSeparationSimpleNegCut : public MpdPairTpcSeparationSimpleCut{
@@ -41,7 +41,7 @@ public:
 	MpdPairTcpSeparationSimpleNegCut();
 	Bool_t Pass(NicaTwoTrack *pair);
 	virtual ~MpdPairTcpSeparationSimpleNegCut();
-	ClassDef(MpdPairTcpSeparationSimpleNegCut,1)
+	ClassDef(MpdPairTcpSeparationSimpleNegCut,1);
 };
 
 #endif /* 2018_DOKTORAT_KODY_NICA_MPD_CUTS_PAIRCUTS_MPDPAIRTPCSEPARATIOSIMPLECUT_H_ */

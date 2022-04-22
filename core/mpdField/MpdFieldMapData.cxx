@@ -73,4 +73,4 @@ MpdFieldMapData::~MpdFieldMapData()
    if (fBz) delete fBz;
 }
 
-ClassImp(MpdFieldMapData)
+ClassImp(MpdFieldMapData);

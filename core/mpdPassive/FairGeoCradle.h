@@ -14,7 +14,7 @@ public:
    ~FairGeoCradle() {}
    const char *getModuleName(Int_t) { return modName; }
    const char *getEleName(Int_t) { return eleName; }
-   ClassDef(FairGeoCradle, 0) // Class for geometry of Cradle
+   ClassDef(FairGeoCradle, 0); // Class for geometry of Cradle
 };
 
 #endif /* !GEOCRADLE_H */

@@ -21,7 +21,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoDummyTrackCut_h
@@ -104,7 +104,7 @@ class MpdFemtoDummyTrackCut : public MpdFemtoBaseTrackCut {
   /// Falied tracks counter
   long fNTracksFailed; 
 
-  ClassDef(MpdFemtoDummyTrackCut, 2)
+  ClassDef(MpdFemtoDummyTrackCut, 2);
 };
 
 #endif

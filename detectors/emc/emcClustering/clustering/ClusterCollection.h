@@ -61,7 +61,7 @@ protected:
    TArrayI Id_;
    CL_CSET Clusters_; // <cluster ID, cluster>
 
-   ClassDef(ClusterCollection, 1)
+   ClassDef(ClusterCollection, 1);
 };
 
 #endif /* __CLUSTERCOLLECTION_H__ */

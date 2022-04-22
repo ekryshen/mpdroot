@@ -259,4 +259,4 @@ Int_t MpdItsKalmanTrack::Compare(const TObject *track) const
    return 0;
 }
 
-ClassImp(MpdItsKalmanTrack)
+ClassImp(MpdItsKalmanTrack);

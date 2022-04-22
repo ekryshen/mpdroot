@@ -20,7 +20,7 @@
 // ROOT headers
 #include "TString.h"
 
-ClassImp(MpdFemtoVertexMultAnalysis)
+ClassImp(MpdFemtoVertexMultAnalysis);
 
 //_________________
 MpdFemtoVertexMultAnalysis::MpdFemtoVertexMultAnalysis(unsigned int binsVertex,

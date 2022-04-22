@@ -80,6 +80,6 @@ private:
    std::set<Int_t>      fMothersPdg;
    TRandom             *fRandom;
 
-   ClassDef(MpdDecayerPyt8, 0) // MPD Particle Decayer using Pythia8
+   ClassDef(MpdDecayerPyt8, 0); // MPD Particle Decayer using Pythia8
 };
 #endif

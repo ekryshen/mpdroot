@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "INPUT = \ " > inputDirectories.txt
-find ../../ -type d -exec bash -O dotglob -c '  # search for directories containing source files
+find . -type d -exec bash -O dotglob -c '  # search for directories containing source files
     for dirpath do
         ok=false
         seen_files=false
@@ -28,22 +28,22 @@ find ../../ -type d -exec bash -O dotglob -c '  # search for directories contain
           continue
         fi
 
-        if [[ "$dirpath" = "../../build"* ]] # skip build folder
+        if [[ "$dirpath" = "./build"* ]] # skip build folder
         then
           continue
         fi
 
-        if [[ "$dirpath" = "../../external"* ]] # skip external (nicafemto) folder
+        if [[ "$dirpath" = "./external"* ]] # skip external (nicafemto) folder
         then
           continue
         fi
 
-        if [[ "$dirpath" = "../../macro"* ]] # skip directory with macros
+        if [[ "$dirpath" = "./macro"* ]] # skip directory with macros
         then
           continue
         fi
 
-        if [[ "$dirpath" = "../../nicafemto"* ]] # we have no nicafemto support for now
+        if [[ "$dirpath" = "./nicafemto"* ]] # we have no nicafemto support for now
         then
           continue
         fi
@@ -51,5 +51,5 @@ find ../../ -type d -exec bash -O dotglob -c '  # search for directories contain
         echo "        $dirpath/ \ " >> inputDirectories.txt  # directory containing source files
     done' bash {} +
 echo "" >> inputDirectories.txt
-#doxygen MPDrootDoxy
-#rm inputDirectories.txt
+doxygen MPDrootDoxy
+# rm inputDirectories.txt

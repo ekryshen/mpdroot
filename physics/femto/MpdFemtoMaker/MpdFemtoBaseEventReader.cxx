@@ -96,4 +96,4 @@ int MpdFemtoBaseEventReader::init(const char* /* ReadWrite */, MpdFemtoString& /
   return 0;
 }
 
-ClassImp(MpdFemtoBaseEventReader)
+ClassImp(MpdFemtoBaseEventReader);

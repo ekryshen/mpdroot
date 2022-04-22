@@ -7,7 +7,7 @@
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
  * \date May 18, 2019
- * \email nigmatkulov@gmail.com
+ * email: nigmatkulov@gmail.com
  */
 
 #ifndef MpdFemtoBaseKinkCut_h
@@ -48,7 +48,7 @@ class MpdFemtoBaseKinkCut : public MpdFemtoBaseParticleCut {
     return nullptr;
   }
 
-  ClassDef(MpdFemtoBaseKinkCut, 0)
+  ClassDef(MpdFemtoBaseKinkCut, 0);
 };
 
 //_________________

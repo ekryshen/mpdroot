@@ -5,7 +5,7 @@
  * The MpdMiniDst class holds pointers to the miniArrays with all data objects.
  *
  * \author Grigory Nigmatkulov
- * \email nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
+ * email: nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
  * \date May 01, 2020
  */
 

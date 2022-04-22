@@ -19,7 +19,7 @@ public:
   virtual FairRunAna* GetRunAna(TString outFile, TString simFile, TString recoFile = "", TString parFile = "");
   virtual NicaEvent* GetFormat(eFormatType type, eAnaType ana = eAnaType::kDefault);
   virtual ~MpdQACoreManager();
-  ClassDef(MpdQACoreManager, 1)
+  ClassDef(MpdQACoreManager, 1);
 };
 
 

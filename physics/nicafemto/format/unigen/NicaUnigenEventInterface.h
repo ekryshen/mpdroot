@@ -45,7 +45,7 @@ public:
 	virtual Double_t GetB()const{return fEvent->GetB();};
 	virtual Double_t GetPhi()const{return fEvent->GetPhi();};
 	virtual ~NicaUnigenEventInterface();
-	ClassDef(NicaUnigenEventInterface,1)
+	ClassDef(NicaUnigenEventInterface,1);
 };
 
 #endif /* NICAUNIGENEVENTINTERFACE_H_ */

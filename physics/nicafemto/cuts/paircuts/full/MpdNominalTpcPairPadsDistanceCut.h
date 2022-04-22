@@ -51,7 +51,7 @@ class MpdNominalTpcPairPadsDistanceCut : public MpdTpcPadsPairCut {
   MpdNominalTpcPairPadsDistanceCut &operator=(
       const MpdNominalTpcPairPadsDistanceCut &other);
   virtual ~MpdNominalTpcPairPadsDistanceCut();
-  ClassDef(MpdNominalTpcPairPadsDistanceCut, 1)
+  ClassDef(MpdNominalTpcPairPadsDistanceCut, 1);
 };
 }  // namespace MpdPadsFormat
 

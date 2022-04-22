@@ -272,7 +272,7 @@ class MpdFemtoModelWeightGeneratorLednicky : public MpdFemtoBaseModelWeightGener
     return setPid(aPid1, aPid2);
   }
 
-  ClassDef(MpdFemtoModelWeightGeneratorLednicky, 1)
+  ClassDef(MpdFemtoModelWeightGeneratorLednicky, 1);
 };
 
 #endif // MpdFemtoModelWeightGeneratorLednicky_h

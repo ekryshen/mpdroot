@@ -30,7 +30,7 @@ public:
     */
    TClonesArray *GetArray() const { return fFreez; };
    virtual ~MpdFreezoutGenerator();
-   ClassDef(MpdFreezoutGenerator, 1)
+   ClassDef(MpdFreezoutGenerator, 1);
 };
 
 #endif /* SRC_MPDROOT_GENERATORS_MPDFREEZOUTGENERATOR_H_ */

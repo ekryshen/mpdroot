@@ -865,4 +865,4 @@ void MpdEventManager::LoadXMLDetector(TGeoNode *node, MpdXMLNode *xml, Int_t dep
    }
 }
 
-ClassImp(MpdEventManager)
+ClassImp(MpdEventManager);

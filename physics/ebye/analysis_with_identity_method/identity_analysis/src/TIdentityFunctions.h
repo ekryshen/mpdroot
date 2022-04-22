@@ -13,6 +13,6 @@ class TIdentityFunctions:public TNamed
   Double_t GetValue(Int_t i, Double_t x);
   //private:
   fptr funs;
-  ClassDef(TIdentityFunctions,0)
+  ClassDef(TIdentityFunctions,0);
     };
 #endif

@@ -5,7 +5,7 @@
  * The MpdMiniMcEvent class keeps variables that characterize Monte Carlo event.
  *
  * \author Grigory Nigmatkulov (NRNU MEPhI)
- * \email nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
+ * email: nigmatkulov@gmail.com ; ganigmatkulov@mephi.ru
  * \date May 01, 2020
  */
 
@@ -121,7 +121,7 @@ private:
    /// Event time (ns)
    Float_t fTime;
 
-   ClassDef(MpdMiniMcEvent, 1)
+   ClassDef(MpdMiniMcEvent, 1);
 };
 
 #endif // #define MpdMiniMcEvent_h
