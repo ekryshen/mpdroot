@@ -10,41 +10,40 @@
 class MpdAnalysisManager {
 
 public:
+   MpdAnalysisManager();
+   MpdAnalysisManager(const char *name);
+   ~MpdAnalysisManager() {} // Destructor
 
-  MpdAnalysisManager();
-  MpdAnalysisManager(const char* name);
-  ~MpdAnalysisManager(){}  // Destructor
+   // Add task to perform analyses
+   // First added tasks will be performed firs (re-calibration etc. before real analysis)
+   void AddTask(MpdAnalysisTask *task);
 
-  //Add task to perform analyses
-  //First added tasks will be performed firs (re-calibration etc. before real analysis)
-  void AddTask(MpdAnalysisTask * task) ;
+   // Process inputFileList with tasks added with AddTask method
+   void Process();
 
-  //Process inputFileList with tasks added with AddTask method
-  void Process() ;
+   // txt file with list of input files
+   void InputFileList(const char *filename) { fInputFiles = filename; }
 
-  //txt file with list of input files
-  void InputFileList(const char * filename){fInputFiles=filename;}
+   // Provide coma separated list of branches to be read for particular analyses
+   //  * will read all branches (slower)
+   void ReadBranches(const char *branchlist = "*") { fBranchList = branchlist; }
 
-  //Provide coma separated list of branches to be read for particular analyses
-  // * will read all branches (slower)
-  void ReadBranches(const char *branchlist="*"){fBranchList=branchlist ;} 
+   // Where to write output file
+   void SetOutput(const char *outputFileName = "histos.root") { fOutFile = outputFileName; }
 
-  //Where to write output file
-  void SetOutput(const char * outputFileName="histos.root"){fOutFile=outputFileName ;}
 protected:
-  bool CreateChain() ;
+   bool CreateChain();
 
 private:
+   TString                        fInputFiles;
+   TChain                        *fChain = nullptr;
+   std::vector<MpdAnalysisTask *> fTasks;
+   TString                        fOutFile    = "";
+   TString                        fBranchList = "";
+   MpdAnalysisEvent               fEvent;
+   MpdKalmanFilter               *fKF = nullptr;
 
-  TString fInputFiles  ;
-  TChain * fChain = nullptr;
-  std::vector<MpdAnalysisTask*> fTasks ;
-  TString fOutFile    = "";  
-  TString fBranchList = "";
-  MpdAnalysisEvent fEvent ;
-  MpdKalmanFilter* fKF          = nullptr ;
-
-  ClassDef(MpdAnalysisManager,0);
+   ClassDef(MpdAnalysisManager, 0);
 };
 
 #endif

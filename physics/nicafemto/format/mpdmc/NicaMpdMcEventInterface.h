@@ -24,33 +24,35 @@
  */
 class NicaMpdMcEvent;
 class NicaMpdMcEventInterface : public NicaMCEventInterface {
-	friend class NicaMpdMcEvent;
-	FairMCEventHeader *fEvent;
-	NicaTrackClones *fMcracks;
+   friend class NicaMpdMcEvent;
+   FairMCEventHeader *fEvent;
+   NicaTrackClones   *fMcracks;
+
 protected:
-	virtual void ConnectToTree();
+   virtual void ConnectToTree();
+
 public:
-	NicaMpdMcEventInterface();
-	virtual Int_t GetTotalTrackNo() const {return fMcracks->GetEntriesFast();};
-	virtual void Register(Bool_t write);
-	virtual void Clear(Option_t *opt="");
-	virtual void Compress(Int_t *map, Int_t map_size);
-	virtual void CopyData(NicaEventInterface *s);
-	virtual void CopyAndCompress(NicaEventInterface *s, Int_t *map, Int_t map_size);
-	virtual void FillTrackInterface(NicaTrackInterface *track, Int_t index);
-	virtual TObject *GetRawEventPointer()const{return fEvent;};
-	virtual TObject * GetRawTrackPointer(Int_t index)const{return fMcracks->UncheckedAt(index);}
-	virtual NicaTrackInterface *GetTrackInterface()const;
-	/** GETTERS SETTERS */
-	virtual void SetVertex(Double_t x, Double_t y, Double_t z){fEvent->SetVertex(x,y,z);};
-	virtual void SetPhi(Double_t phi, Double_t phi_error){};
-	virtual void SetB(Double_t b){};
-	virtual Double_t GetB()const{return 0;};
-	virtual Double_t GetPhi()const{return 0;};
-	virtual Double_t GetPhiError()const{return 0;};
-	virtual TLorentzVector GetVertex()const;
-	virtual ~NicaMpdMcEventInterface();
-	ClassDef(NicaMpdMcEventInterface,1);
+   NicaMpdMcEventInterface();
+   virtual Int_t               GetTotalTrackNo() const { return fMcracks->GetEntriesFast(); };
+   virtual void                Register(Bool_t write);
+   virtual void                Clear(Option_t *opt = "");
+   virtual void                Compress(Int_t *map, Int_t map_size);
+   virtual void                CopyData(NicaEventInterface *s);
+   virtual void                CopyAndCompress(NicaEventInterface *s, Int_t *map, Int_t map_size);
+   virtual void                FillTrackInterface(NicaTrackInterface *track, Int_t index);
+   virtual TObject            *GetRawEventPointer() const { return fEvent; };
+   virtual TObject            *GetRawTrackPointer(Int_t index) const { return fMcracks->UncheckedAt(index); }
+   virtual NicaTrackInterface *GetTrackInterface() const;
+   /** GETTERS SETTERS */
+   virtual void           SetVertex(Double_t x, Double_t y, Double_t z) { fEvent->SetVertex(x, y, z); };
+   virtual void           SetPhi(Double_t phi, Double_t phi_error){};
+   virtual void           SetB(Double_t b){};
+   virtual Double_t       GetB() const { return 0; };
+   virtual Double_t       GetPhi() const { return 0; };
+   virtual Double_t       GetPhiError() const { return 0; };
+   virtual TLorentzVector GetVertex() const;
+   virtual ~NicaMpdMcEventInterface();
+   ClassDef(NicaMpdMcEventInterface, 1);
 };
 
 #endif /* NICAFAIREVENTINTERFACE_H_ */

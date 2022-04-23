@@ -11,11 +11,11 @@
 
 #include "NicaMCTrackInterface.h"
 
-class NicaMpdMcTrackInterface : public NicaMCTrackInterface{
+class NicaMpdMcTrackInterface : public NicaMCTrackInterface {
 public:
-	NicaMpdMcTrackInterface();
-	virtual ~NicaMpdMcTrackInterface();
-	ClassDef(NicaMpdMcTrackInterface,1);
+   NicaMpdMcTrackInterface();
+   virtual ~NicaMpdMcTrackInterface();
+   ClassDef(NicaMpdMcTrackInterface, 1);
 };
 
 #endif /* NICAFAIRTRACKINTERFACE_H_ */

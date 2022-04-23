@@ -23,13 +23,13 @@ using std::list;
 #endif
 
 #ifdef ST_NO_TEMPLATE_DEF_ARGS
-typedef list<MpdFemtoParticle*, allocator<MpdFemtoParticle*> > MpdFemtoParticleCollection;
-typedef list<MpdFemtoParticle*, allocator<MpdFemtoParticle*> >::iterator MpdFemtoParticleIterator;
-typedef list<MpdFemtoParticle*, allocator<MpdFemtoParticle*> >::const_iterator MpdFemtoParticleConstIterator;
+typedef list<MpdFemtoParticle *, allocator<MpdFemtoParticle *>>                 MpdFemtoParticleCollection;
+typedef list<MpdFemtoParticle *, allocator<MpdFemtoParticle *>>::iterator       MpdFemtoParticleIterator;
+typedef list<MpdFemtoParticle *, allocator<MpdFemtoParticle *>>::const_iterator MpdFemtoParticleConstIterator;
 #else
-typedef list<MpdFemtoParticle*> MpdFemtoParticleCollection;
-typedef list<MpdFemtoParticle*>::iterator MpdFemtoParticleIterator;
-typedef list<MpdFemtoParticle*>::const_iterator MpdFemtoParticleConstIterator;
+typedef list<MpdFemtoParticle *>                 MpdFemtoParticleCollection;
+typedef list<MpdFemtoParticle *>::iterator       MpdFemtoParticleIterator;
+typedef list<MpdFemtoParticle *>::const_iterator MpdFemtoParticleConstIterator;
 #endif
 
 #endif // #define MpdFemtoParticleCollection_h

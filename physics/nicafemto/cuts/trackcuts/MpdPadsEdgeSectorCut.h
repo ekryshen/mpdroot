@@ -9,23 +9,23 @@
 #ifndef MPDROOT_NICA_MPD_CUTS_TRACKCUTS_MPDPADSEDGESECTORCUT_H_
 #define MPDROOT_NICA_MPD_CUTS_TRACKCUTS_MPDPADSEDGESECTORCUT_H_
 
-
 #include "NicaTrackCut.h"
 
 class NicaTpcSectorGeo;
 
-class MpdPadsEdgeSectorCut : public NicaTrackCut{
-	Double_t fEdge;
-	NicaTpcSectorGeo *fSec;
+class MpdPadsEdgeSectorCut : public NicaTrackCut {
+   Double_t          fEdge;
+   NicaTpcSectorGeo *fSec;
+
 public:
-	MpdPadsEdgeSectorCut();
-	MpdPadsEdgeSectorCut(const MpdPadsEdgeSectorCut &other);
-	void SetEdge(Double_t edge){fEdge = edge;};
-	Bool_t Init(Int_t format_id);
-	virtual Bool_t Pass(NicaTrack *track);
-	NicaPackage *Report()const;
-	virtual ~MpdPadsEdgeSectorCut();
-	ClassDef(MpdPadsEdgeSectorCut,1);
+   MpdPadsEdgeSectorCut();
+   MpdPadsEdgeSectorCut(const MpdPadsEdgeSectorCut &other);
+   void           SetEdge(Double_t edge) { fEdge = edge; };
+   Bool_t         Init(Int_t format_id);
+   virtual Bool_t Pass(NicaTrack *track);
+   NicaPackage   *Report() const;
+   virtual ~MpdPadsEdgeSectorCut();
+   ClassDef(MpdPadsEdgeSectorCut, 1);
 };
 
 #endif /* MPDROOT_NICA_MPD_CUTS_TRACKCUTS_MPDPADSEDGESECTORCUT_H_ */

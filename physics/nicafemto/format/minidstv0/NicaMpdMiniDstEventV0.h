@@ -14,18 +14,17 @@
 class NicaMpdMiniDstEventV0 : public NicaMpdMiniDstEvent {
 
 protected:
-  virtual void ShallowCopyEvent(NicaEvent* event);
-  NicaMpdMiniDstEventV0(TString trackname);
+   virtual void ShallowCopyEvent(NicaEvent *event);
+   NicaMpdMiniDstEventV0(TString trackname);
 
 public:
-  NicaMpdMiniDstEventV0(NicaMpdMiniDstEvent::eMode = kGlobalTrack);
-  virtual void CreateSource();
-  virtual void Update();
-  virtual Bool_t ExistInTree() const;
-  virtual TString GetFormatName() const;
-  virtual ~NicaMpdMiniDstEventV0();
-  ClassDef(NicaMpdMiniDstEventV0, 1);
+   NicaMpdMiniDstEventV0(NicaMpdMiniDstEvent::eMode = kGlobalTrack);
+   virtual void    CreateSource();
+   virtual void    Update();
+   virtual Bool_t  ExistInTree() const;
+   virtual TString GetFormatName() const;
+   virtual ~NicaMpdMiniDstEventV0();
+   ClassDef(NicaMpdMiniDstEventV0, 1);
 };
-
 
 #endif /* MPDROOT_NICA_MPD_FORMAT_MINIDSTV0_NICAMPDMINIDSTEVENTV0_H_ */

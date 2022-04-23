@@ -11,11 +11,11 @@
 #include "FairTask.h"
 #include "NicaTwoTrackAna.h"
 class NicaPairAnaDebugger : public NicaTwoTrackAna {
- public:
-  NicaPairAnaDebugger();
-  void ProcessEvent();
-  virtual ~NicaPairAnaDebugger();
-  ClassDef(NicaPairAnaDebugger, 1);
+public:
+   NicaPairAnaDebugger();
+   void ProcessEvent();
+   virtual ~NicaPairAnaDebugger();
+   ClassDef(NicaPairAnaDebugger, 1);
 };
 
 #endif /* NICAPAIRANADEBUGGER_H_ */

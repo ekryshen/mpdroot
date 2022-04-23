@@ -14,11 +14,11 @@
  */
 namespace MpdPadsFormat {
 class MpdAlicePairQuality : public MpdTpcPadsPairCut {
- public:
-  MpdAlicePairQuality();
-  Bool_t Pass(NicaTwoTrack *pair);
-  virtual ~MpdAlicePairQuality();
-  ClassDef(MpdAlicePairQuality, 1);
+public:
+   MpdAlicePairQuality();
+   Bool_t Pass(NicaTwoTrack *pair);
+   virtual ~MpdAlicePairQuality();
+   ClassDef(MpdAlicePairQuality, 1);
 };
-}  // namespace MpdPadsFormat
+} // namespace MpdPadsFormat
 #endif /* MPDROOT_NICA_MPD_CUTS_PAIRCUTS_FULL_MPDALICEPAIRQUALITY_H_ */

@@ -23,8 +23,7 @@
 
 ClassImp(FairGeoMagnet);
 
-   FairGeoMagnet::FairGeoMagnet()
-   : FairGeoSet()
+FairGeoMagnet::FairGeoMagnet() : FairGeoSet()
 {
    // Constructor
    fName      = "magnet";

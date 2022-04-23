@@ -48,9 +48,8 @@ public:
    virtual void Print();
    ClassDef(MpdMultiField, 1);
 
-      protected :
-
-      TObjArray *fMaps;
+protected:
+   TObjArray                         *fMaps;
    Int_t                              fNoOfMaps;
    std::map<MpdRegion *, FairField *> fFieldMaps; //!
 };

@@ -13,14 +13,13 @@
 
 class MpdQACoreManager : public NicaQACoreManager {
 public:
-  MpdQACoreManager();
-  virtual void
-  SetRecoTrackCut(NicaTrackAna* ana, NicaQACoreManager::ePidCut cut, NicaQACoreManager::eParticleType primary, TString flag);
-  virtual FairRunAna* GetRunAna(TString outFile, TString simFile, TString recoFile = "", TString parFile = "");
-  virtual NicaEvent* GetFormat(eFormatType type, eAnaType ana = eAnaType::kDefault);
-  virtual ~MpdQACoreManager();
-  ClassDef(MpdQACoreManager, 1);
+   MpdQACoreManager();
+   virtual void        SetRecoTrackCut(NicaTrackAna *ana, NicaQACoreManager::ePidCut cut,
+                                       NicaQACoreManager::eParticleType primary, TString flag);
+   virtual FairRunAna *GetRunAna(TString outFile, TString simFile, TString recoFile = "", TString parFile = "");
+   virtual NicaEvent  *GetFormat(eFormatType type, eAnaType ana = eAnaType::kDefault);
+   virtual ~MpdQACoreManager();
+   ClassDef(MpdQACoreManager, 1);
 };
-
 
 #endif /* MPDROOT_PHYSICS_NICAFEMTO_NICA_HELPERS_MPDQACOREMANAGER_H_ */

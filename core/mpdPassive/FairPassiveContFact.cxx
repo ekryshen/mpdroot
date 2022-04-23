@@ -31,7 +31,7 @@ using namespace std;
 
 ClassImp(FairPassiveContFact);
 
-   static FairPassiveContFact gFairPassiveContFact;
+static FairPassiveContFact gFairPassiveContFact;
 
 FairPassiveContFact::FairPassiveContFact() : FairContFact()
 {

@@ -14,13 +14,9 @@
 
 /// Particle types
 
-enum MpdFemtoParticleType {
-    hbtUndefined, hbtTrack, hbtV0, hbtKink, hbtXi
-};
+enum MpdFemtoParticleType { hbtUndefined, hbtTrack, hbtV0, hbtKink, hbtXi };
 /// I/O mode
 
-enum MpdFemtoIOMode {
-    hbtRead, hbtWrite
-};
+enum MpdFemtoIOMode { hbtRead, hbtWrite };
 
 #endif //#define MpdFemtoEnumeration_h

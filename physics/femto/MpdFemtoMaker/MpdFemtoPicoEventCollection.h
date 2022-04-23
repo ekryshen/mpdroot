@@ -20,11 +20,11 @@
 class MpdFemtoPicoEvent;
 
 #ifdef ST_NO_TEMPLATE_DEF_ARGS
-typedef std::list<MpdFemtoPicoEvent*, std::allocator<MpdFemtoPicoEvent*> > MpdFemtoPicoEventCollection;
-typedef std::list<MpdFemtoPicoEvent*, std::allocator<MpdFemtoPicoEvent*> >::iterator MpdFemtoPicoEventIterator;
+typedef std::list<MpdFemtoPicoEvent *, std::allocator<MpdFemtoPicoEvent *>>           MpdFemtoPicoEventCollection;
+typedef std::list<MpdFemtoPicoEvent *, std::allocator<MpdFemtoPicoEvent *>>::iterator MpdFemtoPicoEventIterator;
 #else
-typedef std::list<MpdFemtoPicoEvent*> MpdFemtoPicoEventCollection;
-typedef std::list<MpdFemtoPicoEvent*>::iterator MpdFemtoPicoEventIterator;
+typedef std::list<MpdFemtoPicoEvent *>           MpdFemtoPicoEventCollection;
+typedef std::list<MpdFemtoPicoEvent *>::iterator MpdFemtoPicoEventIterator;
 #endif
 
 #endif // #define MpdFemtoPicoEventCollection_h

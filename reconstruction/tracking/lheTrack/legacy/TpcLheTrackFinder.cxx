@@ -18,8 +18,8 @@
 
 ClassImp(TpcLheTrackFinder);
 
-   //________________________________________________________________
-   TpcLheTrackFinder::TpcLheTrackFinder()
+//________________________________________________________________
+TpcLheTrackFinder::TpcLheTrackFinder()
 {
    //---
 

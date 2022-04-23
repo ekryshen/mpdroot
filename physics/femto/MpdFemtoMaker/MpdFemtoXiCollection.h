@@ -23,11 +23,11 @@ using std::list;
 #endif
 
 #ifdef ST_NO_TEMPLATE_DEF_ARGS
-typedef list<MpdFemtoXi*, allocator<MpdFemtoXi*> > MpdFemtoXiCollection;
-typedef list<MpdFemtoXi*, allocator<MpdFemtoXi*> >::iterator MpdFemtoXiIterator;
+typedef list<MpdFemtoXi *, allocator<MpdFemtoXi *>>           MpdFemtoXiCollection;
+typedef list<MpdFemtoXi *, allocator<MpdFemtoXi *>>::iterator MpdFemtoXiIterator;
 #else
-typedef list<MpdFemtoXi*> MpdFemtoXiCollection;
-typedef list<MpdFemtoXi*>::iterator MpdFemtoXiIterator;
+typedef list<MpdFemtoXi *>           MpdFemtoXiCollection;
+typedef list<MpdFemtoXi *>::iterator MpdFemtoXiIterator;
 #endif
 
 #endif // #define MpdFemtoXiCollection_h

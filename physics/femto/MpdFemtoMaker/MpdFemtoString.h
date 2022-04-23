@@ -24,7 +24,7 @@ using std::string;
 #endif
 typedef string MpdFemtoString;
 
-#endif //MpdFemtoString_noCint
+#endif // MpdFemtoString_noCint
 
 #else // else to #ifndef __CINT__
 

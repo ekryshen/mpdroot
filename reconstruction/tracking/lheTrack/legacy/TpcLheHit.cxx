@@ -7,9 +7,8 @@ using namespace std;
 
 ClassImp(TpcLheHit);
 
-   //________________________________________________________________
-   TpcLheHit::TpcLheHit()
-   : TObject()
+//________________________________________________________________
+TpcLheHit::TpcLheHit() : TObject()
 {
    //---
 

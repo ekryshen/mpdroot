@@ -20,23 +20,24 @@
 /**
  * basic  class for reading FairMCEventHeader and FairMCTracks
  */
-class NicaMpdMcEvent : public NicaMCEvent{
+class NicaMpdMcEvent : public NicaMCEvent {
 protected:
-	NicaMpdMcEvent(TString trackname);
+   NicaMpdMcEvent(TString trackname);
+
 public:
-	/**
-	 * default constructor
-	 */
-	NicaMpdMcEvent();
-	NicaMpdMcEvent(const NicaMpdMcEvent &other);
-	virtual void CreateSource();
-	virtual void Update();
-	virtual void Clear(Option_t *opt);
-	virtual void Print();
-	virtual Bool_t ExistInTree()const;
-	virtual TString GetFormatName()const;
-	virtual ~NicaMpdMcEvent();
-	ClassDef(NicaMpdMcEvent,1);
+   /**
+    * default constructor
+    */
+   NicaMpdMcEvent();
+   NicaMpdMcEvent(const NicaMpdMcEvent &other);
+   virtual void    CreateSource();
+   virtual void    Update();
+   virtual void    Clear(Option_t *opt);
+   virtual void    Print();
+   virtual Bool_t  ExistInTree() const;
+   virtual TString GetFormatName() const;
+   virtual ~NicaMpdMcEvent();
+   ClassDef(NicaMpdMcEvent, 1);
 };
 
 #endif /* NICAFAIREVENT_H_ */

@@ -29,8 +29,8 @@
 
 ClassImp(MpdMiniDstReader);
 
-   //_________________
-   MpdMiniDstReader::MpdMiniDstReader(const Char_t *inFileName)
+//_________________
+MpdMiniDstReader::MpdMiniDstReader(const Char_t *inFileName)
    : fMiniDst(new MpdMiniDst()), fChain(nullptr), fTree(nullptr), fEventCounter(0), fMiniArrays{}, fStatusArrays{}
 {
 

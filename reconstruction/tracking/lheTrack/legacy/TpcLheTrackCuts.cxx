@@ -2,7 +2,7 @@
 
 ClassImp(TpcLheTrackCuts);
 
-   TpcLheTrackCuts *TpcLheTrackCuts::fInstance = 0;
+TpcLheTrackCuts *TpcLheTrackCuts::fInstance = 0;
 
 //________________________________________________________________
 TpcLheTrackCuts *TpcLheTrackCuts::Instance()

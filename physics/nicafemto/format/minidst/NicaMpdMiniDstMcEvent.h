@@ -11,18 +11,18 @@
 
 #include "NicaMCEvent.h"
 
-class NicaMpdMiniDstMcEvent : public NicaMCEvent{
+class NicaMpdMiniDstMcEvent : public NicaMCEvent {
 public:
-    NicaMpdMiniDstMcEvent();
-    NicaMpdMiniDstMcEvent(const NicaMpdMiniDstMcEvent &other);
-    virtual void CreateSource();
-    virtual void Update();
-    virtual void Clear(Option_t *opt);
-    virtual void Print();
-    virtual Bool_t ExistInTree()const;
-    virtual TString GetFormatName()const;
-    virtual ~NicaMpdMiniDstMcEvent();
-    ClassDef(NicaMpdMiniDstMcEvent,1);
+   NicaMpdMiniDstMcEvent();
+   NicaMpdMiniDstMcEvent(const NicaMpdMiniDstMcEvent &other);
+   virtual void    CreateSource();
+   virtual void    Update();
+   virtual void    Clear(Option_t *opt);
+   virtual void    Print();
+   virtual Bool_t  ExistInTree() const;
+   virtual TString GetFormatName() const;
+   virtual ~NicaMpdMiniDstMcEvent();
+   ClassDef(NicaMpdMiniDstMcEvent, 1);
 };
 
 #endif /* NICAMPDMINIDSTMCEVENT_H_ */

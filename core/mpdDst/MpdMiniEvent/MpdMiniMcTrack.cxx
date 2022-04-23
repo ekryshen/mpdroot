@@ -8,8 +8,8 @@
 
 ClassImp(MpdMiniMcTrack);
 
-   //_________________
-   MpdMiniMcTrack::MpdMiniMcTrack()
+//_________________
+MpdMiniMcTrack::MpdMiniMcTrack()
    : TObject(), fId(0), fPdgId(0), fPx(0), fPy(0), fPz(0), fEnergy(0), fX(0), fY(0), fZ(0), fT(0), fIsFromGen(kFALSE)
 {
    // Default constructor

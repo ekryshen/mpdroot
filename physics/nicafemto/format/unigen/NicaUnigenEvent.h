@@ -15,20 +15,20 @@
 /**
  * class used for representation of unigen event in "fake" format
  */
-class NicaUnigenEvent: public NicaMCEvent{
+class NicaUnigenEvent : public NicaMCEvent {
 public:
-	/**
-	 * default constructor
-	 */
-	NicaUnigenEvent();
-	NicaUnigenEvent(const NicaUnigenEvent &other);
-	void CreateSource();
-	virtual void Update();
-	virtual void Clear(Option_t *opt=" ");
-	virtual Bool_t ExistInTree()const;
-	virtual TString GetFormatName() const;
-	virtual ~NicaUnigenEvent();
-	ClassDef(NicaUnigenEvent,1);
+   /**
+    * default constructor
+    */
+   NicaUnigenEvent();
+   NicaUnigenEvent(const NicaUnigenEvent &other);
+   void            CreateSource();
+   virtual void    Update();
+   virtual void    Clear(Option_t *opt = " ");
+   virtual Bool_t  ExistInTree() const;
+   virtual TString GetFormatName() const;
+   virtual ~NicaUnigenEvent();
+   ClassDef(NicaUnigenEvent, 1);
 };
 
 #endif /* NICAUNIGENEVENT_H_ */

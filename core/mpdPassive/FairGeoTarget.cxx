@@ -23,8 +23,7 @@
 
 ClassImp(FairGeoTarget);
 
-   FairGeoTarget::FairGeoTarget()
-   : FairGeoSet()
+FairGeoTarget::FairGeoTarget() : FairGeoSet()
 {
    // Constructor
    fName = "target";

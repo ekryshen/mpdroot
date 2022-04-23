@@ -2,8 +2,8 @@
 
 ClassImp(TpcLhePoint);
 
-   //________________________________________________________________________
-   TpcLhePoint::TpcLhePoint()
+//________________________________________________________________________
+TpcLhePoint::TpcLhePoint()
 {
    // Default constructor.
    SetX(0.);

@@ -15,11 +15,11 @@
 /**
  * class used by FairEvent that holds MpdMCTracks
  */
-class NicaMpdMcTrack: public NicaMCTrack {
+class NicaMpdMcTrack : public NicaMCTrack {
 public:
-	NicaMpdMcTrack();
-	virtual ~NicaMpdMcTrack();
-	ClassDef(NicaMpdMcTrack,1);
+   NicaMpdMcTrack();
+   virtual ~NicaMpdMcTrack();
+   ClassDef(NicaMpdMcTrack, 1);
 };
 
 #endif /* NICAFAIRTRACK_H_ */

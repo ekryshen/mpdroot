@@ -15,12 +15,12 @@
 
 ClassImp(TpcLheSegments);
 
-   //#define TRACKSEG
+//#define TRACKSEG
 
-   //#define SEGMENTS
+//#define SEGMENTS
 
-   //________________________________________________________________
-   TpcLheSegments::TpcLheSegments()
+//________________________________________________________________
+TpcLheSegments::TpcLheSegments()
 {
    //---
 

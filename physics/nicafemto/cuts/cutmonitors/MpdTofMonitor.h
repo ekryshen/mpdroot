@@ -10,18 +10,14 @@
 #define MPDROOT_NICA_MPD_CUTMONITORS_MPDTOFMONITOR_H_
 #include "NicaPropertyMonitorXY.h"
 class MpdTofMonitor : public NicaPropertyMonitorXY {
- public:
-  MpdTofMonitor();
-  virtual void Update(Bool_t passed, TObject *obj);
-  void SetAxisP(Int_t bins, Double_t min, Double_t max) {
-    SetXaxis(bins, min, max);
-  }
-  void SetAxisM2(Int_t bins, Double_t min, Double_t max) {
-    SetYaxis(bins, min, max);
-  }
-  NicaCutMonitor *MakeCopy() const { return new MpdTofMonitor(*this); };
-  virtual ~MpdTofMonitor();
-  ClassDef(MpdTofMonitor, 1);
+public:
+   MpdTofMonitor();
+   virtual void    Update(Bool_t passed, TObject *obj);
+   void            SetAxisP(Int_t bins, Double_t min, Double_t max) { SetXaxis(bins, min, max); }
+   void            SetAxisM2(Int_t bins, Double_t min, Double_t max) { SetYaxis(bins, min, max); }
+   NicaCutMonitor *MakeCopy() const { return new MpdTofMonitor(*this); };
+   virtual ~MpdTofMonitor();
+   ClassDef(MpdTofMonitor, 1);
 };
 
 #endif /* MPDROOT_NICA_MPD_CUTMONITORS_MPDTOFMONITOR_H_ */

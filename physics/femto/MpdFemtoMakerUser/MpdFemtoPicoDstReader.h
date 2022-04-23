@@ -43,76 +43,66 @@ class StRefMultCorr;
 
 class MpdFemtoPicoDstReader : public MpdFemtoBaseEventReader {
 public:
-    /// Default constructor
-    MpdFemtoPicoDstReader();
-    /// Constructor
-    MpdFemtoPicoDstReader(StPicoDstReader *picoDstReader, int debug = 1);
-    /// Copy constructor
-    MpdFemtoPicoDstReader(const MpdFemtoPicoDstReader& copy);
-    /// Assignment operator
-    MpdFemtoPicoDstReader& operator=(const MpdFemtoPicoDstReader& copy);
-    /// Destructor
-    virtual ~MpdFemtoPicoDstReader();
+   /// Default constructor
+   MpdFemtoPicoDstReader();
+   /// Constructor
+   MpdFemtoPicoDstReader(StPicoDstReader *picoDstReader, int debug = 1);
+   /// Copy constructor
+   MpdFemtoPicoDstReader(const MpdFemtoPicoDstReader &copy);
+   /// Assignment operator
+   MpdFemtoPicoDstReader &operator=(const MpdFemtoPicoDstReader &copy);
+   /// Destructor
+   virtual ~MpdFemtoPicoDstReader();
 
-    /// Return MpdFemtoEvent (back to the analysis)
-    virtual MpdFemtoEvent *returnHbtEvent();
-    /// Make report
-    virtual MpdFemtoString report();
+   /// Return MpdFemtoEvent (back to the analysis)
+   virtual MpdFemtoEvent *returnHbtEvent();
+   /// Make report
+   virtual MpdFemtoString report();
 
-    /// Set picoDst reader
+   /// Set picoDst reader
 
-    void setPicoDstReader(StPicoDstReader *picoDstReader) {
-        mPicoDstReader = picoDstReader;
-    }
+   void setPicoDstReader(StPicoDstReader *picoDstReader) { mPicoDstReader = picoDstReader; }
 #ifndef _VANILLA_ROOT_
-    /// Set StRefMultCorr
+   /// Set StRefMultCorr
 
-    void setRefMultCorrUtil(StRefMultCorr *refMultCorr) {
-        mRefMultCorrUtil = refMultCorr;
-    }
+   void setRefMultCorrUtil(StRefMultCorr *refMultCorr) { mRefMultCorrUtil = refMultCorr; }
 #endif
-    /// Set use StRefMultCorr package
+   /// Set use StRefMultCorr package
 
-    void setUseRefMultCorr(const bool& useRefMultCorr) {
-        mUseRefMultCorr = useRefMultCorr;
-    }
-    /// Set use ZDC correction for StRefMultCorr package
+   void setUseRefMultCorr(const bool &useRefMultCorr) { mUseRefMultCorr = useRefMultCorr; }
+   /// Set use ZDC correction for StRefMultCorr package
 
-    void setUseZdcCorrection(const bool& useZdcCorrection) {
-        mUseZdcCorrection = useZdcCorrection;
-    }
+   void setUseZdcCorrection(const bool &useZdcCorrection) { mUseZdcCorrection = useZdcCorrection; }
 
 private:
+   /// Sphericity calculation for tracks within |eta|<0.5 (or |eta|<1.),
+   /// pT>0.15, DCA<3 and nHits>10
+   void sphericityCalculation();
 
-    /// Sphericity calculation for tracks within |eta|<0.5 (or |eta|<1.),
-    /// pT>0.15, DCA<3 and nHits>10
-    void sphericityCalculation();
+   /// Pointer to the StPicoDstReader
+   StPicoDstReader *mPicoDstReader;
+   /// Pointer to MpdFemtoEvent
+   MpdFemtoEvent *mHbtEvent;
 
-    /// Pointer to the StPicoDstReader
-    StPicoDstReader *mPicoDstReader;
-    /// Pointer to MpdFemtoEvent
-    MpdFemtoEvent *mHbtEvent;
+   /// Use StRefMultCorr
+   bool mUseRefMultCorr;
+   /// Use ZDC correction for StRefMultCorr
+   bool mUseZdcCorrection;
 
-    /// Use StRefMultCorr
-    bool mUseRefMultCorr;
-    /// Use ZDC correction for StRefMultCorr
-    bool mUseZdcCorrection;
+   /// Sphericity esitmated by tracks with  |eta|<0.5, pT>0.15, DCA<3 and nHits>10
+   float mSphericity;
+   /// Sphericity esitmated by tracks with  |eta|<1, pT>0.15, DCA<3 and nHits>10
+   float mSphericity2;
 
-    /// Sphericity esitmated by tracks with  |eta|<0.5, pT>0.15, DCA<3 and nHits>10
-    float mSphericity;
-    /// Sphericity esitmated by tracks with  |eta|<1, pT>0.15, DCA<3 and nHits>10
-    float mSphericity2;
-
-    /// Number of events passed
-    long int mEventsPassed;
+   /// Number of events passed
+   long int mEventsPassed;
 
 #ifndef _VANILLA_ROOT_
-    /// Pointer to the StRefMultCorr instance
-    StRefMultCorr *mRefMultCorrUtil;
+   /// Pointer to the StRefMultCorr instance
+   StRefMultCorr *mRefMultCorrUtil;
 #endif
 
-    ClassDef(MpdFemtoPicoDstReader, 1);
-
+   ClassDef(MpdFemtoPicoDstReader, 1);
 };
 
 #endif // #define MpdFemtoPicoDstReader_h

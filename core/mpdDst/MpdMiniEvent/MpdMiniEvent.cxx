@@ -15,8 +15,8 @@
 
 ClassImp(MpdMiniEvent);
 
-   //_________________
-   MpdMiniEvent::MpdMiniEvent()
+//_________________
+MpdMiniEvent::MpdMiniEvent()
    : TObject(), fRunId(0), fEventId(0), fFillId(0), fBunchCrossId(0), fBField(5.), fTime(0), fPrimaryVertexX(-999.),
      fPrimaryVertexY(-999.), fPrimaryVertexZ(-999.), fPrimaryVertexErrorX(0), fPrimaryVertexErrorY(0),
      fPrimaryVertexErrorZ(0), fNBECalMatch(0), fNBTOFMatch(0), fTriggerIds(), fRefMultNeg(0), fRefMultPos(0),

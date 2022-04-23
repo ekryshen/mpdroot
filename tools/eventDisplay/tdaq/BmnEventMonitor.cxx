@@ -260,4 +260,3 @@ void BmnEventMonitor::Exec(Option_t *option)
 void BmnEventMonitor::Finish() {}
 
 ClassImp(BmnEventMonitor);
-

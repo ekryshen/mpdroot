@@ -8,8 +8,8 @@
 
 ClassImp(MpdMiniMcEvent);
 
-   //_________________
-   MpdMiniMcEvent::MpdMiniMcEvent()
+//_________________
+MpdMiniMcEvent::MpdMiniMcEvent()
    : TObject(), fRunId(0), fEventId(0), fReactionPlaneAngle(0), fImpactParameter(-1), fNpart(-1), fNcoll(-1),
      fPrimaryVertexX(0), fPrimaryVertexY(0), fPrimaryVertexZ(0), fTime(0)
 {

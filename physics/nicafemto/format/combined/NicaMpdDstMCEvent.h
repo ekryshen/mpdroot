@@ -9,20 +9,19 @@
 #ifndef INTERFACES_MPDROOT_NICAMPDDSTMCEVENT_H_
 #define INTERFACES_MPDROOT_NICAMPDDSTMCEVENT_H_
 
-
 #include <TString.h>
 
 #include "NicaComplexEvent.h"
 
-class NicaMpdDstMCEvent : public NicaComplexEvent{
+class NicaMpdDstMCEvent : public NicaComplexEvent {
 public:
-	NicaMpdDstMCEvent();
-	void OnlyPrimary();
-	void OnlyGlobal();
-	void Update();
-	virtual TString GetFormatName()const{return "NicaMpdDstMCEvent";};
-	virtual ~NicaMpdDstMCEvent();
-	ClassDef(NicaMpdDstMCEvent,1);
+   NicaMpdDstMCEvent();
+   void            OnlyPrimary();
+   void            OnlyGlobal();
+   void            Update();
+   virtual TString GetFormatName() const { return "NicaMpdDstMCEvent"; };
+   virtual ~NicaMpdDstMCEvent();
+   ClassDef(NicaMpdDstMCEvent, 1);
 };
 
 #endif /* INTERFACES_MPDROOT_NICAMPDDSTMCEVENT_H_ */

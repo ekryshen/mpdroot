@@ -20,11 +20,13 @@
 #include "MpdFemtoPicoEventCollection.h"
 
 #ifdef ST_NO_TEMPLATE_DEF_ARGS
-typedef std::vector<MpdFemtoPicoEventCollection*, std::allocator<MpdFemtoPicoEventCollection*> > MpdFemtoPicoEventCollectionVector; //!
-typedef std::vector<MpdFemtoPicoEventCollection*, std::allocator<MpdFemtoPicoEventCollection*> >::iterator MpdFemtoPicoEventCollectionIterator; //!
+typedef std::vector<MpdFemtoPicoEventCollection *, std::allocator<MpdFemtoPicoEventCollection *>>
+   MpdFemtoPicoEventCollectionVector; //!
+typedef std::vector<MpdFemtoPicoEventCollection *, std::allocator<MpdFemtoPicoEventCollection *>>::iterator
+   MpdFemtoPicoEventCollectionIterator; //!
 #else
-typedef std::vector<MpdFemtoPicoEventCollection*> MpdFemtoPicoEventCollectionVector; //!
-typedef std::vector<MpdFemtoPicoEventCollection*>::iterator MpdFemtoPicoEventCollectionIterator; //!
+typedef std::vector<MpdFemtoPicoEventCollection *>           MpdFemtoPicoEventCollectionVector;   //!
+typedef std::vector<MpdFemtoPicoEventCollection *>::iterator MpdFemtoPicoEventCollectionIterator; //!
 #endif
 
 #endif // #define MpdFemtoPicoEventCollectionVector_h

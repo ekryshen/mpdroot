@@ -14,12 +14,12 @@
  */
 namespace MpdPadsFormat {
 class MpdHelixSep : public MpdTpcPadsPairCut {
- public:
-  MpdHelixSep();
-  virtual Bool_t Pass(NicaTwoTrack *pair);
-  virtual ~MpdHelixSep();
-  ClassDef(MpdHelixSep, 1);
+public:
+   MpdHelixSep();
+   virtual Bool_t Pass(NicaTwoTrack *pair);
+   virtual ~MpdHelixSep();
+   ClassDef(MpdHelixSep, 1);
 };
-}  // namespace MpdPadsFormat
+} // namespace MpdPadsFormat
 
 #endif /* MPDROOT_NICA_MPD_CUTS_PAIRCUTS_FULL_MPDHELIXSEP_H_ */

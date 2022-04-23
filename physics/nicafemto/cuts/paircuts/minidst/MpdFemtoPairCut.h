@@ -12,12 +12,12 @@
 #include "NicaTwoTrackCut.h"
 namespace MpdHbtDst {
 class MpdFemtoPairCut : public NicaTwoTrackCut {
- public:
-  MpdFemtoPairCut(Int_t size = 1);
-  virtual Bool_t Init(Int_t task_id);
-  virtual ~MpdFemtoPairCut();
-  ClassDef(MpdFemtoPairCut, 1);
+public:
+   MpdFemtoPairCut(Int_t size = 1);
+   virtual Bool_t Init(Int_t task_id);
+   virtual ~MpdFemtoPairCut();
+   ClassDef(MpdFemtoPairCut, 1);
 };
-}  // namespace MpdFemtoMiniDst
+} // namespace MpdHbtDst
 
 #endif /* MPDROOT_NICA_MPD_CUTS_PAIRCUTS_MINIDST_MPDFEMTOPAIRCUT_H_ */

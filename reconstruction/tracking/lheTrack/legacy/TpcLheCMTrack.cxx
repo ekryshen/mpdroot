@@ -9,11 +9,10 @@ using namespace std;
 ClassImp(TpcLheCMTrack);
 
 #define PR(x) cout << #x " = " << x << "\n";
-   //#define PR(x) ;
+//#define PR(x) ;
 
-   //___________________________________________________________
-   TpcLheCMTrack::TpcLheCMTrack()
-   : TpcLheTrack()
+//___________________________________________________________
+TpcLheCMTrack::TpcLheCMTrack() : TpcLheTrack()
 {
    // Creates a ObjArray of the hits belonging to the track.
 

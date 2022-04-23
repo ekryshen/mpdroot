@@ -14,12 +14,12 @@
  */
 namespace MpdPadsFormat {
 class MpdPairSharedHitsCut : public MpdTpcPadsPairCut {
- public:
-  MpdPairSharedHitsCut();
-  Bool_t Pass(NicaTwoTrack *pair);
-  virtual ~MpdPairSharedHitsCut();
-  ClassDef(MpdPairSharedHitsCut, 1);
+public:
+   MpdPairSharedHitsCut();
+   Bool_t Pass(NicaTwoTrack *pair);
+   virtual ~MpdPairSharedHitsCut();
+   ClassDef(MpdPairSharedHitsCut, 1);
 };
-}  // namespace MpdPadsFormat
+} // namespace MpdPadsFormat
 
 #endif /* MPDROOT_NICA_MPD_CUTS_PAIRCUTS_FULL_MPDPAIRSHAREDHITSCUT_H_ */

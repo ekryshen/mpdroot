@@ -13,15 +13,14 @@
 
 class MpdTrackIsGlobalCut : public NicaTrackCut {
 public:
-  MpdTrackIsGlobalCut();
-  void AcceptAll() { SetMinMax(0, 1); };
-  void AcceptOnlyGlobals() { SetMinAndMax(1); };
-  void AcceptOnlyNonGlobal() { SetMinAndMax(0); };
-  virtual Bool_t Init(Int_t task_id);
-  virtual Bool_t Pass(NicaTrack* track);
-  virtual ~MpdTrackIsGlobalCut();
-  ClassDef(MpdTrackIsGlobalCut, 1);
+   MpdTrackIsGlobalCut();
+   void           AcceptAll() { SetMinMax(0, 1); };
+   void           AcceptOnlyGlobals() { SetMinAndMax(1); };
+   void           AcceptOnlyNonGlobal() { SetMinAndMax(0); };
+   virtual Bool_t Init(Int_t task_id);
+   virtual Bool_t Pass(NicaTrack *track);
+   virtual ~MpdTrackIsGlobalCut();
+   ClassDef(MpdTrackIsGlobalCut, 1);
 };
-
 
 #endif /* MPDROOT_NICA_MPD_CUTS_TRACKCUTS_MPDTRACKISGLOBALCUT_H_ */

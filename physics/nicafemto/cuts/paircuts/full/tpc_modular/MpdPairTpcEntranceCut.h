@@ -16,22 +16,22 @@
  */
 namespace MpdPadsFormat {
 class MpdPairTpcEntranceCut : public MpdNominalTpcPairPadsDistanceCut {
- public:
-  MpdPairTpcEntranceCut();
-  virtual Bool_t Pass(NicaTwoTrack *pair);
-  virtual ~MpdPairTpcEntranceCut();
-  ClassDef(MpdPairTpcEntranceCut, 1);
+public:
+   MpdPairTpcEntranceCut();
+   virtual Bool_t Pass(NicaTwoTrack *pair);
+   virtual ~MpdPairTpcEntranceCut();
+   ClassDef(MpdPairTpcEntranceCut, 1);
 };
 
 class MpdPairTpcEntranceCut2D : public MpdNominalTpcPairPadsDistanceCut {
- public:
-  MpdPairTpcEntranceCut2D();
-  virtual Bool_t Pass(NicaTwoTrack *pair);
-  static Int_t XY() { return 0; };
-  static Int_t Z() { return 1; }
-  virtual ~MpdPairTpcEntranceCut2D();
-  ClassDef(MpdPairTpcEntranceCut2D, 1);
+public:
+   MpdPairTpcEntranceCut2D();
+   virtual Bool_t Pass(NicaTwoTrack *pair);
+   static Int_t   XY() { return 0; };
+   static Int_t   Z() { return 1; }
+   virtual ~MpdPairTpcEntranceCut2D();
+   ClassDef(MpdPairTpcEntranceCut2D, 1);
 };
-}  // namespace MpdPadsFormat
+} // namespace MpdPadsFormat
 
 #endif /* MPDROOT_NICA_MPD_CUTS_PAIRCUTS_TPC_DIST_MPDTPCENTRANCECUT_H_ */

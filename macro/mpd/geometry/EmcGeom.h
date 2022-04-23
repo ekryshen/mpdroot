@@ -6,35 +6,29 @@
 #include "TObjArray.h"
 #include "TMath.h"
 
-
 #include "mpdshape.class.C"
 #include "../../../detectors/emc/emc.h"
 #include <vector>
 
 using namespace std;
 
-class EmcGeom : public TObject  
-{
+class EmcGeom : public TObject {
 
 public:
+   EmcGeom();
+   EmcGeom(ofstream *f) { fGeoFile = f; }
 
-  EmcGeom();
-  EmcGeom(ofstream* f) {
-    fGeoFile = f;
-  }
-     
-  virtual ~EmcGeom();
-     
-  void BuildEMC();
- // int build_wall (TString w);  
- // void FieldCage(Double_t z); 
-  void BuildSensVolume();
- //void BuildEC();
-  private:
+   virtual ~EmcGeom();
 
- ofstream* fGeoFile ;    
+   void BuildEMC();
+   // int build_wall (TString w);
+   // void FieldCage(Double_t z);
+   void BuildSensVolume();
+   // void BuildEC();
+private:
+   ofstream *fGeoFile;
 
- ClassDef(EmcGeom,1);
+   ClassDef(EmcGeom, 1);
 };
 
 #endif

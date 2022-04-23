@@ -25,435 +25,421 @@
 
 ClassImp(MpdFemtoPicoDstReader);
 
-
 //_________________
-MpdFemtoPicoDstReader::MpdFemtoPicoDstReader() :
-MpdFemtoBaseEventReader(),
-mPicoDstReader(nullptr),
-mHbtEvent(nullptr),
-mUseRefMultCorr(false),
-mUseZdcCorrection(false),
-mSphericity(-1.),
-mSphericity2(-1.),
-mEventsPassed(0) {
-    // Default Constructor
+MpdFemtoPicoDstReader::MpdFemtoPicoDstReader()
+   : MpdFemtoBaseEventReader(), mPicoDstReader(nullptr), mHbtEvent(nullptr), mUseRefMultCorr(false),
+     mUseZdcCorrection(false), mSphericity(-1.), mSphericity2(-1.), mEventsPassed(0)
+{
+   // Default Constructor
 
-    // 0 - means good
-    mReaderStatus = 0;
+   // 0 - means good
+   mReaderStatus = 0;
 
 #ifndef _VANILLA_ROOT_
-    mRefMultCorrUtil = nullptr;
-#endif
-
-}
-
-//_________________
-
-MpdFemtoPicoDstReader::MpdFemtoPicoDstReader(StPicoDstReader *picoDstReader, int debug) :
-MpdFemtoBaseEventReader(),
-mPicoDstReader(picoDstReader),
-mHbtEvent(nullptr),
-mUseRefMultCorr(false),
-mUseZdcCorrection(false),
-mSphericity(-1.),
-mSphericity2(-1.),
-mEventsPassed(0) {
-    // Parametrized constructor
-    mDebug = debug;
-    // 0 - means good
-    mReaderStatus = 0;
-#ifndef _VANILLA_ROOT_
-    mRefMultCorrUtil = nullptr;
+   mRefMultCorrUtil = nullptr;
 #endif
 }
 
 //_________________
 
-MpdFemtoPicoDstReader::MpdFemtoPicoDstReader(const MpdFemtoPicoDstReader& copy) :
-MpdFemtoBaseEventReader(),
-mPicoDstReader(copy.mPicoDstReader),
-mHbtEvent(nullptr),
-mUseRefMultCorr(copy.mUseRefMultCorr),
-mUseZdcCorrection(copy.mUseZdcCorrection),
-mSphericity(copy.mSphericity),
-mSphericity2(copy.mSphericity2),
-mEventsPassed(0) {
-    // Copy constructor
-
-    // 0 - means good
-    mReaderStatus = 0;
-
+MpdFemtoPicoDstReader::MpdFemtoPicoDstReader(StPicoDstReader *picoDstReader, int debug)
+   : MpdFemtoBaseEventReader(), mPicoDstReader(picoDstReader), mHbtEvent(nullptr), mUseRefMultCorr(false),
+     mUseZdcCorrection(false), mSphericity(-1.), mSphericity2(-1.), mEventsPassed(0)
+{
+   // Parametrized constructor
+   mDebug = debug;
+   // 0 - means good
+   mReaderStatus = 0;
 #ifndef _VANILLA_ROOT_
-    mRefMultCorrUtil = copy.mRefMultCorrUtil;
+   mRefMultCorrUtil = nullptr;
 #endif
 }
 
 //_________________
 
-MpdFemtoPicoDstReader& MpdFemtoPicoDstReader::operator=(const MpdFemtoPicoDstReader& copy) {
-    // Assignment operator
-    if (this != &copy) {
-        mPicoDstReader = copy.mPicoDstReader;
-        mUseRefMultCorr = copy.mUseRefMultCorr;
-        mUseZdcCorrection = copy.mUseZdcCorrection;
-        mSphericity = copy.mSphericity;
-        mSphericity2 = copy.mSphericity2;
+MpdFemtoPicoDstReader::MpdFemtoPicoDstReader(const MpdFemtoPicoDstReader &copy)
+   : MpdFemtoBaseEventReader(), mPicoDstReader(copy.mPicoDstReader), mHbtEvent(nullptr),
+     mUseRefMultCorr(copy.mUseRefMultCorr), mUseZdcCorrection(copy.mUseZdcCorrection), mSphericity(copy.mSphericity),
+     mSphericity2(copy.mSphericity2), mEventsPassed(0)
+{
+   // Copy constructor
+
+   // 0 - means good
+   mReaderStatus = 0;
+
 #ifndef _VANILLA_ROOT_
-        mRefMultCorrUtil = copy.mRefMultCorrUtil;
+   mRefMultCorrUtil = copy.mRefMultCorrUtil;
 #endif
-        mHbtEvent = nullptr;
-    } // if (this != &copy)
-
-    // 0 - means good
-    mReaderStatus = 0;
-    mEventsPassed = 0;
-
-    return *this;
 }
 
 //_________________
 
-MpdFemtoPicoDstReader::~MpdFemtoPicoDstReader() {
-    if (mPicoDstReader) {
-        delete mPicoDstReader;
-        mPicoDstReader = nullptr;
-    }
+MpdFemtoPicoDstReader &MpdFemtoPicoDstReader::operator=(const MpdFemtoPicoDstReader &copy)
+{
+   // Assignment operator
+   if (this != &copy) {
+      mPicoDstReader    = copy.mPicoDstReader;
+      mUseRefMultCorr   = copy.mUseRefMultCorr;
+      mUseZdcCorrection = copy.mUseZdcCorrection;
+      mSphericity       = copy.mSphericity;
+      mSphericity2      = copy.mSphericity2;
 #ifndef _VANILLA_ROOT_
-    if (mRefMultCorrUtil) {
-        delete mRefMultCorrUtil;
-        mRefMultCorrUtil = nullptr;
-    }
+      mRefMultCorrUtil = copy.mRefMultCorrUtil;
 #endif
-    if (mHbtEvent) {
-        delete mHbtEvent;
-        mHbtEvent = nullptr;
-    }
+      mHbtEvent = nullptr;
+   } // if (this != &copy)
+
+   // 0 - means good
+   mReaderStatus = 0;
+   mEventsPassed = 0;
+
+   return *this;
 }
 
 //_________________
 
-MpdFemtoString MpdFemtoPicoDstReader::report() {
-    // Make report
-    MpdFemtoString repstr = "\nMpdFemtoString MpdFemtoPicoDstReader::report() - reporting\n";
-
-    repstr += "---> Event cut in the reader: ";
-    if (mEventCut) {
-        repstr += mEventCut->report();
-    } else {
-        repstr += "\tNONE";
-    }
-
-    repstr += "\n---> Track cut in the reader: ";
-    if (mTrackCut) {
-        repstr += mTrackCut->report();
-    } else {
-        repstr += "\tNONE";
-    }
-
-    repstr += "\n---> V0 cut in the reader: ";
-    if (mV0Cut) {
-        repstr += mV0Cut->report();
-    } else {
-        repstr += "\tNONE";
-    }
-
-    repstr += "\n---> V0 cut in the reader: ";
-    if (mV0Cut) {
-        repstr += mV0Cut->report();
-    } else {
-        repstr += "\tNONE";
-    }
-
-    repstr += "\n---> Kink cut in the reader: ";
-    if (mKinkCut) {
-        repstr += mKinkCut->report();
-    } else {
-        repstr += "\tNONE";
-    }
-
-    repstr += "\n---> Xi cut in the reader: ";
-    if (mXiCut) {
-        repstr += mXiCut->report();
-    } else {
-        repstr += "\tNONE";
-    }
-
-    repstr += "\n";
-    return repstr;
+MpdFemtoPicoDstReader::~MpdFemtoPicoDstReader()
+{
+   if (mPicoDstReader) {
+      delete mPicoDstReader;
+      mPicoDstReader = nullptr;
+   }
+#ifndef _VANILLA_ROOT_
+   if (mRefMultCorrUtil) {
+      delete mRefMultCorrUtil;
+      mRefMultCorrUtil = nullptr;
+   }
+#endif
+   if (mHbtEvent) {
+      delete mHbtEvent;
+      mHbtEvent = nullptr;
+   }
 }
 
 //_________________
 
-MpdFemtoEvent* MpdFemtoPicoDstReader::returnHbtEvent() {
-    // Read picoEvent, create MpdFemtoEvent and return it to the MpdFemtoAnalysis
+MpdFemtoString MpdFemtoPicoDstReader::report()
+{
+   // Make report
+   MpdFemtoString repstr = "\nMpdFemtoString MpdFemtoPicoDstReader::report() - reporting\n";
 
-    // Clean-up mHbtEvent from previous reading
-    mHbtEvent = nullptr;
+   repstr += "---> Event cut in the reader: ";
+   if (mEventCut) {
+      repstr += mEventCut->report();
+   } else {
+      repstr += "\tNONE";
+   }
 
-    // Check that StPicoDstReader exists
-    if (!mPicoDstReader) {
-        std::cout << "[ERROR] MpdFemtoEvent* MpdFemtoPicoDstReader::returnHbtEvent() - no StPicoDstReader is provided" << std::endl;
-        mReaderStatus = 1;
-        return mHbtEvent;
-    }
+   repstr += "\n---> Track cut in the reader: ";
+   if (mTrackCut) {
+      repstr += mTrackCut->report();
+   } else {
+      repstr += "\tNONE";
+   }
 
-    // Read (load) event
-    mPicoDstReader->readPicoEvent(mEventsPassed);
-    // Increment counter
-    mEventsPassed++;
+   repstr += "\n---> V0 cut in the reader: ";
+   if (mV0Cut) {
+      repstr += mV0Cut->report();
+   } else {
+      repstr += "\tNONE";
+   }
 
-    // Check that picoDst exists
-    StPicoDst* picoDst = (StPicoDst*) mPicoDstReader->picoDst();
-    if (!picoDst) {
-        std::cout << "[ERROR] MpdFemtoEvent* MpdFemtoPicoDstReader::returnHbtEvent() - no picoDst is in StPicoDstReader" << std::endl;
-        mReaderStatus = 1;
-        return mHbtEvent;
-    }
+   repstr += "\n---> V0 cut in the reader: ";
+   if (mV0Cut) {
+      repstr += mV0Cut->report();
+   } else {
+      repstr += "\tNONE";
+   }
 
-    // Check that StPicoEvent exists
-    if (!picoDst->event() || !picoDst->numberOfTracks()) {// CAN'T UNDERSTAND WHY THERE IS NO "!" BEFORE SECOND CONDITION or <=0
-        std::cout << "[WARNING] MpdFemtoEvent* MpdFemtoPicoDstReader::returnHbtEvent()"
-                << " - StPicoEvent does not exist or particles missing"
+   repstr += "\n---> Kink cut in the reader: ";
+   if (mKinkCut) {
+      repstr += mKinkCut->report();
+   } else {
+      repstr += "\tNONE";
+   }
+
+   repstr += "\n---> Xi cut in the reader: ";
+   if (mXiCut) {
+      repstr += mXiCut->report();
+   } else {
+      repstr += "\tNONE";
+   }
+
+   repstr += "\n";
+   return repstr;
+}
+
+//_________________
+
+MpdFemtoEvent *MpdFemtoPicoDstReader::returnHbtEvent()
+{
+   // Read picoEvent, create MpdFemtoEvent and return it to the MpdFemtoAnalysis
+
+   // Clean-up mHbtEvent from previous reading
+   mHbtEvent = nullptr;
+
+   // Check that StPicoDstReader exists
+   if (!mPicoDstReader) {
+      std::cout << "[ERROR] MpdFemtoEvent* MpdFemtoPicoDstReader::returnHbtEvent() - no StPicoDstReader is provided"
                 << std::endl;
-        mReaderStatus = 1;
-    } else {
+      mReaderStatus = 1;
+      return mHbtEvent;
+   }
 
-        // Create new MpdFemtoEvent
-        mHbtEvent = new MpdFemtoEvent();
+   // Read (load) event
+   mPicoDstReader->readPicoEvent(mEventsPassed);
+   // Increment counter
+   mEventsPassed++;
 
-        // Retrieve StPicoEvent
-        StPicoEvent *picoEvent = (StPicoEvent*) picoDst->event();
+   // Check that picoDst exists
+   StPicoDst *picoDst = (StPicoDst *)mPicoDstReader->picoDst();
+   if (!picoDst) {
+      std::cout << "[ERROR] MpdFemtoEvent* MpdFemtoPicoDstReader::returnHbtEvent() - no picoDst is in StPicoDstReader"
+                << std::endl;
+      mReaderStatus = 1;
+      return mHbtEvent;
+   }
 
+   // Check that StPicoEvent exists
+   if (!picoDst->event() ||
+       !picoDst->numberOfTracks()) { // CAN'T UNDERSTAND WHY THERE IS NO "!" BEFORE SECOND CONDITION or <=0
+      std::cout << "[WARNING] MpdFemtoEvent* MpdFemtoPicoDstReader::returnHbtEvent()"
+                << " - StPicoEvent does not exist or particles missing" << std::endl;
+      mReaderStatus = 1;
+   } else {
 
-        // Recalculate sphericity values
-        sphericityCalculation();
+      // Create new MpdFemtoEvent
+      mHbtEvent = new MpdFemtoEvent();
 
-        float bField = picoEvent->bField();
+      // Retrieve StPicoEvent
+      StPicoEvent *picoEvent = (StPicoEvent *)picoDst->event();
 
-        mHbtEvent->setEventId(picoEvent->eventId());
-        mHbtEvent->setRunNumber(picoEvent->runId());
-        mHbtEvent->setBField(bField);
-        mHbtEvent->setRefMult(picoEvent->refMult());
-        mHbtEvent->setRefMultPos(picoEvent->refMultPos());
-        mHbtEvent->setGRefMult(picoEvent->grefMult());
+      // Recalculate sphericity values
+      sphericityCalculation();
 
-        if (mUseRefMultCorr) {
+      float bField = picoEvent->bField();
+
+      mHbtEvent->setEventId(picoEvent->eventId());
+      mHbtEvent->setRunNumber(picoEvent->runId());
+      mHbtEvent->setBField(bField);
+      mHbtEvent->setRefMult(picoEvent->refMult());
+      mHbtEvent->setRefMultPos(picoEvent->refMultPos());
+      mHbtEvent->setGRefMult(picoEvent->grefMult());
+
+      if (mUseRefMultCorr) {
 #ifndef _VANILLA_ROOT_
-            if (!mRefMultCorrUtil) {
-                std::cout << "[WARNING] MpdFemtoEvent* MpdFemtoPicoDstReader::returnHbtEvent()"
-                        << " - Pointer to mRefMultCorrUtil does not exist" << std::endl;
-                mHbtEvent->setRefMultCorr(-1);
-            } else {
-
-                mRefMultCorrUtil->init(picoEvent->runId());
-                if (mRefMultCorrUtil->isBadRun(picoEvent->runId())) {
-                    // The run is bad
-                    delete mHbtEvent;
-                    mHbtEvent = nullptr;
-                    return mHbtEvent;
-                }
-
-                if (mUseZdcCorrection) {
-                    mRefMultCorrUtil->initEvent(picoEvent->refMult(),
-                            picoEvent->primaryVertex().Z(),
-                            picoEvent->ZDCx());
-                } else {
-                    mRefMultCorrUtil->initEvent(picoEvent->refMult(),
-                            picoEvent->primaryVertex().Z());
-                }
-
-                if (mRefMultCorrUtil->getCentralityBin16() < 0) {
-                    mHbtEvent->setCent16(-1);
-                    mHbtEvent->setRefMultCorr(-1);
-                    mHbtEvent->setRefMultCorrWeight(1);
-                } else {
-                    mHbtEvent->setCent16(mRefMultCorrUtil->getCentralityBin16());
-                    mHbtEvent->setRefMultCorr(mRefMultCorrUtil->getRefMultCorr());
-                    mHbtEvent->setRefMultCorrWeight(mRefMultCorrUtil->getWeight());
-                }
-            } // else
-#endif
-        }// if (mUseRefMultCorr)
-        else {
-            mHbtEvent->setCent16(-1);
+         if (!mRefMultCorrUtil) {
+            std::cout << "[WARNING] MpdFemtoEvent* MpdFemtoPicoDstReader::returnHbtEvent()"
+                      << " - Pointer to mRefMultCorrUtil does not exist" << std::endl;
             mHbtEvent->setRefMultCorr(-1);
-            mHbtEvent->setRefMultCorrWeight(1);
-        }
+         } else {
 
-        mHbtEvent->setBTofTrayMult(picoEvent->btofTrayMultiplicity());
-        mHbtEvent->setNumberOfBTofMatched(picoEvent->nBTOFMatch());
-        mHbtEvent->setNumberOfBEMCMatched(picoEvent->nBEMCMatch());
-        // Could be recalculated, but skipped for now
-        // mHbtEvent->setNumberOfPrimaryTracks()
-        // mHbtEvent->setNumberOfGlobalTracks()
-        mHbtEvent->setZdcAdcEast(picoEvent->ZdcSumAdcEast());
-        mHbtEvent->setZdcAdcWest(picoEvent->ZdcSumAdcWest());
-
-        mHbtEvent->setZdcCoincidenceRate(picoEvent->ZDCx());
-        mHbtEvent->setBbcCoincidenceRate(picoEvent->BBCx());
-
-        mHbtEvent->setSphericity(mSphericity);
-        mHbtEvent->setSphericity2(mSphericity2);
-        mHbtEvent->setPrimaryVertex(picoEvent->primaryVertex());
-        mHbtEvent->setVpdVz(picoEvent->vzVpd());
-        mHbtEvent->setRanking(picoEvent->ranking());
-        mHbtEvent->setTriggerIds(picoEvent->triggerIds());
-
-        // Loop over picoTracks in the event
-        for (unsigned int iTrk = 0; iTrk < picoDst->numberOfTracks(); iTrk++) {
-
-            // Retrieve i-th picoTrack
-            StPicoTrack *picoTrack = (StPicoTrack*) picoDst->track(iTrk);
-            if (!picoTrack) continue;
-
-            // Create new instance of the MpdFemtoTrack
-            MpdFemtoTrack *hbtTrack = new MpdFemtoTrack();
-            hbtTrack->setId(picoTrack->id());
-            hbtTrack->setFlag(300);
-            hbtTrack->setNHits(picoTrack->nHits() * picoTrack->charge());
-            hbtTrack->setNHitsPossible(picoTrack->nHitsPoss());
-            hbtTrack->setNHitsDedx(picoTrack->nHitsDedx());
-            hbtTrack->setChi2(picoTrack->chi2());
-            hbtTrack->setDedxFromKeV(picoTrack->dEdx());
-            hbtTrack->setNSigmaElectron(picoTrack->nSigmaElectron());
-            hbtTrack->setNSigmaPion(picoTrack->nSigmaPion());
-            hbtTrack->setNSigmaKaon(picoTrack->nSigmaKaon());
-            hbtTrack->setNSigmaProton(picoTrack->nSigmaProton());
-            hbtTrack->setPidProbElectron(0.5);
-            hbtTrack->setPidProbPion(0.5);
-            hbtTrack->setPidProbKaon(0.5);
-            hbtTrack->setPidProbProton(0.5);
-            hbtTrack->setDca(picoTrack->origin().X() - picoEvent->primaryVertex().X(),
-                    picoTrack->origin().Y() - picoEvent->primaryVertex().Y(),
-                    picoTrack->origin().Z() - picoEvent->primaryVertex().Z());
-            if (picoTrack->isPrimary()) {
-                hbtTrack->setP(picoTrack->pMom());
-            } else {
-                hbtTrack->setP(0., 0., 0.);
-            }
-            hbtTrack->setGlobalP(picoTrack->gMom());
-            hbtTrack->setPrimaryVertex(picoEvent->primaryVertex());
-            hbtTrack->setMagneticField(bField);
-            hbtTrack->setTopologyMap(0, picoTrack->topologyMap(0));
-            hbtTrack->setTopologyMap(1, picoTrack->topologyMap(1));
-            if (picoTrack->isTofTrack()) {
-                StPicoBTofPidTraits *trait = picoDst->btofPidTraits(picoTrack->bTofPidTraitsIndex());
-                if (!trait) {
-                    std::cout << "[WARNING] MpdFemtoEvent* MpdFemtoPicoDstReader::returnHbtEvent()"
-                            << " -  No StPicoBTofPidTraits was found by the index" << std::endl;
-                    hbtTrack->setBeta(-999.);
-                } else {
-                    hbtTrack->setBeta(trait->btofBeta());
-                }
-            } else {
-                hbtTrack->setBeta(-999.);
+            mRefMultCorrUtil->init(picoEvent->runId());
+            if (mRefMultCorrUtil->isBadRun(picoEvent->runId())) {
+               // The run is bad
+               delete mHbtEvent;
+               mHbtEvent = nullptr;
+               return mHbtEvent;
             }
 
-            // Hidden info should be used for the MC data
-            MpdFemtoHiddenInfo *hiddenInfo = nullptr;
-            hbtTrack->setHiddenInfo(hiddenInfo);
+            if (mUseZdcCorrection) {
+               mRefMultCorrUtil->initEvent(picoEvent->refMult(), picoEvent->primaryVertex().Z(), picoEvent->ZDCx());
+            } else {
+               mRefMultCorrUtil->initEvent(picoEvent->refMult(), picoEvent->primaryVertex().Z());
+            }
 
-            // Check if a front-loaded cut exists. The mTrackCut
-            // is inherited from MpdFemtoBaseReader
-            if (mTrackCut && !mTrackCut->pass(hbtTrack)) {
-                delete hbtTrack;
-                continue;
-            } // if ( mTrackCut )
+            if (mRefMultCorrUtil->getCentralityBin16() < 0) {
+               mHbtEvent->setCent16(-1);
+               mHbtEvent->setRefMultCorr(-1);
+               mHbtEvent->setRefMultCorrWeight(1);
+            } else {
+               mHbtEvent->setCent16(mRefMultCorrUtil->getCentralityBin16());
+               mHbtEvent->setRefMultCorr(mRefMultCorrUtil->getRefMultCorr());
+               mHbtEvent->setRefMultCorrWeight(mRefMultCorrUtil->getWeight());
+            }
+         } // else
+#endif
+      } // if (mUseRefMultCorr)
+      else {
+         mHbtEvent->setCent16(-1);
+         mHbtEvent->setRefMultCorr(-1);
+         mHbtEvent->setRefMultCorrWeight(1);
+      }
 
-            mHbtEvent->trackCollection()->push_back(hbtTrack);
+      mHbtEvent->setBTofTrayMult(picoEvent->btofTrayMultiplicity());
+      mHbtEvent->setNumberOfBTofMatched(picoEvent->nBTOFMatch());
+      mHbtEvent->setNumberOfBEMCMatched(picoEvent->nBEMCMatch());
+      // Could be recalculated, but skipped for now
+      // mHbtEvent->setNumberOfPrimaryTracks()
+      // mHbtEvent->setNumberOfGlobalTracks()
+      mHbtEvent->setZdcAdcEast(picoEvent->ZdcSumAdcEast());
+      mHbtEvent->setZdcAdcWest(picoEvent->ZdcSumAdcWest());
 
-        } // for (int iTrk=0; iTrk<picoDst->numberOfTracks(); iTrk++)
+      mHbtEvent->setZdcCoincidenceRate(picoEvent->ZDCx());
+      mHbtEvent->setBbcCoincidenceRate(picoEvent->BBCx());
 
-        // Check front-loaded cuts here, because now all event information
-        // should be filled making event cut on it possible. The mEventCut
-        // is inherited from MpdFemtoBaseReader
-        if (mEventCut && !mEventCut->pass(mHbtEvent)) {
-            delete mHbtEvent;
-            mHbtEvent = nullptr;
-            // return mHbtEvent; // Will be deleted 6 lines below
-        } // if (mEventCut)
+      mHbtEvent->setSphericity(mSphericity);
+      mHbtEvent->setSphericity2(mSphericity2);
+      mHbtEvent->setPrimaryVertex(picoEvent->primaryVertex());
+      mHbtEvent->setVpdVz(picoEvent->vzVpd());
+      mHbtEvent->setRanking(picoEvent->ranking());
+      mHbtEvent->setTriggerIds(picoEvent->triggerIds());
 
-    } // else
+      // Loop over picoTracks in the event
+      for (unsigned int iTrk = 0; iTrk < picoDst->numberOfTracks(); iTrk++) {
 
-    return mHbtEvent;
+         // Retrieve i-th picoTrack
+         StPicoTrack *picoTrack = (StPicoTrack *)picoDst->track(iTrk);
+         if (!picoTrack) continue;
+
+         // Create new instance of the MpdFemtoTrack
+         MpdFemtoTrack *hbtTrack = new MpdFemtoTrack();
+         hbtTrack->setId(picoTrack->id());
+         hbtTrack->setFlag(300);
+         hbtTrack->setNHits(picoTrack->nHits() * picoTrack->charge());
+         hbtTrack->setNHitsPossible(picoTrack->nHitsPoss());
+         hbtTrack->setNHitsDedx(picoTrack->nHitsDedx());
+         hbtTrack->setChi2(picoTrack->chi2());
+         hbtTrack->setDedxFromKeV(picoTrack->dEdx());
+         hbtTrack->setNSigmaElectron(picoTrack->nSigmaElectron());
+         hbtTrack->setNSigmaPion(picoTrack->nSigmaPion());
+         hbtTrack->setNSigmaKaon(picoTrack->nSigmaKaon());
+         hbtTrack->setNSigmaProton(picoTrack->nSigmaProton());
+         hbtTrack->setPidProbElectron(0.5);
+         hbtTrack->setPidProbPion(0.5);
+         hbtTrack->setPidProbKaon(0.5);
+         hbtTrack->setPidProbProton(0.5);
+         hbtTrack->setDca(picoTrack->origin().X() - picoEvent->primaryVertex().X(),
+                          picoTrack->origin().Y() - picoEvent->primaryVertex().Y(),
+                          picoTrack->origin().Z() - picoEvent->primaryVertex().Z());
+         if (picoTrack->isPrimary()) {
+            hbtTrack->setP(picoTrack->pMom());
+         } else {
+            hbtTrack->setP(0., 0., 0.);
+         }
+         hbtTrack->setGlobalP(picoTrack->gMom());
+         hbtTrack->setPrimaryVertex(picoEvent->primaryVertex());
+         hbtTrack->setMagneticField(bField);
+         hbtTrack->setTopologyMap(0, picoTrack->topologyMap(0));
+         hbtTrack->setTopologyMap(1, picoTrack->topologyMap(1));
+         if (picoTrack->isTofTrack()) {
+            StPicoBTofPidTraits *trait = picoDst->btofPidTraits(picoTrack->bTofPidTraitsIndex());
+            if (!trait) {
+               std::cout << "[WARNING] MpdFemtoEvent* MpdFemtoPicoDstReader::returnHbtEvent()"
+                         << " -  No StPicoBTofPidTraits was found by the index" << std::endl;
+               hbtTrack->setBeta(-999.);
+            } else {
+               hbtTrack->setBeta(trait->btofBeta());
+            }
+         } else {
+            hbtTrack->setBeta(-999.);
+         }
+
+         // Hidden info should be used for the MC data
+         MpdFemtoHiddenInfo *hiddenInfo = nullptr;
+         hbtTrack->setHiddenInfo(hiddenInfo);
+
+         // Check if a front-loaded cut exists. The mTrackCut
+         // is inherited from MpdFemtoBaseReader
+         if (mTrackCut && !mTrackCut->pass(hbtTrack)) {
+            delete hbtTrack;
+            continue;
+         } // if ( mTrackCut )
+
+         mHbtEvent->trackCollection()->push_back(hbtTrack);
+
+      } // for (int iTrk=0; iTrk<picoDst->numberOfTracks(); iTrk++)
+
+      // Check front-loaded cuts here, because now all event information
+      // should be filled making event cut on it possible. The mEventCut
+      // is inherited from MpdFemtoBaseReader
+      if (mEventCut && !mEventCut->pass(mHbtEvent)) {
+         delete mHbtEvent;
+         mHbtEvent = nullptr;
+         // return mHbtEvent; // Will be deleted 6 lines below
+      } // if (mEventCut)
+
+   } // else
+
+   return mHbtEvent;
 }
 
 //_________________
 
-void MpdFemtoPicoDstReader::sphericityCalculation() {
+void MpdFemtoPicoDstReader::sphericityCalculation()
+{
 
-    // Calculate sphericity values for two different acceptance cuts
-    mSphericity = -1.;
-    mSphericity2 = -1.;
+   // Calculate sphericity values for two different acceptance cuts
+   mSphericity  = -1.;
+   mSphericity2 = -1.;
 
-    if (!mPicoDstReader) {
-        std::cout << "[WARNING] void MpdFemtoPicoDstReader::sphericityCalculation()"
+   if (!mPicoDstReader) {
+      std::cout << "[WARNING] void MpdFemtoPicoDstReader::sphericityCalculation()"
                 << " - No StPicoDstReader is provided" << std::endl;
-        return;
-    }
+      return;
+   }
 
-    StPicoDst *picoDst = (StPicoDst*) mPicoDstReader->picoDst();
-    if (!picoDst || picoDst->numberOfTracks() <= 0) {
-        std::cout << "[WARNING] void MpdFemtoPicoDstReader::sphericityCalculation()"
+   StPicoDst *picoDst = (StPicoDst *)mPicoDstReader->picoDst();
+   if (!picoDst || picoDst->numberOfTracks() <= 0) {
+      std::cout << "[WARNING] void MpdFemtoPicoDstReader::sphericityCalculation()"
                 << " - No StPicoDst or picoTracks in the event" << std::endl;
-        return;
-    }
+      return;
+   }
 
-    // Primary vertex position (needed for DCA calculation)
-    TVector3 pVtx = picoDst->event()->primaryVertex();
+   // Primary vertex position (needed for DCA calculation)
+   TVector3 pVtx = picoDst->event()->primaryVertex();
 
-    // Next matrices will be used for the sphericity calculation
-    TMatrixTSym<double> *matrix = new TMatrixTSym<double>(2);
-    TMatrixTSym<double> *matrix2 = new TMatrixTSym<double>(2);
-    matrix->Zero();
-    matrix2->Zero();
+   // Next matrices will be used for the sphericity calculation
+   TMatrixTSym<double> *matrix  = new TMatrixTSym<double>(2);
+   TMatrixTSym<double> *matrix2 = new TMatrixTSym<double>(2);
+   matrix->Zero();
+   matrix2->Zero();
 
-    float pTsum = 0.;
-    float pTsum2 = 0.;
-    float px = 0.;
-    float py = 0.;
-    float pt = 0.;
+   float pTsum  = 0.;
+   float pTsum2 = 0.;
+   float px     = 0.;
+   float py     = 0.;
+   float pt     = 0.;
 
-    // Loop over tracks
-    for (unsigned int iTrk = 0; iTrk < picoDst->numberOfTracks(); iTrk++) {
-        // Retrieve i-th track
-        StPicoTrack* picoTrack = (StPicoTrack*) picoDst->track(iTrk);
-        // Track must exist and it must be primary
-        if (!picoTrack || !picoTrack->isPrimary()) continue;
+   // Loop over tracks
+   for (unsigned int iTrk = 0; iTrk < picoDst->numberOfTracks(); iTrk++) {
+      // Retrieve i-th track
+      StPicoTrack *picoTrack = (StPicoTrack *)picoDst->track(iTrk);
+      // Track must exist and it must be primary
+      if (!picoTrack || !picoTrack->isPrimary()) continue;
 
-        // Do not use questionably-reconstructed tracks in sphericity calculation
-        if (picoTrack->pPt() < 0.15 ||
-                TMath::Abs(picoTrack->pMom().PseudoRapidity()) > 1. ||
-                picoTrack->gDCA(pVtx).Mag() > 3. ||
-                picoTrack->nHits() < 11) continue;
+      // Do not use questionably-reconstructed tracks in sphericity calculation
+      if (picoTrack->pPt() < 0.15 || TMath::Abs(picoTrack->pMom().PseudoRapidity()) > 1. ||
+          picoTrack->gDCA(pVtx).Mag() > 3. || picoTrack->nHits() < 11)
+         continue;
 
-        // Values for sphericity in |eta|<1.
-        px = picoTrack->pMom().X();
-        py = picoTrack->pMom().Y();
-        pt = picoTrack->pMom().Perp();
+      // Values for sphericity in |eta|<1.
+      px = picoTrack->pMom().X();
+      py = picoTrack->pMom().Y();
+      pt = picoTrack->pMom().Perp();
 
-        (*matrix2)(0, 0) += px * px / pt;
-        (*matrix2)(1, 1) += py * py / pt;
-        (*matrix2)(0, 1) += px * py / pt;
-        (*matrix2)(1, 0) += px * py / pt;
-        pTsum2 += pt;
+      (*matrix2)(0, 0) += px * px / pt;
+      (*matrix2)(1, 1) += py * py / pt;
+      (*matrix2)(0, 1) += px * py / pt;
+      (*matrix2)(1, 0) += px * py / pt;
+      pTsum2 += pt;
 
-        // Values for sphericity in |eta|<0.5
-        if (TMath::Abs(picoTrack->pMom().PseudoRapidity()) <= 0.5) {
-            (*matrix)(0, 0) += px * px / pt;
-            (*matrix)(1, 1) += py * py / pt;
-            (*matrix)(0, 1) += px * py / pt;
-            (*matrix)(1, 0) += px * py / pt;
-            pTsum += pt;
-        } // if ( TMath::Abs( picoTrack->pMom().PseudoRapidity() ) <= 0.5 )
-    } // for (int iTrk=0; iTrk<picoDst->numberOfTracks(); iTrk++)
+      // Values for sphericity in |eta|<0.5
+      if (TMath::Abs(picoTrack->pMom().PseudoRapidity()) <= 0.5) {
+         (*matrix)(0, 0) += px * px / pt;
+         (*matrix)(1, 1) += py * py / pt;
+         (*matrix)(0, 1) += px * py / pt;
+         (*matrix)(1, 0) += px * py / pt;
+         pTsum += pt;
+      } // if ( TMath::Abs( picoTrack->pMom().PseudoRapidity() ) <= 0.5 )
+   }    // for (int iTrk=0; iTrk<picoDst->numberOfTracks(); iTrk++)
 
-    *matrix *= 1. / pTsum;
-    *matrix2 *= 1. / pTsum2;
-    TMatrixDSymEigen eigenEstimator(*matrix);
-    TMatrixDSymEigen eigenEstimator2(*matrix2);
-    TVectorD eigen = eigenEstimator.GetEigenValues();
-    TVectorD eigen2 = eigenEstimator2.GetEigenValues();
-    mSphericity = 2. * eigen.Min() / (eigen[0] + eigen[1]);
-    mSphericity2 = 2. * eigen2.Min() / (eigen2[0] + eigen2[1]);
+   *matrix *= 1. / pTsum;
+   *matrix2 *= 1. / pTsum2;
+   TMatrixDSymEigen eigenEstimator(*matrix);
+   TMatrixDSymEigen eigenEstimator2(*matrix2);
+   TVectorD         eigen  = eigenEstimator.GetEigenValues();
+   TVectorD         eigen2 = eigenEstimator2.GetEigenValues();
+   mSphericity             = 2. * eigen.Min() / (eigen[0] + eigen[1]);
+   mSphericity2            = 2. * eigen2.Min() / (eigen2[0] + eigen2[1]);
 }

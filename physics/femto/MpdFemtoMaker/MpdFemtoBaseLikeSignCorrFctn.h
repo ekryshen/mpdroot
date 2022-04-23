@@ -23,49 +23,52 @@ class MpdFemtoPair;
 
 //_________________
 class MpdFemtoBaseLikeSignCorrFctn : public MpdFemtoBaseCorrFctn {
- public:
-  /// Default constructor
+public:
+   /// Default constructor
 
-  MpdFemtoBaseLikeSignCorrFctn() {
-    /* empty */
-  }
-  /// Copy constructor
-  MpdFemtoBaseLikeSignCorrFctn(const MpdFemtoBaseLikeSignCorrFctn& copy);
-  /// Assignment operator
-  MpdFemtoBaseLikeSignCorrFctn& operator=(const MpdFemtoBaseLikeSignCorrFctn& copy);
-  /// Default destructor
+   MpdFemtoBaseLikeSignCorrFctn()
+   { /* empty */
+   }
+   /// Copy constructor
+   MpdFemtoBaseLikeSignCorrFctn(const MpdFemtoBaseLikeSignCorrFctn &copy);
+   /// Assignment operator
+   MpdFemtoBaseLikeSignCorrFctn &operator=(const MpdFemtoBaseLikeSignCorrFctn &copy);
+   /// Default destructor
 
-  virtual ~MpdFemtoBaseLikeSignCorrFctn() {
-    /* empty */
-  }
+   virtual ~MpdFemtoBaseLikeSignCorrFctn()
+   { /* empty */
+   }
 
-  /// Add positive pair
-  virtual void addLikeSignPositivePair(const MpdFemtoPair*) = 0;
-  /// Add negative pair
-  virtual void addLikeSignNegativePair(const MpdFemtoPair*) = 0;
+   /// Add positive pair
+   virtual void addLikeSignPositivePair(const MpdFemtoPair *) = 0;
+   /// Add negative pair
+   virtual void addLikeSignNegativePair(const MpdFemtoPair *) = 0;
 
-  /// Clone like-sign correlation function
-  virtual MpdFemtoBaseLikeSignCorrFctn* clone() const = 0;
+   /// Clone like-sign correlation function
+   virtual MpdFemtoBaseLikeSignCorrFctn *clone() const = 0;
 
-  /// Return output list
-  virtual TList* getOutputList() = 0;
+   /// Return output list
+   virtual TList *getOutputList() = 0;
 
-  /// The following allows "back-pointing" from the CorrFctn
-  /// to the "parent" Analysis
-  friend class MpdFemtoLikeSignAnalysis;
+   /// The following allows "back-pointing" from the CorrFctn
+   /// to the "parent" Analysis
+   friend class MpdFemtoLikeSignAnalysis;
 };
 
 //_________________
-inline MpdFemtoBaseLikeSignCorrFctn::MpdFemtoBaseLikeSignCorrFctn(const MpdFemtoBaseLikeSignCorrFctn& c) : MpdFemtoBaseCorrFctn(c) {
-  mBaseAnalysis = nullptr;
+inline MpdFemtoBaseLikeSignCorrFctn::MpdFemtoBaseLikeSignCorrFctn(const MpdFemtoBaseLikeSignCorrFctn &c)
+   : MpdFemtoBaseCorrFctn(c)
+{
+   mBaseAnalysis = nullptr;
 }
 
 //_________________
-inline MpdFemtoBaseLikeSignCorrFctn& MpdFemtoBaseLikeSignCorrFctn::operator=(const MpdFemtoBaseLikeSignCorrFctn& c) {
-  if (this != &c) {
-    MpdFemtoBaseCorrFctn::operator=(c);
-  }
-  return *this;
+inline MpdFemtoBaseLikeSignCorrFctn &MpdFemtoBaseLikeSignCorrFctn::operator=(const MpdFemtoBaseLikeSignCorrFctn &c)
+{
+   if (this != &c) {
+      MpdFemtoBaseCorrFctn::operator=(c);
+   }
+   return *this;
 }
 
 #endif // #define MpdFemtoLikeSignCorrFctn_h

@@ -22,11 +22,11 @@ using std::list;
 class MpdFemtoBaseAnalysis;
 
 #ifdef ST_NO_TEMPLATE_DEF_ARGS
-typedef list<MpdFemtoBaseAnalysis*, allocator<MpdFemtoBaseAnalysis*> > MpdFemtoAnalysisCollection;
-typedef list<MpdFemtoBaseAnalysis*, allocator<MpdFemtoBaseAnalysis*> >::iterator MpdFemtoAnalysisIterator;
+typedef list<MpdFemtoBaseAnalysis *, allocator<MpdFemtoBaseAnalysis *>>           MpdFemtoAnalysisCollection;
+typedef list<MpdFemtoBaseAnalysis *, allocator<MpdFemtoBaseAnalysis *>>::iterator MpdFemtoAnalysisIterator;
 #else
-typedef list<MpdFemtoBaseAnalysis*> MpdFemtoAnalysisCollection;
-typedef list<MpdFemtoBaseAnalysis*>::iterator MpdFemtoAnalysisIterator;
+typedef list<MpdFemtoBaseAnalysis *>           MpdFemtoAnalysisCollection;
+typedef list<MpdFemtoBaseAnalysis *>::iterator MpdFemtoAnalysisIterator;
 #endif
 
 #endif // #define MpdFemtoAnalysisCollection_h

@@ -7,9 +7,8 @@ using namespace std;
 
 ClassImp(TpcLheCMPoint);
 
-   //________________________________________________________________
-   TpcLheCMPoint::TpcLheCMPoint()
-   : TpcLheHit()
+//________________________________________________________________
+TpcLheCMPoint::TpcLheCMPoint() : TpcLheHit()
 {
    //--- clean all
 

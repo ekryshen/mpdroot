@@ -23,7 +23,8 @@
 
 #include <stddef.h> // for NULL
 
-ClassImp(FairCave); void FairCave::ConstructGeometry()
+ClassImp(FairCave);
+void FairCave::ConstructGeometry()
 {
    FairGeoLoader    *loader       = FairGeoLoader::Instance();
    FairGeoInterface *GeoInterface = loader->getGeoInterface();

@@ -8,9 +8,8 @@
 
 ClassImp(MpdMiniTrackCovMatrix);
 
-   //_________________
-   MpdMiniTrackCovMatrix::MpdMiniTrackCovMatrix()
-   : mSigma{}, mCorr{}
+//_________________
+MpdMiniTrackCovMatrix::MpdMiniTrackCovMatrix() : mSigma{}, mCorr{}
 {
    rphi0        = 0;
    z            = 0.;

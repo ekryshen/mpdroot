@@ -8,8 +8,8 @@
 
 ClassImp(MpdMiniBTofHit);
 
-   //_________________
-   MpdMiniBTofHit::MpdMiniBTofHit()
+//_________________
+MpdMiniBTofHit::MpdMiniBTofHit()
    : TObject(), fDetectorID(-1), fBTofHitPosX(0), fBTofHitPosY(0), fBTofHitPosZ(0), fTime(0)
 {
    // Default constructor

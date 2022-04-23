@@ -12,15 +12,15 @@
 #include "NicaTwoTrackCut.h"
 #include "NicaHelix.h"
 
-class MpdPairDeltaDCA : public NicaTwoTrackCut{
+class MpdPairDeltaDCA : public NicaTwoTrackCut {
 public:
-	MpdPairDeltaDCA();
-	virtual Bool_t Pass(NicaTwoTrack *pair);
-	static Int_t DeltaDCAxy(){return 0;};
-	static Int_t DeltaDCAz(){return 1;}
-	static Int_t DeltaDCA(){return 2;};
-	virtual ~MpdPairDeltaDCA();
-	ClassDef(MpdPairDeltaDCA,1);
+   MpdPairDeltaDCA();
+   virtual Bool_t Pass(NicaTwoTrack *pair);
+   static Int_t   DeltaDCAxy() { return 0; };
+   static Int_t   DeltaDCAz() { return 1; }
+   static Int_t   DeltaDCA() { return 2; };
+   virtual ~MpdPairDeltaDCA();
+   ClassDef(MpdPairDeltaDCA, 1);
 };
 
 #endif /* MPDROOT_NICA_MPD_CUTS_PAIRCUTS_COMMON_MPDPAIRDELTADCA_H_ */

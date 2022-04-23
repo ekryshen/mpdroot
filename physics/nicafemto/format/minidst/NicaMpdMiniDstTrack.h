@@ -18,17 +18,17 @@ class MpdMiniTrack;
 class NicaMpdMiniDstTrack : public NicaMpdTrack {
 
 public:
-  NicaMpdMiniDstTrack();
-  virtual void Update(MpdMiniTrack* track, NicaMpdMiniDstEvent::eMode mode);
-  virtual ~NicaMpdMiniDstTrack();
-  ClassDef(NicaMpdMiniDstTrack, 1);
+   NicaMpdMiniDstTrack();
+   virtual void Update(MpdMiniTrack *track, NicaMpdMiniDstEvent::eMode mode);
+   virtual ~NicaMpdMiniDstTrack();
+   ClassDef(NicaMpdMiniDstTrack, 1);
 };
 
 class NicaMpdMiniDstTrackInterface : public NicaTrackInterface {
 public:
-  NicaMpdMiniDstTrackInterface();
-  virtual ~NicaMpdMiniDstTrackInterface();
-  ClassDef(NicaMpdMiniDstTrackInterface, 1);
+   NicaMpdMiniDstTrackInterface();
+   virtual ~NicaMpdMiniDstTrackInterface();
+   ClassDef(NicaMpdMiniDstTrackInterface, 1);
 };
 
 #endif /* MPDROOT_NICA_MPD_FORMAT_MINIDST_NICAMPDMINIDSTTRACK_H_ */

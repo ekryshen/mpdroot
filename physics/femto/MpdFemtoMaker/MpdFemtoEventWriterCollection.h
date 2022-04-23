@@ -24,11 +24,11 @@ using std::list;
 #endif
 
 #ifdef ST_NO_TEMPLATE_DEF_ARGS
-typedef list<MpdFemtoBaseEventWriter*, allocator<MpdFemtoBaseEventWriter*> > MpdFemtoEventWriterCollection;
-typedef list<MpdFemtoBaseEventWriter*, allocator<MpdFemtoBaseEventWriter*> >::iterator MpdFemtoEventWriterIterator;
+typedef list<MpdFemtoBaseEventWriter *, allocator<MpdFemtoBaseEventWriter *>>           MpdFemtoEventWriterCollection;
+typedef list<MpdFemtoBaseEventWriter *, allocator<MpdFemtoBaseEventWriter *>>::iterator MpdFemtoEventWriterIterator;
 #else
-typedef list<MpdFemtoBaseEventWriter*> MpdFemtoEventWriterCollection;
-typedef list<MpdFemtoBaseEventWriter*>::iterator MpdFemtoEventWriterIterator;
+typedef list<MpdFemtoBaseEventWriter *>           MpdFemtoEventWriterCollection;
+typedef list<MpdFemtoBaseEventWriter *>::iterator MpdFemtoEventWriterIterator;
 #endif
 
 #endif // #define MpdFemtoEventWriterCollection_h

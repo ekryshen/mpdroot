@@ -7,9 +7,8 @@
 
 ClassImp(MpdMiniFHCalHit);
 
-   //_________________
-   MpdMiniFHCalHit::MpdMiniFHCalHit()
-   : TObject(), fId(0), fEDep(0) /*,fAdc(0)*/
+//_________________
+MpdMiniFHCalHit::MpdMiniFHCalHit() : TObject(), fId(0), fEDep(0) /*,fAdc(0)*/
 {
    // Default constructor
 }

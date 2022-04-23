@@ -19,11 +19,11 @@
 class MpdFemtoBaseEventCut;
 
 #ifdef ST_NO_TEMPLATE_DEF_ARGS
-typedef std::list<MpdFemtoBaseEventCut*, std::allocator<MpdFemtoBaseEventCut*> > MpdFemtoEventCutCollection;
-typedef std::list<MpdFemtoBaseEventCut*, std::allocator<MpdFemtoBaseEventCut*> >::iterator MpdFemtoEventCutIterator;
+typedef std::list<MpdFemtoBaseEventCut *, std::allocator<MpdFemtoBaseEventCut *>>           MpdFemtoEventCutCollection;
+typedef std::list<MpdFemtoBaseEventCut *, std::allocator<MpdFemtoBaseEventCut *>>::iterator MpdFemtoEventCutIterator;
 #else
-typedef std::list<MpdFemtoBaseEventCut*> MpdFemtoEventCutCollection;
-typedef std::list<MpdFemtoBaseEventCut*>::iterator MpdFemtoEventCutIterator;
+typedef std::list<MpdFemtoBaseEventCut *>           MpdFemtoEventCutCollection;
+typedef std::list<MpdFemtoBaseEventCut *>::iterator MpdFemtoEventCutIterator;
 #endif
 
 #endif // #define MpdFemtoEventCutCollection_h

@@ -2,15 +2,14 @@
 
 ClassImp(MpdAnalysisTask);
 
-
-MpdAnalysisTask::MpdAnalysisTask(const char *name, const char *outputName):
-fTaskName(name),fOutputName(outputName)
+MpdAnalysisTask::MpdAnalysisTask(const char *name, const char *outputName) : fTaskName(name), fOutputName(outputName)
 {
-  fOutputList=nullptr;
+   fOutputList = nullptr;
 }
-MpdAnalysisTask::~MpdAnalysisTask(){
-  if(fOutputList){
-  	delete fOutputList;
-  	fOutputList=nullptr;
-  }
+MpdAnalysisTask::~MpdAnalysisTask()
+{
+   if (fOutputList) {
+      delete fOutputList;
+      fOutputList = nullptr;
+   }
 }

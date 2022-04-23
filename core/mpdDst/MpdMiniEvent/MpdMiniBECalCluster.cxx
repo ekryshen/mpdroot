@@ -14,8 +14,8 @@
 
 ClassImp(MpdMiniBECalCluster);
 
-   //_________________
-   MpdMiniBECalCluster::MpdMiniBECalCluster()
+//_________________
+MpdMiniBECalCluster::MpdMiniBECalCluster()
    : TObject(), fEnergy(0), fEcore(0), fEcore1p(0), fEcore2p(0), fTime(0), fX(0), fY(0), fZ(0), fdPhi(0), fdZ(0),
      fTrackId(-1), /* fDisp(0), */ fLambda1(0), fLambda2(0), fChi2(0), fNExLM(0)
 {

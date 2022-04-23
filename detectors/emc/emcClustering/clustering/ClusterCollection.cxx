@@ -14,9 +14,8 @@ using std::endl;
 
 ClassImp(ClusterCollection);
 
-   //_____________________________________________________________________________
-   ClusterCollection::ClusterCollection()
-   : TNamed("collection", "")
+//_____________________________________________________________________________
+ClusterCollection::ClusterCollection() : TNamed("collection", "")
 {
    Id_.Set(3);
 }

@@ -14,8 +14,8 @@
 
 ClassImp(MpdMiniTrack);
 
-   //_________________
-   MpdMiniTrack::MpdMiniTrack()
+//_________________
+MpdMiniTrack::MpdMiniTrack()
    : TObject(), fId(0), fChi2(std::numeric_limits<unsigned short>::max()), fPMomentumX(0), fPMomentumY(0),
      fPMomentumZ(0), fGMomentumX(0), fGMomentumY(0), fGMomentumZ(0), fOriginX(0), fOriginY(0), fOriginZ(0),
      fDedx(0),  /* fDedxError(0), */

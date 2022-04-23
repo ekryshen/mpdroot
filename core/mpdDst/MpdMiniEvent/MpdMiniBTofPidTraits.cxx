@@ -15,8 +15,8 @@
 
 ClassImp(MpdMiniBTofPidTraits);
 
-   //_________________
-   MpdMiniBTofPidTraits::MpdMiniBTofPidTraits()
+//_________________
+MpdMiniBTofPidTraits::MpdMiniBTofPidTraits()
    : TObject(), fTrackIndex(-1), fHitIndex(-1), fBTofBeta(0), fPx(0), fPy(0), fPz(0)
 {
    /* empty */

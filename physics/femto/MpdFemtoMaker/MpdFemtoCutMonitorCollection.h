@@ -26,11 +26,11 @@ using std::vector;
 class MpdFemtoBaseCutMonitor;
 
 #ifdef ST_NO_TEMPLATE_DEF_ARGS
-typedef vector<MpdFemtoBaseCutMonitor*, allocator<MpdFemtoBaseCutMonitor*> > MpdFemtoCutMonitorCollection;
-typedef vector<MpdFemtoBaseCutMonitor*, allocator<MpdFemtoBaseCutMonitor*> >::iterator MpdFemtoCutMonitorIterator;
+typedef vector<MpdFemtoBaseCutMonitor *, allocator<MpdFemtoBaseCutMonitor *>>           MpdFemtoCutMonitorCollection;
+typedef vector<MpdFemtoBaseCutMonitor *, allocator<MpdFemtoBaseCutMonitor *>>::iterator MpdFemtoCutMonitorIterator;
 #else
-typedef vector<MpdFemtoBaseCutMonitor*> MpdFemtoCutMonitorCollection;
-typedef vector<MpdFemtoBaseCutMonitor*>::iterator MpdFemtoCutMonitorIterator;
+typedef vector<MpdFemtoBaseCutMonitor *>           MpdFemtoCutMonitorCollection;
+typedef vector<MpdFemtoBaseCutMonitor *>::iterator MpdFemtoCutMonitorIterator;
 #endif
 
 #endif // #define MpdFemtoCutMonitorCollection_h

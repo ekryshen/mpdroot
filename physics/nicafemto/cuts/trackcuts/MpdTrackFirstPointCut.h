@@ -11,12 +11,12 @@
 
 #include "NicaTrackCut.h"
 
-class MpdTrackFirstPointCut : public NicaTrackCut{
+class MpdTrackFirstPointCut : public NicaTrackCut {
 public:
-	MpdTrackFirstPointCut();
-	Bool_t Pass(NicaTrack *track);
-	virtual ~MpdTrackFirstPointCut();
-	ClassDef(MpdTrackFirstPointCut,1);
+   MpdTrackFirstPointCut();
+   Bool_t Pass(NicaTrack *track);
+   virtual ~MpdTrackFirstPointCut();
+   ClassDef(MpdTrackFirstPointCut, 1);
 };
 
 #endif /* INTERFACES_MPDROOT_CUTS_TRACKCUTS_MPDTRACKFIRSTPOINTCUT_H_ */

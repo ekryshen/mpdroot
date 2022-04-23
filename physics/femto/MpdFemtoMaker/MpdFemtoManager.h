@@ -45,72 +45,57 @@
 
 //_________________
 class MpdFemtoManager {
- public:
-  /// Default constructor
-  MpdFemtoManager();
-  /// Copy constructor
-  MpdFemtoManager(const MpdFemtoManager& copy);
-  /// Copy constructor
-  MpdFemtoManager& operator=(const MpdFemtoManager& man);
-  /// Default destructor
-  virtual ~MpdFemtoManager();
+public:
+   /// Default constructor
+   MpdFemtoManager();
+   /// Copy constructor
+   MpdFemtoManager(const MpdFemtoManager &copy);
+   /// Copy constructor
+   MpdFemtoManager &operator=(const MpdFemtoManager &man);
+   /// Default destructor
+   virtual ~MpdFemtoManager();
 
-  /// Return pointer to the analysis collection
-  MpdFemtoAnalysisCollection *analysisCollection() {
-    return mAnalysisCollection;
-  }
-  /// Access to the n-th analysis within Collection
-  MpdFemtoBaseAnalysis *analysis(int n);
-  /// Add analysis
-  void addAnalysis(MpdFemtoBaseAnalysis *analysis) {
-    mAnalysisCollection->push_back(analysis);
-  }
+   /// Return pointer to the analysis collection
+   MpdFemtoAnalysisCollection *analysisCollection() { return mAnalysisCollection; }
+   /// Access to the n-th analysis within Collection
+   MpdFemtoBaseAnalysis *analysis(int n);
+   /// Add analysis
+   void addAnalysis(MpdFemtoBaseAnalysis *analysis) { mAnalysisCollection->push_back(analysis); }
 
-  /// Return pointer to the Collection of event writers
-  MpdFemtoEventWriterCollection* eventWriterCollection() {
-    return mEventWriterCollection;
-  }
-  /// Access to n-th EventWriter within Collection
-  MpdFemtoBaseEventWriter *eventWriter(int n);
-  /// Add event writer
-  void setEventWriter(MpdFemtoBaseEventWriter *writer) {
-    addEventWriter(writer);
-  }
-  /// Add event writer
-  void addEventWriter(MpdFemtoBaseEventWriter* writer) {
-    mEventWriterCollection->push_back(writer);
-  }
+   /// Return pointer to the Collection of event writers
+   MpdFemtoEventWriterCollection *eventWriterCollection() { return mEventWriterCollection; }
+   /// Access to n-th EventWriter within Collection
+   MpdFemtoBaseEventWriter *eventWriter(int n);
+   /// Add event writer
+   void setEventWriter(MpdFemtoBaseEventWriter *writer) { addEventWriter(writer); }
+   /// Add event writer
+   void addEventWriter(MpdFemtoBaseEventWriter *writer) { mEventWriterCollection->push_back(writer); }
 
-  /// Return event reader
-  MpdFemtoBaseEventReader* eventReader() {
-    return mEventReader;
-  }
-  /// Add EventReader
-  void setEventReader(MpdFemtoBaseEventReader* reader) {
-    mEventReader = reader;
-  }
+   /// Return event reader
+   MpdFemtoBaseEventReader *eventReader() { return mEventReader; }
+   /// Add EventReader
+   void setEventReader(MpdFemtoBaseEventReader *reader) { mEventReader = reader; }
 
-  /// Calls `init()` on all owned EventWriters
-  /// Returns 0 for success, 1 for failure.
-  int init();
-  /// A "0" return value means success - otherwise quit
-  int processEvent();
-  /// Calls `Finish()` on the EventReader, EventWriters, and the Analyses.
-  void finish();
+   /// Calls `init()` on all owned EventWriters
+   /// Returns 0 for success, 1 for failure.
+   int init();
+   /// A "0" return value means success - otherwise quit
+   int processEvent();
+   /// Calls `Finish()` on the EventReader, EventWriters, and the Analyses.
+   void finish();
 
-  /// Construct report
-  MpdFemtoString report();
+   /// Construct report
+   MpdFemtoString report();
 
- private:
+private:
+   /// Pointer to a collection of analyses
+   MpdFemtoAnalysisCollection *mAnalysisCollection;
+   /// Pointer to event reader
+   MpdFemtoBaseEventReader *mEventReader;
+   /// Pointer to a collection of event writers
+   MpdFemtoEventWriterCollection *mEventWriterCollection;
 
-  /// Pointer to a collection of analyses
-  MpdFemtoAnalysisCollection *mAnalysisCollection;
-  /// Pointer to event reader
-  MpdFemtoBaseEventReader *mEventReader;
-  /// Pointer to a collection of event writers
-  MpdFemtoEventWriterCollection *mEventWriterCollection;
-
-  ClassDef(MpdFemtoManager, 0);
+   ClassDef(MpdFemtoManager, 0);
 };
 
 #endif // MpdFemtoManager_h

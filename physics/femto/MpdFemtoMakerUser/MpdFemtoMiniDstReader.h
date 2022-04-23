@@ -43,38 +43,37 @@
 //_________________
 class MpdFemtoMiniDstReader : public MpdFemtoBaseEventReader {
 
- public:
-  /// Default constructor
-  MpdFemtoMiniDstReader();
-  /// Constructor
-  MpdFemtoMiniDstReader(MpdMiniDstReader *miniDstReader, int debug=1);
-  /// Copy constructor
-  MpdFemtoMiniDstReader(const MpdFemtoMiniDstReader& copy);
-  /// Assignment operator
-  MpdFemtoMiniDstReader& operator=(const MpdFemtoMiniDstReader& copy);
-  /// Destructor
-  virtual ~MpdFemtoMiniDstReader();
+public:
+   /// Default constructor
+   MpdFemtoMiniDstReader();
+   /// Constructor
+   MpdFemtoMiniDstReader(MpdMiniDstReader *miniDstReader, int debug = 1);
+   /// Copy constructor
+   MpdFemtoMiniDstReader(const MpdFemtoMiniDstReader &copy);
+   /// Assignment operator
+   MpdFemtoMiniDstReader &operator=(const MpdFemtoMiniDstReader &copy);
+   /// Destructor
+   virtual ~MpdFemtoMiniDstReader();
 
-  /// Return MpdFemtoEvent (back to the analysis)
-  virtual MpdFemtoEvent *returnHbtEvent();
-  /// Make report
-  virtual MpdFemtoString report();
+   /// Return MpdFemtoEvent (back to the analysis)
+   virtual MpdFemtoEvent *returnHbtEvent();
+   /// Make report
+   virtual MpdFemtoString report();
 
-  /// Set miniDst reader
-  void setMiniDstReader(MpdMiniDstReader *miniDstReader) { mMiniDstReader = miniDstReader; }
+   /// Set miniDst reader
+   void setMiniDstReader(MpdMiniDstReader *miniDstReader) { mMiniDstReader = miniDstReader; }
 
- private:
+private:
+   /// Pointer to the MpdMiniDstReader
+   MpdMiniDstReader *mMiniDstReader;
+   /// Pointer to MpdFemtoEvent
+   MpdFemtoEvent *mHbtEvent;
 
-  /// Pointer to the MpdMiniDstReader
-  MpdMiniDstReader *mMiniDstReader;
-  /// Pointer to MpdFemtoEvent
-  MpdFemtoEvent *mHbtEvent;
-
-  /// Number of events passed
-  long int mEventsPassed;
+   /// Number of events passed
+   long int mEventsPassed;
 
 #ifdef __ROOT__
-  ClassDef(MpdFemtoMiniDstReader, 1);
+   ClassDef(MpdFemtoMiniDstReader, 1);
 #endif
 };
 

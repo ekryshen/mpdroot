@@ -20,28 +20,27 @@
 
 //_________________
 class MpdFemtoBaseModelFreezeOutGenerator {
- public:
-  /// Default constructor
-  MpdFemtoBaseModelFreezeOutGenerator();
-  /// Copy constructor
-  MpdFemtoBaseModelFreezeOutGenerator(const MpdFemtoBaseModelFreezeOutGenerator &aModel);
-  /// Assignment operator
-  MpdFemtoBaseModelFreezeOutGenerator& operator=(const MpdFemtoBaseModelFreezeOutGenerator& aGen);
-  /// Destructor
-  virtual ~MpdFemtoBaseModelFreezeOutGenerator();
+public:
+   /// Default constructor
+   MpdFemtoBaseModelFreezeOutGenerator();
+   /// Copy constructor
+   MpdFemtoBaseModelFreezeOutGenerator(const MpdFemtoBaseModelFreezeOutGenerator &aModel);
+   /// Assignment operator
+   MpdFemtoBaseModelFreezeOutGenerator &operator=(const MpdFemtoBaseModelFreezeOutGenerator &aGen);
+   /// Destructor
+   virtual ~MpdFemtoBaseModelFreezeOutGenerator();
 
-  /// Generate freeze-out parameters (x,y,z,t)
-  virtual void generateFreezeOut(MpdFemtoPair *aPair) = 0;
-  /// Clone freeze-out generator
-  virtual MpdFemtoBaseModelFreezeOutGenerator* clone() const;
+   /// Generate freeze-out parameters (x,y,z,t)
+   virtual void generateFreezeOut(MpdFemtoPair *aPair) = 0;
+   /// Clone freeze-out generator
+   virtual MpdFemtoBaseModelFreezeOutGenerator *clone() const;
 
- protected:
-  // Randomizer
-  TRandom3 *mRandom; //!<!
+protected:
+   // Randomizer
+   TRandom3 *mRandom; //!<!
 
- private:
-
-  ClassDef(MpdFemtoBaseModelFreezeOutGenerator, 1);
+private:
+   ClassDef(MpdFemtoBaseModelFreezeOutGenerator, 1);
 };
 
 #endif // #define MpdFemtoBaseModelFreezeOutGenerator_h

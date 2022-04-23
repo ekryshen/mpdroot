@@ -12,13 +12,13 @@
 #include "MpdTpcPadsPairCut.h"
 namespace MpdPadsFormat {
 class MpdModularTpcPairCut : public MpdTpcPadsPairCut {
- public:
-  MpdModularTpcPairCut(Int_t size);
-  MpdModularTpcPairCut& operator=(const MpdModularTpcPairCut& other);
-  virtual ~MpdModularTpcPairCut();
-  ClassDef(MpdModularTpcPairCut, 1);
+public:
+   MpdModularTpcPairCut(Int_t size);
+   MpdModularTpcPairCut &operator=(const MpdModularTpcPairCut &other);
+   virtual ~MpdModularTpcPairCut();
+   ClassDef(MpdModularTpcPairCut, 1);
 };
-}  // namespace MpdPadsFormat
+} // namespace MpdPadsFormat
 
 #endif /* MPDROOT_NICA_MPD_CUTS_PAIRCUTS_FULL_TPC_MODULAR_MPDMODULARTPCPAIRCUT_H_ \
         */

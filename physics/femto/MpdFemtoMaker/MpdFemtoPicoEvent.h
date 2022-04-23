@@ -17,43 +17,36 @@
 
 //_________________
 class MpdFemtoPicoEvent {
- public:
-  /// Default constructor
-  MpdFemtoPicoEvent();
-  /// Copy constructor
-  MpdFemtoPicoEvent(const MpdFemtoPicoEvent& copy);
-  /// Copy constructor
-  MpdFemtoPicoEvent& operator=(const MpdFemtoPicoEvent& copy);
-  /// Default destructor
-  virtual ~MpdFemtoPicoEvent();
+public:
+   /// Default constructor
+   MpdFemtoPicoEvent();
+   /// Copy constructor
+   MpdFemtoPicoEvent(const MpdFemtoPicoEvent &copy);
+   /// Copy constructor
+   MpdFemtoPicoEvent &operator=(const MpdFemtoPicoEvent &copy);
+   /// Default destructor
+   virtual ~MpdFemtoPicoEvent();
 
-  //
-  // Getters
-  //
+   //
+   // Getters
+   //
 
-  /// First particle collection
-  MpdFemtoParticleCollection* firstParticleCollection() {
-    return mFirstParticleCollection;
-  }
-  /// Second particle collection
-  MpdFemtoParticleCollection* secondParticleCollection() {
-    return mSecondParticleCollection;
-  }
-  /// Third particle collection
-  MpdFemtoParticleCollection* thirdParticleCollection() {
-    return mThirdParticleCollection;
-  }
+   /// First particle collection
+   MpdFemtoParticleCollection *firstParticleCollection() { return mFirstParticleCollection; }
+   /// Second particle collection
+   MpdFemtoParticleCollection *secondParticleCollection() { return mSecondParticleCollection; }
+   /// Third particle collection
+   MpdFemtoParticleCollection *thirdParticleCollection() { return mThirdParticleCollection; }
 
- private:
+private:
+   /// First particle collection
+   MpdFemtoParticleCollection *mFirstParticleCollection;
+   /// First particle collection
+   MpdFemtoParticleCollection *mSecondParticleCollection;
+   /// First particle collection
+   MpdFemtoParticleCollection *mThirdParticleCollection;
 
-  /// First particle collection
-  MpdFemtoParticleCollection* mFirstParticleCollection;
-  /// First particle collection
-  MpdFemtoParticleCollection* mSecondParticleCollection;
-  /// First particle collection
-  MpdFemtoParticleCollection* mThirdParticleCollection;
-
-  ClassDef(MpdFemtoPicoEvent, 0);
+   ClassDef(MpdFemtoPicoEvent, 0);
 };
 
 #endif // #define MpdFemtoPicoEvent_h

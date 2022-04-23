@@ -14,9 +14,8 @@ using std::endl;
 
 ClassImp(ClManager);
 
-   //_____________________________________________________________________________
-   ClManager::ClManager()
-   : ElementsN_(0), ClustersN_(0), CollectionsN_(0)
+//_____________________________________________________________________________
+ClManager::ClManager() : ElementsN_(0), ClustersN_(0), CollectionsN_(0)
 {
    // cout << "<ClManager::ClManager> " << endl;
 }
