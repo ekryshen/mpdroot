@@ -149,9 +149,13 @@ public:
       mDPhiStarMin[0] = lo;
       mDPhiStarMin[1] = hi;
    }
-   /// Set verbose mode
-   /// \param true print information for each pair
-   /// \param false do not print (default)
+
+   /*! Set verbose mode:
+   \param[in] isVerbose <table>
+   <tr><td>true</td><td>print information for each pair</td></tr>
+   <tr><td>false</td><td>do not print (default)</td></tr>
+   </table>
+   */
    void setVerboseMode(const bool &isVerbose) { mVerbose = isVerbose; }
 
 private:

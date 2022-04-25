@@ -36,7 +36,7 @@ public:
    void SetGain(unsigned int cellID, float c) { fGainCalib[cellID] = c; }
 
    /// \brief Set energy calibration coefficients in the form of 2D histogram
-   /// \param 2D(phi,-z...z) histogram with calibration coefficients
+   /// \param h input histogram
    /// \return Is successful
    bool SetGain(TH2 *h);
 
@@ -51,7 +51,7 @@ public:
    void SetTimeCalib(unsigned int cellID, float t) { fTimeCalib[cellID] = t; }
 
    /// \brief Set time calibration coefficients in the form of 2D histogram
-   /// \param 2D(phi,-z..z) histogram with calibration coefficients
+   /// \param h input histogram
    /// \return Is successful
    bool SetTimeCalib(TH2 *h);
 

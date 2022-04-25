@@ -3,7 +3,7 @@
  * \brief The pure virtual base class for the event cut
  *
  * All event cuts must inherit from this one and implement the pass() and
- * report() methods. The ::clone() function simply returns nullptr, so if
+ * report() methods. The clone() function simply returns nullptr, so if
  * users want their cuts to behave as expected, they should also write
  * their own.
  *
@@ -61,7 +61,7 @@ public:
    /// \param A list to append settings to.
    /// \param prefix An optional prefix to prepend to the beginning of each setting
    /// \return The same pointer as the parameter
-   virtual TList *appendSettings(TList *, const TString &prefix = "") const;
+   virtual TList *appendSettings(TList *A, const TString &prefix = "") const;
 
    /// User-written method to return string describing cuts
    virtual MpdFemtoString report() = 0;

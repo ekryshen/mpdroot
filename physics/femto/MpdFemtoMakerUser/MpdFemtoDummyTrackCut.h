@@ -7,15 +7,15 @@
  *
  * ## Default cut values
  *
- * |  value   |  min | max |
- * |----------|------|-----|
- * | pt (GeV) |    0 | 100 |
- * | σ-pion   | -100 | 100 |
- * | σ-kaon   | -100 | 100 |
- * | σ-proton | -100 | 100 |
- * | \# Hits  |   10 | 180 |
- * | rapidity |   -2 |   2 |
- * | DCA (cm) |   -1 |  20 |
+ * |  value              |  min | max |
+ * |---------------------|------|-----|
+ * | pt (GeV)            |    0 | 100 |
+ * | \f$\sigma\f$-pion   | -100 | 100 |
+ * | \f$\sigma\f$-kaon   | -100 | 100 |
+ * | \f$\sigma\f$-proton | -100 | 100 |
+ * | \# Hits             |   10 | 180 |
+ * | rapidity            |   -2 |   2 |
+ * | DCA (cm)            |   -1 |  20 |
  *
  * Charge defaults to 1 (positive)
  *

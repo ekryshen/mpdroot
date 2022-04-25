@@ -252,15 +252,21 @@ public:
    /// Set PDG code of the negative track
    void SetPdgPidNeg(const int &aPid) { setPdgPidNeg(aPid); }
 
-   /// Set origin:
-   /// \param 0 physical primary
-   /// \param 1 secondary from weak decay
-   /// \param 2 secondary from material
+   /*! Set origin:
+   \param[in] origin <table>
+   <tr><td>0</td><td>physical primary</td></tr>
+   <tr><td>1</td><td>secondary from weak decay</td></tr>
+   <tr><td>2</td><td>secondary from material</td></tr>
+   </table>
+   */
    void setOrigin(const int &origin) { mOrigin = ((origin > 2 || origin < 0) ? -1 : (char)origin); }
-   /// Set origin:
-   /// \param 0 physical primary
-   /// \param 1 secondary from weak decay
-   /// \param 2 secondary from material
+   /*! Set origin:
+   \param[in] origin <table>
+   <tr><td>0</td><td>physical primary</td></tr>
+   <tr><td>1</td><td>secondary from weak decay</td></tr>
+   <tr><td>2</td><td>secondary from material</td></tr>
+   </table>
+   */
    void SetOrigin(const int &origin) { setOrigin(origin); }
 
    // !!! MANDATORY !!!

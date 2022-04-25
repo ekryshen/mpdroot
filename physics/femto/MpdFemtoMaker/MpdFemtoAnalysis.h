@@ -210,9 +210,12 @@ protected:
    /// AddMixedPair() methods. If no second particle collection is
    /// specfied, make pairs within first particle collection.
    ///
-   /// \param type Either the string "real" or "mixed", specifying which method
+   /// \param typeIn Either the string "real" or "mixed", specifying which method
    ///             to call (AddRealPair or AddMixedPair)
-   void makePairs(const char *type, MpdFemtoParticleCollection *, MpdFemtoParticleCollection *p2 = 0);
+   /// \param partCollection1
+   /// \param partCollection2
+   void makePairs(const char *typeIn, MpdFemtoParticleCollection *partCollection1,
+                  MpdFemtoParticleCollection *partCollection2 = 0);
 
    /// Mixing Buffer used for Analyses which wrap this one
    MpdFemtoPicoEventCollectionVectorHideAway *mPicoEventCollectionVectorHideAway; //!

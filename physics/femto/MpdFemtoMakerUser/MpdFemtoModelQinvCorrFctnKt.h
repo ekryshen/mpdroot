@@ -32,15 +32,16 @@ public:
    ///
    /// \param title  Name of the histogram
    /// \param nBins  Number of qInv bins
-   /// \param qLo    Minimum value of the qInv
-   /// \param qHi    Maximum value of the qInv
+   /// \param QinvLo    Minimum value of the qInv
+   /// \param QinvHi    Maximum value of the qInv
    /// \param ktBins Number of kT bins used in the analysis
    /// \param ktLo   Minimum value of kT
    /// \param ktHi   Maximum value of kT
+   /// \param useDenominator
    ///
-   MpdFemtoModelQinvCorrFctnKt(const char *title = "hQinv", const int &nbins = 100, const double &QinvLo = 0.,
-                               const double &QinvHi = 1., const int &ktBins = 10, const double &KtLo = 0.05,
-                               const double &KtHi = 1.05, const bool useDenominator = true);
+   MpdFemtoModelQinvCorrFctnKt(const char *title = "hQinv", const int &nBins = 100, const double &QinvLo = 0.,
+                               const double &QinvHi = 1., const int &ktBins = 10, const double &ktLo = 0.05,
+                               const double &ktHi = 1.05, const bool useDenominator = true);
    /// Copy constructor
    MpdFemtoModelQinvCorrFctnKt(const MpdFemtoModelQinvCorrFctnKt &copy);
    /// Assignment operator

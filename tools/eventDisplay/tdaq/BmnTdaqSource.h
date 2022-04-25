@@ -29,9 +29,11 @@ public:
     *@param partition_name  partition to work in
     *@param sampling_type   sampling address - sampler type
     *@param sampling_names  sampling address - sampler names
-    *@param max_events      maximum event to receive from Event Sampler
-    *@param verbosity       verbosity-level: 0 - print nothing (default), 1 - print event number and event size? 2 -
-    *print event number, event size and event data
+    *@param verbose <table>
+     <tr><td>0</td><td>print nothing (default)</td></tr>
+     <tr><td>1</td><td>print event number and event size?</td></tr>
+     <tr><td>2</td><td>print event number, event size, and event data</td></tr>
+     </table>
     **/
    BmnTdaqSource(TString partition_name, TString sampling_type, TString sampling_names, Int_t verbose = 0);
    BmnTdaqSource(const BmnTdaqSource &source);

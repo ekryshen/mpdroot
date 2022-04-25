@@ -195,9 +195,8 @@ public:
    /// \param[in] start_run start run number for selected run numbers' range
    /// \param[in] end_period end period number for selected run numbers' range
    /// \param[in] end_run end run number for selected run numbers' range
-   /// \param[out] run pairs (period number+run numbers) of the really existing runs for a selected range (from start to
-   /// end)
-   /// \return size of 'run_numbers' array. if size < 0, return value corresponds to error number
+   /// \param[out] run_numbers pairs (period number+run numbers) of the really existing runs for a selected range (from
+   /// start to end) \return size of 'run_numbers' array. if size < 0, return value corresponds to error number
    static int GetRunNumbers(int start_period, int start_run, int end_period, int end_run,
                             UniqueRunNumber *&run_numbers);
    /// get all numbers of existing runs in the Database

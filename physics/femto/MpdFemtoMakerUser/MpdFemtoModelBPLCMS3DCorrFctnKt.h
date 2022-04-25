@@ -38,7 +38,7 @@ public:
    /// \param ktBins Number of kT bins used in the analysis
    /// \param ktLo   Minimum value of kT
    /// \param ktHi   Maximum value of kT
-   ///
+   /// \param isUseDenominator
    MpdFemtoModelBPLCMS3DCorrFctnKt(const char *title = "hBPLCMSCorrFctn", const int &nBins = 80,
                                    const double &qLo = -0.4, const double &qHi = 0.4, const int &ktBins = 10,
                                    const double &ktLo = 0.05, const double &ktHi = 1.05,

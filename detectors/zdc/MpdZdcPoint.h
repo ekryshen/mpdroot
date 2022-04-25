@@ -25,11 +25,13 @@ public:
     *@param detID    Detector ID (at present, volume MC number)
     *@param copyNo         Number of active layer inside ZDC module
     *@param copyNoMother   ZDC module number
+    *@param copyNoZdc
     *@param pos      Coordinates  [cm]
     *@param mom      Momentum of track [GeV]
     *@param tof      Time since event start [ns]
     *@param length   Track length since creation [cm]
     *@param eLoss    Energy deposit [GeV]
+    *@param EventId
     **/
 
    MpdZdcPoint(Int_t trackID, Int_t detID, Int_t copyNo, Int_t copyNoMother, Int_t copyNoZdc,

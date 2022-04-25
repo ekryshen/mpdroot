@@ -291,7 +291,7 @@ Bool_t MpdTof::CheckIfSensitive(string name)
    return kFALSE;
 }
 //------------------------------------------------------------------------------------------------------------------------
-void MpdTof::Print(const TVector3 &v, const char *comment, ostream &os)
+void MpdTof::Print(const TVector3 &v, const char *comment, std::ostream &os)
 {
    if (comment != nullptr) os << comment;
    os << "(" << v.X() << "," << v.Y() << "," << v.Z() << "; " << v.Perp() << "," << v.Mag() << ")";

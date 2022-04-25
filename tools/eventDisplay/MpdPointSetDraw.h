@@ -28,6 +28,8 @@ public:
 
    /** Standard constructor
     *@param name        Name of task
+    *@param color
+    *@param mstyle
     *@param iVerbose    Verbosity level
     **/
    MpdPointSetDraw(const char *name, Color_t color, Style_t mstyle, Int_t iVerbose = 0);

@@ -503,13 +503,15 @@ public:
    /// \param charge_a charge of the first particle
    /// \param p_b momentum of second particle
    /// \param charge_b charge of the second particle
-   /// \param radius_in_meters Radial distance at which the angle should be taken [Meters]
+   /// \param rad_step_in_meters
+   /// \param rad_min_in_meters
+   /// \param rad_max_in_meters
    /// \param magnetic_field_in_tesla Strength and direction of the magnetic field in the detector [Tesla]
    ///
    static double calculateDPhiStarMin(const TVector3 &p_a, const short &charge_a, const TVector3 &p_b,
                                       const short &charge_b, const double &rad_step_in_meters,
                                       const double &rad_min_in_meters, const double &rad_max_in_meters,
-                                      const double &magnetic_field);
+                                      const double &magnetic_field_in_tesla);
 
    /// Calculate the \f$\Delta\phi^{*}\f$ between two particles at each radial step between
    ///
@@ -517,13 +519,15 @@ public:
    /// \param charge_a charge of the first particle
    /// \param p_b momentum of second particle
    /// \param charge_b charge of the second particle
-   /// \param radius_in_meters Radial distance at which the angle should be taken [Meters]
+   /// \param rad_step_in_meters
+   /// \param rad_min_in_meters
+   /// \param rad_max_in_meters
    /// \param magnetic_field_in_tesla Strength and direction of the magnetic field in the detector [Tesla]
    ///
    static std::vector<double> calculateDPhiStarValues(const TVector3 &p_a, const short &charge_a, const TVector3 &p_b,
                                                       const short &charge_b, const double &rad_step_in_meters,
                                                       const double &rad_min_in_meters, const double &rad_max_in_meters,
-                                                      const double &magnetic_field);
+                                                      const double &magnetic_field_in_tesla);
 
    /// Calculate the \f$\Delta\phi^{*}\f$ between two particles.
    /// \param p_a momentum of first particle
@@ -534,7 +538,8 @@ public:
    /// \param magnetic_field_in_tesla Strength and direction of the magnetic field in the detector [Tesla]
    ///
    static double calculateDPhiStar(const TVector3 &p_a, const short &charge_a, const TVector3 &p_b,
-                                   const short &charge_b, const double &radius_in_meters, const double &magnetic_field);
+                                   const short &charge_b, const double &radius_in_meters,
+                                   const double &magnetic_field_in_tesla);
 
    /// Calculate \f$\Delta\phi\f$ between two particles.
    /// \param a Momentum of first particle
@@ -555,7 +560,7 @@ public:
    /// Calculate \f$\Delta\eta\f$ between two particles.
    /// \param a Momentum of first particle
    /// \param b Momentum of second particle
-   /// \param minRad Radial distance at which the eta value should be taken?
+   /// \param radius_in_meters Radial distance at which the eta value should be taken?
    static double calculateDEtaStar(const TVector3 &a, const TVector3 &b, const double &radius_in_meters);
 
 private:

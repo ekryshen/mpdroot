@@ -32,16 +32,16 @@ class MpdFemtoDeltaEtaDeltaPhiStarMinKt : public MpdFemtoBaseCorrFctn {
 public:
    /// Parametrized constructor
    ///
-   /// \param title     Name of the histogram
-   /// \param nBinsEta  Number of eta bins
-   /// \param mEtaLo    Minimum value of eta
-   /// \param mEtaHi    Maximum value of eta
-   /// \param nBinsPhi  Number of eta bins
-   /// \param mPhiLo    Minimum value of eta
-   /// \param mPhiHi    Maximum value of eta
-   /// \param ktBins 	 Number of kT bins used in the analysis
-   /// \param ktLo   	 Minimum value of kT
-   /// \param ktHi   	 Maximum value of kT
+   /// \param title    Name of the histogram
+   /// \param nBinsEta Number of eta bins
+   /// \param etaLo    Minimum value of eta
+   /// \param etaHi    Maximum value of eta
+   /// \param nBinsPhi Number of eta bins
+   /// \param phiLo    Minimum value of eta
+   /// \param phiHi    Maximum value of eta
+   /// \param ktBins   Number of kT bins used in the analysis
+   /// \param ktLo     Minimum value of kT
+   /// \param ktHi     Maximum value of kT
    ///
    MpdFemtoDeltaEtaDeltaPhiStarMinKt(const char *title = "hDeltaEtaDeltaPhiStarMin", const int &nBinsEta = 200,
                                      const double &etaLo = -0.5, const double &etaHi = 0.5, const int &nBinsPhi = 200,

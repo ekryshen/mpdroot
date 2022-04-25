@@ -471,7 +471,7 @@ void MpdTpcClusterFinderMlem::FindHits()
 
 //__________________________________________________________________________
 
-void MpdTpcClusterFinderMlem::PeakAndValley(const MpdTpc2dCluster *clus, multimap<Double_t, Int_t> &localMax)
+void MpdTpcClusterFinderMlem::PeakAndValley(const MpdTpc2dCluster *clus, std::multimap<Double_t, Int_t> &localMax)
 {
    // Apply peak-and-valley cuts to remove some local maxima
 
@@ -938,8 +938,9 @@ void MpdTpcClusterFinderMlem::Mlem(Int_t iclus, multimap<Double_t, Int_t> &local
 
 //__________________________________________________________________________
 
-void MpdTpcClusterFinderMlem::PeakAndValley(const vector<pixel> &pixels, multimap<Double_t, Int_t> &localMax,
-                                            vector<vector<Double_t>> &charges, vector<vector<Int_t>> &flags)
+void MpdTpcClusterFinderMlem::PeakAndValley(const std::vector<pixel> &pixels, std::multimap<Double_t, Int_t> &localMax,
+                                            std::vector<std::vector<Double_t>> &charges,
+                                            std::vector<std::vector<Int_t>>    &flags)
 {
    // Apply peak-and-valley cuts to remove some local maxima in pixel domain
 

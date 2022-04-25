@@ -20,7 +20,7 @@ public:
    MpdFieldMap();
 
    /** Standard constructor
-    ** @param name       Name of field map
+    ** @param mapName    Name of field map
     ** @param fileType   R = ROOT file, A = ASCII
     **/
    MpdFieldMap(const char *mapName, const char *fileType = "R");
@@ -34,12 +34,22 @@ public:
    /** Initialisation (read map from file) **/
    virtual void Init();
 
-   /** Get the field components at a certain point
-    ** @param x,y,z     Point coordinates (global) [cm]
-    ** @value Bx,By,Bz  Field components [kG]
+   /** Get the field component at a certain point
+    ** @param x,y,z  Point coordinates (global) [cm]
+    ** @return Bx    Field component [kG]
     **/
    virtual Double_t GetBx(Double_t x, Double_t y, Double_t z);
+
+   /** Get the field component at a certain point
+    ** @param x,y,z Point coordinates (global) [cm]
+    ** @return By   Field component [kG]
+    **/
    virtual Double_t GetBy(Double_t x, Double_t y, Double_t z);
+
+   /** Get the field component at a certain point
+    ** @param x,y,z Point coordinates (global) [cm]
+    ** @return Bz   Field component [kG]
+    **/
    virtual Double_t GetBz(Double_t x, Double_t y, Double_t z);
 
    virtual void GetFieldValue(const Double_t point[3], Double_t *bField);

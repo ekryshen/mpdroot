@@ -31,9 +31,9 @@ public:
    /// Parametrized constructor
    ///
    /// \param title     Name of the histogram
-   /// \param nBinsEta  Number of Average Separation bins
-   /// \param mEtaLo    Minimum value of Average Separation
-   /// \param mEtaHi    Maximum value of Average Separation
+   /// \param nBinsAvSep  Number of Average Separation bins
+   /// \param AvSep    Minimum value of Average Separation
+   /// \param aVSep    Maximum value of Average Separation
    ///
    MpdFemtoAverageSeparation(const char *title = "hAverageSepartion", const int &nBinsAvSep = 200,
                              const double &AvSep = 0, const double &aVSep = 100);

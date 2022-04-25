@@ -46,7 +46,7 @@ public:
    MpdEmcPointKI &operator+=(const MpdEmcPointKI &rhs);
 
    /// \brief Creates a new MpdEmcPointKI based on this MpdEmcPointKI but adding the energy loss of the right hand side
-   /// \param
+   /// \param rhs
    /// \return New MpdEmcPointKI based on this MpdEmcPointKI
    MpdEmcPointKI operator+(const MpdEmcPointKI &rhs) const;
 

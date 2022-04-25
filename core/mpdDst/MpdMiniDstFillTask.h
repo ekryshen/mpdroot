@@ -65,17 +65,23 @@ public:
    /// Finish
    virtual void Finish();
 
-   /// Fill track covariant matrix
-   /// \param true store covariant matrix (default)
-   /// \param false do not store covariant matrix information
+   /*! Fill track covariant matrix:
+   \param[in] flag <table>
+   <tr><td>true</td><td>store covariant matrix (default)</td></tr>
+   <tr><td>false</td><td>do not store covariant matrix information</td></tr>
+   </table>
+   */
    void isUseCovMatrix(Bool_t flag) { fIsUseCovMatrix = flag; }
 
    /// Fill ECal-related information
    void isUseECal(Bool_t flag) { fIsUseECal = flag; }
 
-   ///  Set how to fill nSigma(e,pi,K,p)
-   /// \par 0 use values from MpdDst (default)
-   /// \par 1 use values from special tables (cheat way)
+   /*! Set how to fill nSigma(e,pi,K,p):
+   \param[in] estimator <table>
+   <tr><td>0</td><td>use values from MpdDst (default)</td></tr>
+   <tr><td>1</td><td>use values from special tables (cheat way)</td></tr>
+   </table>
+   */
    void setNSigmaDedxEstimator(Int_t estimator)
    {
       fNSigmaDedxEstimator = (estimator == 0 || estimator == 1) ? estimator : 0;

@@ -32,6 +32,7 @@ public:
 
    /** Standard constructor
     ** @param fileName The input (PLUTO) file name
+    ** @param ekin
     **/
    MpdPlutoGenerator(const Char_t *fileName, Double_t ekin);
 

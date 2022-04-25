@@ -77,8 +77,8 @@ public:
 
    /// get numbers of runs existing in the Database for a selected period
    /// \param[in] period_number period number for selected run numbers' range
-   /// \param[out] run pairs (period number+run numbers) of the really existing runs for a selected range (from start to
-   /// end) \return size of 'run_numbers' array. if size < 0, return value corresponds to error number
+   /// \param[out] run_numbers pairs (period number+run numbers) of the really existing runs for a selected range (from
+   /// start to end) \return size of 'run_numbers' array. if size < 0, return value corresponds to error number
    static int GetRunNumbers(int period_number, UniqueRunNumber *&run_numbers);
    /// get first run number for a selected period
    /// \param[in] period_number a selected period number to find the minimal run number

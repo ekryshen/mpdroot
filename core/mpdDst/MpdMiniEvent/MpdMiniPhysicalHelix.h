@@ -33,8 +33,8 @@ public:
    ~MpdMiniPhysicalHelix();
 
    /// Return the momentum at origin
-   ///    \param bField magnetic field
-   TVector3 momentum(Double_t) const;
+   /// \param bField magnetic field
+   TVector3 momentum(Double_t bField) const;
    /// Return momemtum at S
    TVector3 momentumAt(Double_t, Double_t) const;
    /// Return charge of a particle

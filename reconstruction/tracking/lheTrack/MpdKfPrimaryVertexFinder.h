@@ -21,12 +21,12 @@ public:
    /// * FairTask methods
 
    /** Intialisation at begin of run. To be implemented in the derived class.
-    *@value  Success   If not kSUCCESS, task will be set inactive.
+    *@return  Success   If not kSUCCESS, task will be set inactive.
     **/
    InitStatus Init();
 
    /** Reinitialisation.
-    *@value  Success   If not kSUCCESS, task will be set inactive.
+    *@return  Success   If not kSUCCESS, task will be set inactive.
     **/
    InitStatus ReInit();
 

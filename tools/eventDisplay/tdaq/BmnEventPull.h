@@ -1,7 +1,7 @@
 ////////////////////////////////////////////
 //    BmnEventPull.h
-//    BM@N Event Pull class declaration
-//    Creates the Pull Sampler for BM@N experimental data (MPD raw format):
+//    BM\@N Event Pull class declaration
+//    Creates the Pull Sampler for BM\@N experimental data (MPD raw format):
 //    read raw dara from file, convert raw data to digits and send it to the event channel
 //    Konstantin Gertsenberger
 //    Created: Apr. 10 2017
@@ -35,9 +35,17 @@ public:
    /** Standard constructor
     *@param partition_name  partition to work in
     *@param sampling_type   sampling address - sampler type
-    *@param sampling_names  sampling address - sampler names
-    *@param verbosity       verbosity-level: 0 - print nothing (default), 1 - print event number and event size? 2 -
-    *print event number, event size and event data
+    *@param sampling_name  sampling address - sampler names
+    *@param raw_data
+    *@param run_period
+    *@param max_event
+    *@param max_channels
+    *@param wait_file_sec
+    *@param verbose <table>
+     <tr><td>0</td><td>print nothing (default)</td></tr>
+     <tr><td>1</td><td>print event number and event size?</td></tr>
+     <tr><td>2</td><td>print event number, event size, and event data</td></tr>
+     </table>
     **/
    BmnEventPull(TString partition_name, TString sampling_type, TString sampling_name, TString raw_data, int run_period,
                 int max_event = 0, int max_channels = 10, int wait_file_sec = 30, Int_t verbose = 0);
@@ -58,7 +66,7 @@ public:
    /** Set verbosity level. For this task and all of the subtasks. **/
    void SetVerbose(Int_t verbose) { iVerbose = verbose; }
 
-   /** RunPullSampler - pull model of BM@N event sampler **/
+   /** RunPullSampler - pull model of BM\@N event sampler **/
    int Exec();
 
 protected:
@@ -69,7 +77,7 @@ protected:
    // sampler name
    TString strSamplingName;
 
-   // directory with BM@N raw data files to be sent to monitor task
+   // directory with BM\@N raw data files to be sent to monitor task
    TString strRawData;
    // run period corresponding raw data files
    Int_t iRunPeriod;

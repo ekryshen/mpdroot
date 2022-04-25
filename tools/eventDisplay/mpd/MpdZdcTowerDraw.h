@@ -17,6 +17,8 @@ public:
 
    /** Standard constructor
     *@param name        Name of task
+    *@param zdcMinEnergyThreshold
+    *@param shadow
     *@param verbose    Verbosity level
     **/
    MpdZdcTowerDraw(const char *name, Double_t zdcMinEnergyThreshold = 0, Bool_t shadow = kFALSE, Int_t verbose = 0);

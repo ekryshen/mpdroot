@@ -46,8 +46,7 @@ public:
 
    /** Reads on event from the input file and pushes the tracks onto
     ** the stack. Abstract method in base class.
-    ** @param pStack    pointer to the stack
-    ** @param ver       not used
+    ** @param primGen
     **/
    Bool_t ReadEvent(FairPrimaryGenerator *primGen);
 

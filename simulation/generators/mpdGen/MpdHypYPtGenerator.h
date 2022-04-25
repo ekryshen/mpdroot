@@ -31,6 +31,7 @@ public:
    /** Constructor with PDG-ID, multiplicity
     **@param pdgid Particle type (PDG encoding)
     **@param mult  Multiplicity (default is 1)
+    **@param yield
     **/
    MpdHypYPtGenerator(Int_t pdgid, Int_t mult = 1, Double_t yield = -1.0);
 

@@ -67,8 +67,7 @@ public:
    MpdXMLNode(TString name = "", TString value = "");
    /**
     * assignement operator
-    * @param node
-    * @return
+    * @param other
     */
    MpdXMLNode &operator=(const MpdXMLNode &other);
    /**

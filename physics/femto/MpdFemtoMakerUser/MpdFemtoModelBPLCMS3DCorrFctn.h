@@ -35,6 +35,7 @@ public:
    /// \param nBins  Number of bins (will be used for out, side anMpd long projections)
    /// \param qLo    Minimum value of the q
    /// \param qHi    Maximum value of the q
+   /// \param isUseDenominator
    MpdFemtoModelBPLCMS3DCorrFctnKt(const char *title = "hBPLCMSCorrFctn", const int &nBins = 80,
                                    const double &qLo = -0.4, const double &qHi = 0.4,
                                    const bool isUseDenominator = true);

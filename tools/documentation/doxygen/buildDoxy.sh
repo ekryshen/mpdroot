@@ -52,4 +52,4 @@ find . -type d -exec bash -O dotglob -c '  # search for directories containing s
     done' bash {} +
 echo "" >> inputDirectories.txt
 doxygen MPDrootDoxy
-# rm inputDirectories.txt
+rm inputDirectories.txt

@@ -27,6 +27,7 @@ public:
    ///
    /// \param title The title with which to give the output
    /// \param nbins The number of bins in each direction of , and q
+   /// \param QHi
    MpdFemtoCorrFctn3DLCMSSym(const char *title, const int nbins, const float QHi);
    /// Copy Constructor
    MpdFemtoCorrFctn3DLCMSSym(const MpdFemtoCorrFctn3DLCMSSym &aCorrFctn);
@@ -59,9 +60,12 @@ public:
    /// Retrieve list of histograms
    virtual TList *getOutputList();
 
-   /// Set which system to use:
-   /// \param true LCMS (default)
-   /// \param false PRF
+   /*! Set which system to use:
+   \param[in] useLCMS <table>
+   <tr><td>true</td><td>LCMS (default)</td></tr>
+   <tr><td>false</td><td>PRF</td></tr>
+   </table>
+   */
    void setUseLCMS(bool useLCMS) { mUseLCMS = useLCMS; }
    /// Retrieve which system is used for calculations
    bool isUseLCMS() { return mUseLCMS; }

@@ -47,14 +47,19 @@ public:
    /// Enumeration of PID
    enum HbtPID { Electron = 1, Pion, Kaon, Proton };
 
-   /// Select track type
-   /// \param false(0) global
-   /// \param true(1) primary
+   /*! Select track type:
+   \param[in] type <table>
+   <tr><td>false (0)</td><td>global</td></tr>
+   <tr><td>true (1)</td><td>primary</td></tr>
+   </table>
+   */
    void selectPrimary(const bool &type) { setType(type); }
-
-   /// Set track type to select
-   /// \param 0 global
-   /// \param 1 primary
+   /*! Set track type to select:
+   \param[in] type <table>
+   <tr><td>false (0)</td><td>global</td></tr>
+   <tr><td>true (1)</td><td>primary</td></tr>
+   </table>
+   */
    void setType(const bool &type) { mType = type; }
    /// Set charge of the track to select
    void setCharge(const short &charge);
@@ -99,12 +104,15 @@ public:
       mDCA[1] = hi;
    }
 
-   /// Set type of detector selection:
-   /// \param 0 TPC
-   /// \param 1 TOF
-   /// \param 2 TPC+TOF
-   /// \param 3 if(TOF){TPC+TOF} else{TPC}
-   /// \param 4 if(TOF&&p>pthresh){TPC+TOF} else if (p<pthresh){TPC}
+   /*! Set type of detector selection:
+   \param[in] selection <table>
+   <tr><td>0</td><td>TPC</td></tr>
+   <tr><td>1</td><td>TOF</td></tr>
+   <tr><td>2</td><td>TPC+TOF</td></tr>
+   <tr><td>3</td><td>if(TOF){TPC+TOF} else{TPC}</td></tr>
+   <tr><td>4</td><td>if(TOF&&p>pthresh){TPC+TOF} else if (p<pthresh){TPC}</td></tr>
+   </table>
+   */
    void setDetectorSelection(const int &selection)
    {
       if (selection < 0 || selection > 4) {
@@ -215,9 +223,13 @@ public:
    }
    /// Set threshold for detector selection =4
    void setPthresh(const float &mom) { mPthresh = mom; }
-   /// Set verbose mode
-   /// \param true print information for each track
-   /// \param false do not print (default)
+
+   /*! Set verbose mode:
+   \param[in] isVerbose <table>
+   <tr><td>true</td><td>print information for each track</td></tr>
+   <tr><td>false</td><td>do not print (default)</td></tr>
+   </table>
+   */
    void setVerboseMode(const bool &isVerbose) { mVerbose = isVerbose; }
 
 protected:
@@ -240,12 +252,15 @@ protected:
    /// Bounds for DCA to primary vertex
    float mDCA[2];
 
-   /// Type of detector selection:
-   /// \param 0 TPC
-   /// \param 1 TOF
-   /// \param 2 TPC+TOF
-   /// \param 3 if(TOF){TPC+TOF} else{TPC}
-   /// \param 4 if(TOF&&p>pthresh){TPC+TOF} else if (p<pthresh){TPC}
+   /*! Type of detector selection:
+   \param[in] selection <table>
+   <tr><td>0</td><td>TPC</td></tr>
+   <tr><td>1</td><td>TOF</td></tr>
+   <tr><td>2</td><td>TPC+TOF</td></tr>
+   <tr><td>3</td><td>if(TOF){TPC+TOF} else{TPC}</td></tr>
+   <tr><td>4</td><td>if(TOF&&p>pthresh){TPC+TOF} else if (p<pthresh){TPC}</td></tr>
+   </table>
+   */
    unsigned char mDetSelection;
 
    // TPC identification
@@ -281,11 +296,14 @@ protected:
    /// Bounds for nsigma dEdx from proton band
    float mTnTNSigmaProton[2];
 
-   /// PID selection
-   /// \param 1 electron
-   /// \param 2 pion
-   /// \param 3 kaon
-   /// \param 4 proton
+   /*! PID selection:
+   \param[in] selection <table>
+   <tr><td>1</td><td>electron</td></tr>
+   <tr><td>2</td><td>pion</td></tr>
+   <tr><td>3</td><td>kaon</td></tr>
+   <tr><td>4</td><td>proton</td></tr>
+   </table>
+   */
    HbtPID mPidSelection;
 
    /// Passed tracks counter

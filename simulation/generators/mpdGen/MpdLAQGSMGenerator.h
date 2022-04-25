@@ -45,6 +45,9 @@ public:
 
    /** Standard constructor.
     ** @param fileName The input file name
+    ** @param use_collider_system
+    ** @param QGSM_format_ID
+    ** @param Max_Event_Number
     **/
    MpdLAQGSMGenerator(const char *fileName, const Bool_t use_collider_system = kTRUE, Int_t QGSM_format_ID = 0,
                       Int_t Max_Event_Number = 0);

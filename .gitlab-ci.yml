@@ -151,4 +151,17 @@ deploy:nicadist:
     - no-cvmfs
   <<: *deploy
 
+pages:
+  image: git.jinr.ru:5005/nica/docs/docs:latest
+  stage: build
+  before_script:
+    - echo "Skipping global before_script"
+  script:
+    - scripts/build_docs.sh
+  artifacts:
+    paths:
+    - "public"
+  only:
+    - dev
+  allow_failure: false
 

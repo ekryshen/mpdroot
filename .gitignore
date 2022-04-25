@@ -35,7 +35,7 @@ SetEnv.sh
 Testing/
 
 # build directory & data directory
-
+public/
 build/
 build*/
 external/

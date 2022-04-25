@@ -16,7 +16,7 @@
 // MpdFemto
 #include "MpdFemtoBasePairCut.h"
 
-//_________________
+//
 class MpdFemtoKtPairCut : public MpdFemtoBasePairCut {
 
 public:
@@ -64,9 +64,9 @@ public:
    /// \par hi High value of angle
    void SetPhiRange(double lo, double hi) { setPhiRange(lo, hi); }
    /// Check if the pair will pass the cut
-   virtual bool pass(const MpdFemotPair *pair);
+   virtual bool pass(const MpdFemtoPair *pair);
    /// Check if the pair will pass the cut
-   virtual bool pass(const MpdFemotPair *pair, double aRPAngle);
+   virtual bool pass(const MpdFemtoPair *pair, double aRPAngle);
 
 protected:
    /// Reduced pair transverse momentum range

@@ -34,7 +34,7 @@ public:
    MpdFieldMapSym3();
 
    /** Standard constructor
-    ** @param name       Name of field map
+    ** @param mapName    Name of field map
     ** @param fileType   R = ROOT file, A = ASCII
     **/
    MpdFieldMapSym3(const char *mapName, const char *fileType = "R");
@@ -45,19 +45,29 @@ public:
    /** Destructor **/
    virtual ~MpdFieldMapSym3();
 
-   /** Get the field components at a certain point
-    ** @param x,y,z     Point coordinates (global) [cm]
-    ** @value Bx,By,Bz  Field components [kG]
+   /** Get the field component at a certain point
+    ** @param x,y,z Point coordinates (global) [cm]
+    ** @return Bx   Field component [kG]
     **/
    virtual Double_t GetBx(Double_t x, Double_t y, Double_t z);
+
+   /** Get the field component at a certain point
+    ** @param x,y,z Point coordinates (global) [cm]
+    ** @return By   Field component [kG]
+    **/
    virtual Double_t GetBy(Double_t x, Double_t y, Double_t z);
+
+   /** Get the field component at a certain point
+    ** @param x,y,z Point coordinates (global) [cm]
+    ** @return Bz   Field components [kG]
+    **/
    virtual Double_t GetBz(Double_t x, Double_t y, Double_t z);
 
    /** Determine whether a point is inside the field map
-    ** @param x,y,z              Point coordinates (global) [cm]
-    ** @param ix,iy,iz (return)  Grid cell
-    ** @param dx,dy,dz (return)  Distance from grid point [cm] if inside
-    ** @value kTRUE if inside map, else kFALSE
+    ** @param[in] x,y,z     Point coordinates (global) [cm]
+    ** @param[out] ix,iy,iz Grid cell
+    ** @param[out] dx,dy,dz Distance from grid point [cm] if inside
+    ** @return kTRUE if inside map, else kFALSE
     **/
    virtual Bool_t IsInside(Double_t x, Double_t y, Double_t z, Int_t &ix, Int_t &iy, Int_t &iz, Double_t &dx,
                            Double_t &dy, Double_t &dz);

@@ -19,8 +19,9 @@ public:
    /** Constructor with arguments
     *@param trackID  Index of MCTrack
     *@param detID    Detector ID
-    *@param pos      Ccoordinates at entrance to active volume [cm]
-    *@param mom      Momentum of track at entrance [GeV]
+    *@param posIn      Ccoordinates at entrance to active volume [cm]
+    *@param momIn      Momentum of track at entrance [GeV]
+    *@param posOut
     *@param tof      Time since event start [ns]
     *@param length   Track length since creation [cm]
     *@param eLoss    Energy deposit [GeV]

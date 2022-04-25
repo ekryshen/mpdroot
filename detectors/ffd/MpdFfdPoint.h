@@ -22,11 +22,6 @@ public:
    /**
     *@param tid  	Index of MCTrack
     *@param duid    	Detector ID
-    *@param pos      	Coordinates at entrance to active volume [cm]
-    *@param mom      	Momentum of track at entrance [GeV]
-    *@param tof      	Time since event start [ns]
-    *@param length   	Track length since creation [cm]
-    *@param eLoss    	Energy deposit [GeV]
     **/
    MpdFfdPoint(Int_t tid, Int_t duid);
    MpdFfdPoint();

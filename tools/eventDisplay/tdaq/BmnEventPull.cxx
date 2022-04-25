@@ -1,7 +1,7 @@
 ////////////////////////////////////////////
-//    BmnEventPull.h
-//    BM@N Event Pull class implementation
-//    Creates the Pull Sampler for BM@N experimental data (MPD raw format):
+//    BmnEventPull.cxx
+//    BM\@N Event Pull class implementation
+//    Creates the Pull Sampler for BM\@N experimental data (MPD raw format):
 //    read raw dara from file, convert raw data to digits and send it to the event channel
 //    Konstantin Gertsenberger
 //    Created: Apr. 10 2017
@@ -33,7 +33,7 @@ void          signal_handler_sampler(int sig)
    }
 }
 
-/*! BM@N PullSampling class
+/*! BM\@N PullSampling class
  * Apart from the constructor, you will have to override the method sampleEvent.
  * The startSampling method of the PullSamplingFactory shall return instances of this class. For every
  * emon::EventChannel one instance of this class will be created.*/
@@ -51,10 +51,6 @@ private:
 
 public:
    //! Constructor of the BmnPullSampling.
-   /*! This method usually initializes hardware of the data flow system for event sampling
-    * \param sc the selection criteria sampled events shall match
-    * \param event BM@N event to push to the event channel
-    * \param size size of the BM@N event */
    BmnPullSampling(const SelectionCriteria &, string raw_data, int run_period, int wait_file_sec)
    {
       rawDataDecoder = NULL;
@@ -116,7 +112,7 @@ public:
       rawDataDecoder = new BmnRawDataDecoder(directory_name + current_file, 0, iRunPeriod);
       cout << "Raw file " << directory_name + current_file << " is used now." << endl;
       // set mapping for decoder
-      Bool_t setup[11]; // array of flags to determine BM@N setup
+      Bool_t setup[11]; // array of flags to determine BM\@N setup
       // Just put "0" to exclude detector from decoding
       setup[0]  = 1; // TRIGGERS
       setup[1]  = 1; // MWPC
@@ -166,7 +162,7 @@ public:
    }
 
    //! Implementation of the sampling process.
-   /*! This method just pushes one BM@N event to the Monitoring Tasks. When pushEvent of EventChannel
+   /*! This method just pushes one BM\@N event to the Monitoring Tasks. When pushEvent of EventChannel
     * has finished, it is guaranteed, that the event buffer passed to EventChannel may be freed. */
    void sampleEvent(EventChannel &cc)
    {
@@ -269,10 +265,6 @@ private:
 
 public:
    //! Constructor of BmnPullSamplingFactory
-   /*! This constructor simply allocates some memory for a new BM@N event or uses
-    * the event passed in the constructor
-    * \param event the BM@N event that shall be pushed to the EventChannel
-    * \param size size of the BM@N event */
    BmnPullSamplingFactory(string raw_data, int run_period, int wait_file_sec)
       : strRawData(raw_data), iRunPeriod(run_period), iWaitFileSec(wait_file_sec)
    {
