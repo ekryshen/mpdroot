@@ -6,12 +6,12 @@
 
 # Default (project) owner
 #----------------------------------------------------------------------------------
-/                              @roleg 
+/                                        @roleg 
 
 
 # System
 #----------------------------------------------------------------------------------
-/scripts/                      @roleg @hnatics 
+/scripts/                                @hnatics 
 
 
 # Detectors
@@ -40,15 +40,26 @@
 
 # Reconstruction
 #----------------------------------------------------------------------------------
-/reconstruction/tracking/kalman/                       @zinchenk
+/reconstruction/tracking/kalman/         @zinchenk
 
-/core/mpdPid/                       @zinchenk @amudrokh
+/core/mpdPid/                            @zinchenk @amudrokh
 
 
 # Analysis
 #----------------------------------------------------------------------------------
-/core/mpdDst/MpdMiniEvent/          @gnigmat
+/core/mpdDst/MpdMiniEvent/               @gnigmat
 
 
-# QA
+# Database
 #----------------------------------------------------------------------------------
+/tools/database/                         @busa
+
+
+# Documentation
+#----------------------------------------------------------------------------------
+/tools/documentation/                    @busa
+
+
+# Testing
+#----------------------------------------------------------------------------------
+
