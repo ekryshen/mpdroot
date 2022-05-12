@@ -18,6 +18,7 @@
 #----------------------------------------------------------------------------------
 # TPC
 /detectors/tpc/                          @zinchenk  @abychkov
+/detectors/tpc/clusterHitFinder/         @hnatics
 
 # FFD
 /detectors/ffd/                          @nlashmanov
