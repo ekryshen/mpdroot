@@ -56,6 +56,7 @@ set(SRCS
   TpcPoint.cxx
   TpcTimeBin.cxx
   clusterHitFinder/AbstractTpcClusterHitFinder.cxx
+  clusterHitFinder/TpcClusterHitFinderMlem.cxx
 )
 
 Set(HEADERS)

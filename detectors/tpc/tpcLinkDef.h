@@ -38,4 +38,5 @@
 #pragma link C++ class MpdTpcClusterFinderMlem+;
 #pragma link C++ class MpdTpcEDepParams+;
 #pragma link C++ class AbstractTpcClusterHitFinder+;
+#pragma link C++ class TpcClusterHitFinderMlem+;
 #endif
