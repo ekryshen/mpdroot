@@ -3,15 +3,15 @@
 // $Id$
 //
 // Description:
-//      TpcClusterFinderMlem reads in TPC digits and reconstructs clusters and hits
-//
+//      TpcClusterHitFinderMlem reads in TPC digits and reconstructs clusters and hits
+//      This is a port of MpdTpcClusterFinderMlem to AbstractClusterHitInterface
 //
 // Environment:
 //      Software developed for the MPD Detector at NICA.
 //
 // Author List:
 //      Alexandr Zinchenko LHEP, JINR, Dubna - 11-January-2016
-//
+//      Interface port: Slavomir Hnatic, MLIT Dubna - May 2022
 //-----------------------------------------------------------
 
 #ifndef TPCCLUSTERHITFINDERMLEM_HH
@@ -51,15 +51,9 @@ public:
    // Accessors -----------------------
 
    // Modifiers -----------------------
-   void SetPersistence(Bool_t opt = kTRUE) { fPersistence = opt; }
+   void SetPersistence(Bool_t opt = kTRUE) { persistence = opt; }
 
    // Operations ----------------------
-
-   virtual InitStatus Init();
-   void               FinishTask();
-
-   virtual void Exec(Option_t *opt);
-   // virtual void Clear(Option_t* opt);
 
    struct pixel {
       Double_t qq;
@@ -72,20 +66,16 @@ public:
 private:
    // Private Data Members ------------
    static const Int_t fgkNsec2 = 24;                   // number of readout sectors (12 * 2)
+   static const Int_t fgkNrows = 53;                   // number of rows
    static const Int_t fgkNpads = 128, fgkNtimes = 512; // max number of pads and time bins
    // AZ static const Int_t fgkOvfw = 4095; // overflow value
    static const Int_t fgkOvfw = 1023; // overflow value - 10 bits
 
-   TClonesArray *fDigiArray;
-   TClonesArray *fClusArray;
-   TClonesArray *fHitArray;
    // TClonesArray** fPrimArray;
    std::set<Int_t> *fDigiSet[fgkNsec2];
    Double_t         fCharges[fgkNpads][fgkNtimes];
    Int_t            fFlags[fgkNpads][fgkNtimes];
    Int_t            fDigis[fgkNpads][fgkNtimes];
-   Bool_t           fPersistence;
-   MpdTpcSectorGeo *fSecGeo;
    Double_t         fVertexZ; // !!! vertex Z-position estimate (at present it is taken from true value) !!!
 
    // Private Methods -----------------

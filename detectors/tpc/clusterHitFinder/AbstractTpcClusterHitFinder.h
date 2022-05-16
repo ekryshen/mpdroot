@@ -19,7 +19,10 @@
 #include "FairRootManager.h"
 #include "FairTask.h"
 
-// ROOT Class Declarations --
+// MpdRoot Class Headers -----------------
+#include "MpdTpcSectorGeo.h"
+
+// ROOT Class Declarations ---------------
 class TClonesArray;
 
 class AbstractTpcClusterHitFinder : public FairTask {
@@ -30,10 +33,9 @@ public:
    virtual ~AbstractTpcClusterHitFinder();
 
    // FairRun methods left virtual for development purposes
-   // it is suggested to developer to not override them and to adapt to existing implementation
+   // specific implementation of this interface should not implement them
    virtual InitStatus Init();
    virtual void       Exec(Option_t *opt);
-   virtual void       FinishTask(); 
 
    // Methods to be implemented by specific algorithm
    virtual void TransformInputData() = 0;
@@ -42,6 +44,7 @@ public:
 
 protected:
    FairRootManager *ioman;
+   MpdTpcSectorGeo *secGeo;
 
    // there is no complex class hierarchy when deriving from AbstractClusterHitFinder class
    // no getters/setters are implemented, to avoid boilerplate code
@@ -52,10 +55,12 @@ protected:
 
    // Geometry parameters
    // do not modify them in your implementation (const correctness not implemented)
-   Int_t  nSectors;  // number of sectors
-   Int_t  nRows;     // number of rows
-   Int_t *nPads;     // number of pads in a row
-   Int_t  nTimeBins; // maximum number of time bins
+   Int_t        nSectors;  // number of sectors
+   Int_t        nRows;     // number of rows
+   const Int_t *nPads;     // number of pads in a row
+   Int_t        nTimeBins; // maximum number of time bins
+
+   Bool_t persistence;
 
 private:
    // disable default constructor
@@ -64,8 +69,6 @@ private:
    InitStatus ReadGeometryParameters();  // read geometry parameters
    InitStatus ReadInputRegisterOutput(); // read input digiArray, register outputs clusArray & hitArray
    void       ClearClustersHits();       // clears clusArray, hitArray
-
-   Bool_t persistence;
 
    ClassDef(AbstractTpcClusterHitFinder, 1);
 };

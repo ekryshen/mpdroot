@@ -12,10 +12,10 @@
 
 #include "AbstractTpcClusterHitFinder.h"
 
-#include "MpdTpcSectorGeo.h"
-
 // ROOT Headers --------
 #include "TClonesArray.h"
+
+#include <iostream>
 
 //__________________________________________________________________________
 
@@ -50,24 +50,20 @@ void AbstractTpcClusterHitFinder::Exec(Option_t *opt)
 
 //__________________________________________________________________________
 
-void AbstractTpcClusterHitFinder::FinishTask() {} 
-
-//__________________________________________________________________________
-
 InitStatus AbstractTpcClusterHitFinder::ReadGeometryParameters()
 {
    // get MpdTpc sector geometry
-   MpdTpcSectorGeo *fSecGeo = MpdTpcSectorGeo::Instance();
-   if (!fSecGeo) {
+   secGeo = MpdTpcSectorGeo::Instance();
+   if (!secGeo) {
       Error("AbstractTpcClusterHitFinder::readGeometryParameters", "MpdTpcSectorGeo not instantiated!");
       return kERROR;
    }
 
-   nSectors  = fSecGeo->NofSectors() * 2;
-   nRows     = fSecGeo->NofRows();
-   nTimeBins = fSecGeo->GetNTimeBins();
-   for (int i = 0; i < nRows; ++i) nPads[i] = fSecGeo->NPadsInRows()[i];
-   
+   nSectors  = secGeo->NofSectors() * 2;
+   nRows     = secGeo->NofRows();
+   nTimeBins = secGeo->GetNTimeBins();
+   nPads     = secGeo->NPadsInRows();
+
    return kSUCCESS;
 }
 
@@ -89,6 +85,14 @@ InitStatus AbstractTpcClusterHitFinder::ReadInputRegisterOutput()
       return kERROR;
    }
 
+   // Get event header (for vertex Z-position)
+   /////////////////////////////////////////////////////////////////////////
+   // This is needed ONLY for AZ's MLEM algorithm,                        //
+   // placed here to be able to get rid of Init() in his implementation   //
+   // should be moved away from interface to his implementation of it     //
+   ioman->GetObject("MCEventHeader");
+   /////////////////////////////////////////////////////////////////////////
+
    // Create and register output arrays
    clusArray = new TClonesArray("MpdTpc2dCluster");
    ioman->Register("TpcCluster", "Tpc", clusArray, persistence);
@@ -107,4 +111,3 @@ void AbstractTpcClusterHitFinder::ClearClustersHits()
 }
 
 //__________________________________________________________________________
-
