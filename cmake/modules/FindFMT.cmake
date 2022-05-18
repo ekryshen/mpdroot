@@ -10,10 +10,10 @@
 
 # only look in default directories
 find_path(
-	FMT_INCLUDE_DIR
-	NAMES fmt/core.h
-	DOC "FMT include dir"
-	HINTS ${FMT_ROOT}/include
+  FMT_INCLUDE_DIR
+  NAMES fmt/core.h
+  DOC "FMT include dir"
+  HINTS ${FMT_ROOT}/include
 )
 
 if (NOT FMT_INCLUDE_DIR)
