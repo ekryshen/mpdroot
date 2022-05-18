@@ -42,15 +42,19 @@ find_package(Boost REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(Geant3 REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(VMC)
+find_package(VMC QUIET)
 
 #set(BASE_INCLUDE_DIRECTORIES ${BASE_INCLUDE_DIRECTORIES} ${SIMPATH}/include/root ${SIMPATH}/include/vmc)
 #list(APPEND BASE_INCLUDE_DIR ${ROOT_INCLUDE_DIR} ${FAIRROOT_INCLUDE_DIR} ${FairLogger_INCDIR} "${FMT_ROOT}/include")
 list(APPEND BASE_INCLUDE_DIR ${ROOT_INCLUDE_DIR} ${FAIRROOT_INCLUDE_DIR} ${FairLogger_INCDIR} ${FMT_INCLUDE_DIRS}
                              ${PYTHIA8_INCLUDE_DIR} ${Boost_INCLUDE_DIRS}
                              ${LIBXML2_INCLUDE_DIRS} ${Geant3_INCLUDE_DIRS} ${Eigen3_INCLUDE_DIRS}
-                             ${VMC_INCLUDE_DIRS}
                              )
+
+if(VMC_FOUND)
+  list(APPEND BASE_INCLUDE_DIR ${VMC_INCLUDE_DIRS})
+endif()
+
 list(APPEND BASE_LIBRARY_DIR ${ROOT_LIB_DIR} ${FAIRROOT_LIB_DIR} ${FairLogger_LIBDIR} ${LIBXML2_LIBRARIES})
 
 # START this is for compatibility with legacy, remove later
