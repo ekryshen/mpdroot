@@ -54,7 +54,6 @@ set(SRCS
   TpcGeo.cxx
   TpcGeoPar.cxx
   TpcPoint.cxx
-  TpcTimeBin.cxx
   clusterHitFinder/AbstractTpcClusterHitFinder.cxx
   clusterHitFinder/TpcClusterHitFinderMlem.cxx
 )

@@ -3,7 +3,6 @@
 /// Hit in MPD TPC
 /// \author Alexander Zinchenko (LHEP, JINR, Dubna) - extension of TpcHit
 
-//#include "TpcCommon.h"
 #include "MpdTpcHit.h"
 #include "MpdKalmanHit.h"
 #include "MpdTpc2dCluster.h"
