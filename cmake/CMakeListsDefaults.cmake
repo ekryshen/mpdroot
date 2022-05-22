@@ -95,6 +95,12 @@ else() # I have found all dependencies, no text to the screen
   set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:${LIBXML2_ROOT}/lib/pkgconfig")
 endif()
 
+if ("${VMC_ROOT}" STREQUAL "") # if VMC_ROOT was not set, copy it from ENV if possible
+  if (NOT "$ENV{VMC_ROOT}" STREQUAL "")
+    set(VMC_ROOT $ENV{VMC_ROOT})
+  endif()
+endif()
+
 if (CMAKE_INSTALL_PREFIX STREQUAL CMAKE_SOURCE_DIR) # user wants to install MPDROOT into sources directory
   message(FATAL_ERROR "${BoldRed}\n$MPDROOT may not point to the source directory.${ColourReset}\n${BoldYellow}In-source install is not allowed.${ColourReset}\n")
 endif()
