@@ -26,7 +26,7 @@ list(APPEND CMAKE_MODULE_PATH "$ENV{FAIRROOT_ROOT}/share/fairbase/cmake/modules"
 set(FairRoot_DIR ${FAIRROOT_ROOT}) # needed by ROOTMacros.cmake
 
 include(FairMacros) # needed by find_package(ROOT)
-find_package(ROOT 0.0.0 REQUIRED) # 0.0.0 - minimal requested version of ROOT - bug in FindRoot.cmake by FairRoot
+find_package(ROOTMpd 0.0.0 REQUIRED) # 0.0.0 - minimal requested version of ROOT - bug in FindRoot.cmake by FairRoot
 # ensure that ROOT has FFTW3 support
 Execute_Process(COMMAND ${ROOT_CONFIG_EXECUTABLE} --has-fftw3 OUTPUT_VARIABLE ROOT_HAS_FFTW3)
 String(STRIP ${ROOT_HAS_FFTW3} ROOT_HAS_FFTW3)

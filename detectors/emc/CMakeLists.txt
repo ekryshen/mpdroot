@@ -8,7 +8,7 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_LIST_DIR}/emcClustering
   ${CMAKE_CURRENT_LIST_DIR}/emcClustering/clustering
   ${CMAKE_CURRENT_LIST_DIR}/emcKI
-  ${CMAKE_CURRENT_LIST_DIR}/hitmaker
+  ${CMAKE_CURRENT_LIST_DIR}/hitMaker
   ${CMAKE_SOURCE_DIR}/core/mpdBase
   ${CMAKE_SOURCE_DIR}/detectors/tpc
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
@@ -71,10 +71,10 @@ set(SRCS
   emcKI/MpdEmcSimParams.cxx
   emcKI/MpdEmcTrackExtrap.cxx
 
-  hitmaker/MpdEmcGeoParWrapper.cxx
-  hitmaker/MpdEmcHitA.cxx
-  hitmaker/MpdEmcHitCont.cxx
-  hitmaker/MpdEmcHitProducerA.cxx
+  hitMaker/MpdEmcGeoParWrapper.cxx
+  hitMaker/MpdEmcHitA.cxx
+  hitMaker/MpdEmcHitCont.cxx
+  hitMaker/MpdEmcHitProducerA.cxx
 )
 
 Set(HEADERS)
