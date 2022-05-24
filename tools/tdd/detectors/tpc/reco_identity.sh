@@ -70,7 +70,7 @@ function generate_reference() {
 }
 
 function filter() {
- sed '1,/\[INFO\] FairRunAna/d' $TMPFILE | sed '/\[WARN\] FairRunAna/,$d' | sed '/User CPU time/d'
+ sed '1,/\[INFO\] FairRunAna/d' $TMPFILE | sed '/Digitizer work time/,$d' | sed '/User CPU time/d'
 }
 
 function file_cleanup() {

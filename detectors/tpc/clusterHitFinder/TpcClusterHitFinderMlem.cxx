@@ -1077,29 +1077,31 @@ void TpcClusterHitFinderMlem::GetResponse(const MpdTpc2dCluster *clus, TH2D *hXY
       // sigp = hOvfw->GetRMS(2);
    }
 }
-/*
+
 //__________________________________________________________________________
 
-Double_t MpdTpcClusterFinderMlem::GetCij(Double_t x0, Double_t y0, Double_t x1, Double_t y1,
-                Double_t sigt, Double_t sigp, Double_t correl)
+/* Double_t TpcClusterHitFinderMlem::GetCij(Double_t x0, Double_t y0, Double_t x1, Double_t y1, Double_t sigt,
+                                         Double_t sigp, Double_t correl)
 {
-  // Compute couplings - Gauss parameter Sigma_t as a function of the dip angle
+   // Compute couplings - Gauss parameter Sigma_t as a function of the dip angle
 
-  Double_t dx = x1 - x0;
-  Double_t dy = y1 - y0;
-  dx /= sigt;
-  dy /= sigp;
-  Double_t cij = 0;
+   Double_t dx = x1 - x0;
+   Double_t dy = y1 - y0;
+   dx /= sigt;
+   dy /= sigp;
+   Double_t cij = 0;
 
-  if (TMath::Abs(correl) < 0.001) cij = TMath::Exp(-dx*dx/2 - dy*dy/2) / sigt / sigp / TMath::TwoPi();
-  else {
-    Double_t corr2 = 1 - correl * correl;
-    cij = TMath::Exp((-dx*dx/2 + correl*dx*dy - dy*dy/2)/corr2) / sigt / sigp / TMath::TwoPi() / TMath::Sqrt(corr2);
-  }
-  cout << x1-x0 << " " << y1-y0 << " " << cij << endl;
-  return cij;
-}
-*/
+   if (TMath::Abs(correl) < 0.001)
+      cij = TMath::Exp(-dx * dx / 2 - dy * dy / 2) / sigt / sigp / TMath::TwoPi();
+   else {
+      Double_t corr2 = 1 - correl * correl;
+      cij = TMath::Exp((-dx * dx / 2 + correl * dx * dy - dy * dy / 2) / corr2) / sigt / sigp / TMath::TwoPi() /
+            TMath::Sqrt(corr2);
+   }
+   // cout << x1-x0 << " " << y1-y0 << " " << cij << endl;
+   return cij;
+} */
+
 //*
 //__________________________________________________________________________
 
@@ -1114,12 +1116,15 @@ Double_t TpcClusterHitFinderMlem::GetCij(Int_t irow, Double_t x0, Double_t y0, D
    Int_t                                   ixpix = x0 * 1000, iypix = y0 * 1000, ixc = 0, iyc = 0;
    Int_t                                   ixbin = Int_t(x1), iybin = Int_t(y1);
 
+   Double_t cij;
+
    if (ixpix != ixpix0 || iypix != iypix0) {
       cijCache.clear();
       ixpix0 = ixpix;
       iypix0 = iypix;
-      ixc    = Int_t(x0);
-      iyc    = Int_t(y0);
+
+      ixc = Int_t(x0);
+      iyc = Int_t(y0);
 
       Int_t nxy = 2;
       vis       = 0.0;
@@ -1131,28 +1136,32 @@ Double_t TpcClusterHitFinderMlem::GetCij(Int_t irow, Double_t x0, Double_t y0, D
 
          for (Int_t j = -nxy; j <= nxy; ++j) {
             Int_t ip = iyc + j;
-            // if (ip-2 == 0 || ip-2 == 2*secGeo->NPadsInRows()[irow] - 1) continue; // edge
-            if (ip - 2 < 0 || ip - 2 > 2 * secGeo->NPadsInRows()[irow] - 1) {
-               Int_t ivirt = 0;
+            // if (ip-2 == 0 || ip-2 == 2*nPads[irow] - 1) continue; // edge
+            if (ip - 2 < 0 || ip - 2 > 2 * nPads[irow] - 1) {
                // Edge - check for virtual pad (AZ-041121)
-               if ((ip == 1 || ip == 2 * secGeo->NPadsInRows()[irow] + 2) && fFlags[ip][it] != 0) ivirt = 1;
-               if (!ivirt) continue; // outside of the edges
+               if (fFlags[ip][it] == 0 || (ip != 1 && ip != 2 * nPads[irow] + 2)) continue;
             }
             // cout << " ok " << i << " " << j << " " << it << " " << ip << endl;
             Double_t dy = ip - y0 + 0.5;
             dx /= sigt;
             dy /= sigp;
-            map<Int_t, Double_t> aaa;
-            if (cijCache.count(it) == 0) cijCache[it] = aaa;
 
+            cij = 0;
             if (TMath::Abs(correl) < 0.001)
-               cijCache[it][ip] = TMath::Exp(-dx * dx / 2 - dy * dy / 2) / sigt / sigp / TMath::TwoPi();
+               cij = TMath::Exp(-dx * dx / 2 - dy * dy / 2) / sigt / sigp / TMath::TwoPi();
             else {
-               Double_t corr2   = 1 - correl * correl;
-               cijCache[it][ip] = TMath::Exp((-dx * dx / 2 + correl * dx * dy - dy * dy / 2) / corr2) / sigt / sigp /
-                                  TMath::TwoPi() / TMath::Sqrt(corr2);
+               Double_t corr2 = 1 - correl * correl;
+               cij            = TMath::Exp((-dx * dx / 2 + correl * dx * dy - dy * dy / 2) / corr2) / sigt / sigp /
+                     TMath::TwoPi() / TMath::Sqrt(corr2);
             }
-            vis += cijCache[it][ip];
+
+            if (cijCache.count(it) == 0) {
+               map<Int_t, Double_t> aaa;
+               cijCache[it] = aaa;
+            }
+
+            cijCache[it][ip] = cij;
+            vis += cij;
             // cout << it - x0 + 0.5 << " " << ip - y0 + 0.5 << " " << cijCache[it][ip] << " " << it << " " << ip <<
             // endl;
          }
