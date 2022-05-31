@@ -1,28 +1,43 @@
-// $Id: basiclibs.C,v 1.1.1.1 2005/06/23 07:14:09 dbertini Exp $
+//------------------------------------------------
+// The Virtual Monte Carlo examples
+// Copyright (C) 2007 - 2014 Ivana Hrivnacova
+// All rights reserved.
 //
-// Macro for loading basic libraries used with both Geant3 and Geant4
+// For the licensing terms see geant4_vmc/LICENSE.
+// Contact: root-vmc@cern.ch
+//-------------------------------------------------
+
+/// \file basiclibs.C
+/// \brief Macro for loading basic libraries used with all MCs
+
+#if !defined(__CINT__) || defined(__MAKECINT__)
+
+#include <TSystem.h>
+
+#endif
+
+Bool_t isLibrary(const char* libName)
+{
+/// Helper function which testes the existence of the given library
+/// \param libName  The library name
+
+  if (TString(gSystem->DynamicPathName(libName, kTRUE)) != TString(""))
+    return kTRUE;
+  else
+    return kFALSE;
+}
 
 void basiclibs()
 {
+/// Macro function for loading basic libraries used with all MCs
+
   gSystem->Load("libRIO");
   gSystem->Load("libGeom");
-  gSystem->Load("libGeomPainter");
-  gSystem->Load("libVMC");
-  gSystem->Load("libEG");
-  gSystem->Load("libEGPythia6");
-  gSystem->Load("libPythia6");
-  gSystem->Load("libpythia6");
   gSystem->Load("libPhysics");
-  gSystem->Load("libNet");  
-  gSystem->Load("libTree"); 
-  gSystem->Load("libMinuit");
-  gSystem->Load("libMathMore");
+  gSystem->Load("libTree");
 
-  gSystem->Load("libProof");
-  gSystem->Load("libProofPlayer");
-  gSystem->Load("libGX11TTF");
-  gSystem->Load("libGX11");
-  gSystem->Load("libboost_regex");
-
-  gSystem->Load("libGdml");
-}  
+  if ( isLibrary("libVMC") ) {
+    // VMC library in ROOT (optional)
+    gSystem->Load("libVMC");
+  }
+}

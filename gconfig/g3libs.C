@@ -1,31 +1,61 @@
-/********************************************************************************
- *    Copyright (C) 2014 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    *
- *                                                                              *
- *              This software is distributed under the terms of the             *
- *         GNU Lesser General Public Licence version 3 (LGPL) version 3,        *
- *                  copied verbatim in the file "LICENSE"                       *
- ********************************************************************************/
+//------------------------------------------------
+// The Virtual Monte Carlo examples
+// Copyright (C) 2007 - 2014 Ivana Hrivnacova
+// All rights reserved.
+//
+// For the licensing terms see geant4_vmc/LICENSE.
+// Contact: root-vmc@cern.ch
+//-------------------------------------------------
+
+/// \file g3libs.C
+/// \brief Macro for loading Geant3 libraries
+
+#if !defined(__CINT__) || defined(__MAKECINT__)
+
 #include <iostream>
 
+#include <TSystem.h>
+#include <TString.h>
+
+#endif
+
+namespace g3libUtilities {
 Bool_t isLibrary(const char *libName)
 {
-  return gSystem->DynamicPathName(libName, kTRUE) != nullptr;
+   /// Helper function which testes the existence of the given library
+   /// \param libName  The library name
+
+   if (TString(gSystem->DynamicPathName(libName, kTRUE)) != TString(""))
+      return kTRUE;
+   else
+      return kFALSE;
 }
+} // namespace g3libUtilities
 
 void g3libs()
 {
-   cout << "Loading Geant3 libraries ..." << endl;
+   /// Macro function for loading Geant3 libraries
 
-   if (isLibrary("libdummies.so")) gSystem->Load("libdummies.so");
-   // libdummies.so needed from geant3_+vmc version 0.5
+   // Load libraries required by Geant3
+   gSystem->Load("libEG");
+   gSystem->Load("libEGPythia6");
 
-   if (isLibrary("libpythia6.so"))
+   if (g3libUtilities::isLibrary("libpythia6.so"))
       gSystem->Load("libpythia6.so");
-   else if (isLibrary("libPythia6.so")) // Old FairSoft
+   else if (g3libUtilities::isLibrary("libPythia6.so")) // Old FairSoft
       gSystem->Load("libPythia6.so");
 
-   gSystem->Load("libEGPythia6.so");
-   gSystem->Load("libgeant321.so");
+   // VMC library (optional)
+   if (g3libUtilities::isLibrary("libVMCLibrary")) {
+      cout << "Loading VMC library ..." << endl;
+      gSystem->Load("libVMCLibrary");
+   }
+
+   if (g3libUtilities::isLibrary("libdummies")) gSystem->Load("libdummies");
+   // libdummies.so needed from geant3_+vmc version 0.5
+
+   // Load  geant3 library
+   gSystem->Load("libgeant321");
 
    cout << "Loading Geant3 libraries ... finished" << endl;
 }
