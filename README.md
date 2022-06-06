@@ -18,6 +18,3 @@ and
 2. <a href="http://mpdroot.jinr.ru/running-mpdroot-on-local-machine-using-cvmfs/" target="_blank">Locally using CVMFS</a> (recommended)
 
 3. <a href="http://mpdroot.jinr.ru/running-mpdroot-locally-using-alibuild/" target="_blank">Locally using aliBuild</a> (full local build)
-
-4. <a href="http://mpdroot.jinr.ru/how-to-install-mpdroot-legacy-method/" target="_blank">Legacy installation method</a> (obsolete)  
-   Explanation of legacy procedure in steps [here](https://git.jinr.ru/nica/mpdroot/-/wikis/Manual-Installation-of-Fair-Suite-and-MPDroot)
