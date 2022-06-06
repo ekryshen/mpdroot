@@ -592,7 +592,7 @@ void MpdZdc::ConstructGeometry()
 
    TString fileName = GetGeometryFileName();
    if (fileName.EndsWith(".root")) {
-      LOG(INFO) << "Constructing ZDC geometry from ROOT file " << fileName.Data();
+      LOG(info) << "Constructing ZDC geometry from ROOT file " << fileName.Data();
       ConstructRootGeometry();
    }
    /*

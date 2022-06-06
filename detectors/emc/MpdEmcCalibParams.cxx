@@ -11,19 +11,19 @@ bool MpdEmcCalibParams::SetGain(TH2 *h)
 {
    const int MAXX = 300, MAXZ = 128;
    if (!h) {
-      LOG(ERROR) << "no input histogam";
+      LOG(error) << "no input histogam";
       return false;
    }
 
    if (h->GetNbinsX() != MAXX || h->GetNbinsY() != MAXZ) {
-      LOG(ERROR) << "Wrong dimentions of input histogram:" << h->GetNbinsX() << "," << h->GetNbinsY() << " instead of "
+      LOG(error) << "Wrong dimentions of input histogram:" << h->GetNbinsX() << "," << h->GetNbinsY() << " instead of "
                  << MAXX << "," << MAXZ;
       return false;
    }
 
    auto geo = MpdEmcGeoUtils::GetInstance();
    if (!geo) {
-      LOG(ERROR) << "Geometry needs to be initialized";
+      LOG(error) << "Geometry needs to be initialized";
       return false;
    }
 
@@ -39,19 +39,19 @@ bool MpdEmcCalibParams::SetTimeCalib(TH2 *h)
 {
    const int MAXX = 300, MAXZ = 128;
    if (!h) {
-      LOG(ERROR) << "no input histogam";
+      LOG(error) << "no input histogam";
       return false;
    }
 
    if (h->GetNbinsX() != MAXX || h->GetNbinsY() != MAXZ) {
-      LOG(ERROR) << "Wrong dimentions of input histogram:" << h->GetNbinsX() << "," << h->GetNbinsY() << " instead of "
+      LOG(error) << "Wrong dimentions of input histogram:" << h->GetNbinsX() << "," << h->GetNbinsY() << " instead of "
                  << MAXX << "," << MAXZ;
       return false;
    }
 
    auto geo = MpdEmcGeoUtils::GetInstance();
    if (!geo) {
-      LOG(ERROR) << "Geometry needs to be initialized";
+      LOG(error) << "Geometry needs to be initialized";
       return false;
    }
 

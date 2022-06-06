@@ -74,7 +74,7 @@ InitStatus MpdEtofMatching::Init()
    if (aMcPoints && aMcTracks) fUseMCData = true;
 
    if (!aTofHits || !aKFectTracks) {
-      LOG(FATAL) << "[MpdEtofMatching::Init] Branch not found!";
+      LOG(fatal) << "[MpdEtofMatching::Init] Branch not found!";
       return kERROR;
    }
 
@@ -90,7 +90,7 @@ InitStatus MpdEtofMatching::Init()
    //	MpdEtofGeoUtils::Instance()->FindNeighborStrips(0.8, nullptr, nullptr, false);// 0.8 [cm] <--- thresh. distance
    // between neighbor strips,  (see h1TestDistance histo)
 
-   LOG(INFO) << "MpdEtofMatching initialization finished succesfully.";
+   LOG(info) << "MpdEtofMatching initialization finished succesfully.";
 
    return kSUCCESS;
 }

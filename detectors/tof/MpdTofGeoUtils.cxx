@@ -67,7 +67,7 @@ void MpdTofGeoUtils::FindNeighborStrips(Double_t thresh, MpdTofHitProducerQA *pQ
 
    found = true;
 
-   LOG(DEBUG1) << "[MpdTofGeoUtils::FindNeighborStrips] Neighbor strips: left = " << NL << ", right = " << NR << ".";
+   LOG(debug1) << "[MpdTofGeoUtils::FindNeighborStrips] Neighbor strips: left = " << NL << ", right = " << NR << ".";
 }
 //------------------------------------------------------------------------------------------------------------------------
 void MpdTofGeoUtils::ParseTGeoManager(MpdTofHitProducerQA *pQA, bool forced, const char *flnm)
@@ -267,7 +267,7 @@ void MpdTofGeoUtils::ParseTGeoManager(MpdTofHitProducerQA *pQA, bool forced, con
 
    delete[] local;
 
-   LOG(DEBUG1) << "[MpdTof::ParseTGeoManager] Sectors=" << nSectors << ", detectors=" << nDetectors
+   LOG(debug1) << "[MpdTof::ParseTGeoManager] Sectors=" << nSectors << ", detectors=" << nDetectors
                << ", strips=" << nStrips << ".";
 }
 //------------------------------------------------------------------------------------------------------------------------

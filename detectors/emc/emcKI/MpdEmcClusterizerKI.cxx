@@ -32,7 +32,7 @@ InitStatus MpdEmcClusterizerKI::Init()
    FairRootManager *ioman = FairRootManager::Instance();
 
    if (ioman == 0) {
-      LOG(ERROR) << "RootManager not instantiated!";
+      LOG(error) << "RootManager not instantiated!";
       return kERROR;
    }
 
@@ -51,7 +51,7 @@ InitStatus MpdEmcClusterizerKI::Init()
    fDigitsArray = (TClonesArray *)ioman->GetObject("EmcDigit");
 
    if (fDigitsArray == 0) {
-      LOG(ERROR) << "Array of digits not found!";
+      LOG(error) << "Array of digits not found!";
       return kERROR;
    }
 
@@ -116,7 +116,7 @@ void MpdEmcClusterizerKI::PrepareDigits()
    // Alredy sorted by construction, but ROOT requires this to allow search
    fDigitsArray->Sort();
 
-   LOG(INFO) << "Digits used for clusters:" << fDigitsArray->GetEntriesFast() << endl;
+   LOG(info) << "Digits used for clusters:" << fDigitsArray->GetEntriesFast() << endl;
 }
 //__________________________________________________________________________
 void MpdEmcClusterizerKI::MakeClusters()
@@ -345,7 +345,7 @@ void MpdEmcClusterizerKI::UnfoldOneCluster(MpdEmcClusterKI *iniClu, Int_t nMax, 
       MpdEmcDigitKI testdigit(detID, 0, 0, 0);                       // test digit
       int           jdigit = fDigitsArray->BinarySearch(&testdigit); // Look for digit with same detID
       if (jdigit == -1) {
-         LOG(ERROR) << "MpdEmcClusterizerKI::UnfoldOneCluster: Can not find Digit with detID=" << detID;
+         LOG(error) << "MpdEmcClusterizerKI::UnfoldOneCluster: Can not find Digit with detID=" << detID;
          continue;
       }
       MpdEmcDigitKI *digit = static_cast<MpdEmcDigitKI *>(fDigitsArray->At(jdigit));
@@ -361,7 +361,7 @@ void MpdEmcClusterizerKI::EvalClusters()
 {
    // Calculate cluster properties
    int n = fClustersArray->GetEntriesFast();
-   LOG(DEBUG) << "EvalCluProperties: nclu=" << n;
+   LOG(debug) << "EvalCluProperties: nclu=" << n;
 
    for (int i = 0; i < n; i++) {
       MpdEmcClusterKI *clu = static_cast<MpdEmcClusterKI *>(fClustersArray->UncheckedAt(i));

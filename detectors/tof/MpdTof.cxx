@@ -232,13 +232,13 @@ void MpdTof::ConstructGeometry()
 {
    TString fileName = GetGeometryFileName();
    if (fileName.EndsWith(".root")) {
-      LOG(INFO) << "Constructing TOF geometry from ROOT file " << fileName.Data();
+      LOG(info) << "Constructing TOF geometry from ROOT file " << fileName.Data();
       ConstructRootGeometry();
    } else if (fileName.EndsWith(".geo")) {
-      LOG(INFO) << "Constructing TOF geometry from ASCII file " << fileName.Data();
+      LOG(info) << "Constructing TOF geometry from ASCII file " << fileName.Data();
       ConstructAsciiGeometry();
    } else
-      LOG(FATAL) << "Geometry format of TOF file " << fileName.Data() << " not supported.";
+      LOG(fatal) << "Geometry format of TOF file " << fileName.Data() << " not supported.";
 }
 //------------------------------------------------------------------------------------------------------------------------
 void MpdTof::ConstructAsciiGeometry()

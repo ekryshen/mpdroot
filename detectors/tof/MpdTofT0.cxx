@@ -131,7 +131,7 @@ InitStatus MpdTofT0::Init()
       assert(fEventHeader);
    }
 
-   LOG(INFO) << "[MpdTofT0::Init] Initialization finished succesfully.";
+   LOG(info) << "[MpdTofT0::Init] Initialization finished succesfully.";
 
    return kSUCCESS;
 }
@@ -244,7 +244,7 @@ void MpdTofT0::Exec(Option_t *option)
       }
    }
 
-   LOG(INFO) << "[MpdTofT0::Exec] matching nmb= " << fResult->nMatchings << ", T event= " << fResult->Tevent
+   LOG(info) << "[MpdTofT0::Exec] matching nmb= " << fResult->nMatchings << ", T event= " << fResult->Tevent
              << ", weight= " << fResult->Chi2;
 }
 //------------------------------------------------------------------------------------------------------------------------
@@ -317,7 +317,7 @@ MpdTofT0Data MpdTofT0::Estimate(T_matchMini *data, size_t size)
 void MpdTofT0::Finish()
 {
    if (fDoTest) {
-      LOG(DEBUG2) << "[MpdTofT0::Finish] Update  " << fFlnm.Data() << " file. ";
+      LOG(debug2) << "[MpdTofT0::Finish] Update  " << fFlnm.Data() << " file. ";
       auto  ptr = gFile;
       TFile file(fFlnm.Data(), "RECREATE");
       fList.Write();

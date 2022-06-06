@@ -99,7 +99,7 @@ InitStatus MpdFfdHitProducer::Init()
    aFfdHits = new TClonesArray("MpdFfdHit");
    FairRootManager::Instance()->Register("FfdHit", "Ffd", aFfdHits, kTRUE);
 
-   LOG(INFO) << "[MpdFfdHitProducer::Init] Initialization finished succesfully.";
+   LOG(info) << "[MpdFfdHitProducer::Init] Initialization finished succesfully.";
 
    return kSUCCESS;
 }
@@ -306,7 +306,7 @@ void MpdFfdHitProducer::Exec(Option_t *opt)
       assert(false);
    }
 
-   LOG(DEBUG1) << "[MpdFfdHitProducer::Exec] FFD hits = " << aFfdHits->GetEntriesFast();
+   LOG(debug1) << "[MpdFfdHitProducer::Exec] FFD hits = " << aFfdHits->GetEntriesFast();
 }
 //------------------------------------------------------------------------------------------------------------------------
 void MpdFfdHitProducer::AddEntry(double time, size_t suid, const MpdFfdPoint *ptr, size_t index)
@@ -387,7 +387,7 @@ TVector3 MpdFfdHitProducer::GetPadCenter(Int_t suid) // [1,161]
 void MpdFfdHitProducer::Finish()
 {
    if (fFlnm.Length() > 0) {
-      LOG(DEBUG2) << "[MpdFfdHitProducer::Finish] Update  " << fFlnm.Data() << " file. ";
+      LOG(debug2) << "[MpdFfdHitProducer::Finish] Update  " << fFlnm.Data() << " file. ";
       auto  ptr = gFile;
       TFile file(fFlnm.Data(), "RECREATE");
       fList.Write();

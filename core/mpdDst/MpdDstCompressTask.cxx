@@ -21,7 +21,7 @@ InitStatus MpdDstCompressTask::CheckBranches()
    if (fUseMC) {
       fMCTracks = (TClonesArray *)mngr->GetObject("MCTrack");
       if (fMCTracks == nullptr) {
-         LOG(WARNING) << "MC tracks requested but not found!";
+         LOG(warning) << "MC tracks requested but not found!";
          fUseMC = kFALSE;
       } else {
          mngr->Register("MCTrack", "MC", fMCTracks, kTRUE);
@@ -30,7 +30,7 @@ InitStatus MpdDstCompressTask::CheckBranches()
    if (fUseFreezouts) {
       fFreezouts = (TClonesArray *)mngr->GetObject("Freezouts.");
       if (fFreezouts == nullptr) {
-         LOG(WARNING) << "Freeouts tracks requested but not found!";
+         LOG(warning) << "Freeouts tracks requested but not found!";
          fUseFreezouts = kFALSE;
       } else {
          mngr->Register("Freezouts.", "Freezouts", fFreezouts, kTRUE);
@@ -39,7 +39,7 @@ InitStatus MpdDstCompressTask::CheckBranches()
    if (fUseTpcKalmans) {
       fTpcKalmans = (TClonesArray *)mngr->GetObject("TpcKalmanTrack");
       if (fTpcKalmans == nullptr) {
-         LOG(WARNING) << "Kalman TPC tracks requested but not found!";
+         LOG(warning) << "Kalman TPC tracks requested but not found!";
          fUseTpcKalmans = kFALSE;
       } else {
          mngr->Register("TpcKalmanTrack", "TPC", fTpcKalmans, kTRUE);
@@ -48,7 +48,7 @@ InitStatus MpdDstCompressTask::CheckBranches()
    if (fUseTpcHits) {
       fTpcHits = (TClonesArray *)mngr->GetObject("TpcHit");
       if (fTpcHits == nullptr) {
-         LOG(WARNING) << "TPC hits requested but not found!";
+         LOG(warning) << "TPC hits requested but not found!";
          fUseTpcHits = kFALSE;
       } else {
          mngr->Register("TpcHi.", "TPC", fTpcHits, kTRUE);
@@ -73,7 +73,7 @@ InitStatus MpdDstCompressTask::CheckBranches()
 InitStatus MpdDstCompressTask::Init()
 {
    if (CheckBranches() == kFATAL) {
-      LOG(FATAL) << "End of macro MPDEvent not found";
+      LOG(fatal) << "End of macro MPDEvent not found";
       return kFATAL;
    }
    fMCMapSize  = 1000;

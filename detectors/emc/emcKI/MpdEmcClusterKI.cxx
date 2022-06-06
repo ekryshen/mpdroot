@@ -330,7 +330,7 @@ int MpdEmcClusterKI::GetNumberOfLocalMax(int *maxAt, float *maxAtEnergy) const
          maxAtEnergy[iDigitN] = fDigitIDEnergy[i].second;
          iDigitN++;
          if (iDigitN >= simParams->NLMMax()) { // Note that size of output arrays is limited:
-            LOG(ERROR) << "Too many local maxima, cluster multiplicity " << n;
+            LOG(error) << "Too many local maxima, cluster multiplicity " << n;
             return 0;
          }
       }

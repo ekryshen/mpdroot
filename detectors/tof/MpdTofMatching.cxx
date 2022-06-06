@@ -443,7 +443,7 @@ MpdTofMatching::~MpdTofMatching()
 //------------------------------------------------------------------------------------------------------------------------
 InitStatus MpdTofMatching::Init()
 {
-   LOG(DEBUG2) << "[MpdTofMatching::Init] Begin initialization.";
+   LOG(debug2) << "[MpdTofMatching::Init] Begin initialization.";
 
    aMcPoints    = (TClonesArray *)FairRootManager::Instance()->GetObject("TOFPoint");
    aMcTracks    = (TClonesArray *)FairRootManager::Instance()->GetObject("MCTrack");
@@ -453,7 +453,7 @@ InitStatus MpdTofMatching::Init()
    if (aMcPoints && aMcTracks) fIsMcRun = true;
 
    if (!aTofHits || !aTPCkfTracks) {
-      LOG(ERROR) << "Branch not found! (TOFHit or TpcKalmanTrack)";
+      LOG(error) << "Branch not found! (TOFHit or TpcKalmanTrack)";
       return kERROR;
    }
 
@@ -467,7 +467,7 @@ InitStatus MpdTofMatching::Init()
    MpdTofGeoUtils::Instance()->FindNeighborStrips(
       0.8, nullptr, false); // 0.8 [cm] <--- thresh. distance between neighbor strips,  (see h1TestDistance histo)
 
-   LOG(DEBUG) << "[MpdTofMatching::Init] Initialization finished succesfully.";
+   LOG(debug) << "[MpdTofMatching::Init] Initialization finished succesfully.";
    return kSUCCESS;
 }
 //------------------------------------------------------------------------------------------------------------------------
@@ -497,7 +497,7 @@ void MpdTofMatching::Exec(Option_t *option)
    Int_t nTofHits  = aTofHits->GetEntriesFast();
    Int_t nKFTracks = aTPCkfTracks->GetEntries();
 
-   LOG(DEBUG2) << "[MpdTofMatching::Exec] points= " << nTofPoints << ", hits= " << nTofHits
+   LOG(debug2) << "[MpdTofMatching::Exec] points= " << nTofPoints << ", hits= " << nTofHits
                << ", mc tracks= " << nMCTracks << ", kf tracks= " << nKFTracks;
    // ---------------------------------------------------------------------------------------->>> Select (! propagated
    // to Etof) & sort by Pt  the KfTpcTracks

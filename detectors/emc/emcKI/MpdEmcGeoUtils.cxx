@@ -218,7 +218,7 @@ void MpdEmcGeoUtils::DetIdToGlobalPosition(int detId, double &x, double &y, doub
 {
    // calculates senter of front surfase of tower with index detId
    if (!gGeoManager) {
-      LOG(ERROR) << "Can not run without constructed geometry";
+      LOG(error) << "Can not run without constructed geometry";
       x = y = z = 0;
       return;
    }
@@ -262,7 +262,7 @@ void MpdEmcGeoUtils::DetIdToGlobalPosition(int detId, double &x, double &y, doub
       y = global[1];
       z = global[2];
    } else {
-      LOG(ERROR) << "Can not find volume " << path;
+      LOG(error) << "Can not find volume " << path;
       x = y = z = 0;
    }
 }

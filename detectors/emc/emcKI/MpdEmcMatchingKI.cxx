@@ -47,7 +47,7 @@ InitStatus MpdEmcMatchingKI::Init()
    // Get RootManager
    FairRootManager *ioman = FairRootManager::Instance();
    if (!ioman) {
-      LOG(ERROR) << "MpdEmcMatchingKI::Init: "
+      LOG(error) << "MpdEmcMatchingKI::Init: "
                  << "RootManager not instantiated!" << endl;
       return kFATAL;
    }
@@ -55,21 +55,21 @@ InitStatus MpdEmcMatchingKI::Init()
    // Get input array
    fClusterArray = (TObjArray *)ioman->GetObject("EmcCluster");
    if (!fClusterArray) {
-      LOG(ERROR) << "MpdEmcMatchingKI::Init: "
+      LOG(error) << "MpdEmcMatchingKI::Init: "
                  << "No EMC clusters array!" << endl;
       return kERROR;
    }
 
    fTpcTracks = (TClonesArray *)ioman->GetObject("TpcKalmanTrack");
    if (!fTpcTracks) {
-      LOG(ERROR) << "MpdEmcMatchingKI::Init: "
+      LOG(error) << "MpdEmcMatchingKI::Init: "
                  << "No TPC track array!" << endl;
       return kERROR;
    }
 
    fvtx = (TClonesArray *)ioman->GetObject("Vertex");
    if (!fvtx) {
-      LOG(INFO) << "Vertex not found, assume (0,0,0)" << endl;
+      LOG(info) << "Vertex not found, assume (0,0,0)" << endl;
    }
 
    double          rMax;
@@ -96,7 +96,7 @@ void MpdEmcMatchingKI::Exec(Option_t *opt)
    Int_t nClu = fClusterArray->GetEntriesFast();
    Int_t ntpc = fTpcTracks->GetEntriesFast();
 
-   LOG(INFO) << "MpdEmcMatchingKI::Exec started: number of clusters " << nClu << ", number of tracks " << ntpc << endl;
+   LOG(info) << "MpdEmcMatchingKI::Exec started: number of clusters " << nClu << ", number of tracks " << ntpc << endl;
 
    if (ntpc == 0 || nClu == 0) {
       return;

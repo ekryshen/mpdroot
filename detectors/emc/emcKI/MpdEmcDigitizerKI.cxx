@@ -44,19 +44,19 @@ MpdEmcDigitizerKI::~MpdEmcDigitizerKI() {}
 
 InitStatus MpdEmcDigitizerKI::Init()
 {
-   LOG(INFO) << "******************* EMC INIT *********************" << endl;
+   LOG(info) << "******************* EMC INIT *********************" << endl;
 
    // Get RootManager
    FairRootManager *ioman = FairRootManager::Instance();
    if (!ioman) {
-      LOG(FATAL) << "RootManager not instantiated!" << endl;
+      LOG(fatal) << "RootManager not instantiated!" << endl;
       return kFATAL;
    }
 
    // Get input array
    fPointArray = (TClonesArray *)ioman->GetObject("EmcPoint");
    if (!fPointArray) {
-      LOG(ERROR) << "No EmcPoint array!" << endl;
+      LOG(error) << "No EmcPoint array!" << endl;
 
       return kERROR;
    }
@@ -67,7 +67,7 @@ InitStatus MpdEmcDigitizerKI::Init()
       "MpdEmcDigitKI", 100); // TODO: Check, can digits with different length of primary list be in TClonesArray???
    ioman->Register("EmcDigit", "EMC", fDigitsArray, kTRUE);
 
-   LOG(INFO) << "Intialization successfull" << endl;
+   LOG(info) << "Intialization successfull" << endl;
 
    return kSUCCESS;
 }
@@ -76,7 +76,7 @@ InitStatus MpdEmcDigitizerKI::Init()
 
 void MpdEmcDigitizerKI::Finish()
 {
-   LOG(INFO) << "Finish" << endl;
+   LOG(info) << "Finish" << endl;
 }
 
 //__________________________________________________________________________
@@ -88,7 +88,7 @@ void MpdEmcDigitizerKI::Exec(Option_t *opt)
    // Add non-linearity, digitization of energy
    // Remove digits in bad map and below threshold
 
-   LOG(INFO) << " Event No. " << FairRun::Instance()->GetEventHeader()->GetMCEntryNumber();
+   LOG(info) << " Event No. " << FairRun::Instance()->GetEventHeader()->GetMCEntryNumber();
 
    // Reset output Array
    if (!fDigitsArray) Fatal("MpdEmcDigitizerKI::Exec", "No array of digits");
@@ -96,12 +96,12 @@ void MpdEmcDigitizerKI::Exec(Option_t *opt)
    // Reset output Array
 
    if (!fDigitsArray) {
-      LOG(FATAL) << "No array of digits";
+      LOG(fatal) << "No array of digits";
    }
    fDigitsArray->Clear();
    fNDigits = 0;
 
-   LOG(INFO) << "ECAL: number of points in the event: " << fPointArray->GetEntriesFast();
+   LOG(info) << "ECAL: number of points in the event: " << fPointArray->GetEntriesFast();
 
    // Class with list of parameters
    if (!fSimParams) {
@@ -180,8 +180,8 @@ void MpdEmcDigitizerKI::Exec(Option_t *opt)
       }
    }
 
-   LOG(INFO) << "Emc points done:" << fDigitsArray->GetEntriesFast();
-   LOG(INFO) << system("date");
+   LOG(info) << "Emc points done:" << fDigitsArray->GetEntriesFast();
+   LOG(info) << system("date");
 }
 
 //_______________________________________________________________________

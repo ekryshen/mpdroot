@@ -73,7 +73,7 @@ InitStatus MpdEtofHitProducer::Init()
    MpdEtofGeoUtils::Instance()->FindNeighborStrips(0.8,   // 0.8 [cm] <--- thresh. distance between neighbor strips
                                                    true); // forced
 
-   LOG(INFO) << "MpdTofHitProducer initialization finished succesfully.";
+   LOG(info) << "MpdTofHitProducer initialization finished succesfully.";
 
    return kSUCCESS;
 }

@@ -37,18 +37,18 @@ MpdMCTracks::~MpdMCTracks() {}
 // -------------------------------------------------------------------------
 InitStatus MpdMCTracks::Init()
 {
-   LOG(DEBUG) << "MpdMCTracks::Init()";
+   LOG(debug) << "MpdMCTracks::Init()";
 
    FairRootManager *fManager = FairRootManager::Instance();
    fEventManager             = MpdEventManager::Instance();
-   LOG(DEBUG1) << "MpdMCTracks::Init() get instance of MpdEventManager ";
+   LOG(debug1) << "MpdMCTracks::Init() get instance of MpdEventManager ";
 
    fTrackList = (TClonesArray *)fManager->GetObject("GeoTracks");
    if (fTrackList == 0) {
-      LOG(ERROR) << "MpdMCTracks::Init() branch " << GetName() << " not found! Task will be deactivated";
+      LOG(error) << "MpdMCTracks::Init() branch " << GetName() << " not found! Task will be deactivated";
       SetActive(kFALSE);
    }
-   LOG(DEBUG1) << "MpdMCTracks::Init() get track list " << fTrackList;
+   LOG(debug1) << "MpdMCTracks::Init() get track list " << fTrackList;
 
    MinEnergyLimit = fEventManager->GetEvtMinEnergy();
    MaxEnergyLimit = fEventManager->GetEvtMaxEnergy();
@@ -64,25 +64,25 @@ InitStatus MpdMCTracks::Init()
 void MpdMCTracks::Exec(Option_t * /*option*/)
 {
    if (!IsActive()) return;
-   LOG(DEBUG1) << "MpdMCTracks::Exec";
+   LOG(debug1) << "MpdMCTracks::Exec";
 
    Reset();
 
    TGeoTrack      *tr;
    const Double_t *point;
    for (Int_t i = 0; i < fTrackList->GetEntriesFast(); i++) {
-      LOG(DEBUG3) << "MpdMCTracks::Exec " << i;
+      LOG(debug3) << "MpdMCTracks::Exec " << i;
       tr = (TGeoTrack *)fTrackList->At(i);
 
       TParticle *P   = (TParticle *)tr->GetParticle();
       PEnergy        = P->Energy();
       MinEnergyLimit = TMath::Min(PEnergy, MinEnergyLimit);
       MaxEnergyLimit = TMath::Max(PEnergy, MaxEnergyLimit);
-      LOG(DEBUG3) << "MinEnergyLimit " << MinEnergyLimit << " MaxEnergyLimit " << MaxEnergyLimit;
+      LOG(debug3) << "MinEnergyLimit " << MinEnergyLimit << " MaxEnergyLimit " << MaxEnergyLimit;
 
       if ((fEventManager->IsPriOnly() && (P->GetMother(0) > -1))) continue;
       if ((fEventManager->GetCurrentPDG() != 0) && (fEventManager->GetCurrentPDG() != tr->GetPDG())) continue;
-      LOG(DEBUG3) << "PEnergy " << PEnergy << " Min " << fEventManager->GetMinEnergy() << " Max "
+      LOG(debug3) << "PEnergy " << PEnergy << " Min " << fEventManager->GetMinEnergy() << " Max "
                   << fEventManager->GetMaxEnergy();
       if ((PEnergy < fEventManager->GetMinEnergy()) || (PEnergy > fEventManager->GetMaxEnergy())) continue;
 
@@ -106,13 +106,13 @@ void MpdMCTracks::Exec(Option_t * /*option*/)
          }
 
          track->AddPathMark(*path);
-         LOG(DEBUG4) << "Path marker added " << path;
+         LOG(debug4) << "Path marker added " << path;
 
          delete path;
       }
 
       fTrList->AddElement(track);
-      LOG(DEBUG3) << "Track added " << track->GetName();
+      LOG(debug3) << "Track added " << track->GetName();
    }
 
    // for (Int_t i = 0; i < fEveTrList->GetEntriesFast(); i++)

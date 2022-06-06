@@ -49,7 +49,7 @@ InitStatus MpdItsToTpcMatching::Init()
    // return ReInit();
    if (ReInit() != kSUCCESS) return kERROR;
    FairRuntimeDb *rtdb = FairRun::Instance()->GetRuntimeDb();
-   LOG(INFO) << __func__ << (rtdb);
+   LOG(info) << __func__ << (rtdb);
    // FillGeoScheme(); // TODO
 
    return kSUCCESS;

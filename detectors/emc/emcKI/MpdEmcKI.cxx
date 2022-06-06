@@ -180,7 +180,7 @@ Bool_t MpdEmcKI::ProcessHits(FairVolume *vol)
              "/cave_1/emcChamber_%d/emcChH_%d/emcSector_%d/emcCrate_%d/emcModule%d_0/emc_box%d_%d/emc_cl_%c%c%d_%d",
              &chamberH, &chamber, &sector, &crate, &module, &boxA, &boxB, &dummyC1, &dummyC2, &dummyA, &dummyB);
    if (nRead != 11) {
-      LOG(FATAL) << "Can not parse Geant path:" << gMC->CurrentVolPath() << " nRead = " << nRead << endl;
+      LOG(fatal) << "Can not parse Geant path:" << gMC->CurrentVolPath() << " nRead = " << nRead << endl;
       return false;
    }
 
@@ -298,13 +298,13 @@ void MpdEmcKI::ConstructGeometry()
    TString fileName = GetGeometryFileName();
 
    if (fileName.EndsWith(".root")) {
-      LOG(INFO) << "Constructing EMC geometry from ROOT file " << fileName.Data();
+      LOG(info) << "Constructing EMC geometry from ROOT file " << fileName.Data();
       ConstructRootGeometry();
    } else if (fileName.EndsWith(".geo")) {
-      LOG(INFO) << "Constructing EMC geometry from ASCII file " << fileName.Data();
+      LOG(info) << "Constructing EMC geometry from ASCII file " << fileName.Data();
       ConstructAsciiGeometry();
    } else {
-      LOG(FATAL) << "Geometry format of EMC file " << fileName.Data() << " not supported.";
+      LOG(fatal) << "Geometry format of EMC file " << fileName.Data() << " not supported.";
    }
    // Extract inner and outer radii of ECAL from current geometry
 // TODO!!!!!!!!!

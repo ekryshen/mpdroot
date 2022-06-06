@@ -440,7 +440,7 @@ InitStatus MpdTofBayesPid::Init()
       assert(aMcTracks);
    }
 
-   LOG(INFO) << "[MpdTofBayesPid::Init] Initialization finished succesfully.";
+   LOG(info) << "[MpdTofBayesPid::Init] Initialization finished succesfully.";
 
    return kSUCCESS;
 }
@@ -517,7 +517,7 @@ void MpdTofBayesPid::Exec(Option_t *option)
 void MpdTofBayesPid::Finish()
 {
    auto WriteTList = [](const TString &flnm, const TList &list) {
-      LOG(DEBUG2) << "[MpdTofBayesPid::Finish] Update  " << flnm.Data() << " file. ";
+      LOG(debug2) << "[MpdTofBayesPid::Finish] Update  " << flnm.Data() << " file. ";
       auto  ptr = gFile;
       TFile file(flnm.Data(), "RECREATE");
       list.Write();

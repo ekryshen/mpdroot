@@ -59,7 +59,7 @@ InitStatus MpdTofHitProducerIdeal::Init()
    aTofHits = new TClonesArray("MpdTofHit");
    FairRootManager::Instance()->Register("TOFHit", "Tof", aTofHits, kTRUE);
 
-   LOG(INFO) << "[MpdTofHitProducerIdeal::Init] Initialization finished succesfully.";
+   LOG(info) << "[MpdTofHitProducerIdeal::Init] Initialization finished succesfully.";
 
    return kSUCCESS;
 }
@@ -99,7 +99,7 @@ void MpdTofHitProducerIdeal::Exec(Option_t *opt)
    } else
       nFinally = aTofHits->GetEntriesFast();
 
-   LOG(DEBUG1) << "[MpdTofHitProducerIdeal::Exec] single hits= " << nSingleHits << ", final hits= " << nFinally;
+   LOG(debug1) << "[MpdTofHitProducerIdeal::Exec] single hits= " << nSingleHits << ", final hits= " << nFinally;
 }
 //------------------------------------------------------------------------------------------------------------------------
 void MpdTofHitProducerIdeal::Finish()

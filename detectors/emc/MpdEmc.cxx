@@ -176,13 +176,13 @@ void MpdEmc::ConstructGeometry()
 
    TString fileName = GetGeometryFileName();
    if (fileName.EndsWith(".root")) {
-      LOG(INFO) << "Constructing EMC geometry from ROOT file " << fileName.Data();
+      LOG(info) << "Constructing EMC geometry from ROOT file " << fileName.Data();
       ConstructRootGeometry();
    } else if (fileName.EndsWith(".geo")) {
-      LOG(INFO) << "Constructing EMC geometry from ASCII file " << fileName.Data();
+      LOG(info) << "Constructing EMC geometry from ASCII file " << fileName.Data();
       ConstructAsciiGeometry();
    } else {
-      LOG(FATAL) << "Geometry format of EMC file " << fileName.Data() << " not supported.";
+      LOG(fatal) << "Geometry format of EMC file " << fileName.Data() << " not supported.";
    }
 }
 

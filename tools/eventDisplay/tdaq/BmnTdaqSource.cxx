@@ -89,7 +89,7 @@ Bool_t BmnTdaqSource::Init()
    {
        TBranch* pBranch = (TBranch*) fBranchList->At(i);
        TString ObjName = pBranch->GetName();
-       LOG(DEBUG)<<"Branch name "<<ObjName.Data();
+       LOG(debug)<<"Branch name "<<ObjName.Data();
 
        fCheckInputBranches[chainName]->push_back(ObjName.Data());
        FairRootManager::Instance()->AddBranchToList(ObjName.Data());

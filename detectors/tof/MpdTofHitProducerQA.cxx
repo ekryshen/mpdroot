@@ -96,7 +96,7 @@ MpdTofHitProducerQA::MpdTofHitProducerQA(const char *flnm, bool isEndcap) : fFln
 //------------------------------------------------------------------------------------------------------------------------
 void MpdTofHitProducerQA::Finish()
 {
-   LOG(DEBUG2) << "[MpdTofHitProducerQA::Finish] Update  " << fFlnm.Data() << " file. ";
+   LOG(debug2) << "[MpdTofHitProducerQA::Finish] Update  " << fFlnm.Data() << " file. ";
    auto  ptr = gFile;
    TFile file(fFlnm.Data(), "RECREATE");
    fList.Write();

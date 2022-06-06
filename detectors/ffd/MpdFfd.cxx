@@ -226,19 +226,19 @@ void MpdFfd::ConstructGeometry()
    TString fileName = GetGeometryFileName();
 
    if (fileName.EndsWith(".root")) {
-      LOG(INFO) << "Constructing FFD geometry from ROOT file " << fileName.Data() << endl;
+      LOG(info) << "Constructing FFD geometry from ROOT file " << fileName.Data() << endl;
       ConstructRootGeometry();
    } else if (fileName.EndsWith(".geo")) {
-      LOG(INFO) << "Constructing FFD geometry from ASCII file " << fileName.Data() << endl;
+      LOG(info) << "Constructing FFD geometry from ASCII file " << fileName.Data() << endl;
       ConstructAsciiGeometry();
    }
    /*else if ( fileName.EndsWith(".gdml") )
    {
-           LOG(INFO) << "Constructing CPC geometry from GDML file " <<
+           LOG(info) << "Constructing CPC geometry from GDML file " <<
    fileName.Data() << endl; ConstructGDMLGeometry();
    }*/
    else {
-      LOG(FATAL) << "Geometry format of FFD file " << fileName.Data() << " not supported." << endl;
+      LOG(fatal) << "Geometry format of FFD file " << fileName.Data() << " not supported." << endl;
    }
 }
 //------------------------------------------------------------------------------------------------------------------------

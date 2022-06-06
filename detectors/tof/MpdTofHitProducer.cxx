@@ -57,7 +57,7 @@ InitStatus MpdTofHitProducer::Init()
    MpdTofGeoUtils::Instance()->FindNeighborStrips(0.8, pQA, // 0.8 [cm] <--- thresh. distance between neighbor strips
                                                   true);    // forced
 
-   LOG(INFO) << "[MpdTofHitProducer::Init] Initialization finished succesfully.";
+   LOG(info) << "[MpdTofHitProducer::Init] Initialization finished succesfully.";
 
    return status;
 }
@@ -222,7 +222,7 @@ void MpdTofHitProducer::Exec(Option_t *option)
       pQA->PointDistanceTest(aMcPoints);
    }
 
-   LOG(DEBUG1) << "[MpdTofHitProducer::Exec] single hits= " << nSingleHits << ", cross hits= " << nCrossHits
+   LOG(debug1) << "[MpdTofHitProducer::Exec] single hits= " << nSingleHits << ", cross hits= " << nCrossHits
                << ", final hits= " << Nhits;
 }
 //------------------------------------------------------------------------------------------------------------------------
