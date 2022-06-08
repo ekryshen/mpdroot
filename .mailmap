@@ -1,50 +1,43 @@
-Nikita Balashov <balashov@jinr.ru> nifuki <balashov@jinr.ru>
-Dmitry Baranov <dbaranov@jinr.ru> dbaranov <dmitriybaranof@gmail.com>
-Pavel Batyuk <pavel.batyuk@jinr.ru> batyuk <batyuk@vm221-59> 
-Pavel Batyuk <pavel.batyuk@jinr.ru> Pavel Batyuk <batyuk@vm221-59> 
-Pavel Batyuk <pavel.batyuk@jinr.ru> Pavel Batyuk <batyuk@jinr.ru>
-Pavel Batyuk <pavel.batyuk@jinr.ru> batyuk <batyuk@jinr.ru>
-Pavel Batyuk <pavel.batyuk@jinr.ru> batyuk <batyuk@vm221-76>
-Jan Busa <busa@jinr.ru> Jan Busa Jr <busa@jinr.ru>
-Luis Valenzuela Cazares <luisvc3737@gmail.com> Luis <luisvc3737@gmail.com>
-Konstantin Gertsenberger <gertsen@jinr.ru> Konstantin Gertsenberger <gertsen@nc8.jinr.ru>
-Konstantin Gertsenberger <gertsen@jinr.ru> Konstantin Gertsenberger <gertsen@nc9.jinr.ru>
-Konstantin Gertsenberger <gertsen@jinr.ru> Konstantin Gertsenberger <soul@se51-99.jinr.ru>
-Konstantin Gertsenberger <gertsen@jinr.ru> soul <soul@se51-99.jinr.ru>
-Marina Golubeva <golubeva@inr.ru> marina <marina@node207.inr.troitsk.ru>
-Slavomir Hnatic <hnatics@jinr.ru> Hnatic Slavomir <hnatics@jinr.ru> 
-Slavomir Hnatic <hnatics@jinr.ru> hnatics <hnatics@jinr.ru>
-Nikolay Karpushkin <nkarpushkin@mail.ru> nikolay <nkarpushkin@mail.ru>
-Alexander Krylov <avkrylov@jinr.ru> A.Krylov <avkrylov@jinr.ru>
-Elena Litvinenko <litvin@nf.jinr.ru> elena <litvin@nf.jinr.ru>
-Sergei Lobastov <lsp@lnr.jinr.ru> Lobastov S.P <lsp1967@mail.ru>
-Sergei Lobastov <lsp@lnr.jinr.ru> Lobastov S. P <lobastov@he112-151.jinr.ru>
-Sergei Lobastov <lsp@lnr.jinr.ru> Lobastov S.P <lsp@lnr.jinr.ru>
-Sergei Merts <sergey.merts@gmail.com> Sergei Merts <Sergey.Merts@gmail.com>
-Sergei Merts <sergey.merts@gmail.com> Sergei Merts <>
-Sergei Merts <sergey.merts@gmail.com> merz <merz@se51-52.jinr.ru>
-Andrey Moshkin <amoshkin@jinr.ru> Andrey Moshkin <amoshkin@space18.hydra.local>
-Andrey Moshkin <amoshkin@jinr.ru> Andrey Moshkin <andrey_moshkin@mail.ru>
-Andrey Moshkin <amoshkin@jinr.ru> amoshkin <amoshkin@jinr.ru>
-Alexander Mudrokh <mudrokh@jinr.ru> Alexander <alex@se51-33.jinr.ru>
-Alexander Mudrokh <mudrokh@jinr.ru> alex <alex@se51-33.jinr.ru>
-Alexander Mudrokh <mudrokh@jinr.ru> Alexander <alex@se49-130.jinr.ru>
-Alexander Mudrokh <mudrokh@jinr.ru> Alexander <alex@localhost.localdomain>
-Demezhan Myktybekov <myktybekov@jinr.ru> Computer <myktybekov@jinr.ru>
-Peter Parfenov <pparfenov@jinr.ru> PeterParfenovGSI <terrylapard@gmail.com>
-Peter Parfenov <pparfenov@jinr.ru> ParfenovPeter <terrylapard@gmail.com>
-Peter Parfenov <pparfenov@jinr.ru> ParfenovPeter <pparfenov@jinr.ru>
-Peter Parfenov <pparfenov@jinr.ru> pparfenov <pparfenov@jinr.ru>
-Dmitri Peresunko <dmitri.peresunko@cern.ch> Dmitri Peresunko <Dmitri.Peresunko@cern.ch>
-Oleg Rogachevsky <rogachevsky@jinr.ru> Rogachevsky Oleg <roleg@ncx104.jinr.ru>
-Oleg Rogachevsky <rogachevsky@jinr.ru> roleg <rogachevsky@jinr.ru>
-Igor Roufanov <roufanov@gmail.com> ruf <roufanov@gmail.com>
-Ivan Slepov <slepov@jinr.ru> Ivan Slepov <speloff@jinr.ru>
-Ivan Slepov <slepov@jinr.ru> Ivan Slepov <speloff@speloff.ru>
-Ivan Slepov <slepov@jinr.ru> Ivan Slepov <you@example.com>
-Ivan Slepov <slepov@jinr.ru> speloff <speloff@gmail.com>
-Vadim Voronyuk <vadimv@jinr.ru> vadimv <vadimv@jinr.ru>
-Daniel Wielanek <daniel.wielanek@gmail.com> wielanek <wielanek>
-Daniel Wielanek <daniel.wielanek@gmail.com> daniel.wielanek@gmail.com <wielanek@if.pw.edu.pl>
-Alexander Zinchenko <alexander.zinchenko@jinr.ru> Alexander Zinchenko <zinchenk@space23.hydra.local>
-Alexander Zinchenko <alexander.zinchenko@jinr.ru> Alexander Zinchenko <Alexander.Zinchenko@jinr.ru> 
+Nikita Balashov             <balashov@jinr.ru>               <balashov@jinr.ru>
+Dmitry Baranov              <dbaranov@jinr.ru>               <dmitriybaranof@gmail.com>
+Pavel Batyuk                <pavel.batyuk@jinr.ru>           <batyuk@vm221-59> 
+Pavel Batyuk                <pavel.batyuk@jinr.ru>           <batyuk@jinr.ru>
+Pavel Batyuk                <pavel.batyuk@jinr.ru>           <batyuk@vm221-76>
+Jan Busa                    <busa@jinr.ru>                   <busa@jinr.ru>
+Luis Valenzuela Cazares     <luisvc3737@gmail.com>           <luisvc3737@gmail.com>
+Konstantin Gertsenberger    <gertsen@jinr.ru>                <gertsen@nc8.jinr.ru>
+Konstantin Gertsenberger    <gertsen@jinr.ru>                <gertsen@nc9.jinr.ru>
+Konstantin Gertsenberger    <gertsen@jinr.ru>                <soul@se51-99.jinr.ru>
+Marina Golubeva             <golubeva@inr.ru>                <marina@node207.inr.troitsk.ru>
+Slavomir Hnatic             <hnatics@jinr.ru>                <hnatics@jinr.ru> 
+Nikolay Karpushkin          <nkarpushkin@mail.ru>            <nkarpushkin@mail.ru>
+Alexander Krylov            <avkrylov@jinr.ru>               <avkrylov@jinr.ru>
+Elena Litvinenko            <litvin@nf.jinr.ru>              <litvin@nf.jinr.ru>
+Sergei Lobastov             <lsp@lnr.jinr.ru>                <lsp1967@mail.ru>
+Sergei Lobastov             <lsp@lnr.jinr.ru>                <lobastov@he112-151.jinr.ru>
+Sergei Lobastov             <lsp@lnr.jinr.ru>                <lsp@lnr.jinr.ru>
+Sergei Merts                <sergey.merts@gmail.com>         <Sergey.Merts@gmail.com>
+Sergei Merts                <sergey.merts@gmail.com>         <>
+Sergei Merts                <sergey.merts@gmail.com>         <merz@se51-52.jinr.ru>
+Andrey Moshkin              <amoshkin@jinr.ru>               <amoshkin@space18.hydra.local>
+Andrey Moshkin              <amoshkin@jinr.ru>               <andrey_moshkin@mail.ru>
+Andrey Moshkin              <amoshkin@jinr.ru>               <amoshkin@jinr.ru>
+Alexander Mudrokh           <mudrokh@jinr.ru>                <alex@se51-33.jinr.ru>
+Alexander Mudrokh           <mudrokh@jinr.ru>                <alex@se49-130.jinr.ru>
+Alexander Mudrokh           <mudrokh@jinr.ru>                <alex@localhost.localdomain>
+Demezhan Myktybekov         <myktybekov@jinr.ru>             <myktybekov@jinr.ru>
+Peter Parfenov              <pparfenov@jinr.ru>              <terrylapard@gmail.com>
+Peter Parfenov              <pparfenov@jinr.ru>              <pparfenov@jinr.ru>
+Dmitri Peresunko            <dmitri.peresunko@cern.ch>       <Dmitri.Peresunko@cern.ch>
+Oleg Rogachevsky            <rogachevsky@jinr.ru>            <roleg@ncx104.jinr.ru>
+Oleg Rogachevsky            <rogachevsky@jinr.ru>            <rogachevsky@jinr.ru>
+Igor Roufanov               <roufanov@gmail.com>             <roufanov@gmail.com>
+Ivan Slepov                 <slepov@jinr.ru>                 <speloff@jinr.ru>
+Ivan Slepov                 <slepov@jinr.ru>                 <speloff@speloff.ru>
+Ivan Slepov                 <slepov@jinr.ru>                 <you@example.com>
+Ivan Slepov                 <slepov@jinr.ru>                 <speloff@gmail.com>
+Vadim Voronyuk              <vadimv@jinr.ru>                 <vadimv@jinr.ru>
+Daniel Wielanek             <daniel.wielanek@gmail.com>      <wielanek> 
+Daniel Wielanek             <daniel.wielanek@gmail.com>      <wielanek@if.pw.edu.pl>
+Alexander Zinchenko         <alexander.zinchenko@jinr.ru>    <zinchenk@space23.hydra.local>
+Alexander Zinchenko         <alexander.zinchenko@jinr.ru>    <Alexander.Zinchenko@jinr.ru> 
