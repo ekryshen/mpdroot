@@ -10,18 +10,11 @@
 ######################################################################
 ######################### Functionality ##############################
 ###                                                                ###
-### 1. If there is a clang-format version match, then applies      ###
+###    If there is a clang-format version match, then applies      ###
 ###    clang-format to all staged files with c++ file suffix       ###
 ###								   ###
-### 2. If clang-format version is different than required          ###
-###    then attempts to run using pipx from remote server          ###
-###    (you must have pipx installed for that)                     ###
-###                                                                ###
-### 3. If there is no clang-format with required version and no    ###
-###    pipx, asks user to install one of them                      ###
-###								   ###
-###  IMPORTANT: Clang-format major versions must be identical !!!  ###
-###         (different versions produce different results)         ###
+###  IMPORTANT: Clang-format versions must be identical !!!        ###
+###         (different versions might produce different results)   ###
 ###                                                                ###
 ######################################################################
 
@@ -38,20 +31,17 @@ if [[ -n $CLANG_FORMAT_BIN ]]; then
  fi
 fi
 
-# if there is no installed required version of clang-format, check if pipx is installed
-if [[ -z $CLANG_FORMAT_BIN ]] && [[ -n $(command -v pipx) ]]; then
-  CLANG_FORMAT_BIN="pipx run --spec clang-format==$REQUIRED_VERSION clang-format"
-fi
-
 # do the formatting, or ask the user to install required package
 if [[ -n $CLANG_FORMAT_BIN ]]; then
  for FILE in $(git diff --cached --name-only | grep -E '.*\.(h|hpp|c|cpp|cxx)$' | grep -viE '.*LinkDef.h$'); do
   $CLANG_FORMAT_BIN -i --style=$CLANG_STYLE $FILE
  done
 else
- echo -e "\n YOUR CHANGES CANNOT BE FORMATTED\n\n Please install clang-format version $REQUIRED_VERSION.
- If clang-format version $REQUIRED_VERSION is unavailable for your system, then\n
- install pipx either as a package or by installing pip package and running:\n\n
- python3 -m pip install --user pipx\n python3 -m pipx ensurepath\n"
+ echo
+ echo " YOUR CHANGES CANNOT BE FORMATTED"
+ echo
+ echo " Please use clang-format version $REQUIRED_VERSION"
+ echo " by adding mpddev module in the toolbox NICA container."
+ echo
 fi
 
