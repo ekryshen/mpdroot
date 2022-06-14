@@ -5,7 +5,3 @@ SET_TESTS_PROPERTIES (runMC PROPERTIES PASS_REGULAR_EXPRESSION "Macro finished s
 add_test(reco ${ROOTSYS}/bin/root -b -q -l ${PROJECT_SOURCE_DIR}/macro/mpd/reco.C)
 SET_TESTS_PROPERTIES (reco PROPERTIES TIMEOUT "200")
 SET_TESTS_PROPERTIES (reco PROPERTIES PASS_REGULAR_EXPRESSION "Macro finished successfully.")
-
-#add_test(proof ${ROOTSYS}/bin/root -b -l "${PROJECT_SOURCE_DIR}/macro/mpd/reco.C(\"$VMCWORKDIR/macro/mpd/evetest.root\",\"mpddst.root\",0,2,\"proof\")")
-#SET_TESTS_PROPERTIES (proof PROPERTIES TIMEOUT "800")
-#SET_TESTS_PROPERTIES (proof PROPERTIES PASS_REGULAR_EXPRESSION "Macro finished successfully.")

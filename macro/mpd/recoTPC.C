@@ -53,13 +53,7 @@ using namespace std;
 // nStartEvent - number (start with zero) of first event to process, default: 0
 // nEvents - number of events to process, 0 - all events of given file will be proccessed, default: 1
 // outFile - output file with reconstructed data, default: mpddst.root
-// run_type - proof execution, default "local". e.g.:
-//      "proof" - run on proof-lite with "CPU" count workers,
-//      "proof:workers=3" - run on proof-lite with 3 workers
-//      "proof:user@proof.server:21001" - to run on the PROOF cluster created with PoD (under user 'MPD', default port - 21001)
-//      "proof:user@proof.server:21001:workers=10" - to run on the PROOF cluster created with PoD with 10 workers (under USER, default port - 21001)
-//	nc-farm : proof:mpd@nc8.jinr.ru:21001
-void recoTPC(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outFile = "mpddst.root", Int_t nStartEvent = 0, Int_t nEvents = 1, TString run_type="local")
+void recoTPC(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outFile = "mpddst.root", Int_t nStartEvent = 0, Int_t nEvents = 1)
 {
   // ========================================================================
   // Verbosity level (0=quiet, 1=event level, 2=track level, 3=debug)
@@ -84,18 +78,9 @@ void recoTPC(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outF
   // ------------------------------------------------------------------------
 
   // -----   Digitization run   -------------------------------------------
-  int ind = run_type.Index(':');
-  TString proof_name = "";
-  if (ind >= 0){
-      proof_name = run_type(ind+1,run_type.Length()-ind-1);
-      run_type = run_type(0, ind);
-  }
-
-  FairRunAna *fRun= new FairRunAna(run_type, proof_name);
+  FairRunAna *fRun= new FairRunAna();
   fRun->SetInputFile(inFile);
-  //fRun->AddFriend(inFile);
   fRun->SetOutputFile(outFile);
-  fRun->SetProofParName("$VMCWORKDIR/gconfig/libMpdRoot.par");
   // ------------------------------------------------------------------------
 
   // -----  Parameter database   --------------------------------------------
@@ -149,17 +134,7 @@ void recoTPC(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outF
 
   // -----   Intialise   ----------------------------------------------------
   fRun->Init();
-  if (run_type != "proof") cout << "Field: " << fRun->GetField()->GetBz(0.,0.,0.) << endl;
-  else{
-    TProof* pProof = fRun->GetProof();
-    pProof->SetParameter("PROOF_PacketizerStrategy", (Int_t)0);
-    ind = proof_name.Index(":workers=");
-    if (ind >= 0){
-	TString worker_count = proof_name(ind+9,proof_name.Length()-ind-9);
-	if (worker_count.IsDigit())
-	   pProof->SetParallel(worker_count.Atoi());
-    }
-  }
+  cout << "Field: " << fRun->GetField()->GetBz(0.,0.,0.) << endl;
 
   // if nEvents is equal 0 then all events of the given file starting with "nStartEvent" should be processed
   if (nEvents == 0)

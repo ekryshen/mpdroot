@@ -55,16 +55,11 @@ bool CheckFileExist(TString fileName)
 // nStartEvent - number (start with zero) of first event to process, default: 0
 // nEvents - number of events to process, 0 - all events of given file will be proccessed, default: 1
 // outFile - output file with reconstructed data, default: mpddst.root
-// run_type - proof execution, default "local". e.g.:
-//      "proof" - run on proof-lite with "CPU" count workers,
-//      "proof:workers=3" - run on proof-lite with 3 workers
-//      "proof:user@proof.server:21001" - to run on the PROOF cluster created with PoD (under user 'MPD', default port -
-//      21001) "proof:user@proof.server:21001:workers=10" - to run on the PROOF cluster created with PoD with 10 workers
-//      (under USER, default port - 21001)
-//	nc-farm : proof:mpd@nc10.jinr.ru:21001
 void reco(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outFile = "mpddst.root", Int_t nStartEvent = 0,
-          Int_t nEvents = 1, TString run_type = "local")
+          Int_t nEvents = 1)
 {
+   if (!CheckFileExist(inFile)) return;
+
    // ========================================================================
    // Verbosity level (0=quiet, 1=event level, 2=track level, 3=debug)
    Int_t iVerbose = 0;
@@ -75,16 +70,7 @@ void reco(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outFile
    // ------------------------------------------------------------------------
 
    // -----   Digitization run   -------------------------------------------
-   // define parallel or sequential execution
-   int     ind        = run_type.Index(':');
-   TString proof_name = "";
-   if (ind >= 0) {
-      proof_name = run_type(ind + 1, run_type.Length() - ind - 1);
-      run_type   = run_type(0, ind);
-   }
-
    FairRunAna *fRun;
-   if (!CheckFileExist(inFile)) return;
    fRun = new FairRunAna();
 
    FairSource *fFileSource = new FairFileSource(inFile);
@@ -183,7 +169,7 @@ void reco(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outFile
 
    // -----   Intialise   ----------------------------------------------------
    fRun->Init();
-   if (run_type != "proof") cout << "Field: " << fRun->GetField()->GetBz(0., 0., 0.) << endl;
+   cout << "Field: " << fRun->GetField()->GetBz(0., 0., 0.) << endl;
 
    // if nEvents is equal 0 then all events of the given file starting with "nStartEvent" should be processed
    if (nEvents == 0) nEvents = MpdGetNumEvents::GetNumROOTEvents((char *)inFile.Data()) - nStartEvent;
