@@ -93,23 +93,24 @@ void MpdStack::PushTrack(Int_t toBeDone, Int_t parentId, Int_t pdgCode, Double_t
    particle->SetPolarisation(polx, poly, polz);
    particle->SetWeight(weight);
    particle->SetUniqueID(proc);
-   // AZ - global polarization transfer to decay Lambda
+
+   // global polarization transfer to decay Lambda -- emulate heavy hyperon decay
    if (TMath::Abs(pdgCode) == 3122 && proc == kPDecay) {
       TParticle *moth = (TParticle *)partArray.UncheckedAt(parentId);
       TVector3   polar;
       moth->GetPolarisation(polar);
-      Double_t value = moth->GetWeight();
-      if (TMath::Abs(moth->GetPdgCode()) == 3312)
-         value *= 0.927; // Xi+-
-      else if (TMath::Abs(moth->GetPdgCode()) == 3322)
-         value *= 0.900; // Xi0
-      else if (TMath::Abs(moth->GetPdgCode()) == 3212) {
-         // Sigma0
-         value *= (1. / 3);
-         polar *= -1.0;
+      // play spin orientation according to transfer coefficients
+      Float_t xxx = gRandom->Rndm();
+      if (TMath::Abs(moth->GetPdgCode()) == 3212) {
+         if (xxx > 1. / 3.) polar *= -1.0; // C_{\Lambda \Sigma0} = -1/3
+      }
+      else if (TMath::Abs(moth->GetPdgCode()) == 3312) {
+         if (xxx < 0.927) polar *= -1.0; // C_{\Lambda \Xi\pm} = 0.927
+      }
+      else if (TMath::Abs(moth->GetPdgCode()) == 3322) {
+         if (xxx < 0.900) polar *= -1.0; // C_{\Lambda \Xi0} = 0.900
       }
       particle->SetPolarisation(polar);
-      particle->SetWeight(value);
    }
 
    // --> Increment counter
@@ -180,23 +181,24 @@ void MpdStack::PushTrack(Int_t toBeDone, Int_t parentId, Int_t pdgCode, Double_t
    particle->SetPolarisation(polx, poly, polz);
    particle->SetWeight(weight);
    particle->SetUniqueID(proc);
-   // AZ - global polarization transfer to decay Lambda
+
+   // global polarization transfer to decay Lambda -- emulation of heavy hyperons decay
    if (TMath::Abs(pdgCode) == 3122 && proc == kPDecay) {
       TParticle *moth = (TParticle *)partArray.UncheckedAt(parentId);
       TVector3   polar;
       moth->GetPolarisation(polar);
-      Double_t value = moth->GetWeight();
-      if (TMath::Abs(moth->GetPdgCode()) == 3312)
-         value *= 0.927; // Xi+-
-      else if (TMath::Abs(moth->GetPdgCode()) == 3322)
-         value *= 0.900; // Xi0
-      else if (TMath::Abs(moth->GetPdgCode()) == 3212) {
-         // Sigma0
-         value *= (1. / 3);
-         polar *= -1.0;
+      // play spin orientation according to transfer coefficients
+      Float_t xxx = gRandom->Rndm();
+      if (TMath::Abs(moth->GetPdgCode()) == 3212) {
+         if (xxx > 1. / 3.) polar *= -1.0; // C_{\Lambda \Sigma0} = -1/3
+      }
+      else if (TMath::Abs(moth->GetPdgCode()) == 3312) {
+         if (xxx < 0.927) polar *= -1.0; // C_{\Lambda \Xi\pm} = 0.927
+      }
+      else if (TMath::Abs(moth->GetPdgCode()) == 3322) {
+         if (xxx < 0.900) polar *= -1.0; // C_{\Lambda \Xi0} = 0.900
       }
       particle->SetPolarisation(polar);
-      particle->SetWeight(value);
    }
 
    // --> Increment counter

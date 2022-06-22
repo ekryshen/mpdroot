@@ -45,7 +45,6 @@ public:
    virtual void    ReadDecayTable();
 
    virtual void SetDebugLevel(Int_t debug) { fDebug = debug; }
-   virtual void SetGlobalPolar(Int_t glob = 1) { fGlobalPolar = glob; }
 
    static MpdDecayerPyt8 *Instance();
    void                   Decay(TParticle *part);
@@ -60,8 +59,7 @@ protected:
 private:
    void Gdecay(Int_t idpart, TLorentzVector *p);
    void Gdeca2(Double_t xm0, Double_t xm1, Double_t xm2, Double_t pcm[2][4]);
-   // void Anisotropy (Double_t* pvert, Double_t *rndm, Double_t polar, Double_t &phi, Double_t &costh);
-   void Anisotropy(Double_t *pvert, Double_t *rndm, TVector3 &polar, Double_t &phi, Double_t &costh);
+   void Anisotropy(Double_t *rndm, TVector3 &polar, Double_t &phi, Double_t &costh);
    void ChangeBranchings();
    void ChangeParticleBr(TObjArray *tokens);
 
@@ -69,13 +67,11 @@ private:
 
    TPythia8 *fPythia8;     // Pointer to pythia8
    Int_t     fDebug;       // Debug level
-   Int_t     fGlobalPolar; // global polarization flag
 
    Float_t              fBranch; // branching of lambda to p + \pi-
    ParticleDataEntryPtr fLambda; // pointer to Lambda in Pythia8 database
    TLorentzVector       fMother; // mother decay point position
    TClonesArray        *fParticles;
-   TRotation            fRotation;
    SourceFlag           fSourceFlag;
    std::set<Int_t>      fMothersPdg;
    TRandom             *fRandom;

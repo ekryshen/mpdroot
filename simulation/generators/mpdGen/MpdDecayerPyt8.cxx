@@ -43,7 +43,7 @@ MpdDecayerPyt8 *MpdDecayerPyt8::Instance()
 ////////////////////////////////////////////////////////////////////////////////
 /// constructor
 
-MpdDecayerPyt8::MpdDecayerPyt8() : fPythia8(new TPythia8()), fDebug(0), fGlobalPolar(0), fLambda(NULL), fRandom(NULL)
+MpdDecayerPyt8::MpdDecayerPyt8() : fPythia8(new TPythia8()), fDebug(0), fLambda(NULL), fRandom(NULL)
 {
 
    fPythia8->Pythia8()->readString("SoftQCD:elastic = on");
@@ -125,7 +125,7 @@ void MpdDecayerPyt8::Decay(Int_t pdg, TLorentzVector *p)
    part->GetPolarisation(polar);
    Bool_t polarFlag = kFALSE;
 
-   if (TMath::Abs(polar.X()) > 0.0001 || TMath::Abs(polar.Z()) > 0.0001) {
+   if (polar.Mag2() != 0.) {
       // Polarized lambda - simulate anysotropic decay only to p + \pi-
       polarFlag = kTRUE;
       if (gRandom->Rndm() < fBranch) {
@@ -247,19 +247,16 @@ void MpdDecayerPyt8::Gdecay(Int_t idpart, TLorentzVector *p)
 
    Gdeca2(xm0, xm1, xm2, pcm);
 
-   // First, second decay products.
+   // First, second decay products in rest frame.
 
    TLorentzVector daughter1, daughter2;
    daughter1.SetPxPyPzE(pcm[0][0], pcm[0][1], pcm[0][2], pcm[0][3]);
    daughter2.SetPxPyPzE(pcm[1][0], pcm[1][1], pcm[1][2], pcm[1][3]);
 
    // Boost to lab frame
-   // TVector3 boost = p->BoostVector(); //AZ - this is wrong !!!!
-   TVector3 boost(0, 0, p->P() / p->E());
+   TVector3 boost = p->BoostVector();
    daughter1.Boost(boost);
    daughter2.Boost(boost);
-   daughter1.Transform(fRotation);
-   daughter2.Transform(fRotation);
 
    TLorentzVector pos;
    gMC->TrackPosition(pos);
@@ -314,15 +311,13 @@ void MpdDecayerPyt8::Gdeca2(Double_t xm0, Double_t xm1, Double_t xm2, Double_t p
 
    TVector3 polar;
    part->GetPolarisation(polar);
-   if (fGlobalPolar) polar.SetMag(part->GetWeight()); // particle polarization value is passed as its weight
 
-   if (TMath::Abs(polar.X()) < 0.0001 && TMath::Abs(polar.Z()) < 0.0001 && TMath::Abs(polar.Y()) < 0.0001) {
+   if (polar.Mag2() == 0.) {
       costh = 2. * random[0] - 1.0;
       phi   = TMath::TwoPi() * random[1];
    } else {
-      // Anisotropic decay angular distribution (0.5*(1+alpha*P*cos)).
-      // Anisotropy (pvert, random, polar.X(), phi, costh);
-      Anisotropy(pvert, random, polar, phi, costh);
+      // Anisotropic decay angular distribution (0.5*(1+alpha*cos)).
+      Anisotropy(random, polar, phi, costh);
    }
 
    if (TMath::Abs(costh) >= 1.0)
@@ -350,72 +345,35 @@ void MpdDecayerPyt8::Gdeca2(Double_t xm0, Double_t xm1, Double_t xm2, Double_t p
 ////////////////////////////////////////////////////////////////////////////////
 /// Simulate anisotropic (due to polarization) decay of lambda
 
-// void MpdDecayerPyt8::Anisotropy (Double_t *pvert, Double_t *rndm, Double_t polar, Double_t &phi, Double_t &costh)
-void MpdDecayerPyt8::Anisotropy(Double_t *pvert, Double_t *rndm, TVector3 &polar3, Double_t &phi, Double_t &costh)
+void MpdDecayerPyt8::Anisotropy(Double_t *rndm, TVector3 &polar3, Double_t &phi, Double_t &costh)
 {
    // Simulate anisotropic (due to polarization) decay of lambda
 
    // exit(0);
-   // std::ofstream outfile ("costh.txt");
+   // std::ofstream outfile ("costh.txt",std::ios_base::app);
    // freopen ("costh.txt", "w", stdout);
-
-   Double_t polar = 0.0;
-   if (fGlobalPolar)
-      polar = polar3.Mag(); // global polarization - CHECK THIS
-   else
-      polar = polar3.X(); // transverse polar.
 
    // const Double_t alpha = 0.642;
    // static TF1 f("f","1+0.642*[0]*x",-1,1);
-   static TF1 f("f", "1+0.732*[0]*x", -1, 1); // AZ 10.06.21 - new value
-   f.SetParameter(0, polar);
+   static TF1 f("f", "1+0.732*x", -1, 1); // AZ 10.06.21 - new value
    f.SetNpx(1000);
 
-   Double_t costhe = f.GetRandom();
+   Double_t costhe = f.GetRandom(); // cos(theta)
 
    Double_t sinth = 0.0;
    if (TMath::Abs(costhe) >= 1.0)
       costhe = TMath::Sign(1.0, costhe);
    else
       sinth = TMath::Sqrt(1.0 - costhe * costhe);
-   phi = TMath::TwoPi() * rndm[1];
+   phi = TMath::TwoPi() * rndm[1]; // phi
    // std::cout << " Cos: " << costhe << " " << phi << " " << pvert[0] << " " << pvert[1] << " " << pvert[2] <<
    // std::endl;
 
-   // Compute normal vector
-   TVector3 beam(0.0, 0.0, 1.0);
-   TVector3 lambda(pvert[0], pvert[1], pvert[2]);
-   TVector3 norm;
-   if (fGlobalPolar)
-      norm = polar3.Unit(); // global polarization
-   else
-      norm = beam.Cross(lambda).Unit(); // transverse polarization
-
-   // Unit vector with theta and phi w.r.t. normal
+   TVector3 norm = polar3.Unit(); // direction of polarization in rest frame
    TVector3 unit(sinth * TMath::Cos(phi), sinth * TMath::Sin(phi), costhe);
 
-   // Coordinate system transformation
-   // (from lambda to lab)
-   TVector3 lambU = lambda.Unit(), lambZ(0, 0, 1), lambX(1, 0, 0), lambY(0, 1, 0);
-   lambZ.RotateUz(lambU);
-   lambX.RotateUz(lambU);
-   lambY.RotateUz(lambU);
-   TRotation rotL;
-   rotL.RotateAxes(lambX, lambY, lambZ); // transformation to lab. system
-   fRotation = rotL;
-   rotL.Invert();        // from lab. to lambda
-   unit.RotateUz(norm);  // to lab. system
-   unit.Transform(rotL); // to lambda system
-   /*
-   TVector3 normZ(0,0,1), normX(1,0,0), normY(0,1,0);
-   normZ.RotateUz(norm);
-   normX.RotateUz(norm);
-   normY.RotateUz(norm);
-   TRotation rotN;
-   rotN.RotateAxes(normX,normY,normZ); // transformation to lab. system
-   unit.Transform(rotN); // to lab. system
-   unit.Transform(rotL); // to lambda system
-   */
+   unit.RotateUz(norm); // rotate Z to norm (with extra phi rotation which is random)
+
    costh = TMath::Cos(unit.Theta());
    phi   = unit.Phi();
    // std::cout << costh << " " << phi << std::endl;

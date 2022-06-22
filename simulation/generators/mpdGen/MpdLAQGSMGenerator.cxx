@@ -484,9 +484,15 @@ Bool_t MpdLAQGSMGenerator::ReadEvent(FairPrimaryGenerator *primGen)
             if (TMath::Abs(PDG / 100) == 31 || TMath::Abs(PDG / 100) == 32) {
                Int_t      nTr    = gMC->GetStack()->GetNtrack();
                TParticle *part   = ((MpdStack *)gMC->GetStack())->GetParticle(nTr - 1);
-               Double_t   pol[3] = {pol1, 0, 0}; // polarization after rescattering
-               pol[1]            = TMath::Sqrt(1.0 - pol[0] * pol[0]);
-               part->SetPolarisation(pol[0], pol[1], pol[2]);
+               
+               TVector3 beam(0.0, 0.0, 1.0);  // beam direction in calc frame
+               TLorentzVector lorV;
+               part->Momentum(lorV);
+               TVector3 lambda=lorV.Vect();   // Lambda momentum in calc frame
+               TVector3 pol=beam.Cross(lambda).Unit(); // transverse polarization direction
+               Float_t xxx=gRandom->Rndm();
+               if (xxx>1./2.*(1.+pol1)) pol *= -1.; // play spin orientation according to mean polarization
+               part->SetPolarisation(pol);
             }
             //*/
          } // if (FindParticle (iCharge

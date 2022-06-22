@@ -70,9 +70,9 @@ Bool_t MpdPHSDGenerator::ReadEvent(FairPrimaryGenerator *primGen)
 
    /* read tracks */
    for (Int_t i = 1; i <= fntr; i++) {
-      Int_t   ipdg;
-      Float_t px, py, pz;
-      Float_t pol[3] = {0., 0., 0.}; // polarization
+      Int_t    ipdg;
+      Float_t  px, py, pz; // momentum
+      TVector3 pol;        // polarization (extra info)
       /* read track */
       if (gzgets(fgzFile, fbuffer, 256) == Z_NULL) {
          printf("-E- MpdPHSDGenerator: unexpected end of file %d/%d\n", i, fntr);
@@ -92,11 +92,13 @@ Bool_t MpdPHSDGenerator::ReadEvent(FairPrimaryGenerator *primGen)
       // read polarizarion -- extention of standart PHSD output
       if (fHPol == kTRUE &&
           (TMath::Abs(ipdg / 100) == 31 || TMath::Abs(ipdg / 100) == 32 || TMath::Abs(ipdg / 100) == 33)) {
-         res = sscanf(fbuffer, "%*d %*d %*e %*e %*e %*e %*d %*d %*d %e %e %e", &pol[0], &pol[1], &pol[2]);
+         Float_t polx, poly, polz;
+         res = sscanf(fbuffer, "%*d %*d %*e %*e %*e %*e %*d %*d %*d %e %e %e", &polx, &poly, &polz);
          if (res != 3) {
             printf("-E- MpdPHSDGenerator: no Hyperon polarization info %d \n", res);
             exit(1);
          }
+         pol.SetXYZ(polx, poly, polz);
       }
 
       // replacement of heavy particles for Geant4
@@ -131,13 +133,15 @@ Bool_t MpdPHSDGenerator::ReadEvent(FairPrimaryGenerator *primGen)
          Int_t      nTr  = gMC->GetStack()->GetNtrack();
          TParticle *part = ((MpdStack *)gMC->GetStack())->GetParticle(nTr - 1);
 
-         if (TMath::Abs(pol[0]) > 1. || TMath::Abs(pol[1]) > 1. || TMath::Abs(pol[2]) > 1.) {
+         Float_t weight_pol = pol.Mag();
+         if (weight_pol > 1. || weight_pol == 0.) {
             part->SetPolarisation(0., 0., 0.);
-            std::cout << "Component of the polarization vector is higher than 1!" << std::endl;
          } else {
-            part->SetPolarisation(pol[0], pol[1], pol[2]);
-            Float_t weight_pol = TMath::Sqrt(pol[0] * pol[0] + pol[1] * pol[1] + pol[2] * pol[2]);
-            part->SetWeight(weight_pol);
+            if (fPsiRP != 0.) pol.RotateZ(fPsiRP); // rotate according to RP, consistent with above
+            Float_t xxx = frandom->Rndm();
+            if (xxx > 1. / 2. * (1. + weight_pol)) pol *= -1.; // play spin orientation according to mean polarization
+            part->SetPolarisation(pol);
+            // part->SetPolarisation(0., 1., 0.); // test
          }
       }
    }
