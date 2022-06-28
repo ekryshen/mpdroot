@@ -173,7 +173,7 @@ void MpdFfdHitProducer::Exec(Option_t *opt)
                hPMTeff->Fill(pass, energy);
 
             }   // cycle by op
-         } else // kPhotoElectron mode, saved only pe
+	 } else // kPhotoElectron mode, saved only pe
          {
             nPe = pPoint->GetEntries();
 
@@ -415,8 +415,8 @@ bool MpdFfdHitProducer::IsPeCreated(double energy) // [eV]
    {
       const size_t n         = 11;
       const double length[n] = {155., 170., 200., 250., 300., 350., 400., 450., 500., 550., 600.}; // op wavelength [nm]
-      const double eff[n]    = {0.20, 0.20, 0.18, 0.16,  0.18, 0.21,
-                             0.22, 0.16, 0.11, 0.035, 0.015}; // pe creating efficiency
+      const double eff[n]    = {0.20*0.73, 0.20*0.73, 0.18*0.73, 0.16*0.73,  0.18*0.73, 0.21*0.73,
+                             0.22*0.73, 0.16*0.73, 0.11*0.73, 0.035*0.73, 0.015*0.73}; // pe creating efficiency
 
       gPMTeff_pdf = new TGraph(n, length, eff);
    }
@@ -434,6 +434,14 @@ MpdFfdHit *MpdFfdHitProducer::AddHit(const MpdFfdPoint *point, const TVector3 &p
 {
    MpdFfdHit *pHit = new ((*aFfdHits)[aFfdHits->GetEntriesFast()])
       MpdFfdHit(point->GetDetectorID(), pos, dpos, refIndex, point->GetTime(), npe, flag);
+
+   for(const auto& entry : point->GetData()) // cycle by op
+     {
+       float energy = 1.0;
+       float time = entry.second;
+       
+       pHit->AddFFDTimes(energy, time);  
+     }
 
    pHit->AddLink(FairLink(1, point->GetTrackID())); // LS: key value = 1  for mc track index
 

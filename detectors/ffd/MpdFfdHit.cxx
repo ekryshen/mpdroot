@@ -22,3 +22,10 @@ void MpdFfdHit::Print(const Option_t *opt) const
         << "  time=" << fTime << ", nPe=" << fNpe << ", flag=" << fFlag;
 }
 //------------------------------------------------------------------------------------------------------------------------
+void MpdFfdHit::AddFFDTimes(Float_t e, Float_t time)
+{
+  // Update hit information
+  if (fFFDTimes.find(time) == fFFDTimes.end()) fFFDTimes[time] = e;
+  else fFFDTimes[time] += e;
+}
+//------------------------------------------------------------------------------------------------------------------------

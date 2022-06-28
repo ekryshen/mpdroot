@@ -117,9 +117,12 @@ Bool_t MpdFfd::ProcessHits(FairVolume *vol)
             auto point = FindPoint(ptid, suid);
             if (point == nullptr) point = CreatePoint(ptid, suid);
 
+	    TLorentzVector pos;
+	    gMC->TrackPosition(pos);
+
             if (!point->AddOp(energy,
-                              gMC->TrackTime() *
-                                 1.e+9)) // [ns]; if MpdFfdPoint not closed, need to call SaveParentTrackParams ONCE!
+                              gMC->TrackTime() * 1.e+9 + 
+			      (144. - fabs(pos.Z()))/(30./1.8))) // [ns]; if MpdFfdPoint not closed, need to call SaveParentTrackParams ONCE!
             {
                auto ret = FindTrackParams(ptid, suid);
                if (ret.second) {

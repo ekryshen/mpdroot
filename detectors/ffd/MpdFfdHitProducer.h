@@ -43,9 +43,9 @@ private:
    TClonesArray *aExpDigits = nullptr; //! <--- Exp input
    TClonesArray *aFfdHits   = nullptr; //! ---> output
 
-   Bool_t   fUseMCData = true, fUseTimeWindow = true;
+   Bool_t   fUseMCData = true, fUseTimeWindow = false;
    Bool_t   fDoTest    = false;
-   size_t   fNpeThresh = 80.;                                 // default value = 80 photo electrons
+   size_t   fNpeThresh = 70.;                                 // default value = 80 photo electrons
    Double_t fErrXY = 4. / sqrt(12.), fErrZ = 1.5 / sqrt(12.); // 4x4x1.5 [cm]
    TList    fList;
    TString  fFlnm;
@@ -108,7 +108,7 @@ private:
    }
 
 public:
-   MpdFfdHitProducer(const char *name = "FFD hit Producer", bool useMCdata = true, bool useTimeWindow = true,
+   MpdFfdHitProducer(const char *name = "FFD hit Producer", bool useMCdata = true, bool useTimeWindow = false,
                      Int_t verbose = 1, const char *QAflnm = nullptr);
    virtual ~MpdFfdHitProducer();
 
