@@ -115,9 +115,9 @@ public:
       return fELossReco;
    }
 
-    void IncreaseTimesCorrVR(Float_t e, Float_t time);
+   void IncreaseTimesCorrVR(Float_t e, Float_t time);
 
-    std::map<Float_t,Float_t> GetContribTimesCorr() { return fContribTimesCorr; }
+   std::map<Float_t, Float_t> GetContribTimesCorr() { return fContribTimesCorr; }
 
 protected:
    static char
@@ -133,12 +133,12 @@ protected:
    Double_t fELoss;      // Sum of the energy losses as analog signal accumulated prior to digitalization
    Double_t fELossReco;  // Sum of the energy losses as analog simulated response of the detector/channel
 
-   Double_t fModuleX;  // module X coordinates
-   Double_t fModuleY;  // module X coordinates
+   Double_t fModuleX; // module X coordinates
+   Double_t fModuleY; // module X coordinates
 
    Bool_t fIsPsd; // static initialization tried from from MpdZdcDigiPar (0) or MpdZdcPsdDigiPar (1)
 
-   std::map<Float_t,Float_t> fContribTimesCorr; // corrected time vs. deposited energy
+   std::map<Float_t, Float_t> fContribTimesCorr; // corrected time vs. deposited energy
 
    ClassDef(MpdZdcDigi, 3);
 };

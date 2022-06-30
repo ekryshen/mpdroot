@@ -57,7 +57,7 @@ private:
 
    Double_t RecoEnergy(Double_t pfELoss);
 
-   TString fMappingFile;  // mapping file for FHCal modules (X,Y)
+   TString  fMappingFile; // mapping file for FHCal modules (X,Y)
    Double_t fModuleX[91]; // module X coordinates
    Double_t fModuleY[91]; // module Y coordinates
 
@@ -77,8 +77,8 @@ private:
    //  TH2F *fHistZdc1En;
    //  TH2F *fHistZdc2En;
 
-    std::map<Int_t,MpdZdcDigi*> fHitMap; //!
-    MpdZdcDigi* SearchHitVR(Int_t sec);
+   std::map<Int_t, MpdZdcDigi *> fHitMap; //!
+   MpdZdcDigi                   *SearchHitVR(Int_t sec);
 
    ClassDef(MpdZdcDigiProducer, 3);
 };

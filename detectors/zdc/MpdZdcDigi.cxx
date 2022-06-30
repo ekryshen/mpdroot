@@ -177,9 +177,11 @@ UInt_t MpdZdcDigi::ADC(Double_t pfELoss)
 
 void MpdZdcDigi::IncreaseTimesCorrVR(Float_t e, Float_t time)
 {
-  // Update hit information
-  if (fContribTimesCorr.find(time) == fContribTimesCorr.end()) fContribTimesCorr[time] = e;
-  else fContribTimesCorr[time] += e;
+   // Update hit information
+   if (fContribTimesCorr.find(time) == fContribTimesCorr.end())
+      fContribTimesCorr[time] = e;
+   else
+      fContribTimesCorr[time] += e;
 }
 
 // -------------------------------------------------------------------------

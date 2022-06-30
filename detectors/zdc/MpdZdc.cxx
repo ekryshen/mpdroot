@@ -242,9 +242,9 @@ Bool_t MpdZdc::ProcessHits(FairVolume *vol)
       length = 0.;
       gMC->TrackPosition(tPos);
       gMC->TrackMomentum(tMom);
-      //V
+      // V
       fTime   = gMC->TrackTime() * 1.0e09;
-      fLength  = gMC->TrackLength();
+      fLength = gMC->TrackLength();
       gMC->TrackPosition(fPos);
       gMC->TrackMomentum(fMom);
 
@@ -272,11 +272,10 @@ Bool_t MpdZdc::ProcessHits(FairVolume *vol)
 
       // fELoss +=gMC->Edep();
       // Birk corrections
-if (gMC->TrackStep() > 0)
-{
-      QCF = 1. + (BirkConst / gMC->TrackStep()) * gMC->Edep();
-      fELoss += (gMC->Edep()) / QCF;
-}
+      if (gMC->TrackStep() > 0) {
+         QCF = 1. + (BirkConst / gMC->TrackStep()) * gMC->Edep();
+         fELoss += (gMC->Edep()) / QCF;
+      }
       time += gMC->TrackTime() * 1.0e09;
 
       if (gMC->IsTrackStop() || gMC->IsTrackDisappeared()) {
@@ -331,16 +330,16 @@ if (gMC->TrackStep() > 0)
                   // fELoss); new((*fZdcCollection)[fHitNb++]) MpdZdcPoint(fTrackID, ivol, slice, module0, zdc,
                   // TVector3(tPos.X(), tPos.Y(), tPos.Z()),TVector3(tMom.Px(), tMom.Py(), tMom.Pz()),time, length,
                   // fELoss);
-		 AddHit(fTrackID, ivol, slice, module0, zdc, TVector3(fPos.X(), fPos.Y(), fPos.Z()),
+                  AddHit(fTrackID, ivol, slice, module0, zdc, TVector3(fPos.X(), fPos.Y(), fPos.Z()),
                          TVector3(fMom.Px(), fMom.Py(), fMom.Pz()), fTime, fLength, fELoss);
-		 GetHit(slice, module0, zdc) -> IncreaseTimesVR(fELoss, fTime);
+                  GetHit(slice, module0, zdc)->IncreaseTimesVR(fELoss, fTime);
                   // cout <<"INSIDE NO GETHIT 2-> " <<slice <<" "<<module0 <<" " <<zdc <<endl;
                } else {
                   // cout <<"INSIDE GETHIT 1-> " <<slice <<" " <<module0  <<" " <<zdc <<endl;
                   GetHit(slice, module0, zdc)
                      ->AddVSC(fTrackID, ivol, slice, module0, zdc, TVector3(fPos.X(), fPos.Y(), fPos.Z()),
                               TVector3(fMom.Px(), fMom.Py(), fMom.Pz()), fTime, fLength, fELoss);
-		 GetHit(slice, module0, zdc) -> IncreaseTimesVR(fELoss, fTime);
+                  GetHit(slice, module0, zdc)->IncreaseTimesVR(fELoss, fTime);
                   // cout <<"INSIDE GETHIT 2-> " <<slice <<" "<<module0 <<" " <<zdc <<endl;
                }
             } // if(copyNoVTYVECCom==copyNoVTYVEC
@@ -406,11 +405,10 @@ if (gMC->TrackStep() > 0)
 
       // fELoss +=gMC->Edep();
       // Birk corrections
-if (gMC->TrackStep() > 0)
-{
-      QCF = 1. + (BirkConst / gMC->TrackStep()) * gMC->Edep();
-      fELoss += (gMC->Edep()) / QCF;
-}
+      if (gMC->TrackStep() > 0) {
+         QCF = 1. + (BirkConst / gMC->TrackStep()) * gMC->Edep();
+         fELoss += (gMC->Edep()) / QCF;
+      }
       gMC->TrackPosition(tPos);
       gMC->TrackMomentum(tMom);
       // gMC->CurrentVolOffID(2, module0);
@@ -459,14 +457,14 @@ if (gMC->TrackStep() > 0)
                // fELoss);
                AddHit(fTrackID, ivol, slice, module0, zdc, TVector3(fPos.X(), fPos.Y(), fPos.Z()),
                       TVector3(fMom.Px(), fMom.Py(), fMom.Pz()), fTime, fLength, fELoss);
-	       GetHit(slice, module0, zdc) -> IncreaseTimesVR(fELoss, fTime);
+               GetHit(slice, module0, zdc)->IncreaseTimesVR(fELoss, fTime);
                // cout <<"EXIT NO GETHIT 2-> " <<slice <<" "<<module0 <<" " <<zdc <<endl;
             } else {
                // cout <<"EXIT GetHit 1-> " <<slice <<" "<<module0 <<" " <<zdc <<endl;
                GetHit(slice, module0, zdc)
                   ->AddVSC(fTrackID, ivol, slice, module0, zdc, TVector3(fPos.X(), fPos.Y(), fPos.Z()),
                            TVector3(fMom.Px(), fMom.Py(), fMom.Pz()), fTime, fLength, fELoss);
-	       GetHit(slice, module0, zdc) -> IncreaseTimesVR(fELoss, fTime);
+               GetHit(slice, module0, zdc)->IncreaseTimesVR(fELoss, fTime);
                // cout <<"EXIT GetHit 2-> " <<slice <<" "<<module0 <<" " <<zdc <<endl;
             }
          } // if(copyNoVTYVECCom==copyNoVTYVEC

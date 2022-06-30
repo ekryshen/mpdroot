@@ -85,9 +85,11 @@ void MpdZdcPoint::Print(const Option_t *opt) const
 
 void MpdZdcPoint::IncreaseTimesVR(Float_t e, Float_t time)
 {
-  // Update hit information
-  if (fContribTimes.find(time) == fContribTimes.end()) fContribTimes[time] = e;
-  else fContribTimes[time] += e;
+   // Update hit information
+   if (fContribTimes.find(time) == fContribTimes.end())
+      fContribTimes[time] = e;
+   else
+      fContribTimes[time] += e;
 }
 
 // -------------------------------------------------------------------------

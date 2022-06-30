@@ -97,7 +97,7 @@ public:
       nCopyZdc    = idzdc;
       fELoss += de;
       fLength = dl;
-      fTime = dt;
+      fTime   = dt;
    }
    /*
      void AddVSCH(Int_t trackID, Int_t detID, Int_t idvsc, Int_t idmod,TVector3 pos,TVector3 mom,Double_t dt, Double_t
@@ -108,9 +108,9 @@ public:
        nCopy_h=idvsc; nCopyMother_h=idmod; fELoss += de; fLength += dl; fTime+=dt;
      }
    */
-    void IncreaseTimesVR(Float_t e, Float_t time);
+   void IncreaseTimesVR(Float_t e, Float_t time);
 
-    std::map<Float_t,Float_t> GetContribTimes() { return fContribTimes; }
+   std::map<Float_t, Float_t> GetContribTimes() { return fContribTimes; }
 
 protected:
    Short_t nCopy;       // Copy number
@@ -120,7 +120,7 @@ protected:
    // Short_t nCopy_h;                // Copy number
    // Short_t nCopyMother_h;          // Copy number of mother volume
 
-    std::map<Float_t,Float_t> fContribTimes; // corrected time vs. deposited energy
+   std::map<Float_t, Float_t> fContribTimes; // corrected time vs. deposited energy
 
    ClassDef(MpdZdcPoint, 4);
 };
