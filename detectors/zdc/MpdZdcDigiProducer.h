@@ -2,6 +2,7 @@
 // -----                 MpdZdcHitproducer header file                 -----
 // -----                 Created 14/08/06  by S.Spataro                -----
 // -----                 Modified March 2021 by A.Strijak                -----
+// -----                 Modified June 2022 by S.Morozov                -----
 // -------------------------------------------------------------------------
 
 #ifndef MPDZDCDIGIPRODUCER_H
@@ -41,6 +42,8 @@ public:
    inline void SetMIPNoise(Double_t setValue) { fMIPNoise = setValue; }
    inline void SetMIP2GeV(Double_t setValue) { fMIP2GeV = setValue; }
 
+   inline void SetMappingFile(TString mappingFile) { fMappingFile = mappingFile; }
+
 private:
    virtual void SetParContainers();
 
@@ -53,6 +56,10 @@ private:
    Double_t fMIP2GeV;   // MIP to GeV
 
    Double_t RecoEnergy(Double_t pfELoss);
+
+   TString fMappingFile;  // mapping file for FHCal modules (X,Y)
+   Double_t fModuleX[91]; // module X coordinates
+   Double_t fModuleY[91]; // module Y coordinates
 
    /** Input array of MpdZdcPoints **/
    TClonesArray *fPointArray;
@@ -70,6 +77,9 @@ private:
    //  TH2F *fHistZdc1En;
    //  TH2F *fHistZdc2En;
 
-   ClassDef(MpdZdcDigiProducer, 2);
+    std::map<Int_t,MpdZdcDigi*> fHitMap; //!
+    MpdZdcDigi* SearchHitVR(Int_t sec);
+
+   ClassDef(MpdZdcDigiProducer, 3);
 };
 #endif // #ifndef MPDZDCDIGIPRODUCER_H
