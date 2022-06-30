@@ -8,6 +8,7 @@
  *  e-mail:   litvin@nf.jinr.ru
  *  Version:  18-Apr-2008
  *  Modified March 2021  by A.Strijak
+ *  Modified June 2022  by S.Morozovs
  *
  ************************************************************************************/
 
@@ -39,6 +40,8 @@ MpdZdcDigi::MpdZdcDigi()
    fELossDigi  = 0;
    fELossReco  = 0.;
    fIsPsd      = kFALSE;
+   fModuleX    = -100;
+   fModuleY    = -100;
 }
 
 // -------------------------------------------------------------------------
@@ -168,6 +171,15 @@ UInt_t MpdZdcDigi::ADC(Double_t pfELoss)
       return (tmp & ((2 << (fADCBits - 1)) - 1));
    } else
       return 0;
+}
+
+// -------------------------------------------------------------------------
+
+void MpdZdcDigi::IncreaseTimesCorrVR(Float_t e, Float_t time)
+{
+  // Update hit information
+  if (fContribTimesCorr.find(time) == fContribTimesCorr.end()) fContribTimesCorr[time] = e;
+  else fContribTimesCorr[time] += e;
 }
 
 // -------------------------------------------------------------------------
