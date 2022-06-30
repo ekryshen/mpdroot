@@ -9,7 +9,8 @@
 #include "TMath.h"
 
 R__ADD_INCLUDE_PATH($VMCWORKDIR)
-#include "macro/mpd/mpdloadlibs.C"
+//#include "macro/mpd/mpdloadlibs.C"
+#include "../mpdloadlibs.C"
 //#include "ZDC_geom_par.h"
 
 //Detector's position
@@ -232,6 +233,7 @@ void create_rootgeom_zdc_oldnames_7sect_v1_no_overlaps_w_pipe_magnet() {
 
     zdcModuleVH->SetMedium(pMedIron);
 
+    Double_t xxxxNICA[91], yyyyNICA[91];
     //Fill ZDC with modules
     Float_t xCur = Zdc_X_size + Zdc_module_X_size;//60 cm
     Float_t yCur = Zdc_Y_size + Zdc_module_Y_size;//60 cm
@@ -248,11 +250,15 @@ void create_rootgeom_zdc_oldnames_7sect_v1_no_overlaps_w_pipe_magnet() {
 	if((iMod+1)>=2 && (iMod+1)<=6) {
 	  modNb=iMod+1-1;  //mods 1-5
 	  ZDCV->AddNode(zdcModuleV,modNb,zdcModuleV_position);
+	  xxxxNICA[modNb-1] = xCur; 
+	  yyyyNICA[modNb-1] = yCur; 
 	  cout <<"1-5 iMod,modNb,xxxx,yyyy " <<iMod+1 <<" " <<modNb <<" " <<xCur <<" " <<yCur <<endl;
 	}
 	if((iMod+1)>=8 && (iMod+1)<=24) {
 	  modNb=iMod+1-2;  //mods 6-22
 	  ZDCV->AddNode(zdcModuleV,modNb,zdcModuleV_position);
+	  xxxxNICA[modNb-1] = xCur; 
+	  yyyyNICA[modNb-1] = yCur; 
 	  cout <<"6-22 iMod,modNb,xxxx,yyyy " <<iMod+1 <<" " <<modNb <<" " <<xCur <<" " <<yCur <<endl;
 	}
 
@@ -261,11 +267,15 @@ void create_rootgeom_zdc_oldnames_7sect_v1_no_overlaps_w_pipe_magnet() {
 	if((iMod+1)>=26 && (iMod+1)<=42) {
 	  modNb=iMod+1-2;  //mods 24-40
 	  ZDCV->AddNode(zdcModuleV,modNb,zdcModuleV_position);
+	  xxxxNICA[modNb-1] = xCur; 
+	  yyyyNICA[modNb-1] = yCur; 
 	  cout <<"24-40 iMod,modNb,xxxx,yyyy " <<iMod+1 <<" " <<modNb <<" " <<xCur <<" " <<yCur <<endl;
 	}
 	if((iMod+1)>=44 && (iMod+1)<=48) {
 	  modNb=iMod+1-3;  //mods 41-45
 	  ZDCV->AddNode(zdcModuleV,modNb,zdcModuleV_position);
+	  xxxxNICA[modNb-1] = xCur; 
+	  yyyyNICA[modNb-1] = yCur; 
 	  cout <<"41-45 iMod,modNb,xxxx,yyyy " <<iMod+1 <<" " <<modNb <<" " <<xCur <<" " <<yCur <<endl;
 	}
 	
@@ -273,6 +283,25 @@ void create_rootgeom_zdc_oldnames_7sect_v1_no_overlaps_w_pipe_magnet() {
 	
       }//for(Int_t ix==0; ix<7; ix++)
     }//for(Int_t iy==0; iy<7; iy++)
+
+    Double_t xxxx[91], yyyy[91];
+    for(Int_t im=0; im<90; im++) {
+      if(im<45) {
+	xxxx[im] = xxxxNICA[im];
+	yyyy[im] = yyyyNICA[im];
+      }
+      else {
+	xxxx[im] = -xxxxNICA[im-45];
+	yyyy[im] = yyyyNICA[im-45];
+      }
+    }
+    xxxx[22] = 0; yyyy[22] = 0; 
+    xxxx[67] = 0; yyyy[67] = 0; 
+    for(Int_t im=0; im<90; im++) { 
+      if(im<9) cout <<im+1 << setw(11) <<xxxx[im] << setw(10) <<yyyy[im] <<endl;
+      else cout <<im+1 << setw(10) <<xxxx[im] << setw(10) <<yyyy[im] <<endl;
+    }
+    //return 1;
 
     //fill module and module with hole with Fe-Sc-Lead slices
     FillModule(zdcModuleV,zdcModuleVH);
