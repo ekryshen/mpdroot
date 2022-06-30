@@ -7,6 +7,7 @@
  *  e-mail:   litvin@nf.jinr.ru
  *  Version:  18-Apr-2008
  *  Modified March 2021  by A.Strijak
+ *  Modified June 2022  by S.Morozovs
  *
  ************************************************************************************/
 
@@ -36,6 +37,7 @@ MpdZdcDigiProducer::MpdZdcDigiProducer(const char *name) : FairTask(name)
    fMIPEnergy = 0.005; // 5 MeV
    fMIPNoise  = 0.3;   // 0.2 MIP noise level
    fMIP2GeV   = 0.005;
+   fMappingFile = "nofile";
 }
 // -------------------------------------------------------------------------
 
@@ -73,6 +75,39 @@ InitStatus MpdZdcDigiProducer::Init()
    cout << "-I- MpdZdcDigiProducer: Init started..." << endl;
 
    fRandom3 = new TRandom3();
+
+   // Get FHCal module mapping (if mapping file is set)
+
+   for (int i = 0; i < 91; i++) { fModuleX[i] = -100; fModuleY[i] = -100; }
+
+   if (!(fMappingFile == "nofile")) {
+
+     TString dummy;
+     ifstream in;
+
+     TString dir = getenv("VMCWORKDIR");
+     TString path = dir + "/input/";
+     in.open((path + fMappingFile).Data());
+     if (!in.is_open())
+     {
+         printf("Loading FHCal Map from file: %s - file open error!\n", fMappingFile.Data());
+         return kFATAL;
+     }
+     printf("Loading FHCal Map from file: %s\n", fMappingFile.Data());
+     in >> dummy >> dummy >> dummy;
+     while (!in.eof()) {
+         int id;
+         float x,y;
+         in >> id >> x >> y;
+         if (!in.good()) break;
+         printf("%d %f %f\n",id,x,y);
+         fModuleX[id] = x;
+         fModuleY[id] = y;
+     }
+
+     in.close();
+
+   }// if (!(fMappingFile == "nofile"))
 
    // Get RootManager
    FairRootManager *ioman = FairRootManager::Instance();
@@ -226,6 +261,8 @@ void MpdZdcDigiProducer::Exec(Option_t *opt)
             else
                detID = 2;
 
+	    Int_t hitID = i*10 + ii; 
+
             Double_t recEnergy = RecoEnergy(dEdepSectEv[i][ii]);
 
             if (detID == 1) {
@@ -233,11 +270,17 @@ void MpdZdcDigiProducer::Exec(Option_t *opt)
                digi->ConvertSim();
                digi->SetELossReco(recEnergy);
                e1 += recEnergy;
+	       fHitMap[hitID] = digi;
+               digi->SetModuleX(fModuleX[i+1]);
+               digi->SetModuleY(fModuleY[i+1]);
             } else {
-               MpdZdcDigi *digi = AddHit(detID, i - 45 + 1, ii + 1, dEdepSectEv[i][ii]);
+	      MpdZdcDigi *digi = AddHit(detID, i - 45 + 1, ii + 1, dEdepSectEv[i][ii]);
                digi->ConvertSim();
                digi->SetELossReco(recEnergy);
                e2 += recEnergy;
+	       fHitMap[hitID] = digi;
+               digi->SetModuleX(fModuleX[i+1]);
+               digi->SetModuleY(fModuleY[i+1]);
             }
          }
       }
@@ -269,6 +312,41 @@ void MpdZdcDigiProducer::Exec(Option_t *opt)
  }
    */
 
+   map<Float_t,Float_t> contribTMP;
+
+  for (Int_t iPoint=0; iPoint<nPoints; iPoint++) {
+
+    point  = (MpdZdcPoint*) fPointArray->At(iPoint);
+
+    detID = point->GetCopyZdc();//==1 (z>0), ==2 (z<0)
+    if(detID==1) modID  = point->GetCopyMother(); // modules 1-45
+    else modID = point->GetCopyMother() + 45;//modules 46-90
+    chanID = (Int_t)((point->GetCopy()-1)/6); //sections 0-9
+
+    if(dEdepSectEv[modID-1][chanID] == 0) continue;
+
+    contribTMP.clear();
+
+    Int_t hitID = (modID-1)*10 + chanID;
+
+    MpdZdcDigi* hit = SearchHitVR(hitID); 
+
+    if (hit == NULL) {
+      cout<<"Lost ZDC digit??? : "<<detID<<" "<<modID<<" "<<chanID<<" "<<hitID<<" "<<dEdepSectEv[modID][chanID]<<" "<<endl;
+    } 
+    else {
+
+      contribTMP = point -> GetContribTimes();
+
+      for (map<Float_t,Float_t>::iterator it = contribTMP.begin(); it != contribTMP.end(); ++it)
+	{
+	  hit->IncreaseTimesCorrVR(it->second, (it->first) + (405.6 - fabs(point->GetZ()))/(30/1.6));
+	}
+
+    }
+  }//iPoint
+
+
 #undef EDEBUG
 }
 // -------------------------------------------------------------------------
@@ -294,5 +372,11 @@ Double_t MpdZdcDigiProducer::RecoEnergy(Double_t pfELoss)
    energyMIPSmeared += noise;
    return energyMIPSmeared * fMIP2GeV;
 }
+
+MpdZdcDigi* MpdZdcDigiProducer::SearchHitVR(Int_t sec)
+{
+  if (fHitMap.find(sec) == fHitMap.end()) return NULL;
+  return fHitMap[sec];
+}   
 
 ClassImp(MpdZdcDigiProducer);
