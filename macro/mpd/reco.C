@@ -158,7 +158,10 @@ void reco(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outFile
     //FairTask *emcHP = new MpdEmcHitCreation();
     //fRun->AddTask(emcHP);
 
-    FairTask *tdigi = new MpdZdcDigiProducer("MpdZdcDigiProducer");
+    //FairTask *tdigi = new MpdZdcDigiProducer("MpdZdcDigiProducer");
+    //fRun->AddTask(tdigi);
+    MpdZdcDigiProducer *tdigi = new MpdZdcDigiProducer("MpdZdcDigiProducer");
+    tdigi->SetMappingFile("FHCal_mapping.txt");
     fRun->AddTask(tdigi);
 
     //MpdPidRefitTrackTask* trRefit = new MpdPidRefitTrackTask("Track PID and Refit");
