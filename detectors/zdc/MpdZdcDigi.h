@@ -7,6 +7,7 @@
  *  e-mail:   litvin@nf.jinr.ru
  *  Version:  18-Apr-2008
  *  Modified March 2021  by A.Strijak
+ *  Modified June 2022  by S.Morozov
  *
  ************************************************************************************/
 
@@ -14,6 +15,7 @@
 #define MPDZDCDIGI_H
 
 #include "MpdZdcPoint.h"
+#include <map>
 
 class MpdZdcDigi : public TObject {
 public:
@@ -28,6 +30,9 @@ public:
    virtual void Print(const Option_t *opt = "");
 
    inline Int_t GetModuleID() { return fModuleID; }
+
+   inline Int_t GetModuleX() { return fModuleX; }
+   inline Int_t GetModuleY() { return fModuleY; }
 
    inline Int_t    GetDetectorID() { return fDetectorID; }
    inline Int_t    GetChannelID() { return fChannelID; }
@@ -45,6 +50,18 @@ public:
    {
       fModuleID = pfModuleID;
       return fModuleID;
+   }
+
+   inline Double_t SetModuleX(Double_t pfModuleX)
+   {
+      fModuleX = pfModuleX;
+      return fModuleX;
+   }
+
+   inline Double_t SetModuleY(Double_t pfModuleY)
+   {
+      fModuleY = pfModuleY;
+      return fModuleY;
    }
 
    inline Int_t SetDetectorID(UInt_t pfDetectorID)
@@ -98,6 +115,10 @@ public:
       return fELossReco;
    }
 
+    void IncreaseTimesCorrVR(Float_t e, Float_t time);
+
+    std::map<Float_t,Float_t> GetContribTimesCorr() { return fContribTimesCorr; }
+
 protected:
    static char
       fWasInitialized;       // 0 - from built-in constants; 1 - was attempt to read; 2 - success from MpdZdcDigiScheme
@@ -112,9 +133,14 @@ protected:
    Double_t fELoss;      // Sum of the energy losses as analog signal accumulated prior to digitalization
    Double_t fELossReco;  // Sum of the energy losses as analog simulated response of the detector/channel
 
+   Double_t fModuleX;  // module X coordinates
+   Double_t fModuleY;  // module X coordinates
+
    Bool_t fIsPsd; // static initialization tried from from MpdZdcDigiPar (0) or MpdZdcPsdDigiPar (1)
 
-   ClassDef(MpdZdcDigi, 2);
+   std::map<Float_t,Float_t> fContribTimesCorr; // corrected time vs. deposited energy
+
+   ClassDef(MpdZdcDigi, 3);
 };
 
 #endif // MPDZDCDIGI_H
