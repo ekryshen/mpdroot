@@ -318,11 +318,11 @@ void runMC(EGenerators generator = EGenerators::BOX, EVMCType vmc = EVMCType::GE
    // Transport nEvents
    fRun->Run(nEvents);
 
-#ifdef LAQGSM
-   TString Pdg_table_name =
-       TString::Format("%s%s%c%s", gSystem->BaseName(inFile.Data()), ".g", (fRun->GetName())[6], ".pdg_table.dat");
-   (TDatabasePDG::Instance())->WritePDGTable(Pdg_table_name.Data());
-#endif
+   if (generator == EGenerators::LAQGSM)
+   {
+    TString Pdg_table_name = TString::Format("%s%s%c%s", gSystem->BaseName(inFile.Data()), ".g", (fRun->GetName())[6], ".pdg_table.dat");
+    (TDatabasePDG::Instance())->WritePDGTable(Pdg_table_name.Data());
+   }
    timer.Stop();
    Double_t rtime = timer.RealTime(), ctime = timer.CpuTime();
    printf("RealTime=%f seconds, CpuTime=%f seconds\n", rtime, ctime);
