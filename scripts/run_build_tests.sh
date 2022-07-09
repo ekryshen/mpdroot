@@ -59,12 +59,16 @@ function assign_vmc_generator_pairs() {
   # MPD generators: BOX FLUID HSD ION LAQGSM MCDST PART SMASH UNIGEN URQMD VHLLE
   # MPD vmcs : GEANT3 GEANT4
   # Each pair is one test suite for which vmc,generator test template is executed
-  NO_VMC_GEN_PAIRS=4
+  NO_VMC_GEN_PAIRS=6
   INFILE_DEFAULT="auau.09gev.mbias.98k.ftn14"
-  vmc[0]="GEANT4"; generator[0]="BOX"; inFile[0]=$INFILE_DEFAULT;
-  vmc[1]="GEANT4"; generator[1]="UNIGEN"; inFile[1]="$CI_PROJECT_DIR/input/tests/dcmqgsm_bibi_9.2gev_local_1.mcini.root";
-  vmc[2]="GEANT3"; generator[2]="BOX";    inFile[2]=$INFILE_DEFAULT;
-  vmc[3]="GEANT3"; generator[3]="UNIGEN"; inFile[3]="$CI_PROJECT_DIR/input/tests/dcmqgsm_bibi_9.2gev_local_1.mcini.root";
+  INFILE_UNIGEN="$CI_PROJECT_DIR/input/tests/dcmqgsm_bibi_9.2gev_local_1.mcini.root"
+  INFILE_URQMD="$CI_PROJECT_DIR/input/tests/urqmd-BiBi-09.5GeV-mb-eos0-2-108.f14.gz"
+  vmc[0]="GEANT4"; generator[0]="BOX";    inFile[0]=$INFILE_DEFAULT;
+  vmc[1]="GEANT4"; generator[1]="UNIGEN"; inFile[1]=$INFILE_UNIGEN;
+  vmc[2]="GEANT4"; generator[2]="URQMD";  inFile[2]=$INFILE_URQMD;
+  vmc[3]="GEANT3"; generator[3]="BOX";    inFile[3]=$INFILE_DEFAULT;
+  vmc[4]="GEANT3"; generator[4]="UNIGEN"; inFile[4]=$INFILE_UNIGEN;
+  vmc[5]="GEANT3"; generator[5]="URQMD";  inFile[5]=$INFILE_URQMD;
 }
 
 
