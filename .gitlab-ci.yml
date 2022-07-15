@@ -86,11 +86,6 @@ build:c7:
     OS_TYPE: "c7"
   <<: *build
 
-build:c8:
-  variables:
-    OS_TYPE: "c8"
-  <<: *build
-
 .test_build_template: &build_tests
   image: git.jinr.ru:5005/nica/nicadist/$OS_TYPE:alibuild-dev
   stage: test
@@ -120,16 +115,6 @@ build_tests:c7:
   needs: ["build:c7"]
   dependencies:
     - build:c7
-  retry: 1       # retry script if it failed (sometimes if fails due to some unexpected particle). Maximum 2 retries.
-  <<: *build_tests
-
-build_tests:c8:
-  variables:
-    OS_TYPE: "c8"
-    REPORT_NAME: "report_c8"
-  needs: ["build:c8"]
-  dependencies:
-    - build:c8
   retry: 1       # retry script if it failed (sometimes if fails due to some unexpected particle). Maximum 2 retries.
   <<: *build_tests
 
