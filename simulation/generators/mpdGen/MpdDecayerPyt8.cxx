@@ -43,7 +43,7 @@ MpdDecayerPyt8 *MpdDecayerPyt8::Instance()
 ////////////////////////////////////////////////////////////////////////////////
 /// constructor
 
-MpdDecayerPyt8::MpdDecayerPyt8() : fPythia8(new TPythia8()), fDebug(0), fLambda(NULL), fRandom(NULL)
+MpdDecayerPyt8::MpdDecayerPyt8() : fPythia8(new TPythia8()), fDebug(0), fHyperon(NULL), fRandom(NULL)
 {
 
    fPythia8->Pythia8()->readString("SoftQCD:elastic = on");
@@ -81,11 +81,12 @@ void MpdDecayerPyt8::Init()
    fParticles = new TClonesArray("TParticle");
 
    // Lambda branching to p+\pi-
-   fPythia8->Pythia8()->particleData.list(3122);
-   // ParticleDataEntry* part = fPythia8->Pythia8()->particleData.particleDataEntryPtr(3122); // Lambda
-   fLambda               = fPythia8->Pythia8()->particleData.particleDataEntryPtr(3122); // Lambda
-   DecayChannel &channel = fLambda->channel(0);
-   fBranch               = channel.bRatio();
+   fPythia8->Pythia8()->particleData.list(+3122); // \bar{Lambda0} = Lambda0 !be carefull!
+   // fPythia8->Pythia8()->particleData.list(+3322); // \bar{Xi}+ = Xi- !be carefull!
+   //  ParticleDataEntry* part = fPythia8->Pythia8()->particleData.particleDataEntryPtr(3122); // Lambda
+   // fHyperon               = fPythia8->Pythia8()->particleData.particleDataEntryPtr(3122); // Lambda
+   // DecayChannel &channel = fHyperon->channel(0);
+   // fBranch               = channel.bRatio();
 
    // Random number generator
    fRandom = new TRandom(0); // time-dependent seed
@@ -121,25 +122,43 @@ void MpdDecayerPyt8::Decay(Int_t pdg, TLorentzVector *p)
       return;
    }
 
-   TVector3 polar;
-   part->GetPolarisation(polar);
-   Bool_t polarFlag = kFALSE;
+   Bool_t customFlag    = kFALSE;
+   Int_t  customChannel = 0;
 
-   if (polar.Mag2() != 0.) {
-      // Polarized lambda - simulate anysotropic decay only to p + \pi-
-      polarFlag = kTRUE;
-      if (gRandom->Rndm() < fBranch) {
-         // Anysotropic decay
-         // cout << " ----------------- " << fBranch << endl;
-         new ((*fParticles)[0]) TParticle(*part); // store mother particle
-         Gdecay(pdg, p);
-         gRandom = saveRandom;
-         return;
-      } else {
-         // cout << " ++++++++++ " << fBranch << endl;
-         //  Force the other channels
-         DecayChannel &channel = fLambda->channel(0);
-         channel.bRatio(0.0);
+   /* if we will consider heavy hyperons do not forget about spin transfer */
+   if (TMath::Abs(pdg) == 3122) { // handle hyperon decay
+      customChannel = 0;          // select decay channel
+      // customChannel=0 for Lambda-> p+ pi   or   \bar{Lambda}->\bar{p}- pi
+
+      // Pythia8 provides decay channels info in a way: anti-particle = particle
+      Int_t apdg            = TMath::Abs(pdg); // "Abs" to be sure that nothing will changes with changes in Pythia8
+      fHyperon              = fPythia8->Pythia8()->particleData.particleDataEntryPtr(apdg);
+      DecayChannel &channel = fHyperon->channel(customChannel);
+      fBranch               = channel.bRatio();
+      Int_t pdg1            = channel.product(0); // must be baryon
+      Int_t pdg2            = channel.product(1);
+      if (pdg < 0) { // for anti-particle pdg have to be corrected
+         pdg1 = -pdg1;
+         pdg2 = -pdg2;
+      }
+
+      TVector3 polar;
+      part->GetPolarisation(polar);
+
+      if (polar.Mag2() != 0.) {
+         // Polarized hyperon - simulate anysotropic decay
+         customFlag = kTRUE;
+         if (gRandom->Rndm() < fBranch) {
+            // Anysotropic decay
+            new ((*fParticles)[0]) TParticle(*part); // store mother particle
+            Gdecay(pdg, pdg1, pdg2, p);
+            gRandom = saveRandom;
+            return;
+         } else {
+            //  Force the other channels
+            DecayChannel &channel = fHyperon->channel(customChannel);
+            channel.bRatio(0.0);
+         }
       }
    }
 
@@ -149,8 +168,8 @@ void MpdDecayerPyt8::Decay(Int_t pdg, TLorentzVector *p)
    fPythia8->Pythia8()->particleData.mayDecay(idPart, kTRUE);
    fPythia8->Pythia8()->moreDecays();
    if (fDebug > 0) fPythia8->EventListing();
-   if (polarFlag) {
-      DecayChannel &channel = fLambda->channel(0);
+   if (customFlag) {
+      DecayChannel &channel = fHyperon->channel(customChannel);
       channel.bRatio(fBranch);
    }
 
@@ -236,14 +255,14 @@ void MpdDecayerPyt8::ClearEvent()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// Simulate two-body decay process of Lambda-hyperon to p+\pi-
+/// Simulate two-body decay process: hyperon -> pdg1+pdg2
 
-void MpdDecayerPyt8::Gdecay(Int_t idpart, TLorentzVector *p)
+void MpdDecayerPyt8::Gdecay(Int_t idpart, Int_t pdg1, Int_t pdg2, TLorentzVector *p)
 {
 
    Double_t pcm[2][4] = {{0}, {0}};
-   Double_t xm0 = p->M(), xm1 = TDatabasePDG::Instance()->GetParticle(2212)->Mass();
-   Double_t xm2 = TDatabasePDG::Instance()->GetParticle(-211)->Mass();
+   Double_t xm0 = p->M(), xm1 = TDatabasePDG::Instance()->GetParticle(pdg1)->Mass();
+   Double_t xm2 = TDatabasePDG::Instance()->GetParticle(pdg2)->Mass();
 
    Gdeca2(xm0, xm1, xm2, pcm);
 
@@ -263,8 +282,8 @@ void MpdDecayerPyt8::Gdecay(Int_t idpart, TLorentzVector *p)
    // pos.Print();
 
    Int_t npart = fParticles->GetEntriesFast();
-   new ((*fParticles)[npart++]) TParticle(2212, 1, 1, -1, 0, 0, daughter1, pos);
-   new ((*fParticles)[npart]) TParticle(-211, 1, 1, -1, 0, 0, daughter2, pos);
+   new ((*fParticles)[npart++]) TParticle(pdg1, 1, 1, -1, 0, 0, daughter1, pos);
+   new ((*fParticles)[npart]) TParticle(pdg2, 1, 1, -1, 0, 0, daughter2, pos);
 
    fSourceFlag = kCustom;
 
@@ -298,12 +317,8 @@ void MpdDecayerPyt8::Gdeca2(Double_t xm0, Double_t xm1, Double_t xm2, Double_t p
 
    gRandom->RndmArray(2, random);
 
-   // Sanity check - should not happen (legacy code)
    TParticle *part = gMC->GetStack()->GetCurrentTrack();
-   if (part->GetPdgCode() != 3122) {
-      cout << " ??? Not Lambda - exit " << part->GetPdgCode() << endl;
-      exit(0);
-   }
+   Int_t      pdg  = part->GetPdgCode();
 
    TLorentzVector lorV;
    part->Momentum(lorV);
@@ -312,13 +327,8 @@ void MpdDecayerPyt8::Gdeca2(Double_t xm0, Double_t xm1, Double_t xm2, Double_t p
    TVector3 polar;
    part->GetPolarisation(polar);
 
-   if (polar.Mag2() == 0.) {
-      costh = 2. * random[0] - 1.0;
-      phi   = TMath::TwoPi() * random[1];
-   } else {
-      // Anisotropic decay angular distribution (0.5*(1+alpha*cos)).
-      Anisotropy(random, polar, phi, costh);
-   }
+   // Anisotropic decay angular distribution (0.5*(1+alpha*cos)).
+   Anisotropy(pdg, random, polar, phi, costh);
 
    if (TMath::Abs(costh) >= 1.0)
       costh = TMath::Sign(1.0, costh);
@@ -345,7 +355,7 @@ void MpdDecayerPyt8::Gdeca2(Double_t xm0, Double_t xm1, Double_t xm2, Double_t p
 ////////////////////////////////////////////////////////////////////////////////
 /// Simulate anisotropic (due to polarization) decay of lambda
 
-void MpdDecayerPyt8::Anisotropy(Double_t *rndm, TVector3 &polar3, Double_t &phi, Double_t &costh)
+void MpdDecayerPyt8::Anisotropy(Int_t pdg, Double_t *rndm, TVector3 &polar3, Double_t &phi, Double_t &costh)
 {
    // Simulate anisotropic (due to polarization) decay of lambda
 
@@ -355,10 +365,11 @@ void MpdDecayerPyt8::Anisotropy(Double_t *rndm, TVector3 &polar3, Double_t &phi,
 
    // const Double_t alpha = 0.642;
    // static TF1 f("f","1+0.642*[0]*x",-1,1);
-   static TF1 f("f", "1+0.732*x", -1, 1); // AZ 10.06.21 - new value
+   static TF1 f("f", "1+0.732*x", -1, 1); // AZ 10.06.21 - new value of alpha
    f.SetNpx(1000);
 
    Double_t costhe = f.GetRandom(); // cos(theta)
+   if (pdg < 0) costhe = -costhe;   // for anti-hyperon probability is (1-alpha*x)
 
    Double_t sinth = 0.0;
    if (TMath::Abs(costhe) >= 1.0)

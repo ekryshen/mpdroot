@@ -57,20 +57,20 @@ protected:
    void ClearEvent();
 
 private:
-   void Gdecay(Int_t idpart, TLorentzVector *p);
+   void Gdecay(Int_t idpart, Int_t pdg1, Int_t pdg2, TLorentzVector *p);
    void Gdeca2(Double_t xm0, Double_t xm1, Double_t xm2, Double_t pcm[2][4]);
-   void Anisotropy(Double_t *rndm, TVector3 &polar, Double_t &phi, Double_t &costh);
+   void Anisotropy(Int_t pdg, Double_t *rndm, TVector3 &polar, Double_t &phi, Double_t &costh);
    void ChangeBranchings();
    void ChangeParticleBr(TObjArray *tokens);
 
    static MpdDecayerPyt8 *fgInstance; // singleton instance
 
-   TPythia8 *fPythia8;     // Pointer to pythia8
-   Int_t     fDebug;       // Debug level
+   TPythia8 *fPythia8; // Pointer to pythia8
+   Int_t     fDebug;   // Debug level
 
-   Float_t              fBranch; // branching of lambda to p + \pi-
-   ParticleDataEntryPtr fLambda; // pointer to Lambda in Pythia8 database
-   TLorentzVector       fMother; // mother decay point position
+   Float_t              fBranch;  // branching of lambda to p + \pi-
+   ParticleDataEntryPtr fHyperon; // pointer to Lambda in Pythia8 database
+   TLorentzVector       fMother;  // mother decay point position
    TClonesArray        *fParticles;
    SourceFlag           fSourceFlag;
    std::set<Int_t>      fMothersPdg;
