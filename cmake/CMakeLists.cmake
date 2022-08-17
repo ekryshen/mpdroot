@@ -70,42 +70,52 @@ set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
 # cause another cmake executable to run. The same process will walk through
 # the project's entire directory structure.
 # LEVEL 1
-add_subdirectory (core/mpdBase) # INDEPENDENT
-add_subdirectory (core/mpdDst) # Base
-add_subdirectory (core/mpdField) # INDEPENDENT
-add_subdirectory (core/mpdPassive) # INDEPENDENT
-add_subdirectory (core/mpdPid) # INDEPENDENT
-add_subdirectory (detectors/bmd) # INDEPENDENT
-add_subdirectory (detectors/emc) # INDEPENDENT
-add_subdirectory (detectors/etof) # INDEPENDENT
-add_subdirectory (detectors/ffd) # INDEPENDENT
-add_subdirectory (detectors/mcord) # INDEPENDENT
-add_subdirectory (detectors/sts) # INDEPENDENT
-add_subdirectory (detectors/tof) # INDEPENDENT
-add_subdirectory (detectors/zdc) # INDEPENDENT
-add_subdirectory (simulation/generators/genFactory) # INDEPENDENT
-add_subdirectory (simulation/generators/mpdGen)
-add_subdirectory (simulation/generators/mpdGeneralGenerator) # INDEPENDENT
-add_subdirectory (simulation/generators/unigenFormat) # INDEPENDENT
 
-Execute_Process(COMMAND ${ROOT_CONFIG_EXECUTABLE} --has-pgsql OUTPUT_VARIABLE ROOT_HAS_PGSQL)
-String(STRIP ${ROOT_HAS_PGSQL} ROOT_HAS_PGSQL)
-if(ROOT_HAS_PGSQL)
-  message("${BoldWhite}\nROOT was built with PGSQL support. Database part will be built.${ColourReset}\n")  
-  add_subdirectory (tools/database) # INDEPENDENT
+
+set(TpcAlignmentDebug 1)
+if(TpcAlignmentDebug EQUAL 1)
+  add_subdirectory (detectors/tpc_alignment)
+  message("TpcAlignment Library will be generated.")
 else()
-  message("${BoldRed}\nROOT was not built with PGSQL support. Database part will not work.${ColourReset}\n")  
-endif()
+  add_subdirectory (core/mpdBase) # INDEPENDENT
+  add_subdirectory (simulation/generators/mpdGen)
+  add_subdirectory (simulation/generators/unigenFormat) # INDEPENDENT
+  add_subdirectory (core/mpdPassive) # INDEPENDENT
 
-# LEVEL 2
-add_subdirectory (detectors/tpc) # tof
-add_subdirectory (reconstruction/tracking/kalman) # mpdfield
-add_subdirectory (physics) # mpdbase mpddst
-add_subdirectory (simulation/mcDst)
-add_subdirectory (simulation/mcStack) # MpdGen
-# LEVEL 3
-add_subdirectory (tools/eventDisplay) # emc xml2 TODO - remove dependencies on root configuration
-add_subdirectory (reconstruction/tracking/lheTrack) # mpdbase kalman
+  add_subdirectory (core/mpdDst) # Base
+  add_subdirectory (core/mpdField) # INDEPENDENT
+  add_subdirectory (core/mpdPid) # INDEPENDENT
+  add_subdirectory (detectors/bmd) # INDEPENDENT
+  add_subdirectory (detectors/emc) # INDEPENDENT
+  add_subdirectory (detectors/etof) # INDEPENDENT
+  add_subdirectory (detectors/ffd) # INDEPENDENT
+  add_subdirectory (detectors/mcord) # INDEPENDENT
+  add_subdirectory (detectors/sts) # INDEPENDENT
+  add_subdirectory (detectors/tof) # INDEPENDENT
+  add_subdirectory (detectors/zdc) # INDEPENDENT
+  add_subdirectory (simulation/generators/genFactory) # INDEPENDENT  
+  add_subdirectory (simulation/generators/mpdGeneralGenerator) # INDEPENDENT 
+
+
+  Execute_Process(COMMAND ${ROOT_CONFIG_EXECUTABLE} --has-pgsql OUTPUT_VARIABLE ROOT_HAS_PGSQL)
+  String(STRIP ${ROOT_HAS_PGSQL} ROOT_HAS_PGSQL)
+  if(ROOT_HAS_PGSQL)
+    message("${BoldWhite}\nROOT was built with PGSQL support. Database part will be built.${ColourReset}\n")  
+    add_subdirectory (tools/database) # INDEPENDENT
+  else()
+    message("${BoldRed}\nROOT was not built with PGSQL support. Database part will not work.${ColourReset}\n")  
+  endif()
+
+  # LEVEL 2
+  add_subdirectory (detectors/tpc) # tof
+  add_subdirectory (reconstruction/tracking/kalman) # mpdfield
+  add_subdirectory (physics) # mpdbase mpddst
+  add_subdirectory (simulation/mcDst)
+  add_subdirectory (simulation/mcStack) # MpdGen
+  # LEVEL 3
+  add_subdirectory (tools/eventDisplay) # emc xml2 TODO - remove dependencies on root configuration
+  add_subdirectory (reconstruction/tracking/lheTrack) # mpdbase kalman
+endif()
 
 INSTALL(DIRECTORY gconfig/ DESTINATION gconfig)
 INSTALL(DIRECTORY input/ DESTINATION input)
