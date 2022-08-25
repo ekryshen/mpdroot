@@ -8,8 +8,9 @@
 #include "MpdTpcRunner.h"
 
 #include <FairTask.h>
-
 #include <TClonesArray.h>
+
+#include <memory>
 
 /// @brief Acts-based track finder for TPC.
 class MpdTpcTracker final : public FairTask {
@@ -25,7 +26,7 @@ public:
   void Finish() override;
 
 private:
-  Mpd::Tpc::Runner fRunner;
+  std::unique_ptr<Mpd::Tpc::Runner> fRunner;
 
   TClonesArray *fPoints;
   TClonesArray *fKalmanHits;

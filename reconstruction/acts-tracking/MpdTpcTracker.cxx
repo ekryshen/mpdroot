@@ -16,8 +16,7 @@
 #include <iostream>
 
 MpdTpcTracker::MpdTpcTracker(const char *title):
-    FairTask(title),
-    fRunner(Acts::Logging::DEBUG) {}
+    FairTask(title) {}
 
 MpdTpcTracker::~MpdTpcTracker() {}
 
@@ -34,6 +33,9 @@ inline TClonesArray *getArray(const char *name) {
 
 InitStatus MpdTpcTracker::Init() {
   std::cout << "[MpdTpcTracker::Init]: Started" << std::endl;
+
+  // Geometry must already be loaded (gGeoManager != nullptr).
+  fRunner = std::make_unique<Mpd::Tpc::Runner>(Acts::Logging::DEBUG);
 
   fPoints = getArray("TpcPoint");
 //  fKalmanHits = getArray("MpdKalmanHit");
@@ -90,7 +92,7 @@ void MpdTpcTracker::Exec(Option_t *option) {
   }
 
   // Run the track finding algorithm.
-  const auto &trajectories = fRunner.execute(hits);
+  const auto &trajectories = fRunner->execute(hits);
 
   // Convert the output tracks.
   /* base
