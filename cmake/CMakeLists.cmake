@@ -106,6 +106,7 @@ add_subdirectory (simulation/mcStack) # MpdGen
 # LEVEL 3
 add_subdirectory (tools/eventDisplay) # emc xml2 TODO - remove dependencies on root configuration
 add_subdirectory (reconstruction/tracking/lheTrack) # mpdbase kalman
+add_subdirectory (reconstruction/acts-tracking) # Acts-based tracker
 
 INSTALL(DIRECTORY gconfig/ DESTINATION gconfig)
 INSTALL(DIRECTORY input/ DESTINATION input)
