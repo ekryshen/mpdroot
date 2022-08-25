@@ -14,6 +14,7 @@
 int main() {
   Mpd::Tpc::Runner runner(
       "../../geometry/tpc_v9_with_materials.root",
+      "../../geometry/tpc_acts_tracking.json",
       Acts::Logging::VERBOSE
   );
 

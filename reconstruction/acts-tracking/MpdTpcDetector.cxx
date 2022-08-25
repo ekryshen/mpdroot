@@ -160,6 +160,7 @@ bool Detector::editGeometry(TGeoManager *geoManager) {
 }
 
 Detector::Detector(const std::string &rootFile,
+                   const std::string &jsonFile,
                    Acts::Logging::Level level):
     m_logger(Acts::getDefaultLogger("Detector", level)) {
   geoEditor = [this](auto *gm){ return editGeometry(gm); };
@@ -169,7 +170,7 @@ Detector::Detector(const std::string &rootFile,
   m_config.volumeLogLevel = level;
 
   m_config.fileName = rootFile;
-  m_config.readJson(JsonFile);
+  m_config.readJson(jsonFile);
 }
 
 std::shared_ptr<const Acts::TrackingGeometry> Detector::getGeometry() {

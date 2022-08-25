@@ -35,7 +35,10 @@ InitStatus MpdTpcTracker::Init() {
   std::cout << "[MpdTpcTracker::Init]: Started" << std::endl;
 
   // Geometry must already be loaded (gGeoManager != nullptr).
-  fRunner = std::make_unique<Mpd::Tpc::Runner>(Acts::Logging::DEBUG);
+  fRunner = std::make_unique<Mpd::Tpc::Runner>(
+      "../../geometry/tpc_acts_tracking.json", // FIXME:
+      Acts::Logging::DEBUG
+  );
 
   fPoints = getArray("TpcPoint");
 //  fKalmanHits = getArray("MpdKalmanHit");

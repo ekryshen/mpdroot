@@ -97,10 +97,12 @@ struct Config final {
   /// Maximum number of associated measurements on a single surface.
   static constexpr auto NmaxPerSurface      = 5u;                   // FIXME
 
-  Config(Acts::Logging::Level level = Acts::Logging::DEBUG):
-      Config("" /* No import */, level) {}
+  Config(const std::string &jsonFile,
+         Acts::Logging::Level level = Acts::Logging::DEBUG):
+      Config("" /* No import */, jsonFile, level) {}
 
   Config(const std::string &rootFile,
+         const std::string &jsonFile,
          Acts::Logging::Level level = Acts::Logging::DEBUG);
 
   std::shared_ptr<Detector> detector;

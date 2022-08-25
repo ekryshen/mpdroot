@@ -20,14 +20,16 @@ namespace Mpd::Tpc {
 /// @brief Provides an API for the tracker.
 class Runner final {
 public:
-  Runner(Acts::Logging::Level level = Acts::Logging::DEBUG):
-      Runner("" /* No import */, level) {}
+  Runner(const std::string &jsonFile,
+         Acts::Logging::Level level = Acts::Logging::DEBUG):
+      Runner("" /* No import */, jsonFile, level) {}
 
   Runner(const std::string &rootFile,
+         const std::string &jsonFile,
          Acts::Logging::Level level = Acts::Logging::DEBUG):
       m_logger(Acts::getDefaultLogger("Runner", level)),
       m_level(level),
-      m_config(rootFile, m_level),
+      m_config(rootFile, jsonFile, m_level),
       m_store(m_level),
       m_context(m_store) {}
 

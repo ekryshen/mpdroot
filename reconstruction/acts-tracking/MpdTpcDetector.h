@@ -26,8 +26,6 @@ namespace Mpd::Tpc {
 /// @brief Constructs TPC's virtual sensors (required by Acts).
 class Detector final : public ActsExamples::TGeoDetector {
 public:
-  static constexpr auto JsonFile = "tpc_acts_tracking.json";
-
   /// TPC sensitive volume.
   static constexpr auto GasVolume = "tpc01sv";
 
@@ -48,10 +46,12 @@ public:
   static constexpr auto IntDeltaPhi =  SecDeltaPhi / NumPhi;
   static constexpr auto PhiStart    =  0.5*IntDeltaPhi;
 
-  Detector(Acts::Logging::Level level = Acts::Logging::DEBUG):
-      Detector("" /* No import */, level) {}
+  Detector(const std::string &jsonFile,
+           Acts::Logging::Level level = Acts::Logging::DEBUG):
+      Detector("" /* No import */, jsonFile, level) {}
 
   Detector(const std::string &rootFile,
+           const std::string &jsonFile,
            Acts::Logging::Level level = Acts::Logging::DEBUG);
 
   /// Constructs and returns the tracking geometry.
