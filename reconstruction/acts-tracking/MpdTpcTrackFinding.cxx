@@ -109,10 +109,10 @@ ProcessCode TrackFinding::execute(const Context &context) const {
       const auto &lastIndices = trajectory.lastMeasurementIndices;
       const auto &fittedParams = trajectory.fittedParameters;
  
-      ACTS_DEBUG("Multi-trajectory of " << lastIndices.size()
-                                        << " trajectories with "
+      ACTS_DEBUG("Multi-trajectory of " << lastIndices.size() << "/"
                                         << fittedStates.size()
-                                        << " states in total has been found");
+                                        << " trajectories/states "
+                                        << " has been found");
 
       trajectories.emplace_back(fittedStates, lastIndices, fittedParams);
       trajectoryCount++;

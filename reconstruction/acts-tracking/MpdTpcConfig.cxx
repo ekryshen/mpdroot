@@ -41,6 +41,7 @@ Config::Config(const std::string &rootFile,
   trackSeeding.outputProtoTracks = ProtoTracksID;
   trackSeeding.seedFilterConfig.deltaRMin = SeedDeltaRmin;
   trackSeeding.seedFilterConfig.maxSeedsPerSpM = MaxSeedsPerSpM;
+  trackSeeding.seedFinderConfig.rMin = Rmin;
   trackSeeding.seedFinderConfig.rMax = Rmax;
   trackSeeding.seedFinderConfig.deltaRMin = SeedDeltaRmin;
   trackSeeding.seedFinderConfig.deltaRMinTopSP = SeedDeltaRmin;
@@ -48,10 +49,11 @@ Config::Config(const std::string &rootFile,
   trackSeeding.seedFinderConfig.deltaRMax = SeedDeltaRmax;
   trackSeeding.seedFinderConfig.deltaRMaxTopSP = SeedDeltaRmax;
   trackSeeding.seedFinderConfig.deltaRMaxBottomSP = SeedDeltaRmax;
-  trackSeeding.seedFinderConfig.collisionRegionMin = CollisionRegionMin;
-  trackSeeding.seedFinderConfig.collisionRegionMax = CollisionRegionMax;
+  trackSeeding.seedFinderConfig.collisionRegionMin = CollisionZmin;
+  trackSeeding.seedFinderConfig.collisionRegionMax = CollisionZmax;
   trackSeeding.seedFinderConfig.zMin = Zmin;
   trackSeeding.seedFinderConfig.zMax = Zmax;
+  trackSeeding.seedFinderConfig.deltaZMax = SeedDeltaZmax;
   trackSeeding.seedFinderConfig.maxSeedsPerSpM = MaxSeedsPerSpM;
   trackSeeding.seedFinderConfig.cotThetaMax = CotThetaMax;
   trackSeeding.seedFinderConfig.sigmaScattering = SigmaScattering;

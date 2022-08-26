@@ -43,14 +43,16 @@ struct Config final {
   // Track seeding
   //===--------------------------------------------------------------------===//
 
+  static constexpr auto Rmin                =  Detector::Rmin;      //  0.4 m
   static constexpr auto Rmax                =  Detector::Rmax;      //  1.4 m 
   static constexpr auto Zmin                =  Detector::Zmin;      // -1.7 m
   static constexpr auto Zmax                =  Detector::Zmax;      //  1.7 m
+  static constexpr auto CollisionZmin       = -15._cm;              //  Close to 0
+  static constexpr auto CollisionZmax       =  15._cm;              //  Close to 0
   static constexpr auto CotThetaMax         =  1.69839;             // ~1.3 eta, eta < 1.2
   static constexpr auto SeedDeltaRmin       =  3._mm;               // FIXME
   static constexpr auto SeedDeltaRmax       =  60._mm;              // FIXME
-  static constexpr auto CollisionRegionMin  = -250._mm;             // FIXME
-  static constexpr auto CollisionRegionMax  =  250._mm;             // FIXME
+  static constexpr auto SeedDeltaZmax       =  50._cm;              // FIXME
   static constexpr auto MaxSeedsPerSpM      =  3;                   // FIXME
   static constexpr auto SigmaScattering     =  5;                   // FIXME
   static constexpr auto RadLengthPerSeed    =  0.5;                 // FIXME
@@ -87,7 +89,7 @@ struct Config final {
   static constexpr auto ResolvePassive      = false;                // FIXME
   static constexpr auto ResolveMaterial     = true;                 // FIXME
   static constexpr auto ResolveSensitive    = true;                 // FIXME
-  static constexpr auto PropagationMaxSteps = 10000u;               // FIXME
+  static constexpr auto PropagationMaxSteps = 1000u;                // FIXME
   static constexpr auto MultipleScattering  = true;                 // FIXME
   static constexpr auto EnergyLoss          = true;                 // FIXME
   static constexpr auto Smoothing           = true;                 // FIXME

@@ -102,6 +102,8 @@ void Runner::logOutput() const {
           auto &sourceLink = static_cast<const SourceLink&>(state.uncalibrated());
           auto hitIndex = sourceLink.index();
           out << hitIndex << " ";
+        } else {
+          out << "* ";
         }
       });
 
