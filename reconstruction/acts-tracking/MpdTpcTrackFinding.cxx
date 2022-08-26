@@ -16,6 +16,7 @@
 
 #include <cassert>
 #include <limits>
+#include <vector>
 
 namespace Mpd::Tpc {
 
@@ -131,57 +132,61 @@ ProcessCode TrackFinding::execute(const Context &context) const {
 
 void TrackFinding::computeSharedHits(const Container &sourceLinks,
                                      Results &results) const {
-  std::vector<size_t> firstTrackOnTheHit(sourceLinks.size(),
-                                         std::numeric_limits<size_t>::max());
-  std::vector<size_t> firstStateOnTheHit(sourceLinks.size(),
-                                         std::numeric_limits<size_t>::max());
+  const auto nHits = sourceLinks.size();
+  const auto invalid = std::numeric_limits<size_t>::max();
 
+  std::vector<size_t> firstTrackOnHit(nHits, invalid);
+  std::vector<size_t> firstStateOnHit(nHits, invalid);
+
+  // Iterate over the seeds.
   for (size_t i = 0; i < results.size(); i++) {
     if (!results.at(i).ok()) {
+      // No trajectory found for the given seed.
       continue;
     }
 
-    auto &result = results.at(i).value();
-    auto &indices = result.lastMeasurementIndices;
+    // Trajectories associated w/ the given seed.
+    auto &trajectories = results.at(i).value();
+    // Last indices that identify valid trajectories.
+    auto &lastIndices = trajectories.lastMeasurementIndices;
+    // Collection of track states associated w/ the given seed.
+    auto &fittedStates = trajectories.fittedStates;
 
-    for (auto index : indices) {
-      result.fittedStates.visitBackwards(index, [&](const auto &state) {
+    // Iterate over the valid trajectories.
+    for (auto lastIndex : lastIndices) {
+      fittedStates.visitBackwards(lastIndex, [&](const auto &state) {
+        // Do nothing unless the state is a real measurement.
         if (!state.typeFlags().test(Acts::TrackStateFlag::MeasurementFlag)) {
           return;
         }
 
+        // Get the index in the measurement array.
         auto &sourceLink = static_cast<const SourceLink&>(state.uncalibrated());
-        size_t hitIndex = sourceLink.index();
+        auto hitIndex = sourceLink.index();
+
+        auto &firstTrackIndex = firstTrackOnHit.at(hitIndex);
+        auto &firstStateIndex = firstStateOnHit.at(hitIndex);
 
         // Check if the hit has not been already used.
-        if (firstTrackOnTheHit.at(hitIndex) == std::numeric_limits<size_t>::max()) {
-          firstTrackOnTheHit.at(hitIndex) = i;
-          firstStateOnTheHit.at(hitIndex) = state.index();
+        if (firstTrackIndex == invalid) {
+          firstTrackIndex = i;
+          firstStateIndex = state.index();
           return;
         }
 
-        // Check if the first track state has been marked as shared.
-        int indexFirstTrack = firstTrackOnTheHit.at(hitIndex);
-        int indexFirstState = firstStateOnTheHit.at(hitIndex);
+        // Mark the first and current states as shared.
+        auto &firstStateFlags = results.at(firstTrackIndex)
+            .value()
+            .fittedStates.getTrackState(firstStateIndex)
+            .typeFlags();
 
-        if (!results.at(indexFirstTrack)
-                .value()
-                .fittedStates.getTrackState(indexFirstState)
-                .typeFlags()
-                .test(Acts::TrackStateFlag::SharedHitFlag)) {
-          results.at(indexFirstTrack)
-              .value()
-              .fittedStates.getTrackState(indexFirstState)
-              .typeFlags()
-              .set(Acts::TrackStateFlag::SharedHitFlag);
-        }
-
-        // Decorate this track.
-        results.at(i)
+        auto &currentStateFlags = results.at(i)
             .value()
             .fittedStates.getTrackState(state.index())
-            .typeFlags()
-            .set(Acts::TrackStateFlag::SharedHitFlag);
+            .typeFlags();
+
+        firstStateFlags.set(Acts::TrackStateFlag::SharedHitFlag);
+        currentStateFlags.set(Acts::TrackStateFlag::SharedHitFlag);
       });
     }
   }
