@@ -106,24 +106,27 @@ ProcessCode TrackFinding::execute(const Context &context) const {
       const auto &trajectory = result.value();
 
       const auto &fittedStates = trajectory.fittedStates;
-      const auto &measurementIndices = trajectory.lastMeasurementIndices;
+      const auto &lastIndices = trajectory.lastMeasurementIndices;
       const auto &fittedParams = trajectory.fittedParameters;
  
-      ACTS_DEBUG("Trajectory of length " << fittedStates.size()
-                                         << " has been found");
+      ACTS_DEBUG("Multi-trajectory of " << lastIndices.size()
+                                        << " trajectories with "
+                                        << fittedStates.size()
+                                        << " states in total has been found");
 
-      trajectories.emplace_back(fittedStates, measurementIndices, fittedParams);
+      trajectories.emplace_back(fittedStates, lastIndices, fittedParams);
       trajectoryCount++;
     } else {
       ACTS_WARNING("Track finding failed for seed " << iseed << " with error "
                                                     << result.error());
+
       // Add an empty result so the output is of the same length as the input.
       trajectories.push_back(Trajectories());
     }
   }
 
   ACTS_DEBUG("Finalized track finding with " << trajectoryCount
-                                             << " track candidates");
+                                             << " multi-trajectories");
 
   context.eventStore.add(m_config.outputTrajectories, std::move(trajectories));
 

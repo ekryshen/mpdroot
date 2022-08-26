@@ -74,51 +74,49 @@ void Runner::logInput() const {
 void Runner::logOutput() const {
   const auto &hits = m_context.eventStore.get<InputHitContainer>(
       m_config.digitization.inputSimHits);
-  const auto &trajectories = m_context.eventStore.get<TrajectoriesContainer>(
+  const auto &results = m_context.eventStore.get<TrajectoriesContainer>(
       m_config.trackFinding.outputTrajectories);
 
   size_t nMultiTrajectories = 0;
-  size_t nTracks = 0;
+  size_t nTrajectories = 0;
 
-  for (const auto &trajectory : trajectories) {
-    const auto &tips = trajectory.tips();
+  for (const auto &trajectories : results) {
+    // Last indices that identify valid trajectories.
+    auto &lastIndices = trajectories.tips();
 
-    if (tips.empty()) {
+    if (lastIndices.empty()) {
       continue;
     }
+
+    // Collection of track states of the multi-trajectory.
+    auto &fittedStates = trajectories.multiTrajectory();
 
     ACTS_VERBOSE("Multi-trajectory: " << nMultiTrajectories);
     nMultiTrajectories++;
 
-    for (const auto itrack : tips) {
-      ACTS_VERBOSE("Track parameters:\n" << trajectory.trackParameters(itrack));
-      nTracks++;
+    for (auto lastIndex : lastIndices) {
+      std::stringstream out;
+
+      fittedStates.visitBackwards(lastIndex, [&](const auto &state) {
+        if (state.typeFlags().test(Acts::TrackStateFlag::MeasurementFlag)) {
+          auto &sourceLink = static_cast<const SourceLink&>(state.uncalibrated());
+          auto hitIndex = sourceLink.index();
+          out << hitIndex << " ";
+        }
+      });
+
+      ACTS_VERBOSE("Trajectory (reversed): " << out.str());
+      ACTS_VERBOSE("Trajectory parameters:\n"
+          << trajectories.trackParameters(lastIndex));
+
+      nTrajectories++;
     }
-
-    std::stringstream out;
-
-    const auto &fittedStates = trajectory.multiTrajectory();
-    for (size_t istate = 0; istate < fittedStates.size(); istate++) {
-      const auto &state = fittedStates.getTrackState(istate);
-
-      if (!state.hasCalibrated() && !state.hasUncalibrated()) {
-        continue;
-      }
-
-      const auto &sourceLink = state.hasCalibrated()
-          ? static_cast<const SourceLink&>(state.calibratedSourceLink())
-          : static_cast<const SourceLink&>(state.uncalibrated());
-
-      out << sourceLink.index() << " ";
-    }
-
-    ACTS_VERBOSE("States: " << out.str());
   }
 
-  ACTS_DEBUG("Input: " << hits.size() << " points, "
-                      << countSimTracks(hits) << " tracks");
+  ACTS_DEBUG("Input: " << hits.size() << " simulation points, "
+                       << countSimTracks(hits) << " simulation tracks");
   ACTS_DEBUG("Found: " << nMultiTrajectories << " multi-trajectories, "
-                      << nTracks << " tracks");
+                       << nTrajectories << " trajectories");
 }
 
 } // namespace Mpd::Tpc
