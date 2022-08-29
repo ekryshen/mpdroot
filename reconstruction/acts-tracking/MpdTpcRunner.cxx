@@ -15,7 +15,8 @@
 #include "MpdTpcTrackSeeding.h"
 
 #include <sstream>
-#include <unordered_set>
+#include <unordered_map>
+#include <vector>
 
 namespace Mpd::Tpc {
 
@@ -49,26 +50,29 @@ const TrajectoriesContainer &Runner::execute(const InputHitContainer &hits) {
       m_config.trackFinding.outputTrajectories);
 }
 
-size_t Runner::countSimTracks(const InputHitContainer &hits) const {
-  std::unordered_set<int> trackIds;
-  trackIds.reserve(hits.size());
-
-  for (const auto &hit : hits) {
-    trackIds.insert(hit.trackId);
-  }
-
-  return trackIds.size();
-}
-
 void Runner::logInput() const {
   const auto &hits = m_context.eventStore.get<InputHitContainer>(
       m_config.digitization.inputSimHits);
 
+  std::unordered_map<int, std::vector<size_t>> tracks;
+  tracks.reserve(hits.size());
+
+  size_t ihit = 0;
   for (const auto &hit : hits) {
     ACTS_VERBOSE(hit);
+    tracks[hit.trackId].push_back(ihit++);
   }
 
-  ACTS_DEBUG("Input: " << hits.size() << " hits");
+  for (const auto &[trackId, track] : tracks) {
+    std::stringstream out;
+    for (auto ihit : track) {
+      out << ihit << " ";
+    }
+
+    ACTS_DEBUG("Track " << trackId << ": " << out.str());
+  }
+
+  ACTS_DEBUG("Taken " << hits.size() << " hits");
 }
 
 void Runner::logOutput() const {
@@ -79,16 +83,14 @@ void Runner::logOutput() const {
 
   for (const auto &track : tracks) {
     std::stringstream out;
-    for (auto hitIndex : track) {
-      out << hitIndex << " ";
+    for (auto ihit : track) {
+      out << ihit << " ";
     }
 
     ACTS_DEBUG("Track " << out.str());
   }
 
-  ACTS_DEBUG("Input: " << hits.size() << " simulation points, "
-                       << countSimTracks(hits) << " simulation tracks");
-  ACTS_DEBUG("Found: " << tracks.size() << " tracks");
+  ACTS_DEBUG("Found " << tracks.size() << " tracks");
 }
 
 } // namespace Mpd::Tpc
