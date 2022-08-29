@@ -102,6 +102,8 @@ Config::Config(const std::string &rootFile,
   trackFinding.inputSourceLinks = SourceLinksID;
   trackFinding.inputInitialTrackParameters = EstTrackParamsID;
   trackFinding.outputTrajectories = TrajectoriesID;
+  trackFinding.outputTrackCandidates = TrackCandidatesID;
+  trackFinding.trackMinLength = TrackMinLength;
   trackFinding.trackingGeometry = trackingGeometry;
   trackFinding.magneticField = magneticField;
   trackFinding.referenceSurface = referenceSurface;

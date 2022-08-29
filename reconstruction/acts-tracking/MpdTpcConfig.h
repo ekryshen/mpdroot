@@ -38,6 +38,7 @@ struct Config final {
   static constexpr auto EstTrackParamsID    = "estimatedparameters";
   static constexpr auto EstProtoTracksID    = "estimatedprototracks";
   static constexpr auto TrajectoriesID      = "trajectories";
+  static constexpr auto TrackCandidatesID   = "trackcandidates";
 
   //===--------------------------------------------------------------------===//
   // Track seeding
@@ -47,10 +48,10 @@ struct Config final {
   static constexpr auto Rmax                =  Detector::Rmax;      //  1.4 m 
   static constexpr auto Zmin                =  Detector::Zmin;      // -1.7 m
   static constexpr auto Zmax                =  Detector::Zmax;      //  1.7 m
-  static constexpr auto CollisionZmin       = -15._cm;              //  Close to 0
-  static constexpr auto CollisionZmax       =  15._cm;              //  Close to 0
+  static constexpr auto CollisionZmin       = -20._cm;              //  Close to 0
+  static constexpr auto CollisionZmax       =  20._cm;              //  Close to 0
   static constexpr auto CotThetaMax         =  1.69839;             // ~1.3 eta, eta < 1.2
-  static constexpr auto SeedDeltaRmin       =  3._mm;               // FIXME
+  static constexpr auto SeedDeltaRmin       =  0._mm;               // FIXME
   static constexpr auto SeedDeltaRmax       =  60._mm;              // FIXME
   static constexpr auto SeedDeltaZmax       =  50._cm;              // FIXME
   static constexpr auto MaxSeedsPerSpM      =  3;                   // FIXME
@@ -86,6 +87,7 @@ struct Config final {
   // Track finding
   //===--------------------------------------------------------------------===//
 
+  static constexpr auto TrackMinLength      = 3;
   static constexpr auto ResolvePassive      = false;                // FIXME
   static constexpr auto ResolveMaterial     = true;                 // FIXME
   static constexpr auto ResolveSensitive    = true;                 // FIXME
@@ -93,9 +95,9 @@ struct Config final {
   static constexpr auto MultipleScattering  = true;                 // FIXME
   static constexpr auto EnergyLoss          = true;                 // FIXME
   static constexpr auto Smoothing           = true;                 // FIXME
-  static constexpr auto ComputeSharedHits   = true;                 // FIXME
+  static constexpr auto ComputeSharedHits   = false;                // FIXME
   /// Maximum local Chi2 contribution.
-  static constexpr auto Chi2max             = 10.0;                 // FIXME
+  static constexpr auto Chi2max             = 15.0;                 // FIXME
   /// Maximum number of associated measurements on a single surface.
   static constexpr auto NmaxPerSurface      = 5u;                   // FIXME
 

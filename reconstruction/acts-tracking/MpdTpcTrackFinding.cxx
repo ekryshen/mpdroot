@@ -16,6 +16,8 @@
 
 #include <cassert>
 #include <limits>
+#include <map>
+#include <unordered_set>
 #include <vector>
 
 namespace Mpd::Tpc {
@@ -94,6 +96,9 @@ ProcessCode TrackFinding::execute(const Context &context) const {
     computeSharedHits(sourceLinks, results);
   }
 
+  // Performs post-processing (removes duplicates, etc.).
+  constructTrackCandidates(context, sourceLinks, results);
+
   TrajectoriesContainer trajectories;
   trajectories.reserve(initialParameters.size());
 
@@ -109,10 +114,9 @@ ProcessCode TrackFinding::execute(const Context &context) const {
       const auto &lastIndices = trajectory.lastMeasurementIndices;
       const auto &fittedParams = trajectory.fittedParameters;
  
-      ACTS_DEBUG("Multi-trajectory of " << lastIndices.size() << "/"
-                                        << fittedStates.size()
-                                        << " trajectories/states "
-                                        << " has been found");
+      ACTS_VERBOSE("Found multi-trajectory of " << lastIndices.size() << "/"
+                                                << fittedStates.size()
+                                                << " trajectories/states");
 
       trajectories.emplace_back(fittedStates, lastIndices, fittedParams);
       trajectoryCount++;
@@ -130,6 +134,7 @@ ProcessCode TrackFinding::execute(const Context &context) const {
 
   context.eventStore.add(m_config.outputTrajectories, std::move(trajectories));
 
+
   return ProcessCode::SUCCESS;
 }
 
@@ -142,14 +147,14 @@ void TrackFinding::computeSharedHits(const Container &sourceLinks,
   std::vector<size_t> firstStateOnHit(nHits, invalid);
 
   // Iterate over the seeds.
-  for (size_t i = 0; i < results.size(); i++) {
-    if (!results.at(i).ok()) {
+  for (size_t itrack = 0; itrack < results.size(); itrack++) {
+    if (!results.at(itrack).ok()) {
       // No trajectory found for the given seed.
       continue;
     }
 
     // Trajectories associated w/ the given seed.
-    auto &trajectories = results.at(i).value();
+    auto &trajectories = results.at(itrack).value();
     // Last indices that identify valid trajectories.
     auto &lastIndices = trajectories.lastMeasurementIndices;
     // Collection of track states associated w/ the given seed.
@@ -172,7 +177,7 @@ void TrackFinding::computeSharedHits(const Container &sourceLinks,
 
         // Check if the hit has not been already used.
         if (firstTrackIndex == invalid) {
-          firstTrackIndex = i;
+          firstTrackIndex = itrack;
           firstStateIndex = state.index();
           return;
         }
@@ -183,7 +188,7 @@ void TrackFinding::computeSharedHits(const Container &sourceLinks,
             .fittedStates.getTrackState(firstStateIndex)
             .typeFlags();
 
-        auto &currentStateFlags = results.at(i)
+        auto &currentStateFlags = results.at(itrack)
             .value()
             .fittedStates.getTrackState(state.index())
             .typeFlags();
@@ -193,6 +198,121 @@ void TrackFinding::computeSharedHits(const Container &sourceLinks,
       });
     }
   }
+}
+
+inline size_t computeHashCode(size_t hashCode, size_t value) {
+  static constexpr auto prime = 37u;
+  hashCode *= prime;
+  hashCode += value;
+  return hashCode;
+}
+
+void TrackFinding::constructTrackCandidates(const Context &context,
+                                            const Container &sourceLinks,
+                                            Results &results) const {
+  const auto nHits = sourceLinks.size();
+  const auto invalid = std::numeric_limits<size_t>::max();
+
+  // Track candidates ordered by descending length.
+  std::multimap<size_t, ProtoTrack> trackCandidates;
+
+  // Track hash codes for filtering.
+  std::unordered_set<size_t> trackHashCodes;
+  trackHashCodes.reserve(2 * nHits);
+
+  // Iterate over the seeds.
+  for (size_t itrack = 0; itrack < results.size(); itrack++) {
+    if (!results.at(itrack).ok()) {
+      // No trajectory found for the given seed.
+      continue;
+    }
+
+    // Trajectories associated w/ the given seed.
+    auto &trajectories = results.at(itrack).value();
+    // Last indices that identify valid trajectories.
+    auto &lastIndices = trajectories.lastMeasurementIndices;
+    // Collection of track states associated w/ the given seed.
+    auto &fittedStates = trajectories.fittedStates;
+
+    // Iterate over the valid trajectories.
+    for (auto lastIndex : lastIndices) {
+      size_t trackHashCode = 0;
+
+      std::vector<size_t> suffixHashCodes;
+      suffixHashCodes.reserve(fittedStates.size());
+
+      ProtoTrack trackCandidate;
+      trackCandidate.reserve(fittedStates.size());
+
+      fittedStates.visitBackwards(lastIndex, [&](const auto &state) {
+        // Do nothing unless the state is a real measurement.
+        if (!state.typeFlags().test(Acts::TrackStateFlag::MeasurementFlag)) {
+          return;
+        }
+
+        // Get the index in the measurement array.
+        auto &sourceLink = static_cast<const SourceLink&>(state.uncalibrated());
+        auto hitIndex = sourceLink.index();
+
+        // Compute the hash code for the track (and all the suffixes).
+        trackHashCode = computeHashCode(trackHashCode, hitIndex);
+        suffixHashCodes.push_back(trackHashCode);
+
+        trackCandidate.push_back(hitIndex);
+      });
+
+      // Ignore short tracks.
+      if (trackCandidate.size() < m_config.trackMinLength) {
+        continue;
+      }
+
+      std::reverse(trackCandidate.begin(), trackCandidate.end());
+
+      auto it = trackHashCodes.find(trackHashCode);
+      if (it == trackHashCodes.end()) {
+        trackCandidates.insert({nHits - trackCandidate.size(), trackCandidate});
+        std::for_each(suffixHashCodes.begin(), suffixHashCodes.end(),
+            [&](size_t hashCode) { trackHashCodes.insert(hashCode); });
+      }
+    }
+  }
+
+  ProtoTrackContainer protoTracks;
+  protoTracks.reserve(trackCandidates.size());
+ 
+  // Naive hashing-based filtering of prefixes and suffixes.
+  // Note that some of the suffixes have been already removed.
+  trackHashCodes.clear();
+
+  for (const auto &[quality, track] : trackCandidates) {
+    std::vector<size_t> hashCodes;
+    hashCodes.reserve(2 * track.size());
+
+    size_t prefixHashCode = 0;
+    size_t suffixHashCode = 0;
+
+    for (size_t i = 0; i < track.size(); i++) {
+      auto prefixHitIndex = track.at(i);
+      auto suffixHitIndex = track.at(track.size() - 1 - i);
+
+      prefixHashCode = computeHashCode(prefixHashCode, prefixHitIndex);
+      suffixHashCode = computeHashCode(suffixHashCode, suffixHitIndex);
+
+      hashCodes.push_back(prefixHashCode);
+      hashCodes.push_back(suffixHashCode);
+    }
+
+    if (trackHashCodes.find(prefixHashCode) == trackHashCodes.end() &&
+        trackHashCodes.find(suffixHashCode) == trackHashCodes.end()) {
+      protoTracks.push_back(track);
+      std::for_each(hashCodes.begin(), hashCodes.end(),
+          [&](size_t hashCode) { trackHashCodes.insert(hashCode); });
+    }
+  }
+
+  ACTS_DEBUG("Found " << protoTracks.size() << " track candidates");
+  context.eventStore.add(
+      m_config.outputTrackCandidates, std::move(protoTracks));
 }
 
 } // namespace Mpd::Tpc

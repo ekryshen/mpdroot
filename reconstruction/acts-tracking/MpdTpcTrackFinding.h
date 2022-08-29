@@ -58,6 +58,10 @@ public:
     std::string inputSourceLinks;
     std::string inputInitialTrackParameters;
     std::string outputTrajectories;
+    std::string outputTrackCandidates;
+
+    /// Minimal track length (tracks w/ shorter length are ignored).
+    size_t trackMinLength;
 
     std::shared_ptr<const Acts::TrackingGeometry> trackingGeometry;
     std::shared_ptr<const Acts::MagneticFieldProvider> magneticField;
@@ -80,7 +84,13 @@ public:
   const Config &config() const { return m_config; }
 
 private:
+  /// Sets shared-hit flags on trajectories' states.
   void computeSharedHits(const Container &sourceLinks, Results &results) const;
+
+  /// Post-processing: removes duplicates and constructs track candidates.
+  void constructTrackCandidates(const Context &context,
+                                const Container &sourceLinks,
+                                Results &results) const;
 
   Config m_config;
 };
