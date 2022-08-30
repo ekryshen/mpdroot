@@ -48,8 +48,8 @@ struct Config final {
   static constexpr auto Rmax                =  Detector::Rmax;      //  1.4 m 
   static constexpr auto Zmin                =  Detector::Zmin;      // -1.7 m
   static constexpr auto Zmax                =  Detector::Zmax;      //  1.7 m
-  static constexpr auto CollisionZmin       = -20._cm;              //  Close to 0
-  static constexpr auto CollisionZmax       =  20._cm;              //  Close to 0
+  static constexpr auto CollisionZmin       = -30._cm;              //  Close to 0
+  static constexpr auto CollisionZmax       =  30._cm;              //  Close to 0
   static constexpr auto CotThetaMax         =  1.69839;             // ~1.3 eta, eta < 1.2
   static constexpr auto SeedDeltaRmin       =  1._mm;               // FIXME
   static constexpr auto SeedDeltaRmax       =  30._mm;              // FIXME
