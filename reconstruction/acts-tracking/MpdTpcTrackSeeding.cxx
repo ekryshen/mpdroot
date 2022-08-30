@@ -70,38 +70,38 @@ TrackSeeding::TrackSeeding(Config config, Acts::Logging::Level level):
 
   if (m_config.seedFinderConfig.useDetailedDoubleMeasurementInfo) {
     m_config.seedFinderConfig.getTopHalfStripLength.connect(
-      [](const void*, const ActsExamples::SimSpacePoint &sp) -> float {
-        return sp.topHalfStripLength();
-      });
+        [](const void*, const SpacePoint &sp) -> float {
+          return sp.topHalfStripLength();
+        });
 
     m_config.seedFinderConfig.getBottomHalfStripLength.connect(
-      [](const void*, const ActsExamples::SimSpacePoint &sp) -> float {
-        return sp.bottomHalfStripLength();
-      });
+        [](const void*, const SpacePoint &sp) -> float {
+          return sp.bottomHalfStripLength();
+        });
 
     m_config.seedFinderConfig.getTopStripDirection.connect(
-      [](const void*, const ActsExamples::SimSpacePoint &sp) -> Acts::Vector3 {
-        return sp.topStripDirection();
-      });
+        [](const void*, const SpacePoint &sp) -> Acts::Vector3 {
+          return sp.topStripDirection();
+        });
 
     m_config.seedFinderConfig.getBottomStripDirection.connect(
-      [](const void*, const ActsExamples::SimSpacePoint &sp) -> Acts::Vector3 {
-        return sp.bottomStripDirection();
-      });
+        [](const void*, const SpacePoint &sp) -> Acts::Vector3 {
+          return sp.bottomStripDirection();
+        });
 
     m_config.seedFinderConfig.getStripCenterDistance.connect(
-      [](const void*, const ActsExamples::SimSpacePoint &sp) -> Acts::Vector3 {
-        return sp.stripCenterDistance();
-      });
+        [](const void*, const SpacePoint &sp) -> Acts::Vector3 {
+          return sp.stripCenterDistance();
+        });
 
     m_config.seedFinderConfig.getTopStripCenterPosition.connect(
-      [](const void*, const ActsExamples::SimSpacePoint &sp) -> Acts::Vector3 {
-        return sp.topStripCenterPosition();
-      });
-  }
+        [](const void*, const SpacePoint &sp) -> Acts::Vector3 {
+          return sp.topStripCenterPosition();
+        });
+    }
 
   m_config.seedFinderConfig.seedFilter =
-      std::make_unique<Acts::SeedFilter<ActsExamples::SimSpacePoint>>(
+      std::make_unique<Acts::SeedFilter<SpacePoint>>(
           m_config.seedFilterConfig);
 }
 

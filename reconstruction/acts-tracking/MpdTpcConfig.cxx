@@ -43,6 +43,7 @@ Config::Config(const std::string &rootFile,
   trackSeeding.seedFilterConfig.maxSeedsPerSpM = MaxSeedsPerSpM;
   trackSeeding.seedFinderConfig.rMin = Rmin;
   trackSeeding.seedFinderConfig.rMax = Rmax;
+  trackSeeding.seedFinderConfig.binSizeR = SeedBinSizeR;
   trackSeeding.seedFinderConfig.deltaRMin = SeedDeltaRmin;
   trackSeeding.seedFinderConfig.deltaRMinTopSP = SeedDeltaRmin;
   trackSeeding.seedFinderConfig.deltaRMinBottomSP = SeedDeltaRmin;
@@ -56,6 +57,7 @@ Config::Config(const std::string &rootFile,
   trackSeeding.seedFinderConfig.deltaZMax = SeedDeltaZmax;
   trackSeeding.seedFinderConfig.maxSeedsPerSpM = MaxSeedsPerSpM;
   trackSeeding.seedFinderConfig.cotThetaMax = CotThetaMax;
+  trackSeeding.seedFinderConfig.maxPtScattering = MaxPtScattering;
   trackSeeding.seedFinderConfig.sigmaScattering = SigmaScattering;
   trackSeeding.seedFinderConfig.radLengthPerSeed = RadLengthPerSeed;
   trackSeeding.seedFinderConfig.minPt = MinPt;

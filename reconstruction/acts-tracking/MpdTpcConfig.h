@@ -51,17 +51,19 @@ struct Config final {
   static constexpr auto CollisionZmin       = -30._cm;              //  Close to 0
   static constexpr auto CollisionZmax       =  30._cm;              //  Close to 0
   static constexpr auto CotThetaMax         =  1.69839;             // ~1.3 eta, eta < 1.2
+  static constexpr auto SeedBinSizeR        =  4._mm;               // FIXME
   static constexpr auto SeedDeltaRmin       =  1._mm;               // FIXME
-  static constexpr auto SeedDeltaRmax       =  30._mm;              // FIXME
-  static constexpr auto SeedDeltaZmax       =  30._cm;              // FIXME
+  static constexpr auto SeedDeltaRmax       =  20._mm;              // FIXME
+  static constexpr auto SeedDeltaZmax       =  15._cm;              // FIXME
   static constexpr auto MaxSeedsPerSpM      =  3;                   // FIXME
   static constexpr auto SigmaScattering     =  5;                   // FIXME
+  static constexpr auto MaxPtScattering     =  10._GeV;             //  Max Pt for scattering
   static constexpr auto RadLengthPerSeed    =  0.05;                //  Percent
   static constexpr auto MinPt               =  0.02_GeV;            //  0.02 < Pt < 10 GeV
   static constexpr auto Bz                  =  MagneticField::Bz;   //  0.5 T
   static constexpr auto BeamX               =  0._mm;               //  Center
   static constexpr auto BeamY               =  0._mm;               //  Center
-  static constexpr auto ImpactMax           =  3._mm;               // FIXME
+  static constexpr auto ImpactMax           =  10._mm;              // FIXME
 
   //===--------------------------------------------------------------------===//
   // Track parameter estimation
@@ -69,11 +71,11 @@ struct Config final {
 
   static constexpr auto Bmin                =  MagneticField::Bz;   //  0.5 T
   static constexpr auto EstDeltaRmin        =  1._mm;               // FIXME
-  static constexpr auto EstDeltaRmax        =  30._mm;              // FIXME
-  static constexpr auto SigmaLoc0           =  25._um;              // FIXME
-  static constexpr auto SigmaLoc1           =  100._um;             // FIXME
-  static constexpr auto SigmaPhi            =  0.01_degree;         // FIXME
-  static constexpr auto SigmaTheta          =  0.01_degree;         // FIXME
+  static constexpr auto EstDeltaRmax        =  20._mm;              // FIXME
+  static constexpr auto SigmaLoc0           =  0.33_mm;             // FIXME
+  static constexpr auto SigmaLoc1           =  0.33_mm;             // FIXME
+  static constexpr auto SigmaPhi            =  0.1_degree;          // FIXME
+  static constexpr auto SigmaTheta          =  0.1_degree;          // FIXME
   static constexpr auto SigmaQOverP         =  0.1 / 1._GeV;        // FIXME
   static constexpr auto SigmaT0             =  1400._s;             // FIXME
   static constexpr auto InitVarInflatLoc0   =  1.;                  // No inflation?
@@ -87,7 +89,7 @@ struct Config final {
   // Track finding
   //===--------------------------------------------------------------------===//
 
-  static constexpr auto TrackMinLength      = 3;
+  static constexpr auto TrackMinLength      = 4;
   static constexpr auto ResolvePassive      = false;                // FIXME
   static constexpr auto ResolveMaterial     = true;                 // FIXME
   static constexpr auto ResolveSensitive    = true;                 // FIXME
@@ -97,7 +99,7 @@ struct Config final {
   static constexpr auto Smoothing           = true;                 // FIXME
   static constexpr auto ComputeSharedHits   = false;                // FIXME
   /// Maximum local Chi2 contribution.
-  static constexpr auto Chi2max             = 20.0;                 // FIXME
+  static constexpr auto Chi2max             = 30.0;                 // FIXME
   /// Maximum number of associated measurements on a single surface.
   static constexpr auto NmaxPerSurface      = 5u;                   // FIXME
 
