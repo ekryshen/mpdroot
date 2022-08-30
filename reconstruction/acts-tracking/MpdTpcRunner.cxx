@@ -54,43 +54,57 @@ void Runner::logInput() const {
   const auto &hits = m_context.eventStore.get<InputHitContainer>(
       m_config.digitization.inputSimHits);
 
-  std::unordered_map<int, std::vector<size_t>> tracks;
+  std::unordered_map<int, ProtoTrack> tracks;
   tracks.reserve(hits.size());
 
   size_t ihit = 0;
   for (const auto &hit : hits) {
-    ACTS_VERBOSE(hit);
+    logHit(ihit, hit);
     tracks[hit.trackId].push_back(ihit++);
   }
 
   for (const auto &[trackId, track] : tracks) {
-    std::stringstream out;
-    for (auto ihit : track) {
-      out << ihit << " ";
-    }
-
-    ACTS_DEBUG("Track " << trackId << ": " << out.str());
+    logTrack("Real track", trackId, track);
   }
-
-  ACTS_DEBUG("Taken " << hits.size() << " hits");
 }
 
 void Runner::logOutput() const {
-  const auto &hits = m_context.eventStore.get<InputHitContainer>(
-      m_config.digitization.inputSimHits);
+  const auto &protos = m_context.eventStore.get<ProtoTrackContainer>(
+      m_config.trackSeeding.outputProtoTracks);
   const auto &tracks = m_context.eventStore.get<ProtoTrackContainer>(
       m_config.trackFinding.outputTrackCandidates);
 
-  for (const auto &track : tracks) {
-    std::stringstream out;
-    for (auto ihit : track) {
-      out << ihit << " ";
-    }
+  logTracks("Proto track", protos);
+  logTracks("Found track", tracks);
+}
 
-    ACTS_DEBUG("Track " << out.str());
+void Runner::logHit(size_t hitId, const InputHit &hit) const {
+  ACTS_DEBUG("Hit " << hitId << ": " << hit);
+}
+
+void Runner::logHits(const InputHitContainer &hits) const {
+  size_t ihit = 0;
+  for (const auto &hit : hits) {
+    logHit(ihit++, hit);
   }
+}
 
-  ACTS_DEBUG("Found " << tracks.size() << " tracks");
+void Runner::logTrack(const std::string &prefix,
+                      size_t trackId,
+                      const ProtoTrack &track) const {
+  std::stringstream out;
+  for (auto ihit : track) {
+    out << ihit << " ";
+  }
+  ACTS_DEBUG(prefix << " " << trackId << ": " << out.str());
+}
+
+void Runner::logTracks(const std::string &prefix,
+                       const ProtoTrackContainer &tracks) const {
+  size_t itrack = 0;
+  for (const auto &track : tracks) {
+    logTrack(prefix, itrack++, track);
+  }
 }
 
 } // namespace Mpd::Tpc

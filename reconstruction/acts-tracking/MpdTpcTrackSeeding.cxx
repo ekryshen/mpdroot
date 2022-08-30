@@ -48,8 +48,8 @@ TrackSeeding::TrackSeeding(Config config, Acts::Logging::Level level):
     && "Inconsistent config cotThetaMax");
   assert((m_config.gridConfig.minPt == m_config.seedFinderConfig.minPt)
     && "Inconsistent config minPt");
-//  assert((m_config.gridConfig.bFieldInZ == m_config.seedFinderConfig.bFieldInZ) 
-//    && "Inconsistent config bFieldInZ");
+  assert((m_config.gridConfig.bFieldInZ == m_config.seedFinderConfig.bFieldInZ) 
+    && "Inconsistent config bFieldInZ");
 
   assert(((m_config.gridConfig.zBinEdges.size() - 1 == m_config.zBinNeighborsTop.size())
         || m_config.zBinNeighborsTop.empty())
@@ -138,8 +138,10 @@ ProcessCode TrackSeeding::execute(const Context &context) const {
       Acts::BinFinder<SpacePoint>(m_config.zBinNeighborsTop,
                                   m_config.nPhiNeighbors));
 
+  auto gridConfig = m_config.gridConfig;
+  gridConfig.bFieldInZ = 0.; // FIXME: Otherwise sqrt(negative) in Acts
   auto grid = Acts::SpacePointGridCreator::createGrid<SpacePoint>(
-      m_config.gridConfig);
+      gridConfig);
 
   auto grouping = Acts::BinnedSPGroup<SpacePoint>(
                       spacePointPtrs.begin(),
@@ -170,11 +172,10 @@ ProcessCode TrackSeeding::execute(const Context &context) const {
   }
 
   // Proto tracks are groups of measurement indices from the tracks seeds.
-  size_t nSeeds = seeds.size();
   static thread_local ProtoTrackContainer protoTracks;
   protoTracks.clear();
+  protoTracks.reserve(seeds.size());
 
-  protoTracks.reserve(nSeeds);
   for (const auto &seed : seeds) {
     auto &protoTrack = protoTracks.emplace_back();
     protoTrack.reserve(seed.sp().size());

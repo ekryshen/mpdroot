@@ -68,7 +68,7 @@ Config::Config(const std::string &rootFile,
   trackSeeding.gridConfig.zMax = Zmax;
   trackSeeding.gridConfig.cotThetaMax = CotThetaMax;
   trackSeeding.gridConfig.minPt = MinPt;
-  trackSeeding.gridConfig.bFieldInZ = 0; // FIXME: Bz;
+  trackSeeding.gridConfig.bFieldInZ = Bz;
 
   // Track parameter estimation.
   trackEstimation.inputSeeds = SeedsID;

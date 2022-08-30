@@ -101,9 +101,10 @@ ProcessCode SpacePointMaking::execute(const Context &context) const {
         auto index = sourceLink.get().index();
         auto [globalPos, var] = localToGlobal(
             surface, context.gContext, measurements, index);
-        ACTS_VERBOSE("Added space point (" << globalPos[0] << ", "
-                                           << globalPos[1] << ", "
-                                           << globalPos[2] << ")");
+        ACTS_DEBUG("Space point " << index << ": ("
+                                  << globalPos[0] << ", "
+                                  << globalPos[1] << ", "
+                                  << globalPos[2] << ")");
 
         // Construct space point in global coordinates.
         spacePoints.emplace_back(globalPos, var[0], var[1], index);

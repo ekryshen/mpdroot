@@ -34,12 +34,23 @@ public:
       m_context(m_store) {}
 
   const TrajectoriesContainer &execute(const InputHitContainer &hits);
-  size_t countSimTracks(const InputHitContainer &hits) const;
-
-  void logInput() const;
-  void logOutput() const;
 
 private:
+  void logInput() const;
+
+  void logOutput() const;
+
+  void logHit(size_t hitId, const InputHit &hit) const;
+
+  void logHits(const InputHitContainer &hits) const;
+
+  void logTrack(const std::string &prefix,
+                size_t trackId,
+                const ProtoTrack &track) const;
+
+  void logTracks(const std::string &prefix,
+                 const ProtoTrackContainer &tracks) const;
+
   const Acts::Logger &logger() const { return *m_logger; }
 
   std::unique_ptr<const Acts::Logger> m_logger;

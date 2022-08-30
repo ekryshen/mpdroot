@@ -224,6 +224,20 @@ const Acts::TrackingVolume *findVolume(
   return nullptr;
 }
 
+inline Acts::ActsScalar getPhi(Acts::ActsScalar x,
+                               Acts::ActsScalar y,
+                               Acts::ActsScalar deltaPhi) {
+  auto phi = std::acos(x / std::hypot(x, y));
+  if (y < 0) { phi = 2*M_PI - phi; }
+  phi += deltaPhi;
+
+  const auto eps = 0.001;
+  if (phi >= 2*M_PI - eps) { phi -= 2*M_PI; }
+  if (phi < 0) { phi = 0; }
+
+  return phi;
+}
+
 inline uint64_t toBits(const Acts::Vector3 &position,
                        Acts::ActsScalar deltaPhi) {
   const auto x = position[0];
@@ -234,11 +248,9 @@ inline uint64_t toBits(const Acts::Vector3 &position,
   const auto r = std::hypot(x, y);
   assert(Detector::Rmin <= r && r <= Detector::Rmax);
 
-  const auto pi2 = 2. * M_PI;
-  auto phi = std::acos(x / r);
-  if (y < 0) { phi = pi2 - phi; }
-  phi += deltaPhi;
-  if (phi > pi2) { phi -= pi2; }
+  const auto eps = 0.001;
+  const auto phi = getPhi(x, y, deltaPhi) + eps;
+  assert(0 <= phi && phi < 2*M_PI);
 
   auto rBits = static_cast<uint64_t>((r - Detector::Rmin) / Detector::DeltaR);
   auto pBits = static_cast<uint64_t>(phi / Detector::IntDeltaPhi);
@@ -271,6 +283,9 @@ void fillSurfaces(
       auto surface = surfaceVector.at(j)->getSharedPtr();
       auto center = surface->center(context);
       auto bits = toBits(center, 0.5 * Detector::IntDeltaPhi);
+
+      assert(surfaces.find(bits) == surfaces.end()
+          && "There are surfaces with the same bit keys");
       surfaces.insert({bits, surface});
     }
   }
@@ -281,6 +296,7 @@ std::shared_ptr<const Acts::Surface> Detector::getSurface(
     const Acts::Vector3 &position) {
   if (m_surfaces.empty()) {
     fillSurfaces(gcontext, m_trackingGeometry, m_surfaces);
+    ACTS_DEBUG("Constructed " << m_surfaces.size() << " surfaces");
   }
 
   ACTS_VERBOSE("Finding a surface for " << position);
