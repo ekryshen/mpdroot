@@ -1,6 +1,5 @@
 #include <Rtypes.h>
 // ROOT includes
-// Use Acts-based tracker for TPC
 #include "TString.h"
 #include "TStopwatch.h"
 #include "TSystem.h"
@@ -102,13 +101,13 @@ void trackingActs(TString inFile = "evetest.root", TString outFile = "mpddst.roo
 //FIXME:   MpdTpcClusterFinderMlem *tpcClusAZ = new MpdTpcClusterFinderMlem();
 //FIXME:   fRun->AddTask(tpcClusAZ);
 #else
-   MpdTpcHitProducer *hitPr = new MpdTpcHitProducer();
-   hitPr->SetModular(0);
-   fRun->AddTask(hitPr);
+//FIXME:   MpdTpcHitProducer *hitPr = new MpdTpcHitProducer();
+//FIXME:   hitPr->SetModular(0);
+//FIXME:   fRun->AddTask(hitPr);
 #endif
 
-   FairTask *vertZ = new MpdVertexZfinder();
-   fRun->AddTask(vertZ);
+//FIXME:   FairTask *vertZ = new MpdVertexZfinder();
+//FIXME:   fRun->AddTask(vertZ);
 
    MpdTpcTracker *recoKF = new MpdTpcTracker();
    
