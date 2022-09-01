@@ -14,13 +14,10 @@ namespace Mpd::Tpc {
 
 /// @brief Represents a (simulation) hit.
 struct InputHit final {
-  int trackId;                  ///< Simulation track. 
-  int detectorId;               ///< Detector (pad).
-  Acts::Vector3 position;       ///< XYZ in mm.
-  Acts::Vector3 momentum;       ///< Pxyz in FIXME.
-  Acts::ActsScalar time;        ///< Time in FIXME.
-  Acts::ActsScalar length;      ///< Length in mm.
-  Acts::ActsScalar energyLoss;  ///< Energy loss in FIXME.
+  int trackId;            ///< Simulation track. 
+  int detectorId;         ///< Detector (pad).
+  Acts::Vector3 position; ///< XYZ in mm.
+  Acts::Vector3 momentum; ///< Pxyz in GeV.
 };
 
 inline std::ostream &operator<<(std::ostream &out, const InputHit &hit) {
@@ -28,8 +25,11 @@ inline std::ostream &operator<<(std::ostream &out, const InputHit &hit) {
   const auto y = hit.position[1];
   const auto z = hit.position[2];
 
-  return out << "Hit(" << x << ", " << y << ", " << z << "), "
-             << "R=" << std::hypot(x, y);
+  const auto pX = hit.momentum[0];
+  const auto pY = hit.momentum[1];
+
+  return out << "(" << x << ", " << y << ", " << z << "), "
+             << "R=" << std::hypot(x, y) << ", Pt=" << std::hypot(pX, pY);
 }
 
 using InputHitContainer = std::vector<InputHit>;
