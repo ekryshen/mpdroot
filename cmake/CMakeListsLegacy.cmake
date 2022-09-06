@@ -232,6 +232,7 @@ add_subdirectory (detectors/ffd)
 add_subdirectory (detectors/sts)
 # unsupported as of 01.2023 add_subdirectory (detectors/bmd)
 # unsupported as of 12.2022 add_subdirectory (detectors/mcord)
+add_subdirectory (detectors/tpc/alignmentR)
 add_subdirectory (physics) #MpdBase MpdMCStack Kalman MpdPid LHETrack
 add_subdirectory (tools/eventDisplay) #Emc
 
