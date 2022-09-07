@@ -105,7 +105,6 @@ Config::Config(const std::string &rootFile,
   trackFinding.inputInitialTrackParameters = EstTrackParamsID;
   trackFinding.outputTrajectories = TrajectoriesID;
   trackFinding.outputTrackCandidates = TrackCandidatesID;
-  trackFinding.trackMinLength = TrackMinLength;
   trackFinding.trackingGeometry = trackingGeometry;
   trackFinding.magneticField = magneticField;
   trackFinding.referenceSurface = referenceSurface;
@@ -117,7 +116,6 @@ Config::Config(const std::string &rootFile,
   trackFinding.multipleScattering = MultipleScattering;
   trackFinding.energyLoss = EnergyLoss;
   trackFinding.smoothing = Smoothing;
-  trackFinding.computeSharedHits = ComputeSharedHits;
   trackFinding.measurementSelectorConfig = {{
       Acts::GeometryIdentifier(), {
           {/* Single |eta| bin */},
@@ -125,6 +123,10 @@ Config::Config(const std::string &rootFile,
           {NmaxPerSurface}
       }
   }};
+  trackFinding.computeSharedHits = ComputeSharedHits;
+  trackFinding.trackMinLength = TrackMinLength;
+  trackFinding.newHitsInRow = NewHitsInRow;
+  trackFinding.newHitsRatio = NewHitsRatio;
 }
 
 } // namespace Mpd::Tpc

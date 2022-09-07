@@ -200,13 +200,6 @@ void TrackFinding::computeSharedHits(const Container &sourceLinks,
   }
 }
 
-inline size_t computeHashCode(size_t hashCode, size_t value) {
-  static constexpr auto prime = 37u;
-  hashCode *= prime;
-  hashCode += value;
-  return hashCode;
-}
-
 void TrackFinding::constructTrackCandidates(const Context &context,
                                             const Container &sourceLinks,
                                             Results &results) const {
@@ -215,10 +208,6 @@ void TrackFinding::constructTrackCandidates(const Context &context,
 
   // Track candidates ordered by descending length.
   std::multimap<size_t, ProtoTrack> trackCandidates;
-
-  // Track hash codes for filtering.
-  std::unordered_set<size_t> trackHashCodes;
-  trackHashCodes.reserve(2 * nHits);
 
   // Iterate over the seeds.
   for (size_t itrack = 0; itrack < results.size(); itrack++) {
@@ -238,9 +227,6 @@ void TrackFinding::constructTrackCandidates(const Context &context,
     for (auto lastIndex : lastIndices) {
       size_t trackHashCode = 0;
 
-      std::vector<size_t> suffixHashCodes;
-      suffixHashCodes.reserve(fittedStates.size());
-
       ProtoTrack trackCandidate;
       trackCandidate.reserve(fittedStates.size());
 
@@ -250,14 +236,8 @@ void TrackFinding::constructTrackCandidates(const Context &context,
           return;
         }
 
-        // Get the index in the measurement array.
         auto &sourceLink = static_cast<const SourceLink&>(state.uncalibrated());
         auto hitIndex = sourceLink.index();
-
-        // Compute the hash code for the track (and all the suffixes).
-        trackHashCode = computeHashCode(trackHashCode, hitIndex);
-        suffixHashCodes.push_back(trackHashCode);
-
         trackCandidate.push_back(hitIndex);
       });
 
@@ -267,46 +247,46 @@ void TrackFinding::constructTrackCandidates(const Context &context,
       }
 
       std::reverse(trackCandidate.begin(), trackCandidate.end());
-
-      auto it = trackHashCodes.find(trackHashCode);
-      if (it == trackHashCodes.end()) {
-        trackCandidates.insert({nHits - trackCandidate.size(), trackCandidate});
-        std::for_each(suffixHashCodes.begin(), suffixHashCodes.end(),
-            [&](size_t hashCode) { trackHashCodes.insert(hashCode); });
-      }
+      trackCandidates.insert({nHits - trackCandidate.size(), trackCandidate});
     }
   }
+
+  std::unordered_set<Index> coverage;
+  coverage.reserve(nHits);
 
   ProtoTrackContainer protoTracks;
   protoTracks.reserve(trackCandidates.size());
  
-  // Naive hashing-based filtering of prefixes and suffixes.
-  // Note that some of the suffixes have been already removed.
-  trackHashCodes.clear();
-
+  // Naive coverage-based track filtering.
   for (const auto &[quality, track] : trackCandidates) {
-    std::vector<size_t> hashCodes;
-    hashCodes.reserve(2 * track.size());
-
-    size_t prefixHashCode = 0;
-    size_t suffixHashCode = 0;
+    size_t nNewHits = 0;  // Number of uncovered hits in a track.
+    size_t nNewInRow = 0; // Length of a current segment (new hits in a row).
+    size_t nSegments = 0; // Number of segments w/ length > threshold. 
 
     for (size_t i = 0; i < track.size(); i++) {
-      auto prefixHitIndex = track.at(i);
-      auto suffixHitIndex = track.at(track.size() - 1 - i);
+      auto hitIndex = track.at(i);
 
-      prefixHashCode = computeHashCode(prefixHashCode, prefixHitIndex);
-      suffixHashCode = computeHashCode(suffixHashCode, suffixHitIndex);
-
-      hashCodes.push_back(prefixHashCode);
-      hashCodes.push_back(suffixHashCode);
+      if (coverage.find(hitIndex) == coverage.end()) {
+        nNewHits++;
+        nNewInRow++;
+      } else {
+        if (nNewInRow >= m_config.newHitsInRow) {
+          nSegments++;
+        }
+        nNewInRow = 0;
+      }
     }
 
-    if (trackHashCodes.find(prefixHashCode) == trackHashCodes.end() &&
-        trackHashCodes.find(suffixHashCode) == trackHashCodes.end()) {
+    if (nNewInRow >= m_config.newHitsInRow) {
+      nSegments++;
+    }
+
+    auto ratio = static_cast<double>(nNewHits) / track.size();
+    if (ratio >= m_config.newHitsRatio && nSegments > 0) {
       protoTracks.push_back(track);
-      std::for_each(hashCodes.begin(), hashCodes.end(),
-          [&](size_t hashCode) { trackHashCodes.insert(hashCode); });
+      std::for_each(track.begin(), track.end(), [&](auto hitIndex) {
+        coverage.insert(hitIndex);
+      });
     }
   }
 

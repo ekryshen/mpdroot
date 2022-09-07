@@ -60,9 +60,6 @@ public:
     std::string outputTrajectories;
     std::string outputTrackCandidates;
 
-    /// Minimal track length (tracks w/ shorter length are ignored).
-    size_t trackMinLength;
-
     std::shared_ptr<const Acts::TrackingGeometry> trackingGeometry;
     std::shared_ptr<const Acts::MagneticFieldProvider> magneticField;
     std::shared_ptr<const Acts::Surface> referenceSurface;
@@ -77,6 +74,13 @@ public:
     bool smoothing;
 
     bool computeSharedHits;
+
+    /// Minimal track length (tracks w/ shorter length are ignored).
+    size_t trackMinLength;
+    /// Segment length bound (minimal number of new hits in a row).
+    size_t newHitsInRow;
+    /// Coverage ratio (new hits in a track / track size).
+    double newHitsRatio;
   };
 
   TrackFinding(Config config, Acts::Logging::Level level);
