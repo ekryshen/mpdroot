@@ -36,20 +36,23 @@ public:
   const TrajectoriesContainer &execute(const InputHitContainer &hits);
 
 private:
+  // Logging.
   void logInput() const;
-
   void logOutput() const;
-
   void logHit(size_t hitId, const InputHit &hit) const;
-
   void logHits(const InputHitContainer &hits) const;
-
   void logTrack(const std::string &prefix,
                 size_t trackId,
                 const ProtoTrack &track) const;
-
   void logTracks(const std::string &prefix,
                  const ProtoTrackContainer &tracks) const;
+
+  // Collecting statistics.
+  void checkTrack(const InputHitContainer &hits,
+                  size_t trackId,
+                  const ProtoTrack &track) const;
+  void checkTracks(const InputHitContainer &hits,
+                   const ProtoTrackContainer &tracks) const;
 
   const Acts::Logger &logger() const { return *m_logger; }
 

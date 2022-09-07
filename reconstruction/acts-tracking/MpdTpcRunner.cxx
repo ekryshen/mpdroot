@@ -69,6 +69,8 @@ void Runner::logInput() const {
 }
 
 void Runner::logOutput() const {
+  const auto &hits = m_context.eventStore.get<InputHitContainer>(
+      m_config.digitization.inputSimHits);
   const auto &protos = m_context.eventStore.get<ProtoTrackContainer>(
       m_config.trackSeeding.outputProtoTracks);
   const auto &tracks = m_context.eventStore.get<ProtoTrackContainer>(
@@ -76,6 +78,7 @@ void Runner::logOutput() const {
 
   logTracks("Proto track", protos);
   logTracks("Found track", tracks);
+  checkTracks(hits, tracks);
 }
 
 void Runner::logHit(size_t hitId, const InputHit &hit) const {
@@ -104,6 +107,39 @@ void Runner::logTracks(const std::string &prefix,
   size_t itrack = 0;
   for (const auto &track : tracks) {
     logTrack(prefix, itrack++, track);
+  }
+}
+
+void Runner::checkTrack(const InputHitContainer &hits,
+                        size_t trackId,
+                        const ProtoTrack &track) const {
+  std::unordered_map<int, size_t> counts;
+  counts.reserve(track.size());
+
+  for (auto ihit : track) {
+    counts[hits.at(ihit).trackId]++;
+  }
+
+  size_t maxCount = 0;
+  size_t realTrack = 0;
+  for (const auto &[id, count] : counts) {
+    if (count > maxCount) {
+      maxCount = count;
+      realTrack = id;
+    }
+  }
+
+  double percent = (100. * maxCount) / track.size();
+
+  ACTS_DEBUG("Most frequent ID for " << trackId << ": "
+             << realTrack << " (" << percent << "%)");
+}
+
+void Runner::checkTracks(const InputHitContainer &hits,
+                         const ProtoTrackContainer &tracks) const {
+  size_t itrack = 0;
+  for (const auto &track : tracks) {
+    checkTrack(hits, itrack++, track);
   }
 }
 
