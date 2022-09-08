@@ -39,4 +39,5 @@
 #pragma link C++ class MpdTpcEDepParams+;
 #pragma link C++ class AbstractTpcClusterHitFinder+;
 #pragma link C++ class TpcClusterHitFinderMlem+;
+#pragma link C++ class MpdTpcDriftVelocityDB+;
 #endif

@@ -55,6 +55,7 @@ set(SRCS
   TpcPoint.cxx
   clusterHitFinder/AbstractTpcClusterHitFinder.cxx
   clusterHitFinder/TpcClusterHitFinderMlem.cxx
+  MpdTpcDriftVelocityDB.cxx
 )
 
 Set(HEADERS)
