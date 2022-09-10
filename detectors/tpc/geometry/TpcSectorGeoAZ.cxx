@@ -1,13 +1,5 @@
 #include "TpcSectorGeoAZ.h"
 #include "TpcGas.h"
-//#include "TpcGeoPar.h"
-//#include "FairGeoNode.h"
-//#include "FairRunAna.h"
-//#include "FairRuntimeDb.h"
-
-#include <TGeoManager.h>
-#include <TGeoPgon.h>
-#include <TGeoTube.h>
 #include <TMath.h>
 #include <TSystem.h>
 #include <Riostream.h>
@@ -18,89 +10,128 @@ using std::endl;
 //__________________________________________________________________________
 TpcSectorGeoAZ::TpcSectorGeoAZ()
 {
-   /// Initialization of sector parameters
-
-   // FairRuntimeDb* rtdb = FairRun::Instance()->GetRuntimeDb();
-   // TpcGeoPar *geoPar = (TpcGeoPar*) rtdb->getContainer("TpcGeoPar");
-   TString     volName = "tpc01sv";
-   TGeoVolume *sv      = gGeoManager->GetVolume(volName);
-   if (!sv) {
-      Warning("Init", "No sensitive volume found !!!");
-      return;
-   }
-   TGeoShape *shape = sv->GetShape();
-   // TObjArray* sensNodes = geoPar->GetGeoSensitiveNodes();
-   // cout << sensNodes->GetEntriesFast() << " " << geoPar->GetGeoPassiveNodes()->GetEntriesFast() << endl;
-   // FairGeoNode* sensVol = (FairGeoNode*) (sensNodes->FindObject(volName));
-   // FairGeoNode* sensVol = (FairGeoNode*) (sensNodes->At(0));
-   // TArrayD* params = sensVol->getParameters();
-   fDphi = TMath::TwoPi() / fgkNsect;
-   fPhi0 = -fDphi / 2.;
+   fYsec[0]  = 40.699999999999996;
+   fYsec[1]  = 73.1;
+   fYsec[2]  = 119.9;
+   fZmin     = 0.01;
+   fZmax     = 170.;
+   fPhi0     = -15 * TMath::DegToRad();
+   fNrows[0] = 27;
+   fNrows[1] = 26;
+   fPadH[0]  = 1.2;
+   fPadH[1]  = 1.8;
+   fDphi     = TMath::TwoPi() / fgkNsect;
 
    cout << "\n !!!!! ***** ***** ***** !!!!!" << endl;
-   // if (sensVol->getShape() == "TUBE") {
-   if (TString(shape->ClassName()) == "TGeoTube") {
-      // Old sensitive volume
-      fNrows[0] = fNrows[1] = 50;
-      // fNrows = 53;
-      // Double_t rMin = params->At(0);
-      // Double_t rMax = params->At(1);
-      Double_t rMin = ((TGeoTube *)shape)->GetRmin();
-      Double_t rMax = ((TGeoTube *)shape)->GetRmax();
-      cout << " ***** TPC sensitive volume: " << sv->GetName() << " " << shape->ClassName() << " " << rMin << " "
-           << rMax << " " << ((TGeoTube *)shape)->GetDZ() << endl;
-      // fYsec[0] = rMin;
-      // fYsec[1] = rMax * TMath::Cos(fPhi0);
-      fYsec[0] = 36.;            // for consistency with earlier results
-      fYsec[1] = fYsec[2] = 96.; // for consistency with earlier results
-      fPadH[0] = fPadH[1] = (fYsec[1] - fYsec[0]) / fNrows[0];
-      // fYsec[0] = 40.4;
-      // fYsec[1] = fYsec[0] + 53.0;
-      //} else if (sensVol->getShape() == "PGON") {
-   } else if (TString(shape->ClassName()) == "TGeoPgon") {
-      // New sensitive volume
-      // fYsec[0] = params->At(5);
-      // fYsec[1] = params->At(6);
-      fYsec[0] = ((TGeoPgon *)shape)->Rmin(0) + 0.4;
-      // fYsec[2] = ((TGeoPgon*)shape)->Rmax(0);
-      fPadH[0]    = 1.2; // approx. pad height in inner ROC region
-      fPadH[1]    = 1.8; // 1.2; // approx. pad height in outer ROC region
-      fNrows[0]   = 27;  // 33;
-      fNrows[1]   = 26;  // 33;
-      Double_t dy = fPadH[0] * fNrows[0] + fPadH[1] * fNrows[1];
-      fYsec[2]    = fYsec[0] + dy;
-      // Double_t scale = (fYsec[2] - fYsec[0]) / dy;
-      // fPadH[0] *= scale;
-      // fPadH[1] *= scale;
-      fYsec[1] = fYsec[0] + fPadH[0] * fNrows[0];
-      // fYsec[1] = fYsec[0] + 60;
-      // fNrows = Int_t ((fYsec[1] - fYsec[0] + 0.1) / 1.2); // 66 lays
-      // fNrows = Int_t ((fYsec[1] - fYsec[0] + 0.1) / 1.5); // 53 lays
-      // fNrows = Int_t ((fYsec[1] - fYsec[0] + 0.1) / 1.0);
-      // Starting phi
-      fPhi0           = -((TGeoPgon *)shape)->Phi1() * TMath::DegToRad();
-      Double_t loc[3] = {100, 0, 10}, glob[3] = {0};
-      gGeoManager->FindNode(loc[0], loc[1], loc[2]);
-      gGeoManager->LocalToMaster(loc, glob);
-      fPhi0 += TMath::ATan2(glob[1], glob[0]); // due to rotation
-      // Extract sensitive volume Z-coordinates
-      TGeoVolume *membr = gGeoManager->GetVolume("tpc01mb"); // membrane
-      fZmin             = ((TGeoTube *)membr->GetShape())->GetDZ();
-      // fZmax = fZmin + 2 * ((TGeoTube*)shape)->GetDZ();
-      fZmax = 170.;
-      cout << " ***** TPC sensitive volume: " << sv->GetName() << ", shape: " << shape->ClassName()
-           << ", inner radius: " << fYsec[0] << ", outer radius: " << fYsec[2] << ", Zmin, Zmax: " << fZmin << ", "
-           << fZmax << endl;
-   } else
-      Fatal("MpdTpcSectorGeo::Init()", " !!! Unknown sensitive volume shape !!! ");
+   cout << " ***** TPC sensitive volume: "
+        << "tpc01sv"
+        << ", shape: "
+        << "TGeoPgon"
+        << ", inner radius: " << fYsec[0] << ", outer radius: " << fYsec[2] << ", Zmin, Zmax: " << fZmin << ", "
+        << fZmax << endl;
 
-   // fPadH = (fYsec[1] - fYsec[0]) / fNrows;
    cout << " ***** TPC sector params - inner radius: " << fYsec[0] << ", outer radius: " << fYsec[2]
         << ", boundary: " << fYsec[1] << endl;
    cout << " Number of sectors: " << fgkNsect << ", phi0: " << fPhi0 * TMath::RadToDeg()
         << ", numbers of padrows: " << fNrows[0] << " " << fNrows[1] << ", pad heights: " << fPadH[0] << " " << fPadH[1]
         << endl;
    cout << " !!!!! ***** ***** ***** !!!!!" << endl;
+
+   /* 2022, September
+
+      Access to gGeoManager was causing  constructor segfault if instantiated
+      before first task's FairTask::Init method is run in FairRun
+
+      Commenting out the access to gGeoManager and hardcoding the values
+      of calculated parameters. These values are giving identical runReco.C
+      results compared to using it with old (previous) geometry class MpdTpcSectorGeo
+
+
+      /// Initialization of sector parameters
+    // FairRuntimeDb* rtdb = FairRun::Instance()->GetRuntimeDb();
+    // TpcGeoPar *geoPar = (TpcGeoPar*) rtdb->getContainer("TpcGeoPar");
+    TString     volName = "tpc01sv";
+    TGeoVolume *sv      = gGeoManager->GetVolume(volName);
+    if (!sv) {
+       Warning("Init", "No sensitive volume found !!!");
+       return;
+    }
+    TGeoShape *shape = sv->GetShape();
+    // TObjArray* sensNodes = geoPar->GetGeoSensitiveNodes();
+    // cout << sensNodes->GetEntriesFast() << " " << geoPar->GetGeoPassiveNodes()->GetEntriesFast() << endl;
+    // FairGeoNode* sensVol = (FairGeoNode*) (sensNodes->FindObject(volName));
+    // FairGeoNode* sensVol = (FairGeoNode*) (sensNodes->At(0));
+    // TArrayD* params = sensVol->getParameters();
+    fDphi = TMath::TwoPi() / fgkNsect;
+    fPhi0 = -fDphi / 2.;
+
+     cout << "\n !!!!! ***** ***** ***** !!!!!" << endl;
+    // if (sensVol->getShape() == "TUBE") {
+    if (TString(shape->ClassName()) == "TGeoTube") {
+       // Old sensitive volume
+       fNrows[0] = fNrows[1] = 50;
+       // fNrows = 53;
+       // Double_t rMin = params->At(0);
+       // Double_t rMax = params->At(1);
+       Double_t rMin = ((TGeoTube *)shape)->GetRmin();
+       Double_t rMax = ((TGeoTube *)shape)->GetRmax();
+       cout << " ***** TPC sensitive volume: " << sv->GetName() << " " << shape->ClassName() << " " << rMin << " "
+            << rMax << " " << ((TGeoTube *)shape)->GetDZ() << endl;
+       // fYsec[0] = rMin;
+       // fYsec[1] = rMax * TMath::Cos(fPhi0);
+       fYsec[0] = 36.;            // for consistency with earlier results
+       fYsec[1] = fYsec[2] = 96.; // for consistency with earlier results
+       fPadH[0] = fPadH[1] = (fYsec[1] - fYsec[0]) / fNrows[0];
+       // fYsec[0] = 40.4;
+       // fYsec[1] = fYsec[0] + 53.0;
+       //} else if (sensVol->getShape() == "PGON") {
+    } else if (TString(shape->ClassName()) == "TGeoPgon") {
+
+       // New sensitive volume
+       // fYsec[0] = params->At(5);
+       // fYsec[1] = params->At(6);
+       fYsec[0] = ((TGeoPgon *)shape)->Rmin(0) + 0.4;
+       // fYsec[2] = ((TGeoPgon*)shape)->Rmax(0);
+       fPadH[0]    = 1.2; // approx. pad height in inner ROC region
+       fPadH[1]    = 1.8; // 1.2; // approx. pad height in outer ROC region
+       fNrows[0]   = 27;  // 33;
+       fNrows[1]   = 26;  // 33;
+       Double_t dy = fPadH[0] * fNrows[0] + fPadH[1] * fNrows[1];
+       fYsec[2]    = fYsec[0] + dy;
+       // Double_t scale = (fYsec[2] - fYsec[0]) / dy;
+       // fPadH[0] *= scale;
+       // fPadH[1] *= scale;
+       fYsec[1] = fYsec[0] + fPadH[0] * fNrows[0];
+       // fYsec[1] = fYsec[0] + 60;
+       // fNrows = Int_t ((fYsec[1] - fYsec[0] + 0.1) / 1.2); // 66 lays
+       // fNrows = Int_t ((fYsec[1] - fYsec[0] + 0.1) / 1.5); // 53 lays
+       // fNrows = Int_t ((fYsec[1] - fYsec[0] + 0.1) / 1.0);
+       // Starting phi
+       fPhi0           = -((TGeoPgon *)shape)->Phi1() * TMath::DegToRad();
+       Double_t loc[3] = {100, 0, 10}, glob[3] = {0};
+       gGeoManager->FindNode(loc[0], loc[1], loc[2]);
+       gGeoManager->LocalToMaster(loc, glob);
+       fPhi0 += TMath::ATan2(glob[1], glob[0]); // due to rotation
+       // Extract sensitive volume Z-coordinates
+       TGeoVolume *membr = gGeoManager->GetVolume("tpc01mb"); // membrane
+       fZmin             = ((TGeoTube *)membr->GetShape())->GetDZ();
+       // fZmax = fZmin + 2 * ((TGeoTube*)shape)->GetDZ();
+       fZmax = 170.;
+       cout << " ***** TPC sensitive volume: " << sv->GetName() << ", shape: " << shape->ClassName()
+            << ", inner radius: " << fYsec[0] << ", outer radius: " << fYsec[2] << ", Zmin, Zmax: " << fZmin << ", "
+            << fZmax << endl;
+    } else
+       Fatal("MpdTpcSectorGeo::Init()", " !!! Unknown sensitive volume shape !!! ");
+
+    // fPadH = (fYsec[1] - fYsec[0]) / fNrows;
+    cout << " ***** TPC sector params - inner radius: " << fYsec[0] << ", outer radius: " << fYsec[2]
+         << ", boundary: " << fYsec[1] << endl;
+    cout << " Number of sectors: " << fgkNsect << ", phi0: " << fPhi0 * TMath::RadToDeg()
+         << ", numbers of padrows: " << fNrows[0] << " " << fNrows[1] << ", pad heights: " << fPadH[0] << " " <<
+    fPadH[1]
+         << endl;
+    cout << " !!!!! ***** ***** ***** !!!!!" << endl;
+    */
 
    fPadW[0] = fPadW[1] = 0.5; // pad widths
    // Numbers of pads in rows
