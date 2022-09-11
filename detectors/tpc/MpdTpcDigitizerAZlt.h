@@ -16,6 +16,7 @@
 // Base Class Headers ----------------
 
 #include "TpcPoint.h"
+#include "TpcSectorGeoAZ.h"
 #include "MpdTpcDigitizerTask.h"
 #include "MpdTpcDigitizerQAHistograms.h"
 #include "FairTask.h"
@@ -23,7 +24,6 @@
 #include "FairField.h"
 
 class TpcGas;
-class MpdTpcSectorGeo;
 
 using namespace std;
 
@@ -39,7 +39,7 @@ struct DigOrigArray {
 class MpdTpcDigitizerAZlt : public FairTask {
 public:
    // Constructors/Destructors ---------
-   MpdTpcDigitizerAZlt();
+   MpdTpcDigitizerAZlt(BaseTpcGeo& secGeo);
    virtual ~MpdTpcDigitizerAZlt();
 
    Bool_t isSubtrackInInwards(const TpcPoint *p1, const TpcPoint *p2);
@@ -108,7 +108,7 @@ private:
    Float_t          phIn;            // inner pad height
    Float_t          pwOut;           // outer pad width
    Float_t          phOut;           // outer pad height
-   MpdTpcSectorGeo *fSecGeo;         // sector geometry
+   TpcSectorGeoAZ  *fSecGeo;         // sector geometry
 
    // set of boolean flags for manage of work process
    Bool_t fIsHistogramsInitialized; // is QA histograms initialized or not

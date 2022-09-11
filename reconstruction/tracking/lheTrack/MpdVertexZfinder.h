@@ -8,11 +8,12 @@
 #include "TF1.h"
 #include "TH1.h"
 #include "TH2.h"
+#include "TpcSectorGeoAZ.h"
 
 class MpdVertexZfinder : public FairTask {
 public:
    /** Constructor **/
-   MpdVertexZfinder(const char *name = "MpdVertexZfinder", Int_t iVerbose = 1);
+   MpdVertexZfinder(BaseTpcGeo& fSecGeo, const char *name = "MpdVertexZfinder", Int_t iVerbose = 1);
 
    /** Destructor **/
    virtual ~MpdVertexZfinder();
@@ -42,6 +43,7 @@ public:
    Double_t FindZ(const Int_t *layPointers, Int_t &flag);         // evaluate vertex Z-position
 
 private:
+   TpcSectorGeoAZ     *secGeo;  // tpc sector geometry
    const TClonesArray *fKHits;  // array of Kalman hits
    const TH1F         *fhLays;  // histogram of layer occupancy
    TH1F               *fhZ;     // histogram of Z-positions

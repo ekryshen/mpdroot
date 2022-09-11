@@ -31,8 +31,11 @@ using std::multiset;
 // const Double_t MpdTrackFinderIts::fgkChi2Cut = 20; //20; //100;
 
 //__________________________________________________________________________
-MpdVertexZfinder::MpdVertexZfinder(const char *name, Int_t iVerbose) : FairTask(name, iVerbose)
+MpdVertexZfinder::MpdVertexZfinder(BaseTpcGeo& fSecGeo, const char *name, Int_t iVerbose) : FairTask(name, iVerbose)
 {
+   secGeo = dynamic_cast<TpcSectorGeoAZ*>(&fSecGeo);
+   if (!secGeo) Fatal("MpdVertexZfinder::MpdVertexZfinder", " !!! Wrong geometry type !!! ");
+
    fKHits = nullptr, fhLays = nullptr;
    fhZ = nullptr, fUnc = nullptr, fhPhLay = nullptr;
 }
@@ -129,7 +132,8 @@ Double_t MpdVertexZfinder::FindZ(const Int_t *layPointers, Int_t &flag)
    Int_t modular = 0;
    if (((MpdKalmanHit *)fKHits->First())->GetType() == MpdKalmanHit::kFixedP) modular = 1;
    // const TpcPadPlane *padPlane = TpcPadPlane::Instance();
-   MpdTpcSectorGeo *secGeo = MpdTpcSectorGeo::Instance();
+   //MpdTpcSectorGeo* secGeo = MpdTpcSectorGeo::Instance();
+   
 
    // Estimate Z-position of vertex
    // Loop over layers

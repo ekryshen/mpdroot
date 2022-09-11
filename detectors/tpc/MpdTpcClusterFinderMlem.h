@@ -26,10 +26,10 @@
 #include <map>
 
 // Collaborating Class Headers -------
+#include "TpcSectorGeoAZ.h"
 
 // Collaborating Class Declarations --
 class MpdTpc2dCluster;
-class MpdTpcSectorGeo;
 class TClonesArray;
 class TH2D;
 // class TMatrixD;
@@ -37,7 +37,7 @@ class TH2D;
 class MpdTpcClusterFinderMlem : public FairTask {
 public:
    // Constructors/Destructors ---------
-   MpdTpcClusterFinderMlem();
+   MpdTpcClusterFinderMlem(BaseTpcGeo& secGeo);
    ~MpdTpcClusterFinderMlem();
 
    // Operators
@@ -79,7 +79,7 @@ private:
    Int_t            fFlags[fgkNpads][fgkNtimes];
    Int_t            fDigis[fgkNpads][fgkNtimes];
    Bool_t           fPersistence;
-   MpdTpcSectorGeo *fSecGeo;
+   TpcSectorGeoAZ  *fSecGeo;
    Double_t         fVertexZ; // !!! vertex Z-position estimate (at present it is taken from true value) !!!
 
    // Private Methods -----------------

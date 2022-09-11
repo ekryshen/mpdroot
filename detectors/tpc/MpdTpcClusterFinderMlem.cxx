@@ -22,7 +22,6 @@
 #include "MpdTpc2dCluster.h"
 #include "MpdTpcDigit.h"
 #include "MpdTpcHit.h"
-#include "MpdTpcSectorGeo.h"
 #include "TpcPoint.h"
 
 #include "FairRootManager.h"
@@ -52,8 +51,11 @@ using namespace std;
 
 //__________________________________________________________________________
 
-MpdTpcClusterFinderMlem::MpdTpcClusterFinderMlem() : FairTask("TPC Cluster finder Mlem"), fPersistence(kFALSE)
+MpdTpcClusterFinderMlem::MpdTpcClusterFinderMlem(BaseTpcGeo& secGeo) : FairTask("TPC Cluster finder Mlem"), fPersistence(kFALSE)
 {
+   fSecGeo = dynamic_cast<TpcSectorGeoAZ*>(&secGeo);
+   if (!fSecGeo) Fatal("MpdTpcClusterFinderMlem::MpdTpcClusterFinderMlem", " !!! Wrong geometry type !!! ");
+
    /*
    std::string tpcGasFile = gSystem->Getenv("VMCWORKDIR");
    tpcGasFile += "/geometry/Ar-90_CH4-10.asc";
@@ -87,8 +89,6 @@ InitStatus MpdTpcClusterFinderMlem::Init()
 {
 
    // Create containers for digits
-   fSecGeo = MpdTpcSectorGeo::Instance();
-   // Int_t nRows = MpdTpcSectorGeo::Instance()->NofRows();
    Int_t nRows = fSecGeo->NofRows();
    for (Int_t i = 0; i < fgkNsec2; ++i) fDigiSet[i] = new set<Int_t>[nRows];
 
