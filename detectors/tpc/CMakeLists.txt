@@ -56,6 +56,7 @@ set(SRCS
   TpcPoint.cxx
   clusterHitFinder/AbstractTpcClusterHitFinder.cxx
   clusterHitFinder/TpcClusterHitFinderMlem.cxx
+  geometry/BaseTpcGeo.cxx
   geometry/TpcSectorGeoAZ.cxx
 )
 

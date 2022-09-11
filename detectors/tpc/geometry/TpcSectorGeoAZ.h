@@ -7,15 +7,15 @@
 ///
 /// \author Alexander Zinchenko, LHEP JINR Dubna
 ///         
-///        singleton removal, BaseTpcSectorGeo inheritance port:
+///        singleton removal, BaseTpcGeo inheritance port:
 ///        Slavomir Hnatic, LIT JINR Dubna, September 2022
 
-#include <TObject.h>
+#include <BaseTpcGeo.h>
 #include <TVector3.h>
 
 class TpcGas;
 
-class TpcSectorGeoAZ : public TObject {
+class TpcSectorGeoAZ : public BaseTpcGeo {
 
 public:
    enum Shifts { kSectorS = 0, kPadrowS = 5, kPadS = 13, kPadSignS = 30 };
