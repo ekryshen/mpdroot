@@ -99,6 +99,7 @@ void MpdStack::PushTrack(Int_t toBeDone, Int_t parentId, Int_t pdgCode, Double_t
       TParticle *moth = (TParticle *)partArray.UncheckedAt(parentId);
       TVector3   polar;
       moth->GetPolarisation(polar);
+      Double_t value = TMath::Abs(moth->GetWeight());
       // play spin orientation according to transfer coefficients
       Float_t xxx = gRandom->Rndm();
       if (TMath::Abs(moth->GetPdgCode()) == 3212) {
@@ -111,6 +112,7 @@ void MpdStack::PushTrack(Int_t toBeDone, Int_t parentId, Int_t pdgCode, Double_t
          if (xxx < 0.900) polar *= -1.0; // C_{\Lambda \Xi0} = 0.900
       }
       particle->SetPolarisation(polar);
+      particle->SetWeight(value);
    }
 
    // --> Increment counter
@@ -187,6 +189,7 @@ void MpdStack::PushTrack(Int_t toBeDone, Int_t parentId, Int_t pdgCode, Double_t
       TParticle *moth = (TParticle *)partArray.UncheckedAt(parentId);
       TVector3   polar;
       moth->GetPolarisation(polar);
+      Double_t value = TMath::Abs(moth->GetWeight());
       // play spin orientation according to transfer coefficients
       Float_t xxx = gRandom->Rndm();
       if (TMath::Abs(moth->GetPdgCode()) == 3212) {
@@ -199,6 +202,7 @@ void MpdStack::PushTrack(Int_t toBeDone, Int_t parentId, Int_t pdgCode, Double_t
          if (xxx < 0.900) polar *= -1.0; // C_{\Lambda \Xi0} = 0.900
       }
       particle->SetPolarisation(polar);
+      particle->SetWeight(value);
    }
 
    // --> Increment counter

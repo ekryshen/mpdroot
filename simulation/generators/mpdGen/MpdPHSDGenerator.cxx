@@ -136,11 +136,16 @@ Bool_t MpdPHSDGenerator::ReadEvent(FairPrimaryGenerator *primGen)
          Float_t weight_pol = pol.Mag();
          if (weight_pol > 1. || weight_pol == 0.) {
             part->SetPolarisation(0., 0., 0.);
+            part->SetWeight(0.);
          } else {
             if (fPsiRP != 0.) pol.RotateZ(fPsiRP); // rotate according to RP, consistent with above
             Float_t xxx = frandom->Rndm();
-            if (xxx > 1. / 2. * (1. + weight_pol)) pol *= -1.; // play spin orientation according to mean polarization
+            if (xxx > 1. / 2. * (1. + weight_pol)) {
+               pol *= -1.; // play spin orientation according to mean polarization
+               weight_pol *= -1.;
+            }
             part->SetPolarisation(pol);
+            part->SetWeight(weight_pol);
             // part->SetPolarisation(0., 1., 0.); // test
          }
       }
