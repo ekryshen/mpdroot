@@ -121,18 +121,27 @@ void Runner::checkTrack(const InputHitContainer &hits,
   }
 
   size_t maxCount = 0;
-  size_t realTrack = 0;
+  size_t realTrackId = 0;
   for (const auto &[id, count] : counts) {
     if (count > maxCount) {
       maxCount = count;
-      realTrack = id;
+      realTrackId = id;
+    }
+  }
+
+  size_t realTrackLength = 0;
+  for (const auto hit : hits) {
+    if (hit.trackId == realTrackId) {
+      realTrackLength++;
     }
   }
 
   double percent = (100. * maxCount) / track.size();
 
   ACTS_DEBUG("Most frequent ID for " << trackId << ": "
-             << realTrack << " (" << percent << "%)");
+      << realTrackId << " (" << percent << "% ["
+      << maxCount << "/" << track.size() << "], real-length="
+      << realTrackLength << ")");
 }
 
 void Runner::checkTracks(const InputHitContainer &hits,
