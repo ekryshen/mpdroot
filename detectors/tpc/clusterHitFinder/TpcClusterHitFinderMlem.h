@@ -29,10 +29,10 @@
 #include <map>
 
 // Collaborating Class Headers -------
+#include "TpcSectorGeoAZ.h"
 
 // Collaborating Class Declarations --
 class MpdTpc2dCluster;
-class MpdTpcSectorGeo;
 class TClonesArray;
 class TH2D;
 // class TMatrixD;
@@ -40,7 +40,7 @@ class TH2D;
 class TpcClusterHitFinderMlem : public AbstractTpcClusterHitFinder {
 public:
    // Constructors/Destructors ---------
-   TpcClusterHitFinderMlem();
+   TpcClusterHitFinderMlem(BaseTpcGeo &tpcGeo);
    ~TpcClusterHitFinderMlem();
 
    // Interface Implementation
@@ -70,6 +70,8 @@ private:
    static const Int_t fgkNpads = 128, fgkNtimes = 512; // max number of pads and time bins
    // AZ static const Int_t fgkOvfw = 4095; // overflow value
    static const Int_t fgkOvfw = 1023; // overflow value - 10 bits
+
+   TpcSectorGeoAZ *fSecGeo;
 
    // TClonesArray** fPrimArray;
    std::set<Int_t> *fDigiSet[fgkNsec2];

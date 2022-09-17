@@ -20,7 +20,7 @@
 #include "FairTask.h"
 
 // MpdRoot Class Headers -----------------
-#include "MpdTpcSectorGeo.h"
+#include "BaseTpcGeo.h"
 
 // ROOT Class Declarations ---------------
 class TClonesArray;
@@ -29,7 +29,7 @@ class AbstractTpcClusterHitFinder : public FairTask {
 public:
    // Constructors/Destructors ---------
    // default constructor set to private, the subclasses must access/implement the custom one below
-   AbstractTpcClusterHitFinder(const char *name, Bool_t val);
+   AbstractTpcClusterHitFinder(BaseTpcGeo &tpcGeo, const char *name, Bool_t val);
    virtual ~AbstractTpcClusterHitFinder();
 
    // FairRun methods left virtual for development purposes
@@ -44,7 +44,7 @@ public:
 
 protected:
    FairRootManager *ioman;
-   MpdTpcSectorGeo *secGeo;
+   BaseTpcGeo      *secGeo;
 
    // there is no complex class hierarchy when deriving from AbstractClusterHitFinder class
    // no getters/setters are implemented, to avoid boilerplate code
@@ -55,10 +55,6 @@ protected:
 
    // Geometry parameters
    // do not modify them in your implementation (const correctness not implemented)
-   Int_t        nSectors;  // number of sectors
-   Int_t        nRows;     // number of rows
-   const Int_t *nPads;     // number of pads in a row
-   Int_t        nTimeBins; // maximum number of time bins
 
    Bool_t persistence;
 

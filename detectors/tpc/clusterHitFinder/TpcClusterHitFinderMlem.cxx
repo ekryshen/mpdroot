@@ -22,7 +22,6 @@
 #include "MpdTpc2dCluster.h"
 #include "MpdTpcDigit.h"
 #include "MpdTpcHit.h"
-#include "MpdTpcSectorGeo.h"
 #include "TpcPoint.h"
 
 #include "FairRootManager.h"
@@ -52,7 +51,8 @@ using namespace std;
 
 //__________________________________________________________________________
 
-TpcClusterHitFinderMlem::TpcClusterHitFinderMlem() : AbstractTpcClusterHitFinder("TPC Cluster finder Mlem", kFALSE)
+TpcClusterHitFinderMlem::TpcClusterHitFinderMlem(BaseTpcGeo &tpcGeo)
+   : AbstractTpcClusterHitFinder(tpcGeo, "TPC Cluster finder Mlem", kFALSE)
 {
    /*
    std::string tpcGasFile = gSystem->Getenv("VMCWORKDIR");
@@ -60,6 +60,9 @@ TpcClusterHitFinderMlem::TpcClusterHitFinderMlem() : AbstractTpcClusterHitFinder
    fGas= new TpcGas(tpcGasFile, 130);
    std::cout<<*fGas<<std::endl;
    */
+   fSecGeo = dynamic_cast<TpcSectorGeoAZ *>(secGeo);
+   if (!fSecGeo) Fatal("TpcClusterHitFinderMlem::TpcClusterHitFinderMlem", " !!! Wrong geometry type !!! ");
+
    for (Int_t i = 0; i < fgkNsec2; ++i) fDigiSet[i] = new set<Int_t>[fgkNrows];
 }
 
@@ -85,6 +88,7 @@ void TpcClusterHitFinderMlem::TransformInputData()
 
    // const Int_t nSec = fgkNsec2 / 2; // number of TPC readout sectors
    // Clear digi containers
+   Int_t nRows = fSecGeo->NofRows();
    for (Int_t i = 0; i < fgkNsec2; ++i) {
       for (Int_t j = 0; j < nRows; ++j) fDigiSet[i][j].clear();
    }
@@ -105,7 +109,8 @@ void TpcClusterHitFinderMlem::TransformInputData()
 void TpcClusterHitFinderMlem::FindClusters()
 {
 
-   Int_t nSum = 0;
+   Int_t nSum  = 0;
+   Int_t nRows = fSecGeo->NofRows();
    // Loop over sectors
    for (Int_t isec = 0; isec < fgkNsec2; ++isec) {
 
@@ -280,7 +285,8 @@ void TpcClusterHitFinderMlem::findHits()
       Int_t edge = 0;
       Int_t idig = localMax.rbegin()->second;
       Int_t ipad = clus->Col(idig);
-      if (ipad - 2 == 0 || ipad - 2 == 2 * secGeo->NPadsInRows()[clus->Row()] - 1) edge = 1; // remember extra shift !!!
+      if (ipad - 2 == 0 || ipad - 2 == 2 * fSecGeo->NPadsInRows()[clus->Row()] - 1)
+         edge = 1; // remember extra shift !!!
       if (clus->GetNumPads() == 1) clus->SetSinglePad();
       // if (clus->GetNumPads() > 1) edge = -edge;
       if (edge > 0) {
@@ -351,10 +357,10 @@ void TpcClusterHitFinderMlem::findHits()
       padMean = padMean / adcTot - 2; // correct for shift
       timeMean /= adcTot;
 
-      Double_t xloc  = secGeo->Pad2Xloc(padMean, clus->Row());
-      Int_t    padID = secGeo->PadID(clus->GetSect() % secGeo->NofSectors(), clus->Row());
-      Double_t yloc  = secGeo->LocalPadPosition(padID).Y();
-      Double_t zloc  = secGeo->TimeBin2Z(timeMean);
+      Double_t xloc  = fSecGeo->Pad2Xloc(padMean, clus->Row());
+      Int_t    padID = fSecGeo->PadID(clus->GetSect() % fSecGeo->NofSectors(), clus->Row());
+      Double_t yloc  = fSecGeo->LocalPadPosition(padID).Y();
+      Double_t zloc  = fSecGeo->TimeBin2Z(timeMean);
       p3loc.SetXYZ(xloc, yloc, zloc);
       Double_t rmsZ = TMath::Sqrt(sum2t / adcTot - timeMean * timeMean);
       Double_t rmsX = TMath::Sqrt(sum2p / adcTot - padMean * padMean);
@@ -366,8 +372,8 @@ void TpcClusterHitFinderMlem::findHits()
       TVector3 p3errCor(p3err);
       CorrectReco(p3loc, p3errCor, clus->GetNumPads(), adcTot);
 
-      if (clus->GetSect() >= secGeo->NofSectors()) p3loc[2] = -p3loc[2];
-      secGeo->Local2Global(clus->GetSect(), p3loc, p3glob);
+      if (clus->GetSect() >= fSecGeo->NofSectors()) p3loc[2] = -p3loc[2];
+      fSecGeo->Local2Global(clus->GetSect(), p3loc, p3glob);
 
       // Dip angle correction (for interaction point with Z = 0)
       Double_t dip = TMath::ATan2(TMath::Abs(p3glob[2]), p3glob.Pt()) * TMath::RadToDeg();
@@ -392,8 +398,8 @@ void TpcClusterHitFinderMlem::findHits()
       hit->SetLayer(clus->Row());
       hit->SetLocalPosition(p3loc); // point position
       hit->SetEnergyLoss(adcTot);
-      Int_t    ireg = (clus->Row() < secGeo->NofRowsReg(0)) ? 0 : 1;
-      Double_t step = secGeo->PadHeight(ireg);
+      Int_t    ireg = (clus->Row() < fSecGeo->NofRowsReg(0)) ? 0 : 1;
+      Double_t step = fSecGeo->PadHeight(ireg);
       hit->SetStep(step);
       hit->SetModular(1); // modular geometry flag
       hit->SetPad(Int_t(padMean));
@@ -515,7 +521,7 @@ void TpcClusterHitFinderMlem::CorrectReco(TVector3 &p3loc, TVector3 &p3errCor, I
 {
    // Correct reconstructed coordinates
 
-   Double_t xsec = (p3loc.Y() + secGeo->GetMinY()) * TMath::Tan(secGeo->Dphi() / 2);
+   Double_t xsec = (p3loc.Y() + fSecGeo->GetMinY()) * TMath::Tan(fSecGeo->Dphi() / 2);
    Double_t xloc = p3loc.X(), xloc0 = xloc, edge = 0.0; // distance to sector boundary
    if (xloc < 0)
       edge = xloc + xsec;
@@ -599,7 +605,7 @@ void TpcClusterHitFinderMlem::Mlem(Int_t iclus, multimap<Double_t, Int_t> &local
    Int_t edge = 0;
    Int_t idig = localMax.rbegin()->second;
    Int_t ipad = clus->Col(idig);
-   if (ipad - 2 == 0 || ipad - 2 == 2 * secGeo->NPadsInRows()[clus->Row()] - 1) edge = 1; // extra shift
+   if (ipad - 2 == 0 || ipad - 2 == 2 * fSecGeo->NPadsInRows()[clus->Row()] - 1) edge = 1; // extra shift
 
    for (Int_t jdig = 0; jdig < nDigis; ++jdig) {
       ipad        = clus->Col(jdig);
@@ -623,7 +629,7 @@ void TpcClusterHitFinderMlem::Mlem(Int_t iclus, multimap<Double_t, Int_t> &local
       if (hOvfw && fCharges[ipad][itime] > fgkOvfw - 1) hOvfw->Fill(itime + 0.1, ipad + 0.1, fCharges[ipad][itime]);
       // Consider edge effect
       //*
-      if (edge && (ipad - 2 == 0 || ipad - 2 == 2 * secGeo->NPadsInRows()[clus->Row()] - 1)) { // extra shift
+      if (edge && (ipad - 2 == 0 || ipad - 2 == 2 * fSecGeo->NPadsInRows()[clus->Row()] - 1)) { // extra shift
          // cout << " Edge: " << ipad << " " << pix.iy << " " << pix.ix << " " << hXY->GetYaxis()->GetBinCenter(pix.iy)
          // << endl;
          if (ipad - 2 == 0) {
@@ -1032,13 +1038,13 @@ void TpcClusterHitFinderMlem::GetResponse(const MpdTpc2dCluster *clus, TH2D *hXY
    Double_t padMean  = (hXY->GetYaxis()->GetXmin() + hXY->GetYaxis()->GetXmax()) / 2;
    Double_t timeMean = (hXY->GetXaxis()->GetXmin() + hXY->GetXaxis()->GetXmax()) / 2;
    Double_t t        = timeMean;
-   Double_t xloc     = secGeo->Pad2Xloc(padMean, clus->Row());
-   Int_t    padID    = secGeo->PadID(clus->GetSect() % secGeo->NofSectors(), clus->Row());
-   Double_t yloc     = secGeo->LocalPadPosition(padID).Y();
-   Double_t zloc     = secGeo->TimeBin2Z(timeMean);
+   Double_t xloc     = fSecGeo->Pad2Xloc(padMean, clus->Row());
+   Int_t    padID    = fSecGeo->PadID(clus->GetSect() % fSecGeo->NofSectors(), clus->Row());
+   Double_t yloc     = fSecGeo->LocalPadPosition(padID).Y();
+   Double_t zloc     = fSecGeo->TimeBin2Z(timeMean);
    TVector3 p3loc(xloc, yloc, zloc), p3glob;
-   if (clus->GetSect() >= secGeo->NofSectors()) p3loc[2] = -p3loc[2];
-   secGeo->Local2Global(clus->GetSect(), p3loc, p3glob);
+   if (clus->GetSect() >= fSecGeo->NofSectors()) p3loc[2] = -p3loc[2];
+   fSecGeo->Local2Global(clus->GetSect(), p3loc, p3glob);
    // Double_t tanDip = TMath::Abs(p3glob[2]) / p3glob.Pt();
    // tanDip = TMath::Min (tanDip, 2.0);
    Double_t tanDip  = TMath::Abs(p3glob[2] - fVertexZ) / p3glob.Pt(); // AZ-091121
@@ -1136,10 +1142,10 @@ Double_t TpcClusterHitFinderMlem::GetCij(Int_t irow, Double_t x0, Double_t y0, D
 
          for (Int_t j = -nxy; j <= nxy; ++j) {
             Int_t ip = iyc + j;
-            // if (ip-2 == 0 || ip-2 == 2*nPads[irow] - 1) continue; // edge
-            if (ip - 2 < 0 || ip - 2 > 2 * nPads[irow] - 1) {
+            // if (ip-2 == 0 || ip-2 == 2*fSecGeo->NPadsInRows()[irow] - 1) continue; // edge
+            if (ip - 2 < 0 || ip - 2 > 2 * fSecGeo->NPadsInRows()[irow] - 1) {
                // Edge - check for virtual pad (AZ-041121)
-               if (fFlags[ip][it] == 0 || (ip != 1 && ip != 2 * nPads[irow] + 2)) continue;
+               if (fFlags[ip][it] == 0 || (ip != 1 && ip != 2 * fSecGeo->NPadsInRows()[irow] + 2)) continue;
             }
             // cout << " ok " << i << " " << j << " " << it << " " << ip << endl;
             Double_t dy = ip - y0 + 0.5;
@@ -1286,10 +1292,10 @@ void TpcClusterHitFinderMlem::CreateHits(const vector<pixel> &pixels, multimap<D
       padMean  = (padMean / adcTot + 0.5) / scale - 2; // coorrect for shift
       timeMean = (timeMean / adcTot + 0.5) / scale;
 
-      Double_t xloc  = secGeo->Pad2Xloc(padMean - 0.5 + hMlem->GetYaxis()->GetXmin(), clus->Row());
-      Int_t    padID = secGeo->PadID(clus->GetSect() % secGeo->NofSectors(), clus->Row());
-      Double_t yloc  = secGeo->LocalPadPosition(padID).Y();
-      Double_t zloc  = secGeo->TimeBin2Z(timeMean - 0.5 + hMlem->GetXaxis()->GetXmin());
+      Double_t xloc  = fSecGeo->Pad2Xloc(padMean - 0.5 + hMlem->GetYaxis()->GetXmin(), clus->Row());
+      Int_t    padID = fSecGeo->PadID(clus->GetSect() % fSecGeo->NofSectors(), clus->Row());
+      Double_t yloc  = fSecGeo->LocalPadPosition(padID).Y();
+      Double_t zloc  = fSecGeo->TimeBin2Z(timeMean - 0.5 + hMlem->GetXaxis()->GetXmin());
       p3loc.SetXYZ(xloc, yloc, zloc);
       Double_t rmsZ = TMath::Sqrt(sum2t / adcTot / scale / scale - timeMean * timeMean);
       Double_t rmsX = TMath::Sqrt(sum2p / adcTot / scale / scale - padMean * padMean);
@@ -1301,8 +1307,8 @@ void TpcClusterHitFinderMlem::CreateHits(const vector<pixel> &pixels, multimap<D
       TVector3 p3errCor(p3err);
       CorrectRecoMlem(p3loc, p3errCor, clus, adcTot);
 
-      if (clus->GetSect() >= secGeo->NofSectors()) p3loc[2] = -p3loc[2];
-      secGeo->Local2Global(clus->GetSect(), p3loc, p3glob);
+      if (clus->GetSect() >= fSecGeo->NofSectors()) p3loc[2] = -p3loc[2];
+      fSecGeo->Local2Global(clus->GetSect(), p3loc, p3glob);
 
       // Dip angle correction (for interaction point with Z = 0)
       Double_t dip = TMath::ATan2(TMath::Abs(p3glob[2]), p3glob.Pt()) * TMath::RadToDeg();
@@ -1326,8 +1332,8 @@ void TpcClusterHitFinderMlem::CreateHits(const vector<pixel> &pixels, multimap<D
       hit->SetLayer(clus->Row());
       hit->SetLocalPosition(p3loc); // point position
       hit->SetEnergyLoss(adcTot);
-      Int_t    ireg = (clus->Row() < secGeo->NofRowsReg(0)) ? 0 : 1;
-      Double_t step = secGeo->PadHeight(ireg);
+      Int_t    ireg = (clus->Row() < fSecGeo->NofRowsReg(0)) ? 0 : 1;
+      Double_t step = fSecGeo->PadHeight(ireg);
       hit->SetStep(step);
       hit->SetModular(1); // modular geometry flag
       hit->SetPad(Int_t(padMean - 0.5 + hMlem->GetYaxis()->GetXmin()));
@@ -1372,7 +1378,7 @@ void TpcClusterHitFinderMlem::CorrectRecoMlem(TVector3 &p3loc, TVector3 &p3errCo
 {
    // Correct reconstructed coordinates
 
-   Double_t xsec = (p3loc.Y() + secGeo->GetMinY()) * TMath::Tan(secGeo->Dphi() / 2);
+   Double_t xsec = (p3loc.Y() + fSecGeo->GetMinY()) * TMath::Tan(fSecGeo->Dphi() / 2);
    Double_t xloc = p3loc.X(), xloc0 = xloc, edge = 0.0; // distance to sector boundary
    if (xloc < 0)
       edge = xloc + xsec;
