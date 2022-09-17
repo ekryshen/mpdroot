@@ -17,7 +17,6 @@
 #include "MpdTpcDigit.h"
 #include "MpdMultiField.h"
 #include "MpdTpcSector.h"
-#include "MpdTpcSectorGeo.h"
 #include "TpcGas.h"
 #include "TpcPoint.h"
 
@@ -59,13 +58,16 @@ static clock_t tAll    = 0;
 FILE *lunAZ = nullptr; // fopen("gasGain.dat","w");
 //---------------------------------------------------------------------------
 
-MpdTpcDigitizerAZ::MpdTpcDigitizerAZ()
+MpdTpcDigitizerAZ::MpdTpcDigitizerAZ(BaseTpcGeo &secGeo)
    : FairTask("TPC digitizerAZ"), fOnlyPrimary(kFALSE), fPersistence(kTRUE), fResponse(kTRUE), fDistribute(kTRUE),
      fAttach(kFALSE), fDiffuse(kTRUE), fDistort(kFALSE), fPrintDebugInfo(kFALSE), fIsHistogramsInitialized(kFALSE),
      fMakeQA(kFALSE), fHisto(nullptr), fPRF(nullptr), fNumOfPadsInRow(nullptr), fMCPointArray(nullptr),
      fMCTracksArray(nullptr), fDigits(nullptr), fSector(nullptr), fDigits4dArray(nullptr)
 
 {
+   fSecGeo = dynamic_cast<TpcSectorGeoAZ *>(&secGeo);
+   if (!fSecGeo) Fatal("MpdTpcDigitizerAZ::MpdTpcDigitizerAZ", " !!! Wrong geometry type !!! ");
+
    fInputBranchName  = "TpcPoint";
    fOutputBranchName = "MpdTpcDigit";
 
@@ -120,23 +122,22 @@ InitStatus MpdTpcDigitizerAZ::Init()
    r_min = fSector->GetRmin();
    zCathode = fSector->GetLength(); //cm
    */
-   MpdTpcSectorGeo *secGeo = MpdTpcSectorGeo::Instance();
-   fNTimeBins              = secGeo->GetNTimeBins();
-   nSectors                = secGeo->NofSectors() * 2;
-   pwIn                    = secGeo->PadWidth(0);
-   pwOut                   = secGeo->PadWidth(1);
-   phIn                    = secGeo->PadHeight(0);
-   phOut                   = secGeo->PadHeight(1);
-   nRows                   = secGeo->NofRows();
-   nInRows                 = secGeo->NofRowsReg(0);
-   nOutRows                = secGeo->NofRowsReg(1);
-   fSectInHeight           = secGeo->GetRocY(1) - secGeo->GetRocY(0);
-   fSectHeight             = secGeo->GetRocY(2) - secGeo->GetRocY(0);
-   r_min                   = secGeo->GetMinY();
-   zCathode                = secGeo->GetZmax(); // cm
+   fNTimeBins    = fSecGeo->GetNTimeBins();
+   nSectors      = fSecGeo->NofSectors() * 2;
+   pwIn          = fSecGeo->PadWidth(0);
+   pwOut         = fSecGeo->PadWidth(1);
+   phIn          = fSecGeo->PadHeight(0);
+   phOut         = fSecGeo->PadHeight(1);
+   nRows         = fSecGeo->NofRows();
+   nInRows       = fSecGeo->NofRowsReg(0);
+   nOutRows      = fSecGeo->NofRowsReg(1);
+   fSectInHeight = fSecGeo->GetRocY(1) - fSecGeo->GetRocY(0);
+   fSectHeight   = fSecGeo->GetRocY(2) - fSecGeo->GetRocY(0);
+   r_min         = fSecGeo->GetMinY();
+   zCathode      = fSecGeo->GetZmax(); // cm
 
    // fNumOfPadsInRow = fSector->GetArrayPadsInRow();
-   fNumOfPadsInRow = secGeo->NPadsInRows();
+   fNumOfPadsInRow = fSecGeo->NPadsInRows();
    // if (fPrintDebugInfo) {
    if (1) {
       cout << "Number of pads in every rows is ";
@@ -267,7 +268,7 @@ void MpdTpcDigitizerAZ::Exec(Option_t *opt)
       // AZ Electronics response
       SignalShaping();
 
-      Int_t maxTimeBin = MpdTpcSectorGeo::Instance()->TimeMax() / MpdTpcSectorGeo::Instance()->TimeBin() + 1;
+      Int_t maxTimeBin = fSecGeo->TimeMax() / fSecGeo->TimeBin() + 1;
       for (UInt_t iRow = 0; iRow < nRows; ++iRow) {
          for (UInt_t iPad = 0; iPad < fNumOfPadsInRow[iRow] * 2; ++iPad) {
             // AZ for (UInt_t iTime = 0; iTime < fNTimeBins; ++iTime) {
@@ -307,8 +308,8 @@ void MpdTpcDigitizerAZ::Check4Edge(UInt_t iSec, TpcPoint *&prePoint, TpcPoint *v
 
    TVector3 posG, posL;
    prePoint->Position(posG);
-   Int_t row0 = MpdTpcSectorGeo::Instance()->Global2Local(posG, posL, iSec % (nSectors / 2));
-   row0       = MpdTpcSectorGeo::Instance()->PadRow(row0);
+   Int_t row0 = fSecGeo->Global2Local(posG, posL, iSec % (nSectors / 2));
+   row0       = fSecGeo->PadRow(row0);
    // cout << " Row: " << row0 << " " << iSec << " " << posL[1] << endl;
    if (row0) return;
 
@@ -319,7 +320,7 @@ void MpdTpcDigitizerAZ::Check4Edge(UInt_t iSec, TpcPoint *&prePoint, TpcPoint *v
    if (posL[1] < 0.01) return;  // do not adjust - almost at the entrance
 
    posG += mom;
-   MpdTpcSectorGeo::Instance()->Global2Local(posG, posL1, iSec % (nSectors / 2));
+   fSecGeo->Global2Local(posG, posL1, iSec % (nSectors / 2));
    mom = posL1;
    mom -= posL;               // momentum in sector frame
    if (mom[1] < 0.02) return; // do not adjust - going inward or parallel to sector lower edge
@@ -328,7 +329,7 @@ void MpdTpcDigitizerAZ::Check4Edge(UInt_t iSec, TpcPoint *&prePoint, TpcPoint *v
    mom.SetMag(mom.Mag() / scale);
    posL -= mom;
    // cout << posL[0] << " " << posL[1] << " " << posL[2] << endl;
-   MpdTpcSectorGeo::Instance()->Local2Global(iSec % (nSectors / 2), posL, posG);
+   fSecGeo->Local2Global(iSec % (nSectors / 2), posL, posG);
    virtPoint->SetPosition(posG);
    virtPoint->SetTrackID(prePoint->GetTrackID());
    prePoint->SetEnergyLoss(prePoint->GetEnergyLoss() * 1.3); // 29.10.16 - correct for edge-effect
@@ -454,13 +455,13 @@ void MpdTpcDigitizerAZ::SignalShaping()
 
    if (first == 0) {
       first = 1;
-      nbins = MpdTpcSectorGeo::Instance()->GetNTimeBins();
+      nbins = fSecGeo->GetNTimeBins();
       if (nbins % 2 == 0) --nbins;
       icent  = nbins / 2;
       reFilt = new Double_t[nbins];
       imFilt = new Double_t[nbins];
       for (Int_t i = 0; i < nbins; ++i) {
-         Double_t t    = (i - icent) * MpdTpcSectorGeo::Instance()->TimeBin();
+         Double_t t    = (i - icent) * fSecGeo->TimeBin();
          Double_t ampl = TMath::Exp(-t * t / 2 / sigma2);
          if (TMath::Abs(t) > 5 * sigma) ampl = 0;
          reFilt[i] = ampl;
@@ -481,7 +482,7 @@ void MpdTpcDigitizerAZ::SignalShaping()
    Double_t *reTot = new Double_t[nbins];
    Double_t *imTot = new Double_t[nbins];
 
-   // AZ Int_t nRows = MpdTpcSectorGeo::Instance()->NofRows();
+   // AZ Int_t nRows = fSecGeo->NofRows();
    for (UInt_t iRow = 0; iRow < nRows; ++iRow) {
       for (UInt_t iPad = 0; iPad < fNumOfPadsInRow[iRow] * 2; ++iPad) {
          Int_t fired = 0;
@@ -555,11 +556,11 @@ void MpdTpcDigitizerAZ::GetArea(Float_t xEll, Float_t yEll, Float_t radius, vect
    else
       delta = -1000.0; // for test only!!!
 
-   MpdTpcSectorGeo::Instance()->PadID(xEll, yEll, row, pad, yNext);
+   fSecGeo->PadID(xEll, yEll, row, pad, yNext);
    for (Int_t ip = -1; ip < 2; ++ip) {
       Int_t pad1 = pad + ip;
       if (pad1 < 0) continue;
-      if (pad1 >= MpdTpcSectorGeo::Instance()->NPadsInRows()[row] * 2) break;
+      if (pad1 >= fSecGeo->NPadsInRows()[row] * 2) break;
       padIDs.push_back(pad1);
       rowIDs.push_back(row);
    }
@@ -576,7 +577,7 @@ void MpdTpcDigitizerAZ::GetArea(Float_t xEll, Float_t yEll, Float_t radius, vect
       for (Int_t ip = -1; ip < 2; ++ip) {
          Int_t pad1 = pad + ip;
          if (pad1 < 0) continue;
-         if (pad1 >= MpdTpcSectorGeo::Instance()->NPadsInRows()[row1] * 2) break;
+         if (pad1 >= fSecGeo->NPadsInRows()[row1] * 2) break;
          padIDs.push_back(pad1);
          rowIDs.push_back(row1);
       }
@@ -732,20 +733,19 @@ void MpdTpcDigitizerAZ::TpcProcessing(const TpcPoint *prePoint, const TpcPoint *
                                       const UInt_t iPoint, const UInt_t nPoints)
 {
 
-   Float_t          dE       = 0.0;             // energy loss
-   UInt_t           qTotal   = 0;               // sum of clusters charges (=sum of electrons between two TpcPoints)
-   UInt_t           qCluster = 0;               // charge of cluster (= number of electrons)
-   TLorentzVector   curPointPos;                // coordinates for current TpcPoint
-   TLorentzVector   prePointPos;                // coordinates for previous TpcPoint
-   TLorentzVector   diffPointPos;               // steps for clusters creation
-   TVector3         diffuse;                    // vector of diffuse for every coordinates
-   TVector3         distort;                    // vector of distortion for every coordinates
-   TLorentzVector   electronPos;                // coordinates for created electrons
-   TLorentzVector   clustPos;                   // coordinates for created clusters
-   Float_t          driftl = 0.0;               // length for drifting
-   vector<UInt_t>   clustArr;                   // vector of clusters between two TpcPoints
-   Float_t          localX = 0.0, localY = 0.0; // local coordinates of electron (sector coordinates)
-   MpdTpcSectorGeo *secGeo = MpdTpcSectorGeo::Instance();
+   Float_t        dE       = 0.0;             // energy loss
+   UInt_t         qTotal   = 0;               // sum of clusters charges (=sum of electrons between two TpcPoints)
+   UInt_t         qCluster = 0;               // charge of cluster (= number of electrons)
+   TLorentzVector curPointPos;                // coordinates for current TpcPoint
+   TLorentzVector prePointPos;                // coordinates for previous TpcPoint
+   TLorentzVector diffPointPos;               // steps for clusters creation
+   TVector3       diffuse;                    // vector of diffuse for every coordinates
+   TVector3       distort;                    // vector of distortion for every coordinates
+   TLorentzVector electronPos;                // coordinates for created electrons
+   TLorentzVector clustPos;                   // coordinates for created clusters
+   Float_t        driftl = 0.0;               // length for drifting
+   vector<UInt_t> clustArr;                   // vector of clusters between two TpcPoints
+   Float_t        localX = 0.0, localY = 0.0; // local coordinates of electron (sector coordinates)
 
    if (fPrintDebugInfo && (iPoint % 1000 == 0))
       cout << UInt_t(iPoint * 1.0 / nPoints * 100.0) << " % of TPC points processed" << endl;
@@ -869,16 +869,16 @@ void MpdTpcDigitizerAZ::TpcProcessing(const TpcPoint *prePoint, const TpcPoint *
 
             // AZ
             TVector3 xyzLoc;
-            if (secGeo->Global2Local(electronPos.Vect(), xyzLoc, secID % secGeo->NofSectors()) < 0) continue;
+            if (fSecGeo->Global2Local(electronPos.Vect(), xyzLoc, secID % fSecGeo->NofSectors()) < 0) continue;
             localX = xyzLoc[0];
             localY = xyzLoc[1];
             if (!TMath::Finite(localX) || !TMath::Finite(localY)) {
                // Debug
-               cout << " !!! Not finite " << secID % secGeo->NofSectors() << endl;
+               cout << " !!! Not finite " << secID % fSecGeo->NofSectors() << endl;
                electronPos.Vect().Print();
                diffuse.Print();
             }
-            UInt_t curTimeID = UInt_t(secGeo->T2TimeBin(electronPos.T()));
+            UInt_t curTimeID = UInt_t(fSecGeo->T2TimeBin(electronPos.T()));
             // cout << localX << " " << xyzLoc[0] << " " << localY << " " << xyzLoc[1] << " " << curTimeID << " " <<
             // timeBin << endl; AZ
             if (curTimeID >= fNTimeBins) continue;

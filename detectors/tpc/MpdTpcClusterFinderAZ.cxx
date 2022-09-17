@@ -21,7 +21,6 @@
 #include "MpdTpc2dCluster.h"
 #include "MpdTpcDigit.h"
 #include "MpdTpcHit.h"
-#include "MpdTpcSectorGeo.h"
 #include "TpcPoint.h"
 //#include "TpcGas.h"
 //#include "TpcPrimaryCluster.h"
@@ -46,8 +45,12 @@ using namespace std;
 
 //__________________________________________________________________________
 
-MpdTpcClusterFinderAZ::MpdTpcClusterFinderAZ() : FairTask("TPC Cluster finder AZ"), fPersistence(kFALSE)
+MpdTpcClusterFinderAZ::MpdTpcClusterFinderAZ(BaseTpcGeo &secGeo)
+   : FairTask("TPC Cluster finder AZ"), fPersistence(kFALSE)
 {
+   fSecGeo = dynamic_cast<TpcSectorGeoAZ *>(&secGeo);
+   if (!fSecGeo) Fatal("MpdTpcClusterFinderAZ::MpdTpcClusterFinderAZ", " !!! Wrong geometry type !!! ");
+
    /*
    std::string tpcGasFile = gSystem->Getenv("VMCWORKDIR");
    tpcGasFile += "/geometry/Ar-90_CH4-10.asc";
@@ -79,8 +82,6 @@ InitStatus MpdTpcClusterFinderAZ::Init()
 {
 
    // Create containers for digits
-   fSecGeo = MpdTpcSectorGeo::Instance();
-   // Int_t nRows = MpdTpcSectorGeo::Instance()->NofRows();
    Int_t nRows = fSecGeo->NofRows();
    for (Int_t i = 0; i < fgkNsec2; ++i) fDigiSet[i] = new set<Int_t>[nRows];
 
@@ -119,7 +120,6 @@ void MpdTpcClusterFinderAZ::Exec(Option_t *opt)
    fHitArray->Delete();
    const Int_t nSec = fgkNsec2 / 2; // number of TPC readout sectors
    // Clear digi containers
-   // Int_t nRows = MpdTpcSectorGeo::Instance()->NofRows();
    Int_t nRows = fSecGeo->NofRows();
    for (Int_t i = 0; i < fgkNsec2; ++i) {
       for (Int_t j = 0; j < nRows; ++j) fDigiSet[i][j].clear();

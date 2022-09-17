@@ -17,7 +17,6 @@
 #include "MpdTpcDigit.h"
 #include "MpdMultiField.h"
 #include "MpdTpcSector.h"
-#include "MpdTpcSectorGeo.h"
 #include "TpcGas.h"
 #include "TpcPoint.h"
 
@@ -59,7 +58,7 @@ static clock_t tAll    = 0;
 // FILE *lunAZ = nullptr; //fopen("gasGain.dat","w");
 //---------------------------------------------------------------------------
 
-MpdTpcDigitizerAZlt::MpdTpcDigitizerAZlt(BaseTpcGeo& secGeo)
+MpdTpcDigitizerAZlt::MpdTpcDigitizerAZlt(BaseTpcGeo &secGeo)
    : FairTask("TPC digitizerAZlt"), fMCPointArray(nullptr), fMCTracksArray(nullptr), fDigits(nullptr),
      fDigits4dArray(nullptr), fSector(nullptr), fHisto(nullptr), fPRF(nullptr), fNoiseThreshold(3.0), fOverflow(1023.1),
      fNumOfPadsInRow(nullptr), fIsHistogramsInitialized(kFALSE), fMakeQA(kFALSE), fOnlyPrimary(kFALSE),
@@ -70,7 +69,7 @@ MpdTpcDigitizerAZlt::MpdTpcDigitizerAZlt(BaseTpcGeo& secGeo)
      fPrintDebugInfo(kFALSE), fOneRow(kFALSE)
 // fOneRow(kTRUE) // debug
 {
-   fSecGeo = dynamic_cast<TpcSectorGeoAZ*>(&secGeo);
+   fSecGeo = dynamic_cast<TpcSectorGeoAZ *>(&secGeo);
    if (!fSecGeo) Fatal("MpdTpcDigitizerAZlt::MpdTpcDigitizerAZlt", " !!! Wrong geometry type !!! ");
 
    fInputBranchName  = "TpcPoint";
@@ -804,20 +803,20 @@ void MpdTpcDigitizerAZlt::TpcProcessing(const TpcPoint *prePoint, const TpcPoint
                                         const UInt_t iPoint, const UInt_t nPoints)
 {
 
-   Float_t          dE       = 0.0;             // energy loss
-   UInt_t           qTotal   = 0;               // sum of clusters charges (=sum of electrons between two TpcPoints)
-   UInt_t           qCluster = 0;               // charge of cluster (= number of electrons)
-   TLorentzVector   curPointPos;                // coordinates for current TpcPoint
-   TLorentzVector   prePointPos;                // coordinates for previous TpcPoint
-   TLorentzVector   diffPointPos;               // steps for clusters creation
-   TVector3         diffuse;                    // vector of diffuse for every coordinates
-   TVector3         distort;                    // vector of distortion for every coordinates
-   TLorentzVector   electronPos;                // coordinates for created electrons
-   TLorentzVector   clustPos;                   // coordinates for created clusters
-   Float_t          driftl = 0.0;               // length for drifting
-   vector<UInt_t>   clustArr;                   // vector of clusters between two TpcPoints
-   Float_t          localX = 0.0, localY = 0.0; // local coordinates of electron (sector coordinates)
-   TpcSectorGeoAZ   *secGeo = fSecGeo;
+   Float_t         dE       = 0.0;             // energy loss
+   UInt_t          qTotal   = 0;               // sum of clusters charges (=sum of electrons between two TpcPoints)
+   UInt_t          qCluster = 0;               // charge of cluster (= number of electrons)
+   TLorentzVector  curPointPos;                // coordinates for current TpcPoint
+   TLorentzVector  prePointPos;                // coordinates for previous TpcPoint
+   TLorentzVector  diffPointPos;               // steps for clusters creation
+   TVector3        diffuse;                    // vector of diffuse for every coordinates
+   TVector3        distort;                    // vector of distortion for every coordinates
+   TLorentzVector  electronPos;                // coordinates for created electrons
+   TLorentzVector  clustPos;                   // coordinates for created clusters
+   Float_t         driftl = 0.0;               // length for drifting
+   vector<UInt_t>  clustArr;                   // vector of clusters between two TpcPoints
+   Float_t         localX = 0.0, localY = 0.0; // local coordinates of electron (sector coordinates)
+   TpcSectorGeoAZ *secGeo = fSecGeo;
 
    if (fPrintDebugInfo && (iPoint % 1000 == 0))
       cout << UInt_t(iPoint * 1.0 / nPoints * 100.0) << " % of TPC points processed" << endl;

@@ -6,7 +6,6 @@
 //---------------------------------------------------------------------------
 
 #include "MpdTpcHitProducer.h"
-#include "MpdTpcSectorGeo.h"
 #include "MpdKalmanFilter.h"
 #include "TpcGeoPar.h"
 #include "TpcPoint.h"
@@ -27,8 +26,11 @@
 using namespace std;
 
 //---------------------------------------------------------------------------
-MpdTpcHitProducer::MpdTpcHitProducer() : FairTask("TPC Hit Producer"), fModular(0), fPersistance(kFALSE)
+MpdTpcHitProducer::MpdTpcHitProducer(BaseTpcGeo &secGeo)
+   : FairTask("TPC Hit Producer"), fModular(0), fPersistance(kFALSE)
 {
+   fSecGeo = dynamic_cast<TpcSectorGeoAZ *>(&secGeo);
+   if (!fSecGeo) Fatal("MpdTpcHitProducer::MpdTpcHitProducer", " !!! Wrong geometry type !!! ");
    fPointArray = nullptr, fHitArray = nullptr;
 }
 
@@ -135,14 +137,13 @@ void MpdTpcHitProducer::Exec(Option_t *opt)
             TArrayD     *params = inWall->getParameters();
             fZtpc               = params->At(2);
          } else {
-            FairGeoNode *tpc     = (FairGeoNode *)passNodes->FindObject("tpcChamber1");
-            rMax                 = tpc->getParameters()->At(1);
-            dR                   = (rMax - rMin) / nLays;
-            fZtpc                = sensVol0->getParameters()->At(2);
-            MpdTpcSectorGeo *geo = MpdTpcSectorGeo::Instance();
-            geo->SetNofRows(nLays);
-            geo->SetPadHeight(dR);
-            geo->SetMinY(rMin);
+            FairGeoNode *tpc = (FairGeoNode *)passNodes->FindObject("tpcChamber1");
+            rMax             = tpc->getParameters()->At(1);
+            dR               = (rMax - rMin) / nLays;
+            fZtpc            = sensVol0->getParameters()->At(2);
+            fSecGeo->SetNofRows(nLays);
+            fSecGeo->SetPadHeight(dR);
+            fSecGeo->SetMinY(rMin);
          }
          cout << " *** TPC sensitive volume: " << sensVol0->GetName() << " " << rMin << " " << rMax << " " << fZtpc
               << " " << nLays << " " << dR << endl;
@@ -325,7 +326,6 @@ void MpdTpcHitProducer::ExecModular()
 {
    // Emulate geometry of readout chambers
 
-   MpdTpcSectorGeo *secGeo = MpdTpcSectorGeo::Instance();
    // ROOT::Math::Interpolator inter(3, ROOT::Math::Interpolation::kPOLYNOMIAL);
 
    Int_t    lay, layMax = 0, nPoints = fPointArray->GetEntriesFast(), nHits = 0;
@@ -340,7 +340,7 @@ void MpdTpcHitProducer::ExecModular()
       // if (point->GetTrackID() != 1) continue; ///
       if (point->GetTrackID() < 0) continue; /// strange case - protection
       point->Position(p3);
-      Int_t padID = secGeo->Global2Local(p3, p3local);
+      Int_t padID = fSecGeo->Global2Local(p3, p3local);
       // if (padID < 0) {cout << j << " " << p3.X() << " " << p3.Y() << " " << p3local.X() << " " << p3local.Y() <<
       // endl; continue; }// outside sector boundaries
       if (padID < 0) continue; // outside sector boundaries
@@ -349,7 +349,7 @@ void MpdTpcHitProducer::ExecModular()
       // if (point->GetTrackID() <= 2 && point->GetTrackID() > 0) printf("%2d %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %6d
       // %4d %4d\n", point->GetTrackID(), p3.X(), p3.Y(), p3.Z(), p3local.X(), p3local.Y(), p3local.Z(), padID,
       // TpcPadID::numberToPadID(padID).row(), TpcPadID::numberToPadID(padID).sector());
-      lay    = secGeo->PadRow(padID);
+      lay    = fSecGeo->PadRow(padID);
       layMax = TMath::Max(lay, layMax);
       // MpdTpcHit *hit = AddRawHit(j, point->GetDetectorID(), p3, p3err, j, point->GetTrackID());
       MpdTpcHit *hit = AddRawHit(nHits++, padID, p3, p3err, j, point->GetTrackID());
@@ -398,7 +398,7 @@ void MpdTpcHitProducer::ExecModular()
 
       for (Int_t i3 = 0; i3 < nh; ++i3) {
          h         = (MpdTpcHit *)fHitArray->UncheckedAt(hindx[ord[i3]]);
-         Int_t sec = secGeo->Sector(h->GetDetectorID());
+         Int_t sec = fSecGeo->Sector(h->GetDetectorID());
          if (sec != sec0 || i3 > lastIndx) {
             // if (sec != sec0) {
             // Store coordinates of all hits in this sector
@@ -408,7 +408,7 @@ void MpdTpcHitProducer::ExecModular()
             ypad0     = -999.0;
             for (Int_t jj = i3; jj < nh; ++jj) {
                MpdTpcHit *h1 = (MpdTpcHit *)fHitArray->UncheckedAt(hindx[ord[jj]]);
-               sec           = secGeo->Sector(h1->GetDetectorID());
+               sec           = fSecGeo->Sector(h1->GetDetectorID());
                if (sec != sec0) break; // different sector
                yy[np] = h1->GetLocalY();
                xx[np] = h1->GetLocalX();
@@ -419,7 +419,7 @@ void MpdTpcHitProducer::ExecModular()
             /*for (Int_t jj = 0; jj < 6; ++jj) cout << xx[jj] << " " << yy[jj] << " " << zz[jj] << " ";
               cout << endl;*/
          }
-         Double_t ypad = secGeo->LocalPadPosition(h->GetDetectorID()).Y(); // padrow position
+         Double_t ypad = fSecGeo->LocalPadPosition(h->GetDetectorID()).Y(); // padrow position
          if (TMath::Abs(ypad - ypad0) < 0.1) {
             // The same padrow
             if (!ok) {
@@ -466,7 +466,7 @@ void MpdTpcHitProducer::ExecModular()
          h->SetLocalY(ys[i3]);
          h->SetLocalZ(zs[i3]);
          h->LocalPosition(p30);
-         secGeo->Local2Global(secGeo->Sector(padID), p30, p3);
+         fSecGeo->Local2Global(fSecGeo->Sector(padID), p30, p3);
          h->SetPosition(p3);
       }
       delete[] times;
@@ -496,8 +496,8 @@ void MpdTpcHitProducer::ExecModular()
             MpdTpcHit *hit = (MpdTpcHit *)fHitArray->UncheckedAt(hindx[ord[i31]]);
             if (hit == 0x0) continue;
             Int_t padID = hit->GetDetectorID();
-            if (secGeo->PadRow(padID) != secGeo->PadRow(padID0)) break; // in different padrows
-            if (secGeo->Sector(padID) != secGeo->Sector(padID0)) break; // in different sectors
+            if (fSecGeo->PadRow(padID) != fSecGeo->PadRow(padID0)) break; // in different padrows
+            if (fSecGeo->Sector(padID) != fSecGeo->Sector(padID0)) break; // in different sectors
             hit->LocalPosition(p3local);
             hit->Position(p3);
             if (TMath::Abs(p3extr.Z() - p3local.Z()) > 2.5) break;
@@ -703,8 +703,7 @@ Bool_t MpdTpcHitProducer::Interpolate(Int_t np, Int_t &ibeg, Double_t *yp, Doubl
    xhit        = ax * y0 * y0 + bx * y0 + cx;
    // Check if x is inside sector boundaries
    // (can happen when crossing sector boundaries (in some cases))
-   MpdTpcSectorGeo *secGeo = MpdTpcSectorGeo::Instance();
-   Double_t         xEdge  = (y0 + secGeo->GetMinY()) * TMath::Tan(secGeo->Dphi() / 2) + 0.2; // safety margin 0.2
+   Double_t xEdge = (y0 + fSecGeo->GetMinY()) * TMath::Tan(fSecGeo->Dphi() / 2) + 0.2; // safety margin 0.2
    if (TMath::Abs(xhit) > xEdge) {
       return kFALSE;
       // Find y corresponding to sector boundary
@@ -731,9 +730,8 @@ void MpdTpcHitProducer::ExecNew()
 {
    // More streamlined version
 
-   MpdTpcSectorGeo *secGeo = MpdTpcSectorGeo::Instance();
-   static TF1       func("func", "[1]+[2]*(x-[0])+[3]*(x-[0])*(x-[0])", 0, 99999);
-   static Double_t  maxStep = -1;
+   static TF1      func("func", "[1]+[2]*(x-[0])+[3]*(x-[0])*(x-[0])", 0, 99999);
+   static Double_t maxStep = -1;
    if (maxStep < 0) {
       // Get max step for TPC gas
       TGeoMedium *tpcMed = gGeoManager->GetMedium("TPCmixture");
@@ -774,12 +772,12 @@ void MpdTpcHitProducer::ExecNew()
       for (map<Double_t, Int_t>::iterator mit1 = aaa.begin(); mit1 != aaa.end(); ++mit1) {
          TpcPoint *point = (TpcPoint *)fPointArray->UncheckedAt(mit1->second);
          point->Position(p3);
-         Int_t padID = secGeo->Global2Local(p3, p3loc), isec = -1;
+         Int_t padID = fSecGeo->Global2Local(p3, p3loc), isec = -1;
          if (padID < 0) continue; // outside sector boundaries
          lay = -1;
          if (padID >= 0) {
-            lay  = secGeo->PadRow(padID);
-            isec = secGeo->Sector(padID);
+            lay  = fSecGeo->PadRow(padID);
+            isec = fSecGeo->Sector(padID);
          }
          MpdTpcHit hit(padID, p3, p3err, mit1->second);
          hit.SetLayer(lay);
@@ -796,7 +794,7 @@ void MpdTpcHitProducer::ExecNew()
                p3extr = p3;
                pmom3.SetMag(0.001);
                p3extr += pmom3;
-               secGeo->Global2Local(p3extr, pmom3loc, isec);
+               fSecGeo->Global2Local(p3extr, pmom3loc, isec);
                pmom3loc -= p3loc;
                if (pmom3loc[1] < -1.e-7)
                   idir = -1; // going inward
@@ -812,7 +810,7 @@ void MpdTpcHitProducer::ExecNew()
       // Add fake hit to indicate end-of-track
       if (hitMap.size()) {
          MpdTpcHit htmp;
-         htmp.SetDetectorID(secGeo->PadID(30, 0));
+         htmp.SetDetectorID(fSecGeo->PadID(30, 0));
          htmp.SetFlag(hitMap.rbegin()->second.GetFlag());
          hitMap[hitMap.rbegin()->first + 1.0] = htmp;
       }
@@ -825,7 +823,7 @@ void MpdTpcHitProducer::ExecNew()
 
       for (map<Double_t, MpdTpcHit>::iterator mit1 = hitMap.begin(); mit1 != hitMap.end(); ++mit1) {
          MpdTpcHit &hit  = mit1->second;
-         Int_t      isec = secGeo->Sector(hit.GetDetectorID());
+         Int_t      isec = fSecGeo->Sector(hit.GetDetectorID());
          // cout << isec << " " << secGeo->PadRow(hit.GetDetectorID()) << " " << hit.GetEnergyLoss() << endl;
          Int_t idir = hit.GetFlag();
          if (isec0 < 0) {
@@ -896,9 +894,9 @@ void MpdTpcHitProducer::ExecNew()
                   hitok = &mitb->second;
                   lay   = layb;
                } else {
-                  lay = secGeo->PadRow(padID);
-                  if (lay == lay0) continue;                      // hit from the same padrow
-                  p3loc[1] = secGeo->LocalPadPosition(padID).Y(); // padrow position
+                  lay = fSecGeo->PadRow(padID);
+                  if (lay == lay0) continue;                       // hit from the same padrow
+                  p3loc[1] = fSecGeo->LocalPadPosition(padID).Y(); // padrow position
                   // if (p3loc[1] < ylocMinMax[0] || p3loc[1] > ylocMinMax[1]) continue; // curling track
                   if (p3loc[1] < ylocMinMax[0])
                      p3loc[1] = ylocMinMax[0];
@@ -922,8 +920,8 @@ void MpdTpcHitProducer::ExecNew()
                      hitok = &hitMap.rbegin()->second;
                }
                lay0 = lay;
-               secGeo->Local2Global(secGeo->Sector(padID), p3loc, p3);
-               if (secGeo->Global2Local(p3, p30) < 0) continue; // cross-check
+               fSecGeo->Local2Global(fSecGeo->Sector(padID), p3loc, p3);
+               if (fSecGeo->Global2Local(p3, p30) < 0) continue; // cross-check
                MpdTpcHit *hitp = AddRawHit(nHits++, padID, p3, p3err, hitok->GetRefIndex(), id);
                // MpdTpcHit *hitp = new ((*fHitArray)[nHits++]) MpdTpcHit(*hitok); // copy constructor does not work
                hitp->SetLayer(lay);
@@ -935,10 +933,10 @@ void MpdTpcHitProducer::ExecNew()
                hitp->SetLength(hitok->GetLength());
                // Compute correct step and energy loss (angular dependence) - if large step
                if (hitp->GetStep() > maxStep) {
-                  Double_t phi = secGeo->SectorAngle(isec0);
+                  Double_t phi = fSecGeo->SectorAngle(isec0);
                   // Double_t phi = secGeo->SectorAngle(secGeo->Sector(padID));
                   TVector3  sec3(TMath::Cos(phi), TMath::Sin(phi), 0.0);
-                  Double_t  padh  = (lay < secGeo->NofRowsReg(0)) ? secGeo->PadHeight(0) : secGeo->PadHeight(1);
+                  Double_t  padh  = (lay < fSecGeo->NofRowsReg(0)) ? fSecGeo->PadHeight(0) : fSecGeo->PadHeight(1);
                   TpcPoint *point = (TpcPoint *)fPointArray->UncheckedAt(hitok->GetRefIndex());
                   TVector3  mom3;
                   point->Momentum(mom3);
