@@ -33,7 +33,7 @@ codeOwners:
         variables:
             - $CI_MERGE_REQUEST_PROJECT_PATH == "nica/mpdroot" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"
     script:
-        - module add Clang/v13.0.0-1
+        - module add Clang
         - scripts/inform_codeowners.sh
         - scripts/check_clangFormatting.sh
 
