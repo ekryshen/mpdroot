@@ -47,7 +47,6 @@ set(SRCS
   MpdTpcPeak.cxx
   MpdTPCpid.cxx
   MpdTpcSector.cxx
-  MpdTpcSectorGeo.cxx
   TaskHelpers.cxx
   TpcDetector.cxx
   TpcGas.cxx
