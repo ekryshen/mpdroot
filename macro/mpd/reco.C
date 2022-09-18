@@ -36,6 +36,7 @@
 #include "MpdFillDstTask.h"
 #include "MpdGetNumEvents.h"
 #include "MpdEmcHitCreation.h"
+#include "TpcSectorGeoAZ.h"
 
 #include <iostream>
 using namespace std;
@@ -86,17 +87,20 @@ void reco(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outFile
     rtdb->saveOutput();
     // ------------------------------------------------------------------------
 
+    // -----  Initialize geometry   --------------------------------------------
+    BaseTpcGeo *secGeo = new TpcSectorGeoAZ(); 
+
     MpdKalmanFilter *kalman = MpdKalmanFilter::Instance("KF");
     fRun->AddTask(kalman);
 
 #ifndef UseMlem
-    MpdTpcHitProducer* hitPr = new MpdTpcHitProducer();
+    MpdTpcHitProducer* hitPr = new MpdTpcHitProducer(*secGeo);
     hitPr->SetModular(0);
     //hitPr->SetPersistance(); //AZ
     fRun->AddTask(hitPr);
 #else
-    //MpdTpcDigitizerAZ* tpcDigitizer = new MpdTpcDigitizerAZ();
-    MpdTpcDigitizerAZlt* tpcDigitizer = new MpdTpcDigitizerAZlt();
+    //MpdTpcDigitizerAZ* tpcDigitizer = new MpdTpcDigitizerAZ(*secGeo);
+    MpdTpcDigitizerAZlt* tpcDigitizer = new MpdTpcDigitizerAZlt(*secGeo);
     tpcDigitizer->SetPersistence(kFALSE);
     fRun->AddTask(tpcDigitizer);
 #endif
@@ -108,14 +112,14 @@ void reco(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outFile
     //  fRun->AddTask(tpcClusterFinder);
 
 #ifdef UseMlem
-    MpdTpcClusterFinderMlem *tpcClusAZ = new MpdTpcClusterFinderMlem();
+    MpdTpcClusterFinderMlem *tpcClusAZ = new MpdTpcClusterFinderMlem(*secGeo);
     fRun->AddTask(tpcClusAZ);
 #endif
 
-    FairTask* vertZ = new MpdVertexZfinder();
+    FairTask* vertZ = new MpdVertexZfinder(*secGeo);
     fRun->AddTask(vertZ);
 
-    MpdTpcKalmanFilter* recoKF = new MpdTpcKalmanFilter("Kalman filter");
+    MpdTpcKalmanFilter* recoKF = new MpdTpcKalmanFilter(*secGeo, "Kalman filter");
 #ifdef UseMlem
     recoKF->UseTpcHit(kFALSE); // do not use hits from the hit producer
 #endif

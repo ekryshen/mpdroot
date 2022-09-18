@@ -91,7 +91,7 @@ void runReco(TString inFile = "evetest.root", TString outFile = "mpddst.root", I
    fRun->AddTask(kalman);
 
 #ifdef UseMlem
-   // MpdTpcDigitizerAZ* tpcDigitizer = new MpdTpcDigitizerAZ();
+   // MpdTpcDigitizerAZ* tpcDigitizer = new MpdTpcDigitizerAZ(*secGeo);
    MpdTpcDigitizerAZlt *tpcDigitizer = new MpdTpcDigitizerAZlt(*secGeo);
    tpcDigitizer->SetPersistence(kTRUE);
    fRun->AddTask(tpcDigitizer);
@@ -107,7 +107,7 @@ void runReco(TString inFile = "evetest.root", TString outFile = "mpddst.root", I
    MpdTpcClusterFinderMlem *tpcClusAZ = new MpdTpcClusterFinderMlem(*secGeo);
    fRun->AddTask(tpcClusAZ);
 #else
-   MpdTpcHitProducer *hitPr = new MpdTpcHitProducer();
+   MpdTpcHitProducer *hitPr = new MpdTpcHitProducer(*secGeo);
    hitPr->SetModular(0);
    fRun->AddTask(hitPr);
 #endif
