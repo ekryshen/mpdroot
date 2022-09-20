@@ -123,6 +123,11 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
   // Run the track finding algorithm.
   const auto &trajectories = fRunner->execute(hits);
+  // Get the track recognition statistics (for debugging).
+  auto statistics = fRunner->getStatistics();
+
+  // Build histagrams.
+  (void)statistics; // FIXME:
 
   // Convert the output tracks.
   (void)trajectories; // FIXME:

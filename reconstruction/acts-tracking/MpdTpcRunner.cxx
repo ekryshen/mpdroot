@@ -50,6 +50,24 @@ const TrajectoriesContainer &Runner::execute(const InputHitContainer &hits) {
       m_config.trackFinding.outputTrajectories);
 }
 
+Statistics Runner::getStatistics() const {
+  const auto &hits = m_context.eventStore.get<InputHitContainer>(
+      m_config.digitization.inputSimHits);
+  const auto &tracks = m_context.eventStore.get<ProtoTrackContainer>(
+      m_config.trackFinding.outputTrackCandidates);
+
+  Statistics statistics;
+  checkTracks(hits, tracks, statistics);
+
+  for (const auto &[realTrackId, entry] : statistics) {
+    ACTS_DEBUG("Quality for " << realTrackId << ": " << entry.quality << "% ("
+        << entry.length << " of " << entry.realLength << ", "
+        << "accuracy=" << entry.accuracy << "%)");
+  }
+
+  return statistics;
+}
+
 void Runner::logInput() const {
   const auto &hits = m_context.eventStore.get<InputHitContainer>(
       m_config.digitization.inputSimHits);
@@ -69,8 +87,6 @@ void Runner::logInput() const {
 }
 
 void Runner::logOutput() const {
-  const auto &hits = m_context.eventStore.get<InputHitContainer>(
-      m_config.digitization.inputSimHits);
   const auto &protos = m_context.eventStore.get<ProtoTrackContainer>(
       m_config.trackSeeding.outputProtoTracks);
   const auto &tracks = m_context.eventStore.get<ProtoTrackContainer>(
@@ -78,7 +94,6 @@ void Runner::logOutput() const {
 
   logTracks("Proto track", protos);
   logTracks("Found track", tracks);
-  checkTracks(hits, tracks);
 }
 
 void Runner::logHit(size_t hitId, const InputHit &hit) const {
@@ -112,7 +127,8 @@ void Runner::logTracks(const std::string &prefix,
 
 void Runner::checkTrack(const InputHitContainer &hits,
                         size_t trackId,
-                        const ProtoTrack &track) const {
+                        const ProtoTrack &track,
+                        Statistics &statistics) const {
   std::unordered_map<int, size_t> counts;
   counts.reserve(track.size());
 
@@ -129,26 +145,37 @@ void Runner::checkTrack(const InputHitContainer &hits,
     }
   }
 
-  size_t realTrackLength = 0;
+  size_t realLength = 0;
   for (const auto hit : hits) {
     if (hit.trackId == realTrackId) {
-      realTrackLength++;
+      realLength++;
     }
   }
 
-  double percent = (100. * maxCount) / track.size();
+  const auto threshold = 75.;
+  auto accuracy = (100. * maxCount) / track.size();
 
-  ACTS_DEBUG("Most frequent ID for " << trackId << ": "
-      << realTrackId << " (" << percent << "% ["
-      << maxCount << "/" << track.size() << "], real-length="
-      << realTrackLength << ")");
+  if (accuracy >= threshold) {
+    auto &entry = statistics[realTrackId];
+    auto quality = (100. * maxCount) / realLength;
+
+    if (entry.quality < quality) {
+      entry.quality = quality;
+      entry.accuracy = accuracy;
+      entry.length = track.size();
+      entry.realLength = realLength;
+    }
+
+    entry.nTracks++;
+  }
 }
 
 void Runner::checkTracks(const InputHitContainer &hits,
-                         const ProtoTrackContainer &tracks) const {
+                         const ProtoTrackContainer &tracks,
+                         Statistics &statistics) const {
   size_t itrack = 0;
   for (const auto &track : tracks) {
-    checkTrack(hits, itrack++, track);
+    checkTrack(hits, itrack++, track, statistics);
   }
 }
 

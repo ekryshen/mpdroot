@@ -12,10 +12,28 @@
 
 #include <Acts/Utilities/Logger.hpp>
 
+#include <map>
 #include <ostream>
 #include <string>
 
 namespace Mpd::Tpc {
+
+/// Debug information on a single simulation track.
+struct Quality {
+  /// Maximum relative length among all found tracks.
+  double quality;
+  /// Percent of points belonging to the original track.
+  double accuracy;
+  /// Length of the best found track.
+  size_t length;
+  /// Length of the original track.
+  size_t realLength;
+  /// Number of found tracks.
+  size_t nTracks;
+};
+
+/// Maps simulation tracks to the recognition statistics.
+using Statistics = std::map<int, Quality>;
 
 /// @brief Provides an API for the tracker.
 class Runner final {
@@ -35,7 +53,10 @@ public:
 
   const TrajectoriesContainer &execute(const InputHitContainer &hits);
 
+  Statistics getStatistics() const;
+
 private:
+
   // Logging.
   void logInput() const;
   void logOutput() const;
@@ -50,9 +71,11 @@ private:
   // Collecting statistics.
   void checkTrack(const InputHitContainer &hits,
                   size_t trackId,
-                  const ProtoTrack &track) const;
+                  const ProtoTrack &track,
+                  Statistics &statistics) const;
   void checkTracks(const InputHitContainer &hits,
-                   const ProtoTrackContainer &tracks) const;
+                   const ProtoTrackContainer &tracks,
+                   Statistics &statistics) const;
 
   const Acts::Logger &logger() const { return *m_logger; }
 
