@@ -60,9 +60,9 @@ Statistics Runner::getStatistics() const {
   checkTracks(hits, tracks, statistics);
 
   for (const auto &[realTrackId, entry] : statistics) {
-    ACTS_DEBUG("Quality for " << realTrackId << ": " << entry.quality << "% ("
+    ACTS_DEBUG(">> Quality for " << realTrackId << ": " << entry.quality << "% ("
         << entry.length << " of " << entry.realLength << ", "
-        << "accuracy=" << entry.accuracy << "%)");
+        << "accuracy=" << entry.accuracy << "%, parts=" << entry.nTracks << ")");
   }
 
   return statistics;
@@ -84,6 +84,8 @@ void Runner::logInput() const {
   for (const auto &[trackId, track] : tracks) {
     logTrack("Real track", trackId, track);
   }
+
+  ACTS_DEBUG(">> Real tracks: " << tracks.size());
 }
 
 void Runner::logOutput() const {
