@@ -10,11 +10,16 @@
 #include "MpdTpcHit.h"
 #include "TpcPoint.h"
 
+#include "TFile.h"
+#include "TH1.h"
+
 #include <Acts/Definitions/Algebra.hpp>
 #include <Acts/Definitions/Units.hpp>
 #include <Acts/Utilities/Logger.hpp>
 
 #include <iostream>
+#include <string>
+#include <ctime>
 
 static constexpr auto lenScalor = Acts::UnitConstants::cm  /* MPD  */ /
                                   Acts::UnitConstants::mm  /* Acts */;
@@ -127,7 +132,27 @@ void MpdTpcTracker::Exec(Option_t *option) {
   auto statistics = fRunner->getStatistics();
 
   // Build histagrams.
-  (void)statistics; // FIXME:
+  std::time_t currentTime;
+  std::tm *localTime;
+  time(&currentTime);
+  localTime = localtime(&currentTime) ;
+  int Hour = localTime->tm_hour;
+  int Min  = localTime->tm_min;
+  int Sec  = localTime->tm_sec;
+  std::string hour_s = std::to_string(Hour);
+  std::string min_s  = std::to_string(Min);
+  std::string sec_s  = std::to_string(Sec);
+  std::string root_file_name = "stat" + hour_s + "_" + min_s + "_" + sec_s + ".root";
+
+  TFile rootFileWithStat = TFile (root_file_name.c_str(), "RECREATE");
+  std::string histoName = "The number of real tracks: " + std::to_string(fRunner->getTracksNumber());
+  TH1* h1 = new TH1I("statistics", histoName.c_str(), 10, 0.0, 100.0);
+
+  for (auto const& [key, val]: statistics) {
+    h1->Fill(val.quality);
+  }
+  h1->Write();
+  rootFileWithStat.Close();
 
   // Convert the output tracks.
   (void)trajectories; // FIXME:
