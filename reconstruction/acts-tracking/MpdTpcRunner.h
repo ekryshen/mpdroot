@@ -53,6 +53,7 @@ public:
 
   const TrajectoriesContainer &execute(const InputHitContainer &hits);
 
+  size_t getTracksNumber() const;
   Statistics getStatistics() const;
 
 private:

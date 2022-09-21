@@ -16,6 +16,7 @@
 
 #include <sstream>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 namespace Mpd::Tpc {
@@ -66,6 +67,20 @@ Statistics Runner::getStatistics() const {
   }
 
   return statistics;
+}
+
+size_t Runner::getTracksNumber() const {
+  const auto &hits = m_context.eventStore.get<InputHitContainer>(
+      m_config.digitization.inputSimHits);
+
+  std::unordered_set<int> tracks;
+  tracks.reserve(hits.size());
+
+  for (const auto &hit : hits) {
+    tracks.insert(hit.trackId);
+  }
+
+  return tracks.size();
 }
 
 void Runner::logInput() const {
