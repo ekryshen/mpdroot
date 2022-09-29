@@ -26,6 +26,8 @@ Config::Config(const std::string &rootFile,
   digitization.inputSimHits = SimHitsID;
   digitization.outputSourceLinks = SourceLinksID;
   digitization.outputMeasurements = MeasurementsID;
+  digitization.sigmaLoc0 = SigmaLoc0;
+  digitization.sigmaLoc1 = SigmaLoc1;
   digitization.detector = detector;
 
   // Space point making.

@@ -76,7 +76,7 @@ ProcessCode Digitization::execute(const Context &context) const {
 
     // FIXME: setup realistic variances for (loc0, loc1).
     Acts::SymMatrix2 cov = Acts::ActsMatrix<2, 2>::Zero();
-    cov.diagonal() = Acts::Vector2(0.5_mm, 0.5_mm);
+    cov.diagonal() = Acts::Vector2(m_config.sigmaLoc0, m_config.sigmaLoc1);
 
     auto measurement = makeMeasurement(
         sourceLinkRef,
