@@ -183,7 +183,7 @@ std::shared_ptr<const Acts::TrackingGeometry> Detector::getGeometry() {
   m_trackingGeometry = geometry.first;
 
   // Debug output.
-  if (m_logger->doPrint(Acts::Logging::DEBUG)) {
+  if (m_logger->doPrint(Acts::Logging::VERBOSE)) {
     Acts::GeometryContext context;
     Acts::ObjVisualization3D visualizer;
 

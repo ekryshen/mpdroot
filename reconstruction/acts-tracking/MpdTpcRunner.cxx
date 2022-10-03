@@ -21,7 +21,7 @@
 
 namespace Mpd::Tpc {
 
-const TrajectoriesContainer &Runner::execute(const InputHitContainer &hits) {
+const ProtoTrackContainer &Runner::execute(const InputHitContainer &hits) {
   // Clear the storage.
   m_store.clear();
 
@@ -47,8 +47,8 @@ const TrajectoriesContainer &Runner::execute(const InputHitContainer &hits) {
   // Log the output tracks.
   logOutput();
 
-  return m_context.eventStore.get<TrajectoriesContainer>(
-      m_config.trackFinding.outputTrajectories);
+  return m_context.eventStore.get<ProtoTrackContainer>(
+      m_config.trackFinding.outputTrackCandidates);
 }
 
 Statistics Runner::getStatistics() const {

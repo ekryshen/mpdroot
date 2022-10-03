@@ -35,6 +35,9 @@ inline Mpd::Tpc::InputHitContainer convertTpcPoints(TClonesArray *tpcPoints) {
   for (Int_t i = 0; i < nTpcPoints; i++) {
     const auto *tpcPoint = static_cast<TpcPoint*>(tpcPoints->UncheckedAt(i));
 
+    // FIXME: This is for debugging.
+    // if (tpcPoint->GetTrackID() != 0) continue;
+
     hits.emplace_back(Mpd::Tpc::InputHit{
         tpcPoint->GetTrackID(),
         tpcPoint->GetDetectorID(),
@@ -86,8 +89,7 @@ inline TClonesArray *getArray(const char *name) {
     std::cout << "[MpdTpcTracker]: " << name << " not found" << std::endl;
   } else {
     std::cout << "[MpdTpcTracker]: " << name << " contains "
-                                     << array->GetEntriesFast()
-                                     << " entries" << std::endl;
+              << array->GetEntriesFast() << " entries" << std::endl;
   }
 
   return array;
@@ -128,14 +130,16 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
   // Run the track finding algorithm.
   const auto &trajectories = fRunner->execute(hits);
+
   // Get the track recognition statistics (for debugging).
   auto statistics = fRunner->getStatistics();
+  auto nTracks = fRunner->getTracksNumber();
 
   // Build histagrams.
   std::time_t currentTime;
   std::tm *localTime;
   time(&currentTime);
-  localTime = localtime(&currentTime) ;
+  localTime = localtime(&currentTime);
   int Hour = localTime->tm_hour;
   int Min  = localTime->tm_min;
   int Sec  = localTime->tm_sec;
@@ -145,7 +149,7 @@ void MpdTpcTracker::Exec(Option_t *option) {
   std::string root_file_name = "stat" + hour_s + "_" + min_s + "_" + sec_s + ".root";
 
   TFile rootFileWithStat = TFile (root_file_name.c_str(), "RECREATE");
-  std::string histoName = "The number of real tracks: " + std::to_string(fRunner->getTracksNumber());
+  std::string histoName = "The number of real tracks: " + std::to_string(nTracks);
   TH1* h1 = new TH1I("statistics", histoName.c_str(), 10, 0.0, 100.0);
 
   for (auto const& [key, val]: statistics) {

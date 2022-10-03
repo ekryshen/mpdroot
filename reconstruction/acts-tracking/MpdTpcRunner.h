@@ -51,7 +51,7 @@ public:
       m_store(m_level),
       m_context(m_store) {}
 
-  const TrajectoriesContainer &execute(const InputHitContainer &hits);
+  const ProtoTrackContainer &execute(const InputHitContainer &hits);
 
   size_t getTracksNumber() const;
   Statistics getStatistics() const;

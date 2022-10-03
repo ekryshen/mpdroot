@@ -23,7 +23,7 @@
 namespace Mpd::Tpc {
 
 TrackFinding::TrackFinding(Config config, Acts::Logging::Level level):
-  Algorithm("TrackFinding", level),
+    Algorithm("TrackFinding", level),
   m_config(std::move(config)) {
 
   assert(!m_config.inputMeasurements.empty()
