@@ -12,6 +12,8 @@
 
 #include "TFile.h"
 #include "TH1.h"
+#include "TCanvas.h"
+#include "TGraph.h"
 
 #include <Acts/Definitions/Algebra.hpp>
 #include <Acts/Definitions/Units.hpp>
@@ -146,7 +148,8 @@ void MpdTpcTracker::Exec(Option_t *option) {
   std::string hour_s = std::to_string(Hour);
   std::string min_s  = std::to_string(Min);
   std::string sec_s  = std::to_string(Sec);
-  std::string root_file_name = "stat" + hour_s + "_" + min_s + "_" + sec_s + ".root";
+  std::string filePostfix = hour_s + "_" + min_s + "_" + sec_s;
+  std::string root_file_name = "stat" + filePostfix + ".root";
 
   TFile rootFileWithStat = TFile (root_file_name.c_str(), "RECREATE");
   std::string histoName = "The number of real tracks: " + std::to_string(nTracks);
@@ -157,6 +160,25 @@ void MpdTpcTracker::Exec(Option_t *option) {
   }
   h1->Write();
   rootFileWithStat.Close();
+
+  // Plot dots.
+  const int canvasX = 3000;
+  const int canvasY = 3000;
+  TCanvas *canvas = new TCanvas("canvas", "canvas", canvasX, canvasY);
+  TGraph *dotPlot = new TGraph();
+  dotPlot->SetMarkerStyle(kFullDotMedium);
+
+  size_t hitIndex = 0;
+  for (auto hit : hits) {
+    double hitX = hit.position[0];
+    double hitY = hit.position[1];
+    dotPlot->SetPoint(hitIndex++, hitX, hitY);
+  }
+  dotPlot->Draw("P A");
+  std::string dotPlotFileName = "event_" + filePostfix + ".png";
+  canvas->Print(dotPlotFileName.c_str());
+
+  std::cout << "File created: " << dotPlotFileName << std::endl;
 
   // Convert the output tracks.
   (void)trajectories; // FIXME:
