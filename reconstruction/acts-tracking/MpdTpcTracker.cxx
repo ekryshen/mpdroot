@@ -115,6 +115,60 @@ InitStatus MpdTpcTracker::ReInit() {
   return kSUCCESS;
 }
 
+void plotOutputTracks(const int canvasX,
+    const int canvasY,
+    Mpd::Tpc::InputHitContainer hits,
+    Mpd::Tpc::ProtoTrackContainer trajectories,
+    int eventCounter) {
+  TCanvas *canvas = new TCanvas("canvasName", "canvasName", canvasX, canvasY);
+  TGraph *grInputHits = new TGraph();
+  grInputHits->SetMarkerStyle(kFullDotMedium);
+
+  size_t hitIndex = 0;
+  for (auto hit : hits) {
+    double hitX = hit.position[0];
+    double hitY = hit.position[1];
+    grInputHits->SetPoint(hitIndex++, hitX, hitY);
+  }
+  TMultiGraph *multiDotPlot = new TMultiGraph();
+  multiDotPlot->Add(grInputHits, "P");
+  multiDotPlot->Draw("A");
+
+  std::string dotPlotFileNameI = "event_" + std::to_string(eventCounter) + "_i.png";
+  canvas->Print(dotPlotFileNameI.c_str());
+  std::cout << "File created: " << dotPlotFileNameI << std::endl;
+
+  std::vector<TGraph*> outPlots;
+  for (ActsExamples::ProtoTrack reconstructedTrack : trajectories) {
+    TGraph *dotPlotReco = new TGraph();
+    dotPlotReco->SetMarkerStyle(kFullDotMedium);
+    dotPlotReco->SetLineWidth(3);
+    dotPlotReco->SetLineColor(kRed);
+
+    int hitCounter = 0;
+    for (uint32_t hitIndex : reconstructedTrack) {
+      double hitX = hits.at(hitIndex).position[0];
+      double hitY = hits.at(hitIndex).position[1];
+      dotPlotReco->SetPoint(hitCounter++, hitX, hitY);
+    }
+    multiDotPlot->Add(dotPlotReco, "PL");
+    outPlots.push_back(dotPlotReco);
+  }
+  canvas->Clear();
+  multiDotPlot->Draw("A");
+  std::string dotPlotFileNameIO = "event_" + std::to_string(eventCounter) + "_io.png";
+  canvas->Print(dotPlotFileNameIO.c_str());
+
+  delete grInputHits;
+  for (auto outPlot : outPlots) {
+    delete outPlot;
+  }
+  delete multiDotPlot;
+  delete canvas;
+
+  std::cout << "File created: " << dotPlotFileNameIO << std::endl;
+}
+
 void MpdTpcTracker::Exec(Option_t *option) {
   std::cout << "[MpdTpcTracker::Exec]: Started" << std::endl;
 
@@ -141,9 +195,9 @@ void MpdTpcTracker::Exec(Option_t *option) {
   static int staticEventCounter = 0;
   staticEventCounter++;
 
-  std::string root_file_name = "stat_" + std::to_string(staticEventCounter) + ".root";
+  std::string statisticsFileName = "stat_" + std::to_string(staticEventCounter) + ".root";
 
-  TFile rootFileWithStat = TFile (root_file_name.c_str(), "RECREATE");
+  TFile rootFileWithStat = TFile (statisticsFileName.c_str(), "RECREATE");
   std::string histoName = "The number of real tracks: " + std::to_string(nTracks);
   TH1* h1 = new TH1I("statistics", histoName.c_str(), 10, 0.0, 100.0);
 
@@ -153,46 +207,10 @@ void MpdTpcTracker::Exec(Option_t *option) {
   h1->Write();
   rootFileWithStat.Close();
 
-  // Plot dots.
+  // Plot the output tracks.
   const int canvasX = 3000;
   const int canvasY = 3000;
-  TCanvas *canvas = new TCanvas("canvas", "canvas", canvasX, canvasY);
-  TGraph *dotPlot = new TGraph();
-  dotPlot->SetMarkerStyle(kFullDotMedium);
-
-  size_t hitIndex = 0;
-  for (auto hit : hits) {
-    double hitX = hit.position[0];
-    double hitY = hit.position[1];
-    dotPlot->SetPoint(hitIndex++, hitX, hitY);
-  }
-  TMultiGraph *multiDotPlot = new TMultiGraph();
-  multiDotPlot->Add(dotPlot, "P");
-  multiDotPlot->Draw("A");
-  std::string dotPlotFileNameI = "event_" + std::to_string(staticEventCounter) + "_i.png";
-  canvas->Print(dotPlotFileNameI.c_str());
-  std::cout << "File created: " << dotPlotFileNameI << std::endl;
-
-  for (ActsExamples::ProtoTrack protoTrack : trajectories) {
-    TGraph *dotPlotReco = new TGraph();
-    dotPlotReco->SetMarkerStyle(kFullDotMedium);
-    dotPlotReco->SetLineWidth(3);
-    dotPlotReco->SetLineColor(kRed);
-
-    int hitCounter = 0;
-    for (uint32_t hitIndex : protoTrack) {
-      double hitX = hits.at(hitIndex).position[0];
-      double hitY = hits.at(hitIndex).position[1];
-      dotPlotReco->SetPoint(hitCounter++, hitX, hitY);
-    }
-    multiDotPlot->Add(dotPlotReco, "PL");
-  }
-  canvas->Clear();
-  multiDotPlot->Draw("A");
-  std::string dotPlotFileNameIO = "event_" + std::to_string(staticEventCounter) + "_io.png";
-  canvas->Print(dotPlotFileNameIO.c_str());
-
-  std::cout << "File created: " << dotPlotFileNameIO << std::endl;
+  plotOutputTracks(canvasX, canvasY, hits, trajectories, staticEventCounter);
 
   // Convert the output tracks.
   (void)trajectories; // FIXME:
