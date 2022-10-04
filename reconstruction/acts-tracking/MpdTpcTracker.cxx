@@ -22,7 +22,6 @@
 
 #include <iostream>
 #include <string>
-#include <ctime>
 
 static constexpr auto lenScalor = Acts::UnitConstants::cm  /* MPD  */ /
                                   Acts::UnitConstants::mm  /* Acts */;
@@ -139,18 +138,10 @@ void MpdTpcTracker::Exec(Option_t *option) {
   auto nTracks = fRunner->getTracksNumber();
 
   // Build histagrams.
-  std::time_t currentTime;
-  std::tm *localTime;
-  time(&currentTime);
-  localTime = localtime(&currentTime);
-  int Hour = localTime->tm_hour;
-  int Min  = localTime->tm_min;
-  int Sec  = localTime->tm_sec;
-  std::string hour_s = std::to_string(Hour);
-  std::string min_s  = std::to_string(Min);
-  std::string sec_s  = std::to_string(Sec);
-  std::string filePostfix = hour_s + "_" + min_s + "_" + sec_s;
-  std::string root_file_name = "stat" + filePostfix + ".root";
+  static int staticEventCounter = 0;
+  staticEventCounter++;
+
+  std::string root_file_name = "stat_" + std::to_string(staticEventCounter) + ".root";
 
   TFile rootFileWithStat = TFile (root_file_name.c_str(), "RECREATE");
   std::string histoName = "The number of real tracks: " + std::to_string(nTracks);
@@ -178,7 +169,7 @@ void MpdTpcTracker::Exec(Option_t *option) {
   TMultiGraph *multiDotPlot = new TMultiGraph();
   multiDotPlot->Add(dotPlot, "P");
   multiDotPlot->Draw("A");
-  std::string dotPlotFileNameI = "event_" + filePostfix + "_i.png";
+  std::string dotPlotFileNameI = "event_" + std::to_string(staticEventCounter) + "_i.png";
   canvas->Print(dotPlotFileNameI.c_str());
   std::cout << "File created: " << dotPlotFileNameI << std::endl;
 
@@ -198,7 +189,7 @@ void MpdTpcTracker::Exec(Option_t *option) {
   }
   canvas->Clear();
   multiDotPlot->Draw("A");
-  std::string dotPlotFileNameIO = "event_" + filePostfix + "_io.png";
+  std::string dotPlotFileNameIO = "event_" + std::to_string(staticEventCounter) + "_io.png";
   canvas->Print(dotPlotFileNameIO.c_str());
 
   std::cout << "File created: " << dotPlotFileNameIO << std::endl;
