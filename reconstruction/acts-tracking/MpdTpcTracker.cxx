@@ -10,10 +10,11 @@
 #include "MpdTpcHit.h"
 #include "TpcPoint.h"
 
-#include "TFile.h"
-#include "TH1.h"
 #include "TCanvas.h"
+#include "TFile.h"
 #include "TGraph.h"
+#include "TH1.h"
+#include "TMultiGraph.h"
 
 #include <Acts/Definitions/Algebra.hpp>
 #include <Acts/Definitions/Units.hpp>
@@ -174,11 +175,33 @@ void MpdTpcTracker::Exec(Option_t *option) {
     double hitY = hit.position[1];
     dotPlot->SetPoint(hitIndex++, hitX, hitY);
   }
-  dotPlot->Draw("P A");
-  std::string dotPlotFileName = "event_" + filePostfix + ".png";
-  canvas->Print(dotPlotFileName.c_str());
+  TMultiGraph *multiDotPlot = new TMultiGraph();
+  multiDotPlot->Add(dotPlot, "P");
+  multiDotPlot->Draw("A");
+  std::string dotPlotFileNameI = "event_" + filePostfix + "_i.png";
+  canvas->Print(dotPlotFileNameI.c_str());
+  std::cout << "File created: " << dotPlotFileNameI << std::endl;
 
-  std::cout << "File created: " << dotPlotFileName << std::endl;
+  for (ActsExamples::ProtoTrack protoTrack : trajectories) {
+    TGraph *dotPlotReco = new TGraph();
+    dotPlotReco->SetMarkerStyle(kFullDotMedium);
+    dotPlotReco->SetLineWidth(3);
+    dotPlotReco->SetLineColor(kRed);
+
+    int hitCounter = 0;
+    for (uint32_t hitIndex : protoTrack) {
+      double hitX = hits.at(hitIndex).position[0];
+      double hitY = hits.at(hitIndex).position[1];
+      dotPlotReco->SetPoint(hitCounter++, hitX, hitY);
+    }
+    multiDotPlot->Add(dotPlotReco, "PL");
+  }
+  canvas->Clear();
+  multiDotPlot->Draw("A");
+  std::string dotPlotFileNameIO = "event_" + filePostfix + "_io.png";
+  canvas->Print(dotPlotFileNameIO.c_str());
+
+  std::cout << "File created: " << dotPlotFileNameIO << std::endl;
 
   // Convert the output tracks.
   (void)trajectories; // FIXME:
