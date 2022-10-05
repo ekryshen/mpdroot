@@ -36,7 +36,7 @@ TrackFinding::TrackFinding(Config config, Acts::Logging::Level level):
     && "Missing trajectories output collection");
 }
 
-ProcessCode TrackFinding::execute(const Context &context) const {
+ProcessCode TrackFinding::execute(Context &context) const {
   using TrackParametersContainer = ActsExamples::TrackParametersContainer;
   using AccessorDelegate = Acts::SourceLinkAccessorDelegate<Iterator>;
 
@@ -200,7 +200,7 @@ void TrackFinding::computeSharedHits(const Container &sourceLinks,
   }
 }
 
-void TrackFinding::constructTrackCandidates(const Context &context,
+void TrackFinding::constructTrackCandidates(Context &context,
                                             const Container &sourceLinks,
                                             Results &results) const {
   const auto nHits = sourceLinks.size();

@@ -39,7 +39,7 @@ public:
   };
 
   TrackSeeding(Config config, Acts::Logging::Level level);
-  ProcessCode execute(const Context &context) const override;
+  ProcessCode execute(Context &context) const override;
   const Config &config() const { return m_config; }
 
 private:

@@ -71,7 +71,7 @@ SpacePointMaking::SpacePointMaking(Config config, Acts::Logging::Level level):
   }
 }
 
-ProcessCode SpacePointMaking::execute(const Context &context) const {
+ProcessCode SpacePointMaking::execute(Context &context) const {
   ACTS_DEBUG("Space point making");
 
   const auto &sourceLinks =

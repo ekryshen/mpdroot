@@ -55,7 +55,7 @@ TrackEstimation::TrackEstimation(Config config, Acts::Logging::Level level):
       m_config.sigmaT0;
 }
 
-ProcessCode TrackEstimation::execute(const Context &context) const {
+ProcessCode TrackEstimation::execute(Context &context) const {
   // Measurements are necesary for retrieving the geometry identifier.
   const auto &measurements =
       context.eventStore.get<MeasurementContainer>(m_config.inputMeasurements);

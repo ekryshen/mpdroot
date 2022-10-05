@@ -47,11 +47,11 @@ public:
          Acts::Logging::Level level = Acts::Logging::DEBUG):
       m_logger(Acts::getDefaultLogger("Runner", level)),
       m_level(level),
-      m_config(rootFile, jsonFile, m_level),
-      m_store(m_level),
-      m_context(m_store) {}
+      m_config(rootFile, jsonFile, m_level) {}
 
-  const ProtoTrackContainer &execute(const InputHitContainer &hits);
+  void execute(const InputHitContainer &hits);
+  const Config &config() const { return m_config; }
+  const Context &context() const { return m_context; }
 
   size_t getTracksNumber() const;
   Statistics getStatistics() const;
@@ -84,7 +84,6 @@ private:
   Acts::Logging::Level m_level;
 
   Config m_config;
-  EventStorage m_store;
   Context m_context;
 };
 

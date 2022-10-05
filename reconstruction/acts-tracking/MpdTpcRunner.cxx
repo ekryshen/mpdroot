@@ -21,12 +21,13 @@
 
 namespace Mpd::Tpc {
 
-const ProtoTrackContainer &Runner::execute(const InputHitContainer &hits) {
+void Runner::execute(const InputHitContainer &hits) {
   // Clear the storage.
-  m_store.clear();
+  m_context.eventStore.clear();
 
   // Store the input hits.
-  m_store.add(m_config.digitization.inputSimHits, InputHitContainer{hits});
+  m_context.eventStore.add(
+      m_config.digitization.inputSimHits, InputHitContainer{hits});
 
   // Log the input hits.
   logInput();
@@ -46,9 +47,6 @@ const ProtoTrackContainer &Runner::execute(const InputHitContainer &hits) {
 
   // Log the output tracks.
   logOutput();
-
-  return m_context.eventStore.get<ProtoTrackContainer>(
-      m_config.trackFinding.outputTrackCandidates);
 }
 
 Statistics Runner::getStatistics() const {

@@ -35,7 +35,7 @@ Digitization::Digitization(Config config, Acts::Logging::Level level):
     && "Missing detector");
 }
 
-ProcessCode Digitization::execute(const Context &context) const {
+ProcessCode Digitization::execute(Context &context) const {
   ACTS_DEBUG("Digitization");
 
   const auto &simHits =

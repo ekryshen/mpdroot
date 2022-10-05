@@ -97,6 +97,12 @@ inline TClonesArray *getArray(const char *name) {
   return array;
 }
 
+void plotOutputTracks(const int canvasX,
+                      const int canvasY,
+                      const Mpd::Tpc::InputHitContainer &hits,
+                      const Mpd::Tpc::ProtoTrackContainer &trajectories,
+                      int eventCounter);
+
 InitStatus MpdTpcTracker::Init() {
   std::cout << "[MpdTpcTracker::Init]: Started" << std::endl;
 
@@ -115,11 +121,75 @@ InitStatus MpdTpcTracker::ReInit() {
   return kSUCCESS;
 }
 
+void MpdTpcTracker::Exec(Option_t *option) {
+  // For naming files during debug.
+  static int eventCounter = 0;
+
+  std::cout << "[MpdTpcTracker::Exec]: Started" << std::endl;
+
+  if (MpdCodeTimer::Active()) {
+    MpdCodeTimer::Instance()->Start(Class()->GetName(), __FUNCTION__);
+  }
+
+  // Get the input points.
+  fPoints = getArray(UseMcHits ? "TpcPoint" : "TpcRecPoint");
+  assert(fPoints);
+
+  // Convert the input points to the inner representation.
+  auto hits = UseMcHits ? convertTpcPoints(fPoints)
+                        : convertTpcHits(fPoints);
+
+  // Run the track finding algorithm.
+  const auto &config = fRunner->config();
+  const auto &context = fRunner->context();
+
+  fRunner->execute(hits);
+
+  const auto &trajectories =
+      context.eventStore.get<Mpd::Tpc::ProtoTrackContainer>(
+          config.trackFinding.outputTrackCandidates);
+
+  // Get the track recognition statistics (for debugging).
+  auto statistics = fRunner->getStatistics();
+  auto nTracks = fRunner->getTracksNumber();
+
+  // Build histagrams.
+  std::string statisticsFileName = "stat_" + std::to_string(eventCounter) + ".root";
+
+  TFile rootFileWithStat(statisticsFileName.c_str(), "RECREATE");
+  std::string histoName = "The number of real tracks: " + std::to_string(nTracks);
+  TH1 *h1 = new TH1I("statistics", histoName.c_str(), 10, 0.0, 100.0);
+
+  for (auto const &[key, val]: statistics) {
+    h1->Fill(val.quality);
+  }
+  h1->Write();
+  rootFileWithStat.Close();
+
+  // Plot the output tracks.
+  plotOutputTracks(6000, 6000, hits, trajectories, eventCounter);
+
+  // Convert the output tracks.
+//  fKalmanHits = getArray("MpdKalmanHit");
+//  fKalmanTracks = getArray("MpdTpcKalmanTrack");
+
+  if (MpdCodeTimer::Active()) {
+    MpdCodeTimer::Instance()->Stop(Class()->GetName(), __FUNCTION__);
+  }
+
+  std::cout << "[MpdTpcTracker::Exec]: Finished" << std::endl;
+  eventCounter++;
+}
+
+void MpdTpcTracker::Finish() {
+  std::cout << "[MpdTpcTracker::Finish]: Do nothing" << std::endl;
+}
+
 void plotOutputTracks(const int canvasX,
-    const int canvasY,
-    Mpd::Tpc::InputHitContainer hits,
-    Mpd::Tpc::ProtoTrackContainer trajectories,
-    int eventCounter) {
+                      const int canvasY,
+                      const Mpd::Tpc::InputHitContainer &hits,
+                      const Mpd::Tpc::ProtoTrackContainer &trajectories,
+                      int eventCounter) {
   TCanvas *canvas = new TCanvas("canvasName", "canvasName", canvasX, canvasY);
   TGraph *grInputHits = new TGraph();
   grInputHits->SetMarkerStyle(kFullDotMedium);
@@ -167,66 +237,6 @@ void plotOutputTracks(const int canvasX,
   delete canvas;
 
   std::cout << "File created: " << dotPlotFileNameIO << std::endl;
-}
-
-void MpdTpcTracker::Exec(Option_t *option) {
-  std::cout << "[MpdTpcTracker::Exec]: Started" << std::endl;
-
-  if (MpdCodeTimer::Active()) {
-    MpdCodeTimer::Instance()->Start(Class()->GetName(), __FUNCTION__);
-  }
-
-  // Get the input points.
-  fPoints = getArray(UseMcHits ? "TpcPoint" : "TpcRecPoint");
-  assert(fPoints);
-
-  // Convert the input points to the inner representation.
-  auto hits = UseMcHits ? convertTpcPoints(fPoints)
-                        : convertTpcHits(fPoints);
-
-  // Run the track finding algorithm.
-  const auto &trajectories = fRunner->execute(hits);
-
-  // Get the track recognition statistics (for debugging).
-  auto statistics = fRunner->getStatistics();
-  auto nTracks = fRunner->getTracksNumber();
-
-  // Build histagrams.
-  static int staticEventCounter = 0;
-  staticEventCounter++;
-
-  std::string statisticsFileName = "stat_" + std::to_string(staticEventCounter) + ".root";
-
-  TFile rootFileWithStat = TFile (statisticsFileName.c_str(), "RECREATE");
-  std::string histoName = "The number of real tracks: " + std::to_string(nTracks);
-  TH1* h1 = new TH1I("statistics", histoName.c_str(), 10, 0.0, 100.0);
-
-  for (auto const& [key, val]: statistics) {
-    h1->Fill(val.quality);
-  }
-  h1->Write();
-  rootFileWithStat.Close();
-
-  // Plot the output tracks.
-  const int canvasX = 3000;
-  const int canvasY = 3000;
-  plotOutputTracks(canvasX, canvasY, hits, trajectories, staticEventCounter);
-
-  // Convert the output tracks.
-  (void)trajectories; // FIXME:
-
-//  fKalmanHits = getArray("MpdKalmanHit");
-//  fKalmanTracks = getArray("MpdTpcKalmanTrack");
-
-  if (MpdCodeTimer::Active()) {
-    MpdCodeTimer::Instance()->Stop(Class()->GetName(), __FUNCTION__);
-  }
-
-  std::cout << "[MpdTpcTracker::Exec]: Finished" << std::endl;
-}
-
-void MpdTpcTracker::Finish() {
-  std::cout << "[MpdTpcTracker::Finish]: Do nothing" << std::endl;
 }
 
 ClassImp(MpdTpcTracker);

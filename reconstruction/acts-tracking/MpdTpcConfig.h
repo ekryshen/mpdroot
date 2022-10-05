@@ -76,7 +76,7 @@ struct Config final {
   static constexpr auto SigmaLoc1           =  0.5_mm;              // OK
   static constexpr auto SigmaPhi            =  0.5_degree;          // OK
   static constexpr auto SigmaTheta          =  0.5_degree;          // OK
-  static constexpr auto SigmaQOverP         =  0.1 / 1._GeV;        // OK
+  static constexpr auto SigmaQOverP         =  0.1_GeV;             // OK
   static constexpr auto SigmaT0             =  1400._s;             // FIXME
   static constexpr auto InitVarInflatLoc0   =  1.;                  // No inflation?
   static constexpr auto InitVarInflatLoc1   =  1.;                  // No inflation?
@@ -99,7 +99,7 @@ struct Config final {
   /// Maximum local Chi2 contribution.
   static constexpr auto Chi2max             = 50.0;                 // FIXME
   /// Maximum number of associated measurements on a single surface.
-  static constexpr auto NmaxPerSurface      = 4u;                   // FIXME
+  static constexpr auto NmaxPerSurface      = 5u;                   // FIXME
   static constexpr auto ComputeSharedHits   = false;
   static constexpr auto TrackMinLength      = 3u;
   static constexpr auto NewHitsInRow        = 3u;

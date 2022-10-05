@@ -28,7 +28,7 @@ public:
   std::string name() const { return m_name; }
 
   /// Executes the algorithm for one event.
-  virtual ProcessCode execute(const Context &context) const = 0;
+  virtual ProcessCode execute(Context &context) const = 0;
 
 protected:
   const Acts::Logger &logger() const { return *m_logger; }

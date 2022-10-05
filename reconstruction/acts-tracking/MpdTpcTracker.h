@@ -19,7 +19,7 @@ public:
   static constexpr auto UseMcHits = true;
    
   explicit MpdTpcTracker(const char *title = TaskTitle):
-    FairTask(title) {}
+      FairTask(title) {}
   virtual ~MpdTpcTracker() {}
 
   InitStatus Init() override;

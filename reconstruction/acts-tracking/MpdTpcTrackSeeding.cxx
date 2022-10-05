@@ -105,7 +105,7 @@ TrackSeeding::TrackSeeding(Config config, Acts::Logging::Level level):
           m_config.seedFilterConfig);
 }
 
-ProcessCode TrackSeeding::execute(const Context &context) const {
+ProcessCode TrackSeeding::execute(Context &context) const {
   ACTS_DEBUG("Track seeding");
 
   const auto &spacePoints =
