@@ -101,6 +101,7 @@ void plotOutputTracks(const int canvasX,
                       const int canvasY,
                       const Mpd::Tpc::InputHitContainer &hits,
                       const Mpd::Tpc::ProtoTrackContainer &trajectories,
+                      const Mpd::Tpc::SpacePointContainer &spacePoints,
                       int eventCounter);
 
 InitStatus MpdTpcTracker::Init() {
@@ -149,6 +150,10 @@ void MpdTpcTracker::Exec(Option_t *option) {
       context.eventStore.get<Mpd::Tpc::ProtoTrackContainer>(
           config.trackFinding.outputTrackCandidates);
 
+  const auto &spacePoints =
+      context.eventStore.get<Mpd::Tpc::SpacePointContainer>(
+          config.spacePointMaking.outputSpacePoints);
+
   // Get the track recognition statistics (for debugging).
   auto statistics = fRunner->getStatistics();
   auto nTracks = fRunner->getTracksNumber();
@@ -167,7 +172,7 @@ void MpdTpcTracker::Exec(Option_t *option) {
   rootFileWithStat.Close();
 
   // Plot the output tracks.
-  plotOutputTracks(6000, 6000, hits, trajectories, eventCounter);
+  plotOutputTracks(6000, 6000, hits, trajectories, spacePoints, eventCounter);
 
   // Convert the output tracks.
 //  fKalmanHits = getArray("MpdKalmanHit");
@@ -189,54 +194,65 @@ void plotOutputTracks(const int canvasX,
                       const int canvasY,
                       const Mpd::Tpc::InputHitContainer &hits,
                       const Mpd::Tpc::ProtoTrackContainer &trajectories,
+                      const Mpd::Tpc::SpacePointContainer &spacePoints,
                       int eventCounter) {
   TCanvas *canvas = new TCanvas("canvasName", "canvasName", canvasX, canvasY);
-  TGraph *grInputHits = new TGraph();
-  grInputHits->SetMarkerStyle(kFullDotMedium);
+  TMultiGraph *multiGraph = new TMultiGraph();
 
-  size_t hitIndex = 0;
-  for (auto hit : hits) {
-    double hitX = hit.position[0];
-    double hitY = hit.position[1];
-    grInputHits->SetPoint(hitIndex++, hitX, hitY);
+// SpacePoints graph
+  TGraph *spacePointsGraph = new TGraph();
+  spacePointsGraph->SetMarkerStyle(kFullDotMedium);
+  spacePointsGraph->SetMarkerColor(kOrange);
+
+  size_t pIndex = 0;
+  for (auto spacePoint : spacePoints) {
+    double x = spacePoint.x();
+    double y = spacePoint.y();
+    spacePointsGraph->SetPoint(pIndex++, x, y);
   }
-  TMultiGraph *multiDotPlot = new TMultiGraph();
-  multiDotPlot->Add(grInputHits, "P");
-  multiDotPlot->Draw("A");
+  multiGraph->Add(spacePointsGraph, "P");
 
-  std::string dotPlotFileNameI = "event_" + std::to_string(eventCounter) + "_i.png";
-  canvas->Print(dotPlotFileNameI.c_str());
-  std::cout << "File created: " << dotPlotFileNameI << std::endl;
+// input hits graph
+  TGraph *inputHitsGraph = new TGraph();
+  inputHitsGraph->SetMarkerStyle(kFullDotMedium);
 
-  std::vector<TGraph*> outPlots;
+  pIndex = 0;
+  for (auto hit : hits) {
+    double x = hit.position[0];
+    double y = hit.position[1];
+    inputHitsGraph->SetPoint(pIndex++, x, y);
+  }
+  multiGraph->Add(inputHitsGraph, "P");
+
+// reconstructed tracks graph
+  std::vector<TGraph*> graphs;
   for (ActsExamples::ProtoTrack reconstructedTrack : trajectories) {
-    TGraph *dotPlotReco = new TGraph();
-    dotPlotReco->SetMarkerStyle(kFullDotMedium);
-    dotPlotReco->SetLineWidth(3);
-    dotPlotReco->SetLineColor(kRed);
+    TGraph *outTrajectoryGraph = new TGraph();
+    outTrajectoryGraph->SetMarkerStyle(kFullDotMedium);
+    outTrajectoryGraph->SetLineWidth(3);
+    outTrajectoryGraph->SetLineColor(kRed);
 
     int hitCounter = 0;
     for (uint32_t hitIndex : reconstructedTrack) {
-      double hitX = hits.at(hitIndex).position[0];
-      double hitY = hits.at(hitIndex).position[1];
-      dotPlotReco->SetPoint(hitCounter++, hitX, hitY);
+      double x = hits.at(hitIndex).position[0];
+      double y = hits.at(hitIndex).position[1];
+      outTrajectoryGraph->SetPoint(hitCounter++, x, y);
     }
-    multiDotPlot->Add(dotPlotReco, "PL");
-    outPlots.push_back(dotPlotReco);
+    multiGraph->Add(outTrajectoryGraph, "PL");
+    graphs.push_back(outTrajectoryGraph);
   }
-  canvas->Clear();
-  multiDotPlot->Draw("A");
-  std::string dotPlotFileNameIO = "event_" + std::to_string(eventCounter) + "_io.png";
-  canvas->Print(dotPlotFileNameIO.c_str());
+  multiGraph->Draw("A");
+  std::string dotPlotFileName = "event_" + std::to_string(eventCounter) + ".png";
+  canvas->Print(dotPlotFileName.c_str());
 
-  delete grInputHits;
-  for (auto outPlot : outPlots) {
-    delete outPlot;
+  delete inputHitsGraph;
+  for (auto graph : graphs) {
+    delete graph;
   }
-  delete multiDotPlot;
+  delete multiGraph;
   delete canvas;
 
-  std::cout << "File created: " << dotPlotFileNameIO << std::endl;
+  std::cout << "File created: " << dotPlotFileName << std::endl;
 }
 
 ClassImp(MpdTpcTracker);
