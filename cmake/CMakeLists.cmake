@@ -35,21 +35,22 @@ if(NOT ROOT_HAS_FFTW3)
   message(FATAL_ERROR "${BoldRed}\nROOT was not built with FFTW3 support. Rebuild ROOT and try again.${ColourReset}\n")  
 endif()
 
-find_package(FairRoot REQUIRED)
-find_package(FairLogger REQUIRED)
-find_package(FMT REQUIRED)
-find_package(Pythia8 REQUIRED)
 find_package(Boost REQUIRED)
-find_package(LibXml2 REQUIRED)
-find_package(Geant3 REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(FairLogger REQUIRED)
+find_package(FairRoot REQUIRED)
+find_package(FMT REQUIRED)
+find_package(Geant3 REQUIRED)
+find_package(LibXml2 REQUIRED)
+find_package(NLOHMANN_JSON REQUIRED)
+find_package(Pythia8 REQUIRED)
 find_package(VMC QUIET)
 
 #set(BASE_INCLUDE_DIRECTORIES ${BASE_INCLUDE_DIRECTORIES} ${SIMPATH}/include/root ${SIMPATH}/include/vmc)
 #list(APPEND BASE_INCLUDE_DIR ${ROOT_INCLUDE_DIR} ${FAIRROOT_INCLUDE_DIR} ${FairLogger_INCDIR} "${FMT_ROOT}/include")
 list(APPEND BASE_INCLUDE_DIR ${ROOT_INCLUDE_DIR} ${FAIRROOT_INCLUDE_DIR} ${FairLogger_INCDIR} ${FMT_INCLUDE_DIRS}
-                             ${PYTHIA8_INCLUDE_DIR} ${Boost_INCLUDE_DIRS}
-                             ${LIBXML2_INCLUDE_DIRS} ${Geant3_INCLUDE_DIRS} ${Eigen3_INCLUDE_DIRS}
+                             ${PYTHIA8_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIRS}
+                             ${Geant3_INCLUDE_DIRS} ${Eigen3_INCLUDE_DIRS} ${NLOHMANN_JSON_INCLUDE_DIRS}
                              )
 
 if(VMC_FOUND)
