@@ -199,10 +199,10 @@ void plotOutputTracks(const int canvasX,
   TCanvas *canvas = new TCanvas("canvasName", "canvasName", canvasX, canvasY);
   TMultiGraph *multiGraph = new TMultiGraph();
 
-// SpacePoints graph
+// space points graph
   TGraph *spacePointsGraph = new TGraph();
   spacePointsGraph->SetMarkerStyle(kFullDotMedium);
-  spacePointsGraph->SetMarkerColor(kOrange);
+  spacePointsGraph->SetMarkerColor(kSpring);
 
   size_t pIndex = 0;
   for (auto spacePoint : spacePoints) {
