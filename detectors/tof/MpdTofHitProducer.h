@@ -18,6 +18,8 @@ class TRandom2;
 class TEfficiency;
 class TH1D;
 class TH2D;
+
+class FairMCEventHeader;
 //------------------------------------------------------------------------------------------------------------------------
 class MpdTofHitProducer : public MpdTofHitProducerIdeal {
    Double_t  fTimeSigma = 0.080;                    // Uncertainties of time, gaus sigma [ns]
@@ -28,6 +30,9 @@ class MpdTofHitProducer : public MpdTofHitProducerIdeal {
    // value - distance to the strip edge [cm], gap - 1,3 = outer strip gap, 2 = middle strip gap
    Bool_t IsHitCreated(Double_t value, Int_t gap);
    Bool_t IsCrossHitCreated(Double_t value, Int_t gap);
+//V
+   FairMCEventHeader *fEventHeaderB  = nullptr;
+   Float_t b_mc, t0res_mc;
 
 public:
    MpdTofHitProducer(const char *name = "TOF HitProducer", Bool_t useMCdata = true, Int_t verbose = 1,

@@ -133,7 +133,7 @@ void MpdStack::PushTrack(Int_t toBeDone, Int_t parentId, Int_t pdgCode, Double_t
 
       for (Int_t j = 0; j < npart; ++j) {
          TParticle tpart = *((TParticle *)fDecays->UncheckedAt(j));
-         tpart.Print();
+         // tpart.Print();
          vDecays.push_back(tpart);
       }
 
@@ -220,7 +220,7 @@ void MpdStack::PushTrack(Int_t toBeDone, Int_t parentId, Int_t pdgCode, Double_t
 
       for (Int_t j = 0; j < npart; ++j) {
          TParticle tpart = *((TParticle *)fDecays->UncheckedAt(j));
-         tpart.Print();
+         //V tpart.Print();
          vDecays.push_back(tpart);
       }
 

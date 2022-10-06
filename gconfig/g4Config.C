@@ -60,7 +60,7 @@ void Config()
    if(cut==0)gInterpreter->ProcessLine("SetCuts()"); 
 
    //set geant4 specific stuff
-  geant4->SetMaxNStep(10000);  // default is 30000
+  geant4->SetMaxNStep(500000);  // default is 10000  
   geant4->ProcessGeantMacro(configm1.Data());
 
   // Activate the parameters defined in tracking media

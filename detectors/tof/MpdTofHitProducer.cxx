@@ -23,6 +23,8 @@
 #include "MpdTofHitProducerQA.h"
 
 #include "MpdTofHitProducer.h"
+//V
+#include "FairMCEventHeader.h"
 
 using namespace std;
 
@@ -56,6 +58,11 @@ InitStatus MpdTofHitProducer::Init()
 
    MpdTofGeoUtils::Instance()->FindNeighborStrips(0.8, pQA, // 0.8 [cm] <--- thresh. distance between neighbor strips
                                                   true);    // forced
+
+//V
+   if (fUseMCData) {
+      fEventHeaderB = (FairMCEventHeader *)FairRootManager::Instance()->GetObject("MCEventHeader.");
+   }
 
    LOG(info) << "[MpdTofHitProducer::Init] Initialization finished succesfully.";
 
@@ -142,6 +149,20 @@ void MpdTofHitProducer::Exec(Option_t *option)
    };
 
    if (fUseMCData) {
+
+//V
+     b_mc = fEventHeaderB->GetB(); //[fm]
+     t0res_mc = 0.;
+     if (b_mc > 0 && b_mc < 17)
+       {
+	 t0res_mc = 1.52911e-002 - 
+	            5.96912e-005 * b_mc +
+	            1.78144e-004 * b_mc * b_mc -
+	            3.39944e-005 * b_mc * b_mc * b_mc +
+	            2.46001e-006 * b_mc * b_mc * b_mc * b_mc; //[ns]
+       }
+//V
+
       for (Int_t pointIndex = 0, nTofPoint = aMcPoints->GetEntriesFast(); pointIndex < nTofPoint;
            pointIndex++) // cycle by TOF points
       {
@@ -153,7 +174,11 @@ void MpdTofHitProducer::Exec(Option_t *option)
          Int_t suid = pPoint->GetDetectorID();
          Int_t gap  = pPoint->GetGap();
 
-         Double_t time = pRandom->Gaus(pPoint->GetTime(), fTimeSigma); // default 100 ps
+//V
+         Double_t time = pRandom->Gaus(pPoint->GetTime(), t0res_mc);
+         time = pRandom->Gaus(time, fTimeSigma); // default 100 ps
+//V
+
          pPoint->Position(mcPosition);
 
          auto strip        = MpdTofGeoUtils::Instance()->FindStrip(suid);
