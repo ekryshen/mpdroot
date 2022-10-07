@@ -6,7 +6,6 @@
 #include "MpdTpcEventStorage.h"
 #include "MpdTpcTrackEstimation.h"
 
-#include <Acts/EventData/TrackParameters.hpp>
 #include <Acts/Geometry/TrackingGeometry.hpp>
 #include <Acts/MagneticField/MagneticFieldProvider.hpp>
 #include <Acts/Seeding/EstimateTrackParamsFromSeed.hpp>
@@ -67,14 +66,17 @@ ProcessCode TrackEstimation::execute(Context &context) const {
     seeds = context.eventStore.get<SeedContainer>(m_config.inputSeeds);
     ACTS_DEBUG("Read " << seeds.size() << " seeds");
   } else {
-    const auto &protoTracks = context.eventStore.get<ProtoTrackContainer>(m_config.inputProtoTracks);
-    const auto &spacePoints = context.eventStore.get<SpacePointContainer>(m_config.inputSpacePoints);
+    const auto &protoTracks = context.eventStore.get<ProtoTrackContainer>(
+        m_config.inputProtoTracks);
+    const auto &spacePoints = context.eventStore.get<SpacePointContainer>(
+        m_config.inputSpacePoints);
+
     seeds = createSeeds(protoTracks, spacePoints);
     ACTS_DEBUG("Read " << protoTracks.size() << " proto tracks, and created "
                        << seeds.size() << " seeds");
   }
 
-  ActsExamples::TrackParametersContainer trackParameters;
+  TrackParametersContainer trackParameters;
   trackParameters.reserve(seeds.size());
 
   ProtoTrackContainer tracks;

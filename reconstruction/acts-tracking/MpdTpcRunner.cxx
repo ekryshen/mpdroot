@@ -104,10 +104,13 @@ void Runner::logInput() const {
 void Runner::logOutput() const {
   const auto &protos = m_context.eventStore.get<ProtoTrackContainer>(
       m_config.trackSeeding.outputProtoTracks);
+  const auto &params = m_context.eventStore.get<TrackParametersContainer>(
+      m_config.trackEstimation.outputTrackParameters);
   const auto &tracks = m_context.eventStore.get<ProtoTrackContainer>(
       m_config.trackFinding.outputTrackCandidates);
 
   logTracks("Proto track", protos);
+  logParams("Track param", params);
   logTracks("Found track", tracks);
 }
 
@@ -137,6 +140,26 @@ void Runner::logTracks(const std::string &prefix,
   size_t itrack = 0;
   for (const auto &track : tracks) {
     logTrack(prefix, itrack++, track);
+  }
+}
+
+void Runner::logParam(const std::string &prefix,
+                     size_t trackId,
+                     const TrackParameters &param) const {
+  std::stringstream out;
+  out << "T=" << param.time() << ", "
+      << "P=" << param.absoluteMomentum() << ", "
+      << "Pt=" << param.transverseMomentum() << ", "
+      << "Q=" << param.charge();
+
+  ACTS_DEBUG(prefix << " " << trackId << ": " << out.str());
+}
+
+void Runner::logParams(const std::string &prefix,
+                       const TrackParametersContainer &params) const {
+  size_t iparam = 0;
+  for (const auto &param : params) {
+    logParam(prefix, iparam++, param);
   }
 }
 

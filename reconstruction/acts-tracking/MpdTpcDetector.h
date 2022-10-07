@@ -32,19 +32,17 @@ public:
   /// TPC is represented as two symmetric nodes.
   static constexpr auto HasTwoNodes = true;
 
-  static constexpr auto Rmin        =  40.29_cm;    // FIXME
-  static constexpr auto Rmax        =  132.15_cm;   // FIXME
-  static constexpr auto Zmin        = -2.*81.95_cm; // FIXME
-  static constexpr auto Zmax        =  2.*81.95_cm; // FIXME
-  static constexpr auto NumLayers   =  200u;
-  static constexpr auto NumSectors  =  12u;
-  static constexpr auto NumZ        =  2u;
-  static constexpr auto NumPhi      =  10u;
-  static constexpr auto DeltaR      =  (Rmax - Rmin) / NumLayers;
-  static constexpr auto DeltaZ      =  (Zmax - Zmin) / NumZ;
-  static constexpr auto SecDeltaPhi =  (2.*M_PI) / NumSectors;
-  static constexpr auto IntDeltaPhi =  SecDeltaPhi / NumPhi;
-  static constexpr auto PhiStart    =  0.5*IntDeltaPhi;
+  static constexpr auto Rmin       =  40.29_cm;    // FIXME
+  static constexpr auto Rmax       =  132.15_cm;   // FIXME
+  static constexpr auto Zmin       = -2.*81.95_cm; // FIXME
+  static constexpr auto Zmax       =  2.*81.95_cm; // FIXME
+  static constexpr auto NumLayers  =  200u;
+  static constexpr auto NumSectors =  120u;
+  static constexpr auto NumZ       =  2u;
+  static constexpr auto DeltaR     =  (Rmax - Rmin) / NumLayers;
+  static constexpr auto DeltaZ     =  (Zmax - Zmin) / NumZ;
+  static constexpr auto DeltaPhi   =  (2.*M_PI) / NumSectors;
+  static constexpr auto PhiStart   =  0.5*DeltaPhi;
 
   Detector(const std::string &jsonFile,
            Acts::Logging::Level level = Acts::Logging::DEBUG):

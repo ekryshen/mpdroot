@@ -82,15 +82,12 @@ inline void addSensorsPhi(TGeoVolume *gasVolume,
                           Double_t z,
                           Int_t &isensor) {
   for (size_t isec = 0; isec < Detector::NumSectors; isec++) {
-    for (size_t iphi = 0; iphi < Detector::NumPhi; iphi++) {
-      auto phi = (isec * Detector::SecDeltaPhi) +
-                 (iphi * Detector::IntDeltaPhi) + Detector::PhiStart;
+    auto phi = (isec * Detector::DeltaPhi) + Detector::PhiStart;
 
-      auto x = r * std::cos(phi);
-      auto y = r * std::sin(phi);
+    auto x = r * std::cos(phi);
+    auto y = r * std::sin(phi);
 
-      addSensor(gasVolume, sensorVolume, x, y, z, phi, isensor);
-    }
+    addSensor(gasVolume, sensorVolume, x, y, z, phi, isensor);
   }
 }
 
@@ -114,7 +111,7 @@ void addSensors(TGeoManager *geoManager, TGeoVolume *gasVolume) {
   auto *medium = gasVolume->GetMedium();
   assert(medium && "Missing TPC gas medium");
 
-  const auto tanHalfDeltaPhi = std::tan(0.5 * Detector::IntDeltaPhi);
+  const auto tanHalfDeltaPhi = std::tan(0.5 * Detector::DeltaPhi);
 
   auto isensor = 0;
   for(size_t ilayer = 0; ilayer < Detector::NumLayers; ilayer++) {
@@ -126,7 +123,7 @@ void addSensors(TGeoManager *geoManager, TGeoVolume *gasVolume) {
     auto sizeY = rPhi;
     auto sizeZ = toRootLength(Detector::DeltaZ);
 
-    auto eps = 0.00001;
+    auto eps = 0.00001; // FIXME: if 0.02, then no overlapping
     auto deltaX = (0.5 - eps) * sizeX; // Rotation error
     auto deltaY = (0.5 - eps) * sizeY; // Rotation error
     auto deltaZ = 0.5 * sizeZ;
@@ -253,7 +250,7 @@ inline uint64_t toBits(const Acts::Vector3 &position,
   assert(0 <= phi && phi < 2*M_PI);
 
   auto rBits = static_cast<uint64_t>((r - Detector::Rmin) / Detector::DeltaR);
-  auto pBits = static_cast<uint64_t>(phi / Detector::IntDeltaPhi);
+  auto pBits = static_cast<uint64_t>(phi / Detector::DeltaPhi);
   auto zBits = static_cast<uint64_t>((z - Detector::Zmin) / Detector::DeltaZ);
 
   return (rBits << 32) | (pBits << 16) | zBits;
@@ -282,7 +279,7 @@ void fillSurfaces(
     for(size_t j = 0; j < surfaceVector.size(); j++) {
       auto surface = surfaceVector.at(j)->getSharedPtr();
       auto center = surface->center(context);
-      auto bits = toBits(center, 0.5 * Detector::IntDeltaPhi);
+      auto bits = toBits(center, 0.5 * Detector::DeltaPhi);
 
       assert(surfaces.find(bits) == surfaces.end()
           && "There are surfaces with the same bit keys");
@@ -300,7 +297,7 @@ std::shared_ptr<const Acts::Surface> Detector::getSurface(
   }
 
   ACTS_VERBOSE("Finding a surface for " << position);
-  auto bits = toBits(position, 0.5 * Detector::IntDeltaPhi);
+  auto bits = toBits(position, 0.5 * Detector::DeltaPhi);
   auto iter = m_surfaces.find(bits);
   assert(iter != m_surfaces.end() && "Surface not found");
 

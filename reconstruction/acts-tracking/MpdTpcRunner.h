@@ -61,13 +61,21 @@ private:
   // Logging.
   void logInput() const;
   void logOutput() const;
+
   void logHit(size_t hitId, const InputHit &hit) const;
   void logHits(const InputHitContainer &hits) const;
+
   void logTrack(const std::string &prefix,
                 size_t trackId,
                 const ProtoTrack &track) const;
   void logTracks(const std::string &prefix,
                  const ProtoTrackContainer &tracks) const;
+
+  void logParam(const std::string &prefix,
+                size_t trackId,
+                const TrackParameters &param) const;
+  void logParams(const std::string &prefix,
+                 const TrackParametersContainer &params) const;
 
   // Collecting statistics.
   void checkTrack(const InputHitContainer &hits,

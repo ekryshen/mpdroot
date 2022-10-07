@@ -35,6 +35,9 @@ using SeedContainer = std::vector<Acts::Seed<SpacePoint>>;
 using ProtoTrack = ActsExamples::ProtoTrack;
 using ProtoTrackContainer = ActsExamples::ProtoTrackContainer;
 
+using TrackParameters = ActsExamples::TrackParameters;
+using TrackParametersContainer = ActsExamples::TrackParametersContainer;
+
 using Trajectory = Acts::VectorMultiTrajectory;
 using Trajectories = ActsExamples::Trajectories;
 using TrajectoriesContainer = ActsExamples::TrajectoriesContainer;
