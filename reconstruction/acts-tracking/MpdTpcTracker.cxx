@@ -38,7 +38,7 @@ inline Mpd::Tpc::InputHitContainer convertTpcPoints(TClonesArray *tpcPoints) {
     const auto *tpcPoint = static_cast<TpcPoint*>(tpcPoints->UncheckedAt(i));
 
     // FIXME: This is for debugging.
-    // if (tpcPoint->GetTrackID() != 0) continue;
+    // if (tpcPoint->GetTrackID() != 5) continue;
 
     hits.emplace_back(Mpd::Tpc::InputHit{
         tpcPoint->GetTrackID(),

@@ -37,7 +37,7 @@ public:
   static constexpr auto Zmin       = -2.*81.95_cm; // FIXME
   static constexpr auto Zmax       =  2.*81.95_cm; // FIXME
   static constexpr auto NumLayers  =  200u;
-  static constexpr auto NumSectors =  120u;
+  static constexpr auto NumSectors =  180u;
   static constexpr auto NumZ       =  2u;
   static constexpr auto DeltaR     =  (Rmax - Rmin) / NumLayers;
   static constexpr auto DeltaZ     =  (Zmax - Zmin) / NumZ;
