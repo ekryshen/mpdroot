@@ -104,7 +104,9 @@ void plotOutputTracks(const int canvasX,
                       const Mpd::Tpc::SpacePointContainer &spacePoints,
                       const Mpd::Tpc::InputHitContainer &hits,
                       const Mpd::Tpc::ProtoTrackContainer &trajectories,
-                      const int eventCounter);
+                      const int eventCounter,
+                      const bool plotDetectorSurfCenters,
+                      const bool plotDetectorSurfaces);
 
 void buildHistograms (const Mpd::Tpc::Statistics statistics,
                       const int nTracks,
@@ -172,7 +174,7 @@ void MpdTpcTracker::Exec(Option_t *option) {
   std::shared_ptr<const Acts::TrackingGeometry> geometry =
       config.detector->getGeometry();
 
-  plotOutputTracks(6000, 6000, geometry, spacePoints, hits, trajectories, eventCounter);
+  plotOutputTracks(6000, 6000, geometry, spacePoints, hits, trajectories, eventCounter, false, true);
 
   // Convert the output tracks.
 //  fKalmanHits = getArray("MpdKalmanHit");
@@ -210,29 +212,81 @@ void plotOutputTracks(const int canvasX,
                       const Mpd::Tpc::SpacePointContainer &spacePoints,
                       const Mpd::Tpc::InputHitContainer &hits,
                       const Mpd::Tpc::ProtoTrackContainer &trajectories,
-                      const int eventCounter) {
-  std::cout << "plotOutputTracks() started" << std::endl;
+                      const int eventCounter,
+                      const bool plotDetectorSurfCenters,
+                      const bool plotDetectorSurfaces) {
   TCanvas canvas("outputTrajectories", "Output trajectories", canvasX, canvasY);
   TMultiGraph multiGraph;
 
-// graph of the centers of the detector's sensitive elements
-  std::vector<Acts::Vector3> centers;
-  Acts::GeometryContext actsContext;
-  geometry->visitSurfaces([&actsContext, &centers](const Acts::Surface *surface) {
-    Acts::Vector3 center = surface->center(actsContext);
-    centers.push_back(center);
-  });
-  TGraph surfGraph;
-  surfGraph.SetMarkerStyle(kFullDotMedium);
-  surfGraph.SetMarkerColor(kYellow);
-
   size_t pIndex = 0;
-  for (auto center : centers) {
-    double x = center.x();
-    double y = center.y();
-    surfGraph.SetPoint(pIndex++, x, y);
+
+// graph of the centers of the detector's sensitive elements
+  TGraph **surfGraphs;
+  int nSurfaces = 0;
+  if (plotDetectorSurfaces) {
+    geometry->visitSurfaces([&nSurfaces](const Acts::Surface *surface) {
+      nSurfaces++;
+    });
+    surfGraphs = new TGraph*[nSurfaces];
+    for (int i = 0; i < nSurfaces; i++) {
+      surfGraphs[i] = new TGraph;
+    }
+    Acts::GeometryContext actsContext;
+    int surfI = -1;
+    geometry->visitSurfaces([&actsContext, &surfGraphs, &surfI, &multiGraph](const Acts::Surface *surface) {
+      surfI++;
+      Acts::Vector3 center = surface->center(actsContext);
+
+      std::vector<double> boundsValues = surface->bounds().values();
+
+      double xLeftDown = boundsValues.at(0);
+      double yLeftDown = boundsValues.at(1);
+      double xRightUp  = boundsValues.at(2);
+      double yRightUp  = boundsValues.at(3);
+
+      if (yLeftDown + yRightUp != 0) {
+        std::cout << "boundsValues.at(1) + boundsValues.at(3) != 0" << std::endl;
+      }
+      if (xLeftDown + xRightUp != 0) {
+        std::cout << "boundsValues.at(0) + boundsValues.at(2) != 0" << std::endl;
+      }
+      Acts::Vector2 locBound0(xLeftDown, yLeftDown);
+      Acts::Vector2 locBound1(xRightUp,  yRightUp);
+      Acts::Vector3 unused;
+
+      Acts::Vector3 globalBound0 = surface->localToGlobal(actsContext, locBound0, unused);
+      Acts::Vector3 globalBound1 = surface->localToGlobal(actsContext, locBound1, unused);
+
+      surfGraphs[surfI]->SetPoint(0, globalBound0.x(), globalBound0.y());
+      surfGraphs[surfI]->SetPoint(1, globalBound1.x(), globalBound1.y());
+
+      surfGraphs[surfI]->SetMarkerStyle(kFullDotMedium);
+      surfGraphs[surfI]->SetLineColor(kYellow);
+      surfGraphs[surfI]->SetMarkerColor(kYellow);
+      multiGraph.Add(surfGraphs[surfI], "PL");
+    });
   }
-  multiGraph.Add(&surfGraph, "P");
+
+// graph of the centers of the detector's sensitive elements
+  if (plotDetectorSurfCenters) {
+    std::vector<Acts::Vector3> centers;
+    Acts::GeometryContext actsContext;
+    geometry->visitSurfaces([&actsContext, &centers](const Acts::Surface *surface) {
+      Acts::Vector3 center = surface->center(actsContext);
+      centers.push_back(center);
+    });
+    TGraph centersGraph;
+    centersGraph.SetMarkerStyle(kFullDotMedium);
+    centersGraph.SetMarkerColor(kYellow);
+
+    size_t pIndex = 0;
+    for (auto center : centers) {
+      double x = center.x();
+      double y = center.y();
+      centersGraph.SetPoint(pIndex++, x, y);
+    }
+    multiGraph.Add(&centersGraph, "P");
+  }
 
 // space points graph
   TGraph spacePointsGraph;
@@ -281,6 +335,11 @@ void plotOutputTracks(const int canvasX,
   multiGraph.Draw("A");
   std::string dotPlotFileName = "event_" + std::to_string(eventCounter) + ".png";
   canvas.Print(dotPlotFileName.c_str());
+
+  for (int i = 0; i < nSurfaces; i++) {
+    delete surfGraphs[i];
+  }
+  if (nSurfaces) delete surfGraphs;
 
   std::cout << "File created: " << dotPlotFileName << std::endl;
 }
