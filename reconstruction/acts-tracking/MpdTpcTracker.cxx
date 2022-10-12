@@ -18,6 +18,7 @@
 
 #include <Acts/Definitions/Algebra.hpp>
 #include <Acts/Definitions/Units.hpp>
+#include <Acts/Surfaces/Surface.hpp>
 #include <Acts/Utilities/Logger.hpp>
 
 #include <iostream>
@@ -99,9 +100,10 @@ inline TClonesArray *getArray(const char *name) {
 
 void plotOutputTracks(const int canvasX,
                       const int canvasY,
+                      const std::shared_ptr<const Acts::TrackingGeometry> &geometry,
+                      const Mpd::Tpc::SpacePointContainer &spacePoints,
                       const Mpd::Tpc::InputHitContainer &hits,
                       const Mpd::Tpc::ProtoTrackContainer &trajectories,
-                      const Mpd::Tpc::SpacePointContainer &spacePoints,
                       const int eventCounter);
 
 void buildHistograms (const Mpd::Tpc::Statistics statistics,
@@ -128,7 +130,8 @@ InitStatus MpdTpcTracker::ReInit() {
 
 void MpdTpcTracker::Exec(Option_t *option) {
   // For naming files during debug.
-  static int eventCounter = 0;
+  static int eventCounter = -1;
+  eventCounter++;
 
   std::cout << "[MpdTpcTracker::Exec]: Started" << std::endl;
 
@@ -166,7 +169,10 @@ void MpdTpcTracker::Exec(Option_t *option) {
   buildHistograms(statistics, nTracks, eventCounter);
 
   // Plot the output tracks.
-  plotOutputTracks(6000, 6000, hits, trajectories, spacePoints, eventCounter);
+  std::shared_ptr<const Acts::TrackingGeometry> geometry =
+      config.detector->getGeometry();
+
+  plotOutputTracks(6000, 6000, geometry, spacePoints, hits, trajectories, eventCounter);
 
   // Convert the output tracks.
 //  fKalmanHits = getArray("MpdKalmanHit");
@@ -177,7 +183,6 @@ void MpdTpcTracker::Exec(Option_t *option) {
   }
 
   std::cout << "[MpdTpcTracker::Exec]: Finished" << std::endl;
-  eventCounter++;
 }
 
 void MpdTpcTracker::Finish() {
@@ -201,19 +206,40 @@ void buildHistograms(const Mpd::Tpc::Statistics statistics,
 
 void plotOutputTracks(const int canvasX,
                       const int canvasY,
+                      const std::shared_ptr<const Acts::TrackingGeometry> &geometry,
+                      const Mpd::Tpc::SpacePointContainer &spacePoints,
                       const Mpd::Tpc::InputHitContainer &hits,
                       const Mpd::Tpc::ProtoTrackContainer &trajectories,
-                      const Mpd::Tpc::SpacePointContainer &spacePoints,
                       const int eventCounter) {
+  std::cout << "plotOutputTracks() started" << std::endl;
   TCanvas canvas("outputTrajectories", "Output trajectories", canvasX, canvasY);
   TMultiGraph multiGraph;
+
+// graph of the centers of the detector's sensitive elements
+  std::vector<Acts::Vector3> centers;
+  Acts::GeometryContext actsContext;
+  geometry->visitSurfaces([&actsContext, &centers](const Acts::Surface *surface) {
+    Acts::Vector3 center = surface->center(actsContext);
+    centers.push_back(center);
+  });
+  TGraph surfGraph;
+  surfGraph.SetMarkerStyle(kFullDotMedium);
+  surfGraph.SetMarkerColor(kYellow);
+
+  size_t pIndex = 0;
+  for (auto center : centers) {
+    double x = center.x();
+    double y = center.y();
+    surfGraph.SetPoint(pIndex++, x, y);
+  }
+  multiGraph.Add(&surfGraph, "P");
 
 // space points graph
   TGraph spacePointsGraph;
   spacePointsGraph.SetMarkerStyle(kFullDotMedium);
   spacePointsGraph.SetMarkerColor(kSpring);
 
-  size_t pIndex = 0;
+  pIndex = 0;
   for (auto spacePoint : spacePoints) {
     double x = spacePoint.x();
     double y = spacePoint.y();
@@ -235,8 +261,10 @@ void plotOutputTracks(const int canvasX,
 
 // reconstructed tracks graph
   TGraph outTrajectoryGraphs[trajectories.size()];
-  int trackIndex = 0;
+  int trackIndex = -1;
   for (ActsExamples::ProtoTrack reconstructedTrack : trajectories) {
+    trackIndex++;
+
     TGraph &outTrajectoryGraph = outTrajectoryGraphs[trackIndex];
     outTrajectoryGraph.SetMarkerStyle(kFullDotMedium);
     outTrajectoryGraph.SetLineWidth(3);
@@ -249,7 +277,6 @@ void plotOutputTracks(const int canvasX,
       outTrajectoryGraph.SetPoint(pIndex++, x, y);
     }
     multiGraph.Add(&outTrajectoryGraph, "PL");
-    trackIndex++;
   }
   multiGraph.Draw("A");
   std::string dotPlotFileName = "event_" + std::to_string(eventCounter) + ".png";
