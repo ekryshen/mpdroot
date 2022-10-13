@@ -214,14 +214,10 @@ void plotOutputTracks(const int canvasX,
   TCanvas canvas("outputTrajectories", "Output trajectories", canvasX, canvasY);
   TMultiGraph multiGraph;
 
-  size_t pIndex = 0;
-
 // detector's sensitive surfaces graph
   std::vector<TGraph*> surfGraphs;
   Acts::GeometryContext actsContext;
   geometry->visitSurfaces([&actsContext, &surfGraphs, &multiGraph](const Acts::Surface *surface) {
-    Acts::Vector3 center = surface->center(actsContext);
-
     std::vector<double> boundsValues = surface->bounds().values();
 
     double xLeftDown = boundsValues.at(0);
@@ -259,7 +255,7 @@ void plotOutputTracks(const int canvasX,
   spacePointsGraph.SetMarkerStyle(kFullDotMedium);
   spacePointsGraph.SetMarkerColor(kSpring);
 
-  pIndex = 0;
+  size_t pIndex = 0;
   for (auto spacePoint : spacePoints) {
     double x = spacePoint.x();
     double y = spacePoint.y();
