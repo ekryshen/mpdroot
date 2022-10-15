@@ -36,7 +36,7 @@ public:
 
    /* transformations */
    // sectors: angle and number
-   double SectorAxisAngle(int iSector) { return iSector * SECTOR_PHI; } // returns azimuthal angle of sector axis
+   double SectorAxisAngleRad(int iSector) { return iSector * SECTOR_PHI_RAD; } // angle of sector axis in radians
    int    SectorNumberFromGlobal(const TVector3 &globalXYZ);
 
    // padplane: padrows to local coordinates and vice versa
@@ -58,11 +58,12 @@ public:
 
    /* constants */
    enum PadArea : int { inner, outer };
+   enum PadAreaBoundaries : int { lowerEdge, midBoundary, upperEdge };
 
    const int    SECTOR_COUNT      = 24;                     // total number of sectors
    const int    SECTOR_COUNT_HALF = 12;                     // number of sectors on one side
-   const double SECTOR_PHI        = 30 * TMath::DegToRad(); // sector angle
-   const double SECTOR_PHI0       = -SECTOR_PHI / 2.;       // first sector angle
+   const double SECTOR_PHI_RAD    = 30 * TMath::DegToRad(); // sector angle
+   const double SECTOR_PHI0_RAD   = -SECTOR_PHI_RAD / 2.;   // first sector angle
 
    const double Z_MIN        = 0.01;                 // half of membrane thickness
    const double DRIFT_LENGTH = 163.879;              // drift length
@@ -82,15 +83,15 @@ public:
 
    const double YPADPLANE_OFFSET         = 40.3; // Y of padplane's low edge in global coordinates
    const double YPADPLANE2PADAREA_OFFSET = 0.4;  // distance between padplane's lower edge and padarea
-   const double YPADAREA_OFFSET          = YPADPLANE_OFFSET + YPADPLANE2PADAREA_OFFSET;
+   const double YPADAREA_LOWEREDGE       = YPADPLANE_OFFSET + YPADPLANE2PADAREA_OFFSET;
    // Y length of padareas: inner, outer
    const std::vector<double> YPADAREA_LENGTH{ROW_COUNT[inner] * PAD_HEIGHT[inner],
                                              ROW_COUNT[outer] * PAD_HEIGHT[outer]};
    // Y coordinates of padareas in local & global coordinates: inner edge, boundary inner/outer, outer edge
    const std::vector<double> YPADAREA_LOCAL{0., YPADAREA_LENGTH[inner],
                                             YPADAREA_LENGTH[inner] + YPADAREA_LENGTH[outer]};
-   const std::vector<double> YPADAREA_GLOBAL{YPADAREA_OFFSET, YPADAREA_OFFSET + YPADAREA_LOCAL[1],
-                                             YPADAREA_OFFSET + YPADAREA_LOCAL[2]};
+   const std::vector<double> YPADAREA_GLOBAL{YPADAREA_LOWEREDGE, YPADAREA_LOWEREDGE + YPADAREA_LOCAL[midBoundary],
+                                             YPADAREA_LOWEREDGE + YPADAREA_LOCAL[upperEdge]};
 
 protected:
 private:

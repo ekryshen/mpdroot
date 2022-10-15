@@ -24,7 +24,7 @@ BaseTpcGeo::~BaseTpcGeo() {}
 
 int BaseTpcGeo::SectorNumberFromGlobal(const TVector3 &globalXYZ)
 {
-   double phiGlobalNormalized = TMath::ATan2(globalXYZ.X(), globalXYZ.Y()) / SECTOR_PHI;
+   double phiGlobalNormalized = TMath::ATan2(globalXYZ.X(), globalXYZ.Y()) / SECTOR_PHI_RAD;
    // convention: 105 deg is start of Sector 0, 75 deg is start of Sector 1, ..
    const double PHI_SHIFT_NORMALIZED = 3.5;
    int          iSector;
@@ -71,10 +71,10 @@ std::pair<double, double> BaseTpcGeo::Local2PadRow(const TVector3 &localXYZ)
    const std::pair<double, double> PAD_OUTOFRANGE(1e4, 0);
 
    PadArea currentPadArea;
-   if (localXYZ.Y() >= YPADAREA_LOCAL[0] && localXYZ.Y() <= YPADAREA_LOCAL[1]) {
+   if (localXYZ.Y() >= YPADAREA_LOCAL[lowerEdge] && localXYZ.Y() <= YPADAREA_LOCAL[midBoundary]) {
       currentPadArea = inner;
       row            = localXYZ.Y() / PAD_HEIGHT[inner];
-   } else if (localXYZ.Y() > YPADAREA_LOCAL[1] && localXYZ.Y() < YPADAREA_LOCAL[2]) {
+   } else if (localXYZ.Y() > YPADAREA_LOCAL[midBoundary] && localXYZ.Y() < YPADAREA_LOCAL[upperEdge]) {
       currentPadArea = outer;
       row            = ROW_COUNT[inner] + (localXYZ.Y() - YPADAREA_LENGTH[inner]) / PAD_HEIGHT[outer];
    } else
@@ -95,11 +95,11 @@ TVector3 BaseTpcGeo::Global2Local(const TVector3 &globalXYZ, int &iSector)
 
    TVector3 localXYZ(globalXYZ);
 
-   localXYZ.RotateZ(SECTOR_PHI * iSector);
+   localXYZ.RotateZ(SECTOR_PHI_RAD * iSector);
 
    if (localXYZ.Z() > 0) localXYZ.RotateY(TMath::Pi());
 
-   localXYZ.SetY(localXYZ.Y() - YPADAREA_OFFSET);
+   localXYZ.SetY(localXYZ.Y() - YPADAREA_LOWEREDGE);
    localXYZ.SetZ(localXYZ.Z() + DRIFT_LENGTH);
 
    return localXYZ;
@@ -123,11 +123,11 @@ TVector3 BaseTpcGeo::Local2Global(const TVector3 &localXYZ, int iSector)
    TVector3 globalXYZ(localXYZ);
 
    globalXYZ.SetZ(localXYZ.Z() - DRIFT_LENGTH);
-   globalXYZ.SetY(localXYZ.Y() + YPADAREA_OFFSET);
+   globalXYZ.SetY(localXYZ.Y() + YPADAREA_LOWEREDGE);
 
    if (iSector < SECTOR_COUNT_HALF) globalXYZ.RotateY(TMath::Pi());
 
-   globalXYZ.RotateZ(-SECTOR_PHI * iSector);
+   globalXYZ.RotateZ(-SECTOR_PHI_RAD * iSector);
 
    return globalXYZ;
 }
