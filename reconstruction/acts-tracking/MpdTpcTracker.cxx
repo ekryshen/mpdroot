@@ -21,6 +21,7 @@
 #include <Acts/Surfaces/Surface.hpp>
 #include <Acts/Utilities/Logger.hpp>
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 
@@ -110,6 +111,10 @@ void buildHistograms (const Mpd::Tpc::Statistics statistics,
                       const int nTracks,
                       const int eventCounter);
 
+void drawQualityOnMom(const Mpd::Tpc::InputHitContainer &hits,
+                      const Mpd::Tpc::ProtoTrackContainer &trajectories,
+                      const int eventCounter);
+
 InitStatus MpdTpcTracker::Init() {
   std::cout << "[MpdTpcTracker::Init]: Started" << std::endl;
 
@@ -167,6 +172,7 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
   // Build histagrams.
   buildHistograms(statistics, nTracks, eventCounter);
+  drawQualityOnMom(hits, trajectories, eventCounter);
 
   // Plot the output tracks.
   std::shared_ptr<const Acts::TrackingGeometry> geometry =
@@ -202,6 +208,181 @@ void buildHistograms(const Mpd::Tpc::Statistics statistics,
   }
   h1.Write();
   rootFile.Close();
+}
+
+size_t realTrackLen(const Mpd::Tpc::InputHitContainer &hits,
+                    const size_t realTrackId) {
+  size_t length = 0;
+  for (const auto hit : hits) {
+    if (hit.trackId == realTrackId) {
+      length++;
+    }
+  }
+  return length;
+}
+
+void getRecoLenRealLen(const Mpd::Tpc::InputHitContainer &hits,
+                       const ActsExamples::ProtoTrack &track,
+                       int *recoLen,
+                       int *realLen,
+                       int *realTrackIdout) {
+  std::unordered_map<int, size_t> counts;
+  counts.reserve(track.size());
+
+  for (auto iHit : track) {
+    counts[hits.at(iHit).trackId]++;
+  }
+  size_t maxCount = 0;
+  size_t realTrackId = 0;
+  for (const auto &[id, count] : counts) {
+    if (count > maxCount) {
+      maxCount = count;
+      realTrackId = id;
+    }
+  }
+  *recoLen = maxCount;
+  *realLen = realTrackLen(hits, realTrackId);
+  *realTrackIdout = realTrackId;
+}
+
+// Reconstructed track parameters for .png graphs
+struct TrackParam {
+  double p;    // the momentum of the first hit in the reconstructed track
+
+  int recoLen; // the length of the maximum part of the recognized track,
+               // that corresponds to some real track
+
+  int realLen; // the length of real track corresponding to reconstructed track
+};
+
+// Draw png graphics quality depending on momentum
+//   for every event and
+//   for all events
+void drawQualityOnMom(const Mpd::Tpc::InputHitContainer &hits,
+                      const Mpd::Tpc::ProtoTrackContainer &trajectories,
+                      const int eventCounter) {
+  if (eventCounter == 0) {
+    return;
+  }
+
+  static double pMinGlobal = 10000000;
+  static double pMaxGlobal = 0;
+
+  double pMin = 10000000;
+  double pMax = 0;
+
+  static std::vector<TrackParam*> trackParamsGlobal;
+  int lastIndex = trackParamsGlobal.size();
+
+// loop over reconstructed tracks
+  int tI = -1;
+  for (auto track : trajectories) {
+    tI++;
+    auto hit0Index = track.at(0);
+    auto pX = hits.at(hit0Index).momentum[0];
+    auto pY = hits.at(hit0Index).momentum[1];
+    double p = std::hypot(pX, pY);
+    if (p < pMin) {pMin = p;}
+    if (p > pMax) {pMax = p;}
+
+    struct TrackParam *trackParam = new TrackParam;
+    trackParam->p = p;
+    int recoLen;
+    int realLen;
+
+    int realTrackId;
+    getRecoLenRealLen(hits, track, &recoLen, &realLen, &realTrackId);
+    trackParam->recoLen = recoLen;
+    trackParam->realLen = realLen;
+
+    trackParamsGlobal.push_back(trackParam);
+  }
+  if (pMin < pMinGlobal) {
+    pMinGlobal = pMin;
+  }
+  if (pMax > pMaxGlobal) {
+    pMaxGlobal = pMax;
+  }
+  const int nIntervals = 50;
+
+  int realLenSums[nIntervals];
+  int recoLenSums[nIntervals];
+
+  std::fill(realLenSums, realLenSums + nIntervals, 0);
+  std::fill(recoLenSums, recoLenSums + nIntervals, 0);
+
+  double momentums[nIntervals];
+  double qualities[nIntervals];
+  TCanvas canvas("Quality_on_momentum", "Quality on momentum", 1000, 1000);
+
+// draw .png graph for the current event
+  if (!((pMin == 0) && (pMax == 0))) {
+
+  if ((pMax == pMin) && (pMin != 0)) {
+    pMax = pMin + 1;
+  }
+  for (int i = lastIndex; i < trackParamsGlobal.size(); i++) {
+
+    struct TrackParam *trackParam = trackParamsGlobal.at(i);
+    double intervalLen = (pMax - pMin) / nIntervals;
+    int ind = int( (trackParam->p - pMin) / intervalLen );
+    if (ind == nIntervals) {
+        ind--;
+    }
+    realLenSums[ind] += trackParam->realLen;
+    recoLenSums[ind] += trackParam->recoLen;
+  }
+  for (int i = 0; i < nIntervals; i++) {
+    momentums[i] = pMin + i*(pMax - pMin)/nIntervals;
+    if (realLenSums[i] != 0) {
+      qualities[i] = 100.*recoLenSums[i] / realLenSums[i];
+    } else {
+      qualities[i] = 0;
+    }
+  }
+  TGraph eventI(nIntervals, momentums, qualities);
+  eventI.SetFillColor(38);
+  eventI.Draw("AB");
+  std::string fName = "event_" + std::to_string(eventCounter) + "quality_on_momentum.png";
+  canvas.Print(fName.c_str());
+  }
+
+  // draw .png graph for all events
+  std::fill(realLenSums, realLenSums + nIntervals, 0);
+  std::fill(recoLenSums, recoLenSums + nIntervals, 0);
+
+  if ((pMinGlobal == 0) && (pMaxGlobal == 0)) {
+    return;
+  }
+  // patch boundaries
+  if (pMaxGlobal == pMinGlobal) {
+    pMaxGlobal = pMinGlobal + 1;
+  }
+
+  for (int i = 0; i < trackParamsGlobal.size(); i++) {
+    struct TrackParam *trackParam = trackParamsGlobal.at(i);
+    double intervalLen = (pMaxGlobal - pMinGlobal) / nIntervals;
+    int ind = int( (trackParam->p - pMinGlobal) / intervalLen);
+    if (ind == nIntervals) {
+        ind--;
+    }
+    realLenSums[ind] += trackParam->realLen;
+    recoLenSums[ind] += trackParam->recoLen;
+  }
+  for (int i = 0; i < nIntervals; i++) {
+    momentums[i] = pMin + i*(pMaxGlobal - pMinGlobal)/nIntervals;
+    if (realLenSums[i] != 0) {
+      qualities[i] = 100.*recoLenSums[i] / realLenSums[i];
+    } else {
+      qualities[i] = 0;
+    }
+  }
+  canvas.Clear();
+  TGraph events(nIntervals, momentums, qualities);
+  events.SetFillColor(38);
+  events.Draw("AB");
+  std::string fName = "events_all_quality_on_momentum.png";
+  canvas.Print(fName.c_str());
 }
 
 void plotOutputTracks(const int canvasX,
