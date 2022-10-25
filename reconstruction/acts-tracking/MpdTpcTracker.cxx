@@ -260,10 +260,10 @@ struct TrackParam {
                // trackId of real track that corresponds to reconstructed track
 };
 
-using RealTracksMap = std::map<int, std::pair<TrackParam*, bool> >;
+using RealTracksMap = std::map<int, std::pair<TrackParam*, bool*> >;
 
 void drawGraph(const int nIntervals,
-               RealTracksMap realTracksMap,                // all real tracks (input)
+               RealTracksMap realTracksMap,                // real tracks (input)
                std::vector<TrackParam*> recoTrackParams,   // reconstructed tracks (output)
                const std::string fName,
 
@@ -282,6 +282,7 @@ void drawGraph(const int nIntervals,
     if (p > pMax) {pMax = p;}
   }
   int nRealTracks = 0;
+  int nReconstructedTracks = 0;
   for (auto & [trackIdExtended, pair] : realTracksMap) {
     int eventNumberC = trackIdExtended / kTrackId;
 
@@ -292,6 +293,9 @@ void drawGraph(const int nIntervals,
     if (p < pMin) {pMin = p;}
     if (p > pMax) {pMax = p;}
     nRealTracks++;
+    if (*(pair.second)) {
+      nReconstructedTracks++;
+    }
   }
   if ((pMin == 0) && (pMax == 0)) {
     std::string ev;
@@ -300,7 +304,7 @@ void drawGraph(const int nIntervals,
     } else {
       ev = std::string("event ") + std::to_string(eventNumber);
     }
-    std::cout <<  std::endl << "draw(): " <<
+    std::cout <<  std::endl << "drawGraph(): " <<
       "; can not draw .png graph for " << ev <<
       "; pMin == 0 and pMax == 0" << std::endl;
     return;
@@ -335,15 +339,13 @@ void drawGraph(const int nIntervals,
     appearanceReco[ind]--;
   }
 
-  int nReconstructed = 0;
   // loop over non-recunstuctered
   for (auto & [trackIdExtended, pair] : realTracksMap) {
     int eventNumberC = trackIdExtended / kTrackId;
     if ( (eventNumber >= 0) && (eventNumber!= eventNumberC) ) {
       continue;
     }
-    if (pair.second) {
-      nReconstructed++;
+    if (*(pair.second)) {
       continue;
     }
     double p = pair.first->p;
@@ -371,19 +373,19 @@ void drawGraph(const int nIntervals,
     if (sumRealAmongReconstructed[i] != 0) {
       qualitiesAmongReco[i] = 100.*sumsReconstructed[i] / sumRealAmongReconstructed[i];
     } else {
-      std::cout << "draw(): al events: " <<
+      std::cout << "drawGraph(): al events: " <<
       "sumRealAmongReconstructed[" << i << "] == 0" << std::endl;
       qualitiesAmongReco[i] = 0;
     }
     if (sumRealAmongReal[i] != 0) {
       qualities[i] = 100.*sumsReconstructed[i] / sumRealAmongReal[i];
     } else {
-      std::cout << "draw(): al events: " <<
+      std::cout << "drawGraph(): al events: " <<
       "sumRealAmongReal[" << i << "] == 0" << std::endl;
       qualities[i] = 0;
     }
   }
-  int canvasY = 1000;
+  int canvasY = 3000;
   int canvasX = int(canvasY * 1.161); // golden ratio for beauty
   TCanvas canvas("Quality_on_momentum", "Quality on momentum", canvasX, canvasY);
 
@@ -406,7 +408,7 @@ void drawGraph(const int nIntervals,
   mg.Add(&appearanceRecoGraph, "B");
 
   std::string title = "The number of reconstructed tracks: " +
-                      std::to_string(recoTrackParams.size() - startRecoIndex) + " / " +
+                      std::to_string(nReconstructedTracks) + " / " +
                       std::to_string(nRealTracks);
   mg.SetTitle(title.c_str());
   mg.GetXaxis()->SetTitle("Pt (GeV)");
@@ -421,15 +423,15 @@ void drawGraph(const int nIntervals,
 void drawQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
                       const Mpd::Tpc::ProtoTrackContainer &trajectories,
                       const int eventCounter) {
-  double rightBound = 2.5;
+  double rightBound = 2.5; // GeV
   int kTrackId = 1000000;
   if (eventCounter == 0) {
     return;
   }
   // map for all real tracks:
   // trackId ->  std::pair(trackParam         : TrackParam*
-  //                       is track was reconstructed: bool)
-  RealTracksMap realTracksMap;
+  //                       is track was reconstructed: bool*)
+  static RealTracksMap realTracksMap;
 
 // collecting info about real tracks
   int nRealTracks = 0;
@@ -442,7 +444,9 @@ void drawQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
     if (realTracksMap.find(trackIdExtended) == realTracksMap.end()) {
       nRealTracks++;
       TrackParam *trackParam = new TrackParam;
-      realTracksMap[trackIdExtended] = std::make_pair(trackParam, false);
+      bool *is_reconstructed = new bool;
+      *is_reconstructed = false;
+      realTracksMap[trackIdExtended] = std::make_pair(trackParam, is_reconstructed);
 
       realTracksMap[trackIdExtended].first->p = std::hypot(hit.momentum[0],
                                                            hit.momentum[1]);
@@ -469,7 +473,10 @@ void drawQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
 
     int realTrackId;
     getRecoTrackParams(hits, recoTrack, &recoLen, &realLen, &realTrackId);
-    realTracksMap[eventCounter * kTrackId + realTrackId].second = true;
+
+    bool *is_reconstructed = realTracksMap[eventCounter * kTrackId + realTrackId].second;
+    *is_reconstructed = true;
+
     trackParam->recoLen = recoLen;
     trackParam->realLen = realLen;
     trackParam->realTrackId = realTrackId;
@@ -490,8 +497,8 @@ void drawQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
             realTracksMap,
             recoTrackParams,
             std::string("quality_momentum_ev_all.png"),
-            eventCounter,
-            recoLastIndex,
+            -1,
+            0,
             kTrackId,
             rightBound);
 }
