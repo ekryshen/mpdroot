@@ -86,9 +86,9 @@ void trackingActs(TString inFile = "evetest.root", TString outFile = "mpddst.roo
 
 #ifdef UseMlem
    // MpdTpcDigitizerAZ* tpcDigitizer = new MpdTpcDigitizerAZ();
-//FIXME:   MpdTpcDigitizerAZlt *tpcDigitizer = new MpdTpcDigitizerAZlt();
-//FIXME:   tpcDigitizer->SetPersistence(kTRUE);
-//FIXME:   fRun->AddTask(tpcDigitizer);
+   MpdTpcDigitizerAZlt *tpcDigitizer = new MpdTpcDigitizerAZlt();
+   tpcDigitizer->SetPersistence(kTRUE);
+   fRun->AddTask(tpcDigitizer);
 #endif
 
    //  MpdTpcClusterFinderTask *tpcClusterFinder = new MpdTpcClusterFinderTask();
@@ -98,16 +98,16 @@ void trackingActs(TString inFile = "evetest.root", TString outFile = "mpddst.roo
    //  fRun->AddTask(tpcClusterFinder);
 
 #ifdef UseMlem
-//FIXME:   MpdTpcClusterFinderMlem *tpcClusAZ = new MpdTpcClusterFinderMlem();
-//FIXME:   fRun->AddTask(tpcClusAZ);
+   MpdTpcClusterFinderMlem *tpcClusAZ = new MpdTpcClusterFinderMlem();
+   fRun->AddTask(tpcClusAZ);
 #else
-//FIXME:   MpdTpcHitProducer *hitPr = new MpdTpcHitProducer();
-//FIXME:   hitPr->SetModular(0);
-//FIXME:   fRun->AddTask(hitPr);
+   MpdTpcHitProducer *hitPr = new MpdTpcHitProducer();
+   hitPr->SetModular(0);
+   fRun->AddTask(hitPr);
 #endif
 
-//FIXME:   FairTask *vertZ = new MpdVertexZfinder();
-//FIXME:   fRun->AddTask(vertZ);
+   FairTask *vertZ = new MpdVertexZfinder();
+   fRun->AddTask(vertZ);
 
    MpdTpcTracker *recoKF = new MpdTpcTracker();
    
@@ -116,16 +116,16 @@ void trackingActs(TString inFile = "evetest.root", TString outFile = "mpddst.roo
 #endif
    fRun->AddTask(recoKF);
 
-//FIXME:   FairTask *findVtx = new MpdKfPrimaryVertexFinder("Vertex finder");
-//FIXME:   fRun->AddTask(findVtx);
+   FairTask *findVtx = new MpdKfPrimaryVertexFinder("Vertex finder");
+   fRun->AddTask(findVtx);
 
-//FIXME:   MpdFfdHitProducer *ffdHit = new MpdFfdHitProducer("FFDHitProducer");
-//FIXME:   fRun->AddTask(ffdHit);
+   MpdFfdHitProducer *ffdHit = new MpdFfdHitProducer("FFDHitProducer");
+   fRun->AddTask(ffdHit);
 
    // TOF hit producers
-//FIXME:   MpdTofHitProducer *tofHit = new MpdTofHitProducer("Hit producer");
-//FIXME:   tofHit->SetTimeResolution(0.080);
-//FIXME:   fRun->AddTask(tofHit);
+   MpdTofHitProducer *tofHit = new MpdTofHitProducer("Hit producer");
+   tofHit->SetTimeResolution(0.080);
+   fRun->AddTask(tofHit);
 
    /*
        MpdEtofHitProducer* etofHitProd = new MpdEtofHitProducer("ETOF HitProducer");
@@ -143,8 +143,8 @@ void trackingActs(TString inFile = "evetest.root", TString outFile = "mpddst.roo
    */
 
    // TOF matching
-//FIXME:   MpdTofMatching *tofMatch = new MpdTofMatching("TOF matching");
-//FIXME:   fRun->AddTask(tofMatch);
+   MpdTofMatching *tofMatch = new MpdTofMatching("TOF matching");
+   fRun->AddTask(tofMatch);
 
    // ETOF matching
    // MpdEtofMatching* etofMatch = new MpdEtofMatching("ETOF matching");
@@ -153,17 +153,17 @@ void trackingActs(TString inFile = "evetest.root", TString outFile = "mpddst.roo
    // FairTask *emcHP = new MpdEmcHitCreation();
    // fRun->AddTask(emcHP);
 
-//FIXME:   FairTask *tdigi = new MpdZdcDigiProducer("MpdZdcDigiProducer");
-//FIXME:   fRun->AddTask(tdigi);
+   FairTask *tdigi = new MpdZdcDigiProducer("MpdZdcDigiProducer");
+   fRun->AddTask(tdigi);
 
    // MpdPidRefitTrackTask* trRefit = new MpdPidRefitTrackTask("Track PID and Refit");
    // fRun->AddTask(trRefit);
 
-//FIXME:   MpdFillDstTask *fillDST = new MpdFillDstTask("MpdDst task");
-//FIXME:   fRun->AddTask(fillDST);
+   MpdFillDstTask *fillDST = new MpdFillDstTask("MpdDst task");
+   fRun->AddTask(fillDST);
 
-//FIXME:   MpdMiniDstFillTask *miniDst = new MpdMiniDstFillTask(outFile);
-//FIXME:   fRun->AddTask(miniDst);
+   MpdMiniDstFillTask *miniDst = new MpdMiniDstFillTask(outFile);
+   fRun->AddTask(miniDst);
 
    // -----   Intialise   ----------------------------------------------------
    fRun->Init();

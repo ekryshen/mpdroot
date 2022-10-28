@@ -39,9 +39,6 @@ inline Mpd::Tpc::InputHitContainer convertTpcPoints(TClonesArray *tpcPoints) {
   for (Int_t i = 0; i < nTpcPoints; i++) {
     const auto *tpcPoint = static_cast<TpcPoint*>(tpcPoints->UncheckedAt(i));
 
-    // FIXME: This is for debugging.
-    // if (tpcPoint->GetTrackID() != 5) continue;
-
     hits.emplace_back(Mpd::Tpc::InputHit{
         tpcPoint->GetTrackID(),
         tpcPoint->GetDetectorID(),
@@ -69,6 +66,9 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits) {
 
   for (Int_t i = 0; i < nTpcHits; i++) {
     const auto *tpcHit = static_cast<MpdTpcHit*>(tpcHits->UncheckedAt(i));
+
+    // FIXME: This is for debugging.
+    //if (tpcHit->GetTrackID() != 6 && tpcHit->GetTrackID() != 5) continue;
 
     hits.emplace_back(Mpd::Tpc::InputHit{
         tpcHit->GetTrackID(),
@@ -107,13 +107,13 @@ void plotOutputTracks(const int canvasX,
                       const Mpd::Tpc::ProtoTrackContainer &trajectories,
                       const int eventCounter);
 
-void buildHistograms (const Mpd::Tpc::Statistics statistics,
-                      const int nTracks,
-                      const int eventCounter);
+void buildHistograms(const Mpd::Tpc::Statistics &statistics,
+                     const int nTracks,
+                     const int eventCounter);
 
 void drawQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
-                      const Mpd::Tpc::ProtoTrackContainer &trajectories,
-                      const int eventCounter);
+                    const Mpd::Tpc::ProtoTrackContainer &trajectories,
+                    const int eventCounter);
 
 InitStatus MpdTpcTracker::Init() {
   std::cout << "[MpdTpcTracker::Init]: Started" << std::endl;
@@ -123,6 +123,10 @@ InitStatus MpdTpcTracker::Init() {
       "../../geometry/tpc_acts_tracking.json", // FIXME:
       Acts::Logging::DEBUG
   );
+
+  // FIXME: Should be a field.
+  auto *fTracks = new TClonesArray("MpdTpcKalmanTrack");
+  FairRootManager::Instance()->Register("TpcKalmanTrack", "MpdKalmanTrack", fTracks, kTRUE);
 
   std::cout << "[MpdTpcTracker::Init]: Finished" << std::endl;
   return kSUCCESS;
@@ -195,7 +199,7 @@ void MpdTpcTracker::Finish() {
   std::cout << "[MpdTpcTracker::Finish]: Do nothing" << std::endl;
 }
 
-void buildHistograms(const Mpd::Tpc::Statistics statistics,
+void buildHistograms(const Mpd::Tpc::Statistics &statistics,
                      const int nTracks,
                      const int eventCounter) {
   std::string fileName = "stat_" + std::to_string(eventCounter) + ".root";

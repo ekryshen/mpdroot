@@ -44,46 +44,46 @@ struct Config final {
   // Track seeding
   //===--------------------------------------------------------------------===//
 
-  static constexpr auto Rmin                =  Detector::Rmin;      //  0.4 m
-  static constexpr auto Rmax                =  Detector::Rmax;      //  1.4 m 
-  static constexpr auto Zmin                =  Detector::Zmin;      // -1.7 m
-  static constexpr auto Zmax                =  Detector::Zmax;      //  1.7 m
-  static constexpr auto CollisionZmin       = -30._cm;              //  Close to 0
-  static constexpr auto CollisionZmax       =  30._cm;              //  Close to 0
-  static constexpr auto CotThetaMax         =  1.7;                 // ~1.3 eta, eta < 1.2
-  static constexpr auto SeedBinSizeR        =  10._mm;              //  Pads are ~12-18 mm
-  static constexpr auto SeedDeltaRmin       =  2._mm;               //  FIXME
-  static constexpr auto SeedDeltaRmax       =  20._mm;              //  FIXME
-  static constexpr auto SeedDeltaZmax       =  15._cm;              //  FIXME
-  static constexpr auto MaxSeedsPerSpM      =  3;                   //  FIXME
-  static constexpr auto SigmaScattering     =  5;                   //  FIXME
-  static constexpr auto MaxPtScattering     =  5._GeV;              //  Max Pt for scattering
-  static constexpr auto RadLengthPerSeed    =  0.05;                //  OK
-  static constexpr auto MinPt               =  0.02_GeV;            //  0.02 < Pt < 10 GeV
-  static constexpr auto Bz                  =  MagneticField::Bz;   //  0.5 T
-  static constexpr auto BeamX               =  0._mm;               //  OK
-  static constexpr auto BeamY               =  0._mm;               //  OK
-  static constexpr auto ImpactMax           =  10._mm;              //  FIXME
+  static constexpr auto Rmin                =  Detector::Rmin;      // ~ 0.4 m
+  static constexpr auto Rmax                =  Detector::Rmax;      // ~ 1.4 m 
+  static constexpr auto Zmin                =  Detector::Zmin;      // ~-1.7 m
+  static constexpr auto Zmax                =  Detector::Zmax;      // ~ 1.7 m
+  static constexpr auto CollisionZmin       = -30._cm;              // Close to 0
+  static constexpr auto CollisionZmax       =  30._cm;              // Close to 0
+  static constexpr auto CotThetaMax         =  1.7;                 // max(dZ/dR)=1.7 ~ 1.3 eta (eta < 1.2)
+  static constexpr auto SeedBinSizeR        =  20._mm;              // 10._mm for MC (pads are ~12-18 mm)
+  static constexpr auto SeedDeltaRmin       =  10._mm;              // 02._mm for MC
+  static constexpr auto SeedDeltaRmax       =  60._mm;              // 20._mm for MC
+  static constexpr auto SeedDeltaZmax       =  10._cm;              // FIXME 10._cm for MC
+  static constexpr auto MaxSeedsPerSpM      =  3;                   // FIXME
+  static constexpr auto SigmaScattering     =  5;                   // FIXME
+  static constexpr auto MaxPtScattering     =  5._GeV;              // Max Pt for scattering
+  static constexpr auto RadLengthPerSeed    =  0.05;                // OK
+  static constexpr auto MinPt               =  0.02_GeV;            // 0.02 < Pt < 10 GeV
+  static constexpr auto Bz                  =  MagneticField::Bz;   // 0.5 T
+  static constexpr auto BeamX               =  0._mm;               // Center
+  static constexpr auto BeamY               =  0._mm;               // Center
+  static constexpr auto ImpactMax           =  10._mm;              // FIXME
 
   //===--------------------------------------------------------------------===//
   // Track parameter estimation
   //===--------------------------------------------------------------------===//
 
-  static constexpr auto Bmin                =  MagneticField::Bz;   //  0.5 T
-  static constexpr auto EstDeltaRmin        =  2._mm;               // FIXME
-  static constexpr auto EstDeltaRmax        =  20._mm;              // FIXME
+  static constexpr auto Bmin                =  MagneticField::Bz;   // 0.5 T
+  static constexpr auto EstDeltaRmin        =  SeedDeltaRmin;       // OK
+  static constexpr auto EstDeltaRmax        =  SeedDeltaRmax;       // OK
   static constexpr auto SigmaLoc0           =  0.5_mm;              // OK
   static constexpr auto SigmaLoc1           =  0.5_mm;              // OK
   static constexpr auto SigmaPhi            =  0.5_degree;          // OK
   static constexpr auto SigmaTheta          =  0.5_degree;          // OK
   static constexpr auto SigmaQOverP         =  0.1 / 1._GeV;        // OK
   static constexpr auto SigmaT0             =  2000._s;             // FIXME
-  static constexpr auto InitVarInflatLoc0   =  1.;                  // No inflation?
-  static constexpr auto InitVarInflatLoc1   =  1.;                  // No inflation?
-  static constexpr auto InitVarInflatPhi    =  1.;                  // No inflation?
-  static constexpr auto InitVarInflatTheta  =  1.;                  // No inflation?
-  static constexpr auto InitVarInflatQOverP =  1.;                  // No inflation?
-  static constexpr auto InitVarInflatT0     =  1.;                  // No inflation?
+  static constexpr auto InitVarInflatLoc0   =  1.;                  // No inflation
+  static constexpr auto InitVarInflatLoc1   =  1.;                  // No inflation
+  static constexpr auto InitVarInflatPhi    =  1.;                  // No inflation
+  static constexpr auto InitVarInflatTheta  =  1.;                  // No inflation
+  static constexpr auto InitVarInflatQOverP =  1.;                  // No inflation
+  static constexpr auto InitVarInflatT0     =  1.;                  // No inflation
 
   //===--------------------------------------------------------------------===//
   // Track finding
@@ -101,7 +101,7 @@ struct Config final {
   /// Maximum number of associated measurements on a single surface.
   static constexpr auto NmaxPerSurface      = 5u;                   // FIXME
   static constexpr auto ComputeSharedHits   = false;
-  static constexpr auto TrackMinLength      = 3u;
+  static constexpr auto TrackMinLength      = 4u;
   static constexpr auto NewHitsInRow        = 3u;
   static constexpr auto NewHitsRatio        = 0.25;
 

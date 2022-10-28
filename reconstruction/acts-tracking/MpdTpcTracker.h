@@ -16,7 +16,7 @@
 class MpdTpcTracker final : public FairTask {
 public:
   static constexpr auto TaskTitle = "TPC Acts-based tracker";
-  static constexpr auto UseMcHits = true;
+  static constexpr auto UseMcHits = false;
    
   explicit MpdTpcTracker(const char *title = TaskTitle):
       FairTask(title) {}

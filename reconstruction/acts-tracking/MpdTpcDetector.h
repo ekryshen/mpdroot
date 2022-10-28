@@ -33,9 +33,9 @@ public:
   static constexpr auto HasTwoNodes = true;
 
   static constexpr auto Rmin       =  40.29_cm;    // FIXME
-  static constexpr auto Rmax       =  132.15_cm;   // FIXME
-  static constexpr auto Zmin       = -2.*81.95_cm; // FIXME
-  static constexpr auto Zmax       =  2.*81.95_cm; // FIXME
+  static constexpr auto Rmax       =  Rmin + 84.7_cm; //132.15_cm;   // FIXME
+  static constexpr auto Zmin       = -2.*82.5_cm; // FIXME: 81.95
+  static constexpr auto Zmax       =  2.*82.5_cm; // FIXME: 81.95
   static constexpr auto NumLayers  =  200u;
   static constexpr auto NumSectors =  180u;
   static constexpr auto NumZ       =  2u;
