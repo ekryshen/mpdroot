@@ -8,6 +8,8 @@
 #include "TH1.h"
 #include "TMultiGraph.h"
 
+#include <limits>
+
 void buildHistograms(const Mpd::Tpc::Statistics &statistics,
                      const int nTracks,
                      const int eventCounter) {
@@ -70,14 +72,14 @@ struct TrackParam {
                // for real track: its length
 
   int realTrackId; // for recontructed track only:
-               // trackId of real track that corresponds to reconstructed track
+                   // trackId of real track that corresponds to reconstructed track
 };
 
 using RealTracksMap = std::map<int, std::pair<TrackParam, bool> >;
 
 void drawGraph(const int nIntervals,
-               RealTracksMap &realTracksMap,               // real tracks (input)
-               std::vector<TrackParam> &recoTrackParams,   // reconstructed tracks (output)
+               const RealTracksMap &realTracksMap,              // real tracks (input)
+               const std::vector<TrackParam> &recoTrackParams,  // reconstructed tracks (output)
                const std::string fName,
 
                // if eventNumber == -1 then draw png for all events
@@ -86,7 +88,7 @@ void drawGraph(const int nIntervals,
                const int startRecoIndex,
                const int kTrackId,
                const double rightBound) {
-  double pMin = 10000000;
+  double pMin = std::numeric_limits<double>::max();
   double pMax = 0;
 
   for (int trackI = startRecoIndex; trackI < recoTrackParams.size(); trackI++) {
@@ -106,7 +108,7 @@ void drawGraph(const int nIntervals,
     if (p < pMin) {pMin = p;}
     if (p > pMax) {pMax = p;}
     nRealTracks++;
-    if (pair.second == true) {
+    if (pair.second) {  // true
       nReconstructedTracks++;
     }
   }
@@ -158,13 +160,13 @@ void drawGraph(const int nIntervals,
     if ( (eventNumber >= 0) && (eventNumber!= eventNumberC) ) {
       continue;
     }
-    if (pair.second == true) {
+    if (pair.second) {  // true
       continue;
     }
     double p = pair.first.p;
     int ind = int( (p - pMin) / intervalLen );
     if (ind == nIntervals) {
-        ind--;
+      ind--;
     }
     sumRealAmongReal[ind] += pair.first.realLen;
     appearanceAll[ind]--;
@@ -205,11 +207,11 @@ void drawGraph(const int nIntervals,
   mg.Add(&qualitiesAmongRecoGraph, "B");
 
   TGraph qualitiesGraph(nIntervals + 1, pI, qualities);
-  qualitiesGraph.SetFillColor(kBlue+2);
+  qualitiesGraph.SetFillColor(kBlue + 2);
   mg.Add(&qualitiesGraph, "B");
 
   TGraph appearanceAllGraph(nIntervals + 1, pI, appearanceAll);
-  appearanceAllGraph.SetFillColor(kRed-9);
+  appearanceAllGraph.SetFillColor(kRed - 9);
   mg.Add(&appearanceAllGraph, "B");
 
   TGraph appearanceRecoGraph(nIntervals + 1, pI, appearanceReco);

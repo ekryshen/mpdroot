@@ -34,6 +34,7 @@ set(SRCS
   MpdTpcTrackFinding.cxx
   MpdTpcTrackSeeding.cxx
   MpdTpcTracker.cxx
+  PlotUtils.cxx
 )
 
 Set(HEADERS
@@ -68,6 +69,7 @@ Set(HEADERS
   MpdTpcTrackFinding.h
   MpdTpcTrackSeeding.h
   MpdTpcTracker.h
+  PlotUtils.h
 )
 
 Set(LINKDEF MpdTpcTrackerLinkDef.h)
