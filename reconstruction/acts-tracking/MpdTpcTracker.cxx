@@ -30,6 +30,7 @@ static constexpr auto lenScalor = Acts::UnitConstants::cm  /* MPD  */ /
 static constexpr auto momScalor = Acts::UnitConstants::GeV /* MPD  */ /
                                   Acts::UnitConstants::GeV /* Acts */;
 
+/// Converts MC points to the internal representation.
 inline Mpd::Tpc::InputHitContainer convertTpcPoints(TClonesArray *tpcPoints) {
   const auto nTpcPoints = tpcPoints->GetEntriesFast();
 
@@ -58,6 +59,7 @@ inline Mpd::Tpc::InputHitContainer convertTpcPoints(TClonesArray *tpcPoints) {
   return hits;
 }
 
+/// Converts TPC hits to the internal representation.
 inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits) {
   const auto nTpcHits = tpcHits->GetEntriesFast();
 
@@ -115,6 +117,10 @@ void drawQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
                     const Mpd::Tpc::ProtoTrackContainer &trajectories,
                     const int eventCounter);
 
+//===----------------------------------------------------------------------===//
+// Init / ReInit Tasks
+//===----------------------------------------------------------------------===//
+
 InitStatus MpdTpcTracker::Init() {
   std::cout << "[MpdTpcTracker::Init]: Started" << std::endl;
 
@@ -137,6 +143,10 @@ InitStatus MpdTpcTracker::ReInit() {
   return kSUCCESS;
 }
 
+//===----------------------------------------------------------------------===//
+// Exec Task
+//===----------------------------------------------------------------------===//
+
 void MpdTpcTracker::Exec(Option_t *option) {
   // For naming files during debug.
   static int eventCounter = -1;
@@ -152,7 +162,7 @@ void MpdTpcTracker::Exec(Option_t *option) {
   fPoints = getArray(UseMcHits ? "TpcPoint" : "TpcRecPoint");
   assert(fPoints);
 
-  // Convert the input points to the inner representation.
+  // Convert the input points to the internal representation.
   auto hits = UseMcHits ? convertTpcPoints(fPoints)
                         : convertTpcHits(fPoints);
 
@@ -194,6 +204,10 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
   std::cout << "[MpdTpcTracker::Exec]: Finished" << std::endl;
 }
+
+//===----------------------------------------------------------------------===//
+// Finish Task
+//===----------------------------------------------------------------------===//
 
 void MpdTpcTracker::Finish() {
   std::cout << "[MpdTpcTracker::Finish]: Do nothing" << std::endl;
@@ -261,14 +275,14 @@ struct TrackParam {
                // for real track: its length
 
   int realTrackId; // for recontructed track only:
-               // trackId of real track that corresponds to reconstructed track
+                   // trackId of real track that corresponds to reconstructed track
 };
 
 using RealTracksMap = std::map<int, std::pair<TrackParam*, bool*> >;
 
 void drawGraph(const int nIntervals,
-               RealTracksMap realTracksMap,                // real tracks (input)
-               std::vector<TrackParam*> recoTrackParams,   // reconstructed tracks (output)
+               const RealTracksMap &realTracksMap,              // real tracks (input)
+               const std::vector<TrackParam*> &recoTrackParams, // reconstructed tracks (output)
                const std::string fName,
 
                // if eventNumber == -1 then draw png for all events
@@ -355,7 +369,7 @@ void drawGraph(const int nIntervals,
     double p = pair.first->p;
     int ind = int( (p - pMin) / intervalLen );
     if (ind == nIntervals) {
-        ind--;
+      ind--;
     }
     sumRealAmongReal[ind] += pair.first->realLen;
     appearanceAll[ind]--;
@@ -400,11 +414,11 @@ void drawGraph(const int nIntervals,
   mg.Add(&qualitiesAmongRecoGraph, "B");
 
   TGraph qualitiesGraph(nIntervals + 1, pI, qualities);
-  qualitiesGraph.SetFillColor(kBlue+2);
+  qualitiesGraph.SetFillColor(kBlue + 2);
   mg.Add(&qualitiesGraph, "B");
 
   TGraph appearanceAllGraph(nIntervals + 1, pI, appearanceAll);
-  appearanceAllGraph.SetFillColor(kRed-9);
+  appearanceAllGraph.SetFillColor(kRed - 9);
   mg.Add(&appearanceAllGraph, "B");
 
   TGraph appearanceRecoGraph(nIntervals + 1, pI, appearanceReco);
@@ -425,8 +439,8 @@ void drawGraph(const int nIntervals,
 //   for every event and
 //   for all events
 void drawQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
-                      const Mpd::Tpc::ProtoTrackContainer &trajectories,
-                      const int eventCounter) {
+                    const Mpd::Tpc::ProtoTrackContainer &trajectories,
+                    const int eventCounter) {
   double rightBound = 2.5; // GeV
   int kTrackId = 1000000;
   if (eventCounter == 0) {
