@@ -3,6 +3,7 @@
 // Copyright (C) 2022 JINR
 
 #include "MpdTpcTracker.h"
+#include "PlotUtils.h"
 
 #include "MpdCodeTimer.h"
 #include "MpdKalmanHit.h"
@@ -91,22 +92,6 @@ inline TClonesArray *getArray(const char *name) {
 
   return array;
 }
-
-void plotOutputTracks(const int canvasX,
-                      const int canvasY,
-                      const std::shared_ptr<const Acts::TrackingGeometry> &geometry,
-                      const Mpd::Tpc::SpacePointContainer &spacePoints,
-                      const Mpd::Tpc::InputHitContainer &hits,
-                      const Mpd::Tpc::ProtoTrackContainer &trajectories,
-                      const int eventCounter);
-
-void buildHistograms(const Mpd::Tpc::Statistics &statistics,
-                     const int nTracks,
-                     const int eventCounter);
-
-void drawQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
-                    const Mpd::Tpc::ProtoTrackContainer &trajectories,
-                    const int eventCounter);
 
 //===----------------------------------------------------------------------===//
 // Init / ReInit Tasks
