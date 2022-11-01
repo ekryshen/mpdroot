@@ -88,6 +88,7 @@ void drawGraph(const int nIntervals,
                const int startRecoIndex,
                const int kTrackId,
                const double rightBound) {
+  const bool debugPrint = false;
   double pMin = std::numeric_limits<double>::max();
   double pMax = 0;
 
@@ -141,26 +142,11 @@ void drawGraph(const int nIntervals,
   std::fill_n(appearanceReco, nIntervals + 1, 0);
 
   double intervalLen = (pMax - pMin) / nIntervals;
-  for (int trackI = startRecoIndex; trackI < recoTrackParams.size(); trackI++) {
-    struct TrackParam trackReco = recoTrackParams.at(trackI);
-    int ind = int( (trackReco.p - pMin) / intervalLen);
-    if (ind == nIntervals) {
-        ind--;
-    }
-    sumRealAmongReconstructed[ind] += trackReco.realLen;
-    sumRealAmongReal         [ind] += trackReco.realLen;
-    sumsReconstructed        [ind] += trackReco.recoLen;
-    appearanceAll [ind]--;  // graph is under x axis, so "-"
-    appearanceReco[ind]--;
-  }
 
-  // loop over non-recunstuctered
+  // loop over real tracks
   for (auto & [trackIdExtended, pair] : realTracksMap) {
     int eventNumberC = trackIdExtended / kTrackId;
     if ( (eventNumber >= 0) && (eventNumber!= eventNumberC) ) {
-      continue;
-    }
-    if (pair.second) {  // true
       continue;
     }
     double p = pair.first.p;
@@ -168,8 +154,45 @@ void drawGraph(const int nIntervals,
     if (ind == nIntervals) {
       ind--;
     }
-    sumRealAmongReal[ind] += pair.first.realLen;
     appearanceAll[ind]--;
+
+    int realTrackId = trackIdExtended % kTrackId;
+    if (pair.second) { // track was reconstructed
+      appearanceReco[ind]--;
+
+      int maxRecoLen = 0;
+      int trackIndex = -1;
+      for (int trackI = startRecoIndex; trackI < recoTrackParams.size(); trackI++) {
+        if (recoTrackParams.at(trackI).realTrackId != realTrackId) {
+          continue;
+        }
+        int curRecoLen = recoTrackParams.at(trackI).recoLen;
+        if (curRecoLen > maxRecoLen) {
+          maxRecoLen = curRecoLen;
+          trackIndex = trackI;
+        }
+      }
+      if (trackIndex == -1) {
+        std::cout << "drawGraph() ERROR: can't find a reconstructed track for the real track; " <<
+                     "real trackId = " << realTrackId << std::endl;
+        continue;
+      }
+      if (pair.first.realLen != recoTrackParams.at(trackIndex).realLen) {
+         if (debugPrint) {
+           std::cout << "drawGraph() WARNING: " <<
+               "lentgh(real track) != length(real track corresponding to reco track); " <<
+               "real trackId = " << realTrackId <<
+               "; len(real track) = " << pair.first.realLen <<
+               "; length(real track corresponding to reco track) = recoTrackParams.at(trackIndex).realLen" <<
+               "; reco track index = " << trackIndex << std::endl;
+        }
+      }
+      sumRealAmongReal[ind]          += pair.first.realLen;
+      sumRealAmongReconstructed[ind] += pair.first.realLen;
+      sumsReconstructed[ind]         += recoTrackParams.at(trackIndex).recoLen;
+    } else { // track was not reconstructed
+      sumRealAmongReal[ind]          += pair.first.realLen;
+    }
   }
   double pI[nIntervals + 1];
 
