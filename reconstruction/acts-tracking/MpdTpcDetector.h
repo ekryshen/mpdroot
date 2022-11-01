@@ -32,8 +32,8 @@ public:
   /// TPC is represented as two symmetric nodes.
   static constexpr auto HasTwoNodes = true;
 
-  static constexpr auto Rmin       =  40.29_cm;    // FIXME
-  static constexpr auto Rmax       =  Rmin + 84.7_cm; //132.15_cm;   // FIXME
+  static constexpr auto Rmin       =  40.0_cm;    // FIXME
+  static constexpr auto Rmax       =  Rmin + 85.5_cm; //132.15_cm;   // FIXME
   static constexpr auto Zmin       = -2.*82.5_cm; // FIXME: 81.95
   static constexpr auto Zmax       =  2.*82.5_cm; // FIXME: 81.95
   static constexpr auto NumLayers  =  200u;

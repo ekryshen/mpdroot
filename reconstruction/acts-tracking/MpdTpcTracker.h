@@ -31,6 +31,7 @@ private:
   std::unique_ptr<Mpd::Tpc::Runner> fRunner;
 
   TClonesArray *fPoints;
+  TClonesArray *fHits;
   TClonesArray *fKalmanHits;
   TClonesArray *fKalmanTracks;
 

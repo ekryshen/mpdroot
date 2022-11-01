@@ -17,6 +17,28 @@
 
 #include <iostream>
 
+//===----------------------------------------------------------------------===//
+// Utilities
+//===----------------------------------------------------------------------===//
+
+inline TClonesArray *getArray(const char *name) {
+  auto *manager = FairRootManager::Instance();
+  auto *array = static_cast<TClonesArray*>(manager->GetObject(name));
+
+  if (!array) {
+    std::cout << "[MpdTpcTracker]: " << name << " not found" << std::endl;
+  } else {
+    std::cout << "[MpdTpcTracker]: " << name << " contains "
+              << array->GetEntriesFast() << " entries" << std::endl;
+  }
+
+  return array;
+}
+
+//===----------------------------------------------------------------------===//
+// Conversion
+//===----------------------------------------------------------------------===//
+
 static constexpr auto lenScalor = Acts::UnitConstants::cm  /* MPD  */ /
                                   Acts::UnitConstants::mm  /* Acts */;
 static constexpr auto momScalor = Acts::UnitConstants::GeV /* MPD  */ /
@@ -52,7 +74,21 @@ inline Mpd::Tpc::InputHitContainer convertTpcPoints(TClonesArray *tpcPoints) {
 }
 
 /// Converts TPC hits to the internal representation.
-inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits) {
+inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
+                                                  TClonesArray *tpcPoints) {
+  // Connect information on momentum (for estimating the algorithm efficiency).
+  std::unordered_map<int, Acts::Vector3> momentum;
+  const auto nTpcPoints = tpcPoints->GetEntriesFast();
+
+  for (Int_t i = 0; i < nTpcPoints; i++) {
+    const auto *tpcPoint = static_cast<TpcPoint*>(tpcPoints->UncheckedAt(i));
+    momentum[tpcPoint->GetTrackID()] = Acts::Vector3{
+                                         tpcPoint->GetPx() * momScalor,
+                                         tpcPoint->GetPx() * momScalor,
+                                         tpcPoint->GetPz() * momScalor
+                                       };
+  }
+
   const auto nTpcHits = tpcHits->GetEntriesFast();
 
   Mpd::Tpc::InputHitContainer hits;
@@ -60,9 +96,6 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits) {
 
   for (Int_t i = 0; i < nTpcHits; i++) {
     const auto *tpcHit = static_cast<MpdTpcHit*>(tpcHits->UncheckedAt(i));
-
-    // FIXME: This is for debugging.
-    //if (tpcHit->GetTrackID() != 6 && tpcHit->GetTrackID() != 5) continue;
 
     hits.emplace_back(Mpd::Tpc::InputHit{
         tpcHit->GetTrackID(),
@@ -72,25 +105,11 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits) {
             tpcHit->GetY() * lenScalor,
             tpcHit->GetZ() * lenScalor
         },
-        Acts::Vector3{0, 0, 0} // Fake momentum
+        momentum[tpcHit->GetTrackID()] // For statistics only.
     });
   }
 
   return hits;
-}
-
-inline TClonesArray *getArray(const char *name) {
-  auto *manager = FairRootManager::Instance();
-  auto *array = static_cast<TClonesArray*>(manager->GetObject(name));
-
-  if (!array) {
-    std::cout << "[MpdTpcTracker]: " << name << " not found" << std::endl;
-  } else {
-    std::cout << "[MpdTpcTracker]: " << name << " contains "
-              << array->GetEntriesFast() << " entries" << std::endl;
-  }
-
-  return array;
 }
 
 //===----------------------------------------------------------------------===//
@@ -134,13 +153,16 @@ void MpdTpcTracker::Exec(Option_t *option) {
     MpdCodeTimer::Instance()->Start(Class()->GetName(), __FUNCTION__);
   }
 
-  // Get the input points.
-  fPoints = getArray(UseMcHits ? "TpcPoint" : "TpcRecPoint");
+  // Get the MC points.
+  fPoints = getArray("TpcPoint");
   assert(fPoints);
+  // Get the TPC hits.
+  fHits = getArray("TpcRecPoint");
+  assert(fHits);
 
   // Convert the input points to the internal representation.
   auto hits = UseMcHits ? convertTpcPoints(fPoints)
-                        : convertTpcHits(fPoints);
+                        : convertTpcHits(fHits, fPoints);
 
   // Run the track finding algorithm.
   const auto &config = fRunner->config();

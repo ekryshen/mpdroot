@@ -50,7 +50,7 @@ struct Config final {
   static constexpr auto Zmax                =  Detector::Zmax;      // ~ 1.7 m
   static constexpr auto CollisionZmin       = -30._cm;              // Close to 0
   static constexpr auto CollisionZmax       =  30._cm;              // Close to 0
-  static constexpr auto CotThetaMax         =  1.7;                 // max(dZ/dR)=1.7 ~ 1.3 eta (eta < 1.2)
+  static constexpr auto CotThetaMax         =  2.;                  // max(dZ/dR)=1.7 ~ 1.3 eta (eta < 1.2)
   static constexpr auto SeedBinSizeR        =  20._mm;              // 10._mm for MC (pads are ~12-18 mm)
   static constexpr auto SeedDeltaRmin       =  10._mm;              // 02._mm for MC
   static constexpr auto SeedDeltaRmax       =  60._mm;              // 20._mm for MC
@@ -63,7 +63,7 @@ struct Config final {
   static constexpr auto Bz                  =  MagneticField::Bz;   // 0.5 T
   static constexpr auto BeamX               =  0._mm;               // Center
   static constexpr auto BeamY               =  0._mm;               // Center
-  static constexpr auto ImpactMax           =  10._mm;              // FIXME
+  static constexpr auto ImpactMax           =  30._mm;              // FIXME
 
   //===--------------------------------------------------------------------===//
   // Track parameter estimation
@@ -97,7 +97,7 @@ struct Config final {
   static constexpr auto EnergyLoss          = true;                 // FIXME
   static constexpr auto Smoothing           = true;                 // FIXME
   /// Maximum local Chi2 contribution.
-  static constexpr auto Chi2max             = 50.0;                 // FIXME
+  static constexpr auto Chi2max             = 30.0;                 // FIXME
   /// Maximum number of associated measurements on a single surface.
   static constexpr auto NmaxPerSurface      = 5u;                   // FIXME
   static constexpr auto ComputeSharedHits   = false;
