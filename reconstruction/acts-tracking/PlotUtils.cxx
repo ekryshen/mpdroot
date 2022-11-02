@@ -341,7 +341,8 @@ void plotOutputTracks(const int canvasX,
                       const Mpd::Tpc::SpacePointContainer &spacePoints,
                       const Mpd::Tpc::InputHitContainer &hits,
                       const Mpd::Tpc::ProtoTrackContainer &trajectories,
-                      const int eventCounter) {
+                      const int eventCounter,
+                      const bool multicoloured) {
   TCanvas canvas("outputTrajectories", "Output trajectories", canvasX, canvasY);
   TMultiGraph multiGraph;
 
@@ -409,13 +410,21 @@ void plotOutputTracks(const int canvasX,
 // reconstructed tracks graph
   TGraph outTrajectoryGraphs[trajectories.size()];
   int trackIndex = -1;
+  std::vector<int> colors = {kRed, kMagenta, kCyan + 1, kBlue - 4,
+      kGreen - 3, kOrange + 7, kOrange - 7};
+
   for (ActsExamples::ProtoTrack reconstructedTrack : trajectories) {
     trackIndex++;
 
     TGraph &outTrajectoryGraph = outTrajectoryGraphs[trackIndex];
     outTrajectoryGraph.SetMarkerStyle(kFullDotMedium);
     outTrajectoryGraph.SetLineWidth(3);
-    outTrajectoryGraph.SetLineColor(kRed);
+    int color = kRed;
+    if (multicoloured) {
+      int iColor = trackIndex % colors.size();
+      color = colors[iColor];
+    }
+    outTrajectoryGraph.SetLineColor(color);
 
     pIndex = 0;
     for (uint32_t hitIndex : reconstructedTrack) {

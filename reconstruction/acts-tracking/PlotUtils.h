@@ -18,4 +18,5 @@ void plotOutputTracks(const int canvasX,
                       const Mpd::Tpc::SpacePointContainer &spacePoints,
                       const Mpd::Tpc::InputHitContainer &hits,
                       const Mpd::Tpc::ProtoTrackContainer &trajectories,
-                      const int eventCounter);
+                      const int eventCounter,
+                      const bool multicoloured);

@@ -190,7 +190,7 @@ void MpdTpcTracker::Exec(Option_t *option) {
   std::shared_ptr<const Acts::TrackingGeometry> geometry =
       config.detector->getGeometry();
 
-  plotOutputTracks(6000, 6000, geometry, spacePoints, hits, trajectories, eventCounter);
+  plotOutputTracks(6000, 6000, geometry, spacePoints, hits, trajectories, eventCounter, false);
 
   // Convert the output tracks.
 //  fKalmanHits = getArray("MpdKalmanHit");
