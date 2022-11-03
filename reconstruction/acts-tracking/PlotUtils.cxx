@@ -410,15 +410,15 @@ void plotOutputTracks(const int canvasX,
 // reconstructed tracks graph
   TGraph outTrajectoryGraphs[trajectories.size()];
   int trackIndex = -1;
-  std::vector<int> colors = {kRed, kMagenta, kCyan + 1, kBlue - 4,
-      kGreen - 3, kOrange + 7, kOrange - 7};
+  std::vector<int> colors = {kRed, kCyan, kGreen - 3, kBlue - 4,
+      kMagenta, kOrange + 7, kOrange - 7};
 
   for (ActsExamples::ProtoTrack reconstructedTrack : trajectories) {
     trackIndex++;
 
     TGraph &outTrajectoryGraph = outTrajectoryGraphs[trackIndex];
     outTrajectoryGraph.SetMarkerStyle(kFullDotMedium);
-    outTrajectoryGraph.SetLineWidth(3);
+    outTrajectoryGraph.SetLineWidth(2);
     int color = kRed;
     if (multicoloured) {
       int iColor = trackIndex % colors.size();
