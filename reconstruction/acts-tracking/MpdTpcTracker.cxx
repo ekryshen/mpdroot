@@ -97,8 +97,8 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
   for (Int_t i = 0; i < nTpcHits; i++) {
     const auto *tpcHit = static_cast<MpdTpcHit*>(tpcHits->UncheckedAt(i));
 
-    const auto i = momentum.find(tpcHit->GetTrackID());
-    assert(i != momentum.end());
+    const auto iter = momentum.find(tpcHit->GetTrackID());
+    assert(iter != momentum.end());
 
     hits.emplace_back(Mpd::Tpc::InputHit{
         tpcHit->GetTrackID(),
@@ -108,7 +108,7 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
             tpcHit->GetY() * lenScalor,
             tpcHit->GetZ() * lenScalor
         },
-        i->second // For statistics only.
+        iter->second // For statistics only.
     });
   }
 
