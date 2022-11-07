@@ -8,7 +8,7 @@ void buildHistograms(const Mpd::Tpc::Statistics &statistics,
                      const int nTracks,
                      const int eventCounter);
 
-void drawQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
+void plotQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
                     const Mpd::Tpc::ProtoTrackContainer &trajectories,
                     const int eventCounter);
 
@@ -19,4 +19,5 @@ void plotOutputTracks(const int canvasX,
                       const Mpd::Tpc::InputHitContainer &hits,
                       const Mpd::Tpc::ProtoTrackContainer &trajectories,
                       const int eventCounter,
-                      const bool multicoloured);
+                      const bool multicoloured,
+                      const int lineWidth);

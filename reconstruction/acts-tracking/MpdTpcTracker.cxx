@@ -187,13 +187,16 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
   // Build histagrams.
   buildHistograms(statistics, nTracks, eventCounter);
-  drawQualityOnP(hits, trajectories, eventCounter);
+  plotQualityOnP(hits, trajectories, eventCounter);
 
   // Plot the output tracks.
   std::shared_ptr<const Acts::TrackingGeometry> geometry =
       config.detector->getGeometry();
 
-  plotOutputTracks(6000, 6000, geometry, spacePoints, hits, trajectories, eventCounter, false);
+  Int_t lineWidth = 3;
+  Bool_t multicoloured = false;
+  plotOutputTracks(6000, 6000, geometry, spacePoints, hits,
+                   trajectories, eventCounter, multicoloured, lineWidth);
 
   // Convert the output tracks.
 //  fKalmanHits = getArray("MpdKalmanHit");

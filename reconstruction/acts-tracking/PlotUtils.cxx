@@ -73,6 +73,8 @@ struct TrackParam {
 
   int realTrackId; // for recontructed track only:
                    // trackId of real track that corresponds to reconstructed track
+
+  int eventNumber;
 };
 
 using RealTracksMap = std::map<int, std::pair<TrackParam, bool> >;
@@ -88,7 +90,6 @@ void drawGraph(const int nIntervals,
                const int startRecoIndex,
                const int kTrackId,
                const double rightBound) {
-  const bool debugPrint = false;
   double pMin = std::numeric_limits<double>::max();
   double pMax = 0;
 
@@ -160,10 +161,11 @@ void drawGraph(const int nIntervals,
     if (pair.second) { // track was reconstructed
       appearanceReco[ind]--;
 
-      int maxRecoLen = 0;
+      int maxRecoLen =  0;
       int trackIndex = -1;
       for (int trackI = startRecoIndex; trackI < recoTrackParams.size(); trackI++) {
-        if (recoTrackParams.at(trackI).realTrackId != realTrackId) {
+        if ((recoTrackParams.at(trackI).realTrackId != realTrackId) ||
+            (recoTrackParams.at(trackI).eventNumber != eventNumberC)) {
           continue;
         }
         int curRecoLen = recoTrackParams.at(trackI).recoLen;
@@ -178,22 +180,33 @@ void drawGraph(const int nIntervals,
         continue;
       }
       if (pair.first.realLen != recoTrackParams.at(trackIndex).realLen) {
-         if (debugPrint) {
-           std::cout << "drawGraph() WARNING: " <<
-               "lentgh(real track) != length(real track corresponding to reco track); " <<
-               "real trackId = " << realTrackId <<
-               "; len(real track) = " << pair.first.realLen <<
-               "; length(real track corresponding to reco track) = recoTrackParams.at(trackIndex).realLen" <<
-               "; reco track index = " << trackIndex << std::endl;
-        }
+        std::cout << "drawGraph() WARNING: " <<
+            "lentgh(real track) != length(real track corresponding to reco track); " <<
+            "real trackId = " << realTrackId <<
+            "; len(real track) = " << pair.first.realLen <<
+            "; length(real track corresponding to reco track) = " <<
+                recoTrackParams.at(trackIndex).realLen << std::endl;
       }
       sumRealAmongReal[ind]          += pair.first.realLen;
       sumRealAmongReconstructed[ind] += pair.first.realLen;
       sumsReconstructed[ind]         += recoTrackParams.at(trackIndex).recoLen;
+
+      // consistency check
+      if (pair.first.realLen < recoTrackParams.at(trackIndex).recoLen) {
+        std::cout << "drawGraph() WARNING: for reconstructed track " << trackIndex <<
+            " real len = " << pair.first.realLen <<
+            " < reconstructed len = "  << recoTrackParams.at(trackIndex).recoLen << std::endl;
+      }
     } else { // track was not reconstructed
       sumRealAmongReal[ind]          += pair.first.realLen;
     }
   }
+  // normalization of the number of tracks
+  for (int iInterval = 0; iInterval < nIntervals; iInterval++) {
+    appearanceAll [iInterval] = 100 * appearanceAll [iInterval] / nRealTracks;
+    appearanceReco[iInterval] = 100 * appearanceReco[iInterval] / nRealTracks;
+  }
+
   double pI[nIntervals + 1];
 
   for (int i = 0; i < nIntervals; i++) {
@@ -254,11 +267,11 @@ void drawGraph(const int nIntervals,
 // Draw png graphics quality depending on momentum
 //   for every event and
 //   for all events
-void drawQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
+void plotQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
                     const Mpd::Tpc::ProtoTrackContainer &trajectories,
                     const int eventCounter) {
-  double rightBound = 2.5; // GeV
-  int kTrackId = 1000000;
+  const double rightBound = 2.5; // GeV
+  const int kTrackId = 1000000;
   if (eventCounter == 0) {
     return;
   }
@@ -269,9 +282,7 @@ void drawQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
 
 // collecting info about real tracks
   int nRealTracks = 0;
-  int iHit = -1;
   for (auto hit : hits) {
-    iHit++;
     int trackId = hit.trackId;
     int trackIdExtended = eventCounter * kTrackId + trackId;
 
@@ -281,6 +292,7 @@ void drawQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
       trackParam.p = std::hypot(hit.momentum[0], hit.momentum[1]);
       trackParam.recoLen = 0;
       trackParam.realLen = 0;
+      trackParam.eventNumber = eventCounter;
 
       bool isReconstructed = false;
       realTracksMap[trackIdExtended] = std::make_pair(trackParam, isReconstructed);
@@ -312,7 +324,26 @@ void drawQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
     trackParam.recoLen = recoLen;
     trackParam.realLen = realLen;
     trackParam.realTrackId = realTrackId;
+    trackParam.eventNumber = eventCounter;
     recoTrackParams.push_back(trackParam);
+
+    // consistency check
+    if (trackParam.realLen != realTracksMap[eventCounter * kTrackId + realTrackId].first.realLen) {
+      std::cout << "plotQualityOnP() WARNING: trackParam.realLen != " <<
+          "realTracksMap[eventCounter * kTrackId + realTrackId].first.realLen" <<
+          "reco track index = " << tI <<
+          "; realTrackId = " << realTrackId <<
+          "; realLen = "     << trackParam.realLen <<
+          "; realTracksMap[eventCounter * kTrackId + realTrackId].first.realLen = " <<
+              realTracksMap[eventCounter * kTrackId + realTrackId].first.realLen << std::endl;
+    }
+    if (trackParam.recoLen > trackParam.realLen) {
+      std::cout << "plotQualityOnP() WARNING: trackParam.recoLen > trackParam.realLen" <<
+          "reco track index = " << tI <<
+          "; realTrackId = " << realTrackId <<
+          "; recoLen = " << recoLen <<
+          "; realLen = " << trackParam.realLen << std::endl;
+    }
   }
 
   const int nIntervals = 50;
@@ -342,7 +373,8 @@ void plotOutputTracks(const int canvasX,
                       const Mpd::Tpc::InputHitContainer &hits,
                       const Mpd::Tpc::ProtoTrackContainer &trajectories,
                       const int eventCounter,
-                      const bool multicoloured) {
+                      const bool multicoloured,
+                      const int lineWidth) {
   TCanvas canvas("outputTrajectories", "Output trajectories", canvasX, canvasY);
   TMultiGraph multiGraph;
 
@@ -418,7 +450,7 @@ void plotOutputTracks(const int canvasX,
 
     TGraph &outTrajectoryGraph = outTrajectoryGraphs[trackIndex];
     outTrajectoryGraph.SetMarkerStyle(kFullDotMedium);
-    outTrajectoryGraph.SetLineWidth(2);
+    outTrajectoryGraph.SetLineWidth(lineWidth);
     int color = kRed;
     if (multicoloured) {
       int iColor = trackIndex % colors.size();
@@ -435,11 +467,15 @@ void plotOutputTracks(const int canvasX,
     multiGraph.Add(&outTrajectoryGraph, "PL");
   }
   multiGraph.Draw("A");
-  std::string dotPlotFileName = "event_" + std::to_string(eventCounter) + ".png";
+
+  std::string dotPlotFileName = "event_" + std::to_string(eventCounter);
+  if (lineWidth == 0) {
+    dotPlotFileName += "_w0";
+  }
+  dotPlotFileName += ".png";
   canvas.Print(dotPlotFileName.c_str());
 
   for (auto surfGraph : surfGraphs) {
     delete surfGraph;
   }
-  std::cout << "File created: " << dotPlotFileName << std::endl;
 }
