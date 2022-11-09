@@ -4,6 +4,12 @@
 
 #pragma once
 
+enum CoordSystem {
+  XY,
+  YZ,
+  RZ
+};
+
 void buildHistograms(const Mpd::Tpc::Statistics &statistics,
                      const int nTracks,
                      const int eventCounter);
@@ -20,4 +26,5 @@ void plotOutputTracks(const int canvasX,
                       const Mpd::Tpc::ProtoTrackContainer &trajectories,
                       const int eventCounter,
                       const bool multicoloured,
-                      const int lineWidth);
+                      const int lineWidth,
+                      const CoordSystem coordSystem);

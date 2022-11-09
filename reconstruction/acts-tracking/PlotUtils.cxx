@@ -1,6 +1,7 @@
 #include "MpdTpcHit.h"
 #include "MpdTpcInputHit.h"
 #include "MpdTpcRunner.h"
+#include "PlotUtils.h"
 
 #include "TCanvas.h"
 #include "TFile.h"
@@ -179,6 +180,7 @@ void drawGraph(const int nIntervals,
                      "real trackId = " << realTrackId << std::endl;
         continue;
       }
+      // consistency check
       if (pair.first.realLen != recoTrackParams.at(trackIndex).realLen) {
         std::cout << "drawGraph() WARNING: " <<
             "lentgh(real track) != length(real track corresponding to reco track); " <<
@@ -366,6 +368,46 @@ void plotQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
             rightBound);
 }
 
+struct PointP {
+  double x, y, z;
+
+  PointP(double xInit, double yInit, double zInit) {
+    x = xInit;
+    y = yInit;
+    z = zInit;
+  }
+  int transform(const CoordSystem coordSystem) {
+    int res = 0;
+    double xTmp = 0;
+    double yTmp = 0;
+    double zTmp = 0;
+    switch (coordSystem) {
+      case XY:
+        xTmp = x;
+        yTmp = y;
+        break;
+      case YZ:
+        xTmp = y;
+        yTmp = z;
+        break;
+      case RZ:
+        xTmp = std::hypot(x, y);
+        yTmp = z;
+        break;
+      default:
+        std::cout << "PointP::transform() ERROR: unknown coordinate system type!" << std::endl;
+        xTmp = 0;
+        yTmp = 0;
+        res = -1;
+        break;
+    }
+    x = xTmp;
+    y = yTmp;
+    z = zTmp;
+    return res;
+  }
+};
+
 void plotOutputTracks(const int canvasX,
                       const int canvasY,
                       const std::shared_ptr<const Acts::TrackingGeometry> &geometry,
@@ -374,45 +416,48 @@ void plotOutputTracks(const int canvasX,
                       const Mpd::Tpc::ProtoTrackContainer &trajectories,
                       const int eventCounter,
                       const bool multicoloured,
-                      const int lineWidth) {
+                      const int lineWidth,
+                      const CoordSystem coordSystem) {
   TCanvas canvas("outputTrajectories", "Output trajectories", canvasX, canvasY);
   TMultiGraph multiGraph;
 
 // detector's sensitive surfaces graph
   std::vector<TGraph*> surfGraphs;
   Acts::GeometryContext actsContext;
-  geometry->visitSurfaces([&actsContext, &surfGraphs, &multiGraph](const Acts::Surface *surface) {
-    std::vector<double> boundsValues = surface->bounds().values();
+  if (coordSystem == CoordSystem::XY) {
+    geometry->visitSurfaces([&actsContext, &surfGraphs, &multiGraph](const Acts::Surface *surface) {
+      std::vector<double> boundsValues = surface->bounds().values();
 
-    double xLeftDown = boundsValues.at(0);
-    double yLeftDown = boundsValues.at(1);
-    double xRightUp  = boundsValues.at(2);
-    double yRightUp  = boundsValues.at(3);
+      double xLeftDown = boundsValues.at(0);
+      double yLeftDown = boundsValues.at(1);
+      double xRightUp  = boundsValues.at(2);
+      double yRightUp  = boundsValues.at(3);
 
-    if (yLeftDown + yRightUp != 0) {
-      std::cout << "boundsValues.at(1) + boundsValues.at(3) != 0" << std::endl;
-    }
-    if (xLeftDown + xRightUp != 0) {
-      std::cout << "boundsValues.at(0) + boundsValues.at(2) != 0" << std::endl;
-    }
-    Acts::Vector2 locBound0(xLeftDown, yLeftDown);
-    Acts::Vector2 locBound1(xRightUp,  yRightUp);
-    Acts::Vector3 unused;
+      if (yLeftDown + yRightUp != 0) {
+        std::cout << "boundsValues.at(1) + boundsValues.at(3) != 0" << std::endl;
+      }
+      if (xLeftDown + xRightUp != 0) {
+        std::cout << "boundsValues.at(0) + boundsValues.at(2) != 0" << std::endl;
+      }
+      Acts::Vector2 locBound0(xLeftDown, yLeftDown);
+      Acts::Vector2 locBound1(xRightUp,  yRightUp);
+      Acts::Vector3 unused;
 
-    Acts::Vector3 globalBound0 = surface->localToGlobal(actsContext, locBound0, unused);
-    Acts::Vector3 globalBound1 = surface->localToGlobal(actsContext, locBound1, unused);
+      Acts::Vector3 globalBound0 = surface->localToGlobal(actsContext, locBound0, unused);
+      Acts::Vector3 globalBound1 = surface->localToGlobal(actsContext, locBound1, unused);
 
-    TGraph *surfGraph = new TGraph;
-    surfGraphs.push_back(surfGraph);
+      TGraph *surfGraph = new TGraph;
+      surfGraphs.push_back(surfGraph);
 
-    surfGraph->SetPoint(0, globalBound0.x(), globalBound0.y());
-    surfGraph->SetPoint(1, globalBound1.x(), globalBound1.y());
+      surfGraph->SetPoint(0, globalBound0.x(), globalBound0.y());
+      surfGraph->SetPoint(1, globalBound1.x(), globalBound1.y());
 
-    surfGraph->SetMarkerStyle(kFullDotMedium);
-    surfGraph->SetLineColor(kYellow);
-    surfGraph->SetMarkerColor(kYellow);
-    multiGraph.Add(surfGraph, "PL");
-  });
+      surfGraph->SetMarkerStyle(kFullDotMedium);
+      surfGraph->SetLineColor(kYellow);
+      surfGraph->SetMarkerColor(kYellow);
+      multiGraph.Add(surfGraph, "PL");
+    });
+  }
 
 // space points graph
   TGraph spacePointsGraph;
@@ -421,8 +466,11 @@ void plotOutputTracks(const int canvasX,
 
   size_t pIndex = 0;
   for (auto spacePoint : spacePoints) {
-    double x = spacePoint.x();
-    double y = spacePoint.y();
+    PointP point(spacePoint.x(), spacePoint.y(), spacePoint.z());
+    point.transform(coordSystem);
+    double x = point.x;
+    double y = point.y;
+
     spacePointsGraph.SetPoint(pIndex++, x, y);
   }
   multiGraph.Add(&spacePointsGraph, "P");
@@ -433,8 +481,11 @@ void plotOutputTracks(const int canvasX,
 
   pIndex = 0;
   for (auto hit : hits) {
-    double x = hit.position[0];
-    double y = hit.position[1];
+    PointP point(hit.position[0], hit.position[1], hit.position[2]);
+    point.transform(coordSystem);
+    double x = point.x;
+    double y = point.y;
+
     inputHitsGraph.SetPoint(pIndex++, x, y);
   }
   multiGraph.Add(&inputHitsGraph, "P");
@@ -460,8 +511,13 @@ void plotOutputTracks(const int canvasX,
 
     pIndex = 0;
     for (uint32_t hitIndex : reconstructedTrack) {
-      double x = hits.at(hitIndex).position[0];
-      double y = hits.at(hitIndex).position[1];
+      PointP point(hits.at(hitIndex).position[0],
+                   hits.at(hitIndex).position[1],
+                   hits.at(hitIndex).position[2]);
+      point.transform(coordSystem);
+      double x = point.x;
+      double y = point.y;
+
       outTrajectoryGraph.SetPoint(pIndex++, x, y);
     }
     multiGraph.Add(&outTrajectoryGraph, "PL");

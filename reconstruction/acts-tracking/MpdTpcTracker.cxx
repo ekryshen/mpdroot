@@ -173,31 +173,33 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
   fRunner->execute(hits);
 
-  const auto &trajectories =
-      context.eventStore.get<Mpd::Tpc::ProtoTrackContainer>(
-          config.trackFinding.outputTrackCandidates);
+  if (PlotGraphs) {
+    const auto &trajectories =
+        context.eventStore.get<Mpd::Tpc::ProtoTrackContainer>(
+            config.trackFinding.outputTrackCandidates);
 
-  const auto &spacePoints =
-      context.eventStore.get<Mpd::Tpc::SpacePointContainer>(
-          config.spacePointMaking.outputSpacePoints);
+    const auto &spacePoints =
+        context.eventStore.get<Mpd::Tpc::SpacePointContainer>(
+            config.spacePointMaking.outputSpacePoints);
 
-  // Get the track recognition statistics (for debugging).
-  auto statistics = fRunner->getStatistics();
-  auto nTracks = fRunner->getTracksNumber();
+    // Get the track recognition statistics (for debugging).
+    auto statistics = fRunner->getStatistics();
+    auto nTracks = fRunner->getTracksNumber();
 
-  // Build histagrams.
-  buildHistograms(statistics, nTracks, eventCounter);
-  plotQualityOnP(hits, trajectories, eventCounter);
+    // Build histagrams.
+    buildHistograms(statistics, nTracks, eventCounter);
+    plotQualityOnP(hits, trajectories, eventCounter);
 
-  // Plot the output tracks.
-  std::shared_ptr<const Acts::TrackingGeometry> geometry =
-      config.detector->getGeometry();
+    // Plot the output tracks.
+    std::shared_ptr<const Acts::TrackingGeometry> geometry =
+        config.detector->getGeometry();
 
-  Int_t lineWidth = 3;
-  Bool_t multicoloured = false;
-  plotOutputTracks(6000, 6000, geometry, spacePoints, hits,
-                   trajectories, eventCounter, multicoloured, lineWidth);
-
+    Int_t lineWidth = 3;
+    Bool_t multicoloured = false;
+    plotOutputTracks(6000, 6000, geometry, spacePoints, hits,
+                     trajectories, eventCounter, multicoloured,
+                     lineWidth, CoordSystem::XY);
+  }
   // Convert the output tracks.
 //  fKalmanHits = getArray("MpdKalmanHit");
 //  fKalmanTracks = getArray("MpdTpcKalmanTrack");

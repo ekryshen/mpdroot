@@ -15,8 +15,9 @@
 /// @brief Acts-based track finder for TPC.
 class MpdTpcTracker final : public FairTask {
 public:
-  static constexpr auto TaskTitle = "TPC Acts-based tracker";
-  static constexpr auto UseMcHits = false;
+  static constexpr auto TaskTitle  = "TPC Acts-based tracker";
+  static constexpr auto UseMcHits  = false;
+  static constexpr auto PlotGraphs = true;
    
   explicit MpdTpcTracker(const char *title = TaskTitle):
       FairTask(title) {}
