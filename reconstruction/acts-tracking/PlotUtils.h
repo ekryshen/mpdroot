@@ -6,8 +6,8 @@
 
 enum CoordSystem {
   XY,
-  YZ,
-  RZ
+  ZY,
+  ZR
 };
 
 void buildHistograms(const Mpd::Tpc::Statistics &statistics,

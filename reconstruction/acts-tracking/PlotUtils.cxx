@@ -386,13 +386,13 @@ struct PointP {
         xTmp = x;
         yTmp = y;
         break;
-      case YZ:
-        xTmp = y;
-        yTmp = z;
+      case ZY:
+        xTmp = z;
+        yTmp = y;
         break;
-      case RZ:
-        xTmp = std::hypot(x, y);
-        yTmp = z;
+      case ZR:
+        xTmp = z;
+        yTmp = std::hypot(x, y);
         break;
       default:
         std::cout << "PointP::transform() ERROR: unknown coordinate system type!" << std::endl;
