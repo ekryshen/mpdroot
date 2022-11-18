@@ -2,6 +2,25 @@
 # the array .
 # The extension is already found.  Any number of sources could be listed here.
 
+function (GET_ACTS_DIR)
+  string (FIND $ENV{PATH} "Acts" ActsFound)
+  if (ActsFound STREQUAL "-1")
+    set (ACTS_PATH "" PARENT_SCOPE)
+    return()
+  endif()
+  if (UNIX)
+    SET (_path_separator "/")
+    string(REGEX REPLACE "^(.*[:])?([^:]*Acts[^:]+).*" "\\2" ACTS_PATH $ENV{PATH})
+  else()
+    SET (_path_separator "\\")
+    string(REGEX REPLACE "^(.*[;])?([^;]*Acts[^;]+).*" "\\2" ACTS_PATH $ENV{PATH})
+  endif()
+  SET (_path_separator ${_path_separator} PARENT_SCOPE)
+  set (ACTS_PATH ${ACTS_PATH}${_path_separator}..${_path_separator}  PARENT_SCOPE)
+endfunction()
+
+GET_ACTS_DIR()
+
 set(INCLUDE_DIRECTORIES
   ${BASE_INCLUDE_DIRECTORIES}
   ${CMAKE_CURRENT_LIST_DIR}
@@ -12,6 +31,7 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/lheTrack
   ${CMAKE_SOURCE_DIR}/simulation/mcStack
+  ${ACTS_PATH}/include
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
@@ -19,6 +39,14 @@ Set(SYSTEM_INCLUDE_DIRECTORIES
 )
 
 include_directories(${INCLUDE_DIRECTORIES})
+
+set(LINK_DIRECTORIES
+  ${ACTS_PATH}/lib64
+  ${Boost_INCLUDE_DIRS}${_path_separator}..${_path_separator}lib
+)
+set (_path_separator)
+
+link_directories(${LINK_DIRECTORIES})
 
 # List of source files
 set(SRCS
@@ -73,7 +101,7 @@ Set(HEADERS
 )
 
 Set(LINKDEF MpdTpcTrackerLinkDef.h)
-Set(LIBRARY_NAME MpdTpcTracker)
+Set(LIBRARY_NAME MpdTpcActsTracker)
 Set(DEPENDENCIES Kalman MpdField ActsCore ActsFatras ActsPluginTGeo boost_program_options)
 
 GENERATE_LIBRARY()
