@@ -13,7 +13,7 @@
 class MpdVertexZfinder : public FairTask {
 public:
    /** Constructor **/
-   MpdVertexZfinder(BaseTpcGeo& fSecGeo, const char *name = "MpdVertexZfinder", Int_t iVerbose = 1);
+   MpdVertexZfinder(BaseTpcSectorGeo &fSecGeo, const char *name = "MpdVertexZfinder", Int_t iVerbose = 1);
 
    /** Destructor **/
    virtual ~MpdVertexZfinder();

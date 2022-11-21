@@ -39,7 +39,7 @@ struct DigOrigArray {
 class MpdTpcDigitizerAZ : public FairTask {
 public:
    // Constructors/Destructors ---------
-   MpdTpcDigitizerAZ(BaseTpcGeo &secGeo);
+   MpdTpcDigitizerAZ(BaseTpcSectorGeo &secGeo);
    virtual ~MpdTpcDigitizerAZ();
 
    Bool_t isSubtrackInInwards(const TpcPoint *p1, const TpcPoint *p2);

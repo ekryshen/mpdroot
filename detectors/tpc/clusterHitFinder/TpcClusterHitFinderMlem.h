@@ -40,7 +40,7 @@ class TH2D;
 class TpcClusterHitFinderMlem : public AbstractTpcClusterHitFinder {
 public:
    // Constructors/Destructors ---------
-   TpcClusterHitFinderMlem(BaseTpcGeo &tpcGeo);
+   TpcClusterHitFinderMlem(BaseTpcSectorGeo &tpcGeo);
    ~TpcClusterHitFinderMlem();
 
    // Interface Implementation

@@ -102,7 +102,7 @@ void reco_with_zdc (TString inFile = "evetest_10ev_new.root", Int_t number_of_ev
   //rtdb->setSecondInput(parInput2);
 
    // -----  Initialize geometry   --------------------------------------------
-   BaseTpcGeo *secGeo = new TpcSectorGeoAZ(); 
+   BaseTpcSectorGeo *secGeo = new TpcSectorGeoAZ(); 
 
   // fRun->LoadGeometry();   // EL
   // ------------------------------------------------------------------------

@@ -30,7 +30,8 @@ using std::multiset;
 // const Double_t MpdTrackFinderIts::fgkChi2Cut = 20; //20; //100;
 
 //__________________________________________________________________________
-MpdVertexZfinder::MpdVertexZfinder(BaseTpcGeo &fSecGeo, const char *name, Int_t iVerbose) : FairTask(name, iVerbose)
+MpdVertexZfinder::MpdVertexZfinder(BaseTpcSectorGeo &fSecGeo, const char *name, Int_t iVerbose)
+   : FairTask(name, iVerbose)
 {
    secGeo = dynamic_cast<TpcSectorGeoAZ *>(&fSecGeo);
    if (!secGeo) Fatal("MpdVertexZfinder::MpdVertexZfinder", " !!! Wrong geometry type !!! ");

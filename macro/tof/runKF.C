@@ -69,7 +69,7 @@ gSystem->Load("libXMLIO");
   // ------------------------------------------------------------------------
   
   // -----  Initialize geometry   --------------------------------------------
-  BaseTpcGeo *secGeo = new TpcSectorGeoAZ(); 
+  BaseTpcSectorGeo *secGeo = new TpcSectorGeoAZ(); 
 
   MpdKalmanFilter *kalman = MpdKalmanFilter::Instance("KF");
   fRun->AddTask(kalman); 

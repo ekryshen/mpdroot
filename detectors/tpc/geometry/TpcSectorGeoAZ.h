@@ -6,24 +6,24 @@
 /// \brief Geometry configuration of MPD TPC sector
 ///
 /// \author Alexander Zinchenko, LHEP JINR Dubna
-///         
+///
 ///        singleton removal, BaseTpcGeo inheritance port:
 ///        Slavomir Hnatic, LIT JINR Dubna, September 2022
 
-#include <BaseTpcGeo.h>
+#include "BaseTpcSectorGeo.h"
 #include <TVector3.h>
 
 class TpcGas;
 
-class TpcSectorGeoAZ : public BaseTpcGeo {
+class TpcSectorGeoAZ : public BaseTpcSectorGeo {
 
 public:
    enum Shifts { kSectorS = 0, kPadrowS = 5, kPadS = 13, kPadSignS = 30 };
    enum Masks { kSectorM = 31, kPadrowM = 255, kPadM = 255, kPadSignM = 1 };
 
 public:
-   TpcSectorGeoAZ();              ///< Default ctor
-   virtual ~TpcSectorGeoAZ(){ ; } ///< Destructor   
+   TpcSectorGeoAZ();               ///< Default ctor
+   virtual ~TpcSectorGeoAZ() { ; } ///< Destructor
 
    Int_t    Global2Local(const Double_t *xyzGlob, Double_t *xyzLoc,
                          Int_t iSec = -1); ///< transform global coordinates to local (sector) - returns padID
@@ -66,11 +66,8 @@ public:
    void SetMinY(Double_t rmin) { fYsec[0] = rmin; }
 
 protected:
-   
-
 private:
-      
-   static const Int_t      fgkNsect = 12; // number of TPC sectors
+   static const Int_t fgkNsect = 12; // number of TPC sectors
    // static const Int_t fgkNrows = 50; // number of padrows
    Int_t    fNrows[2];    // number of padrows 2 ROC regions
    Double_t fPhi0;        // phi0 of the first sector

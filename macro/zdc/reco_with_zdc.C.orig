@@ -91,7 +91,7 @@ void reco_with_zdc (TString inFile = "zdctest.root", Int_t number_of_events=0)
   //rtdb->setSecondInput(parInput2);
 
   // -----  Initialize geometry   --------------------------------------------
-  BaseTpcGeo *secGeo = new TpcSectorGeoAZ(); 
+  BaseTpcSectorGeo *secGeo = new TpcSectorGeoAZ(); 
 
   // fRun->LoadGeometry();   // EL
   // ------------------------------------------------------------------------

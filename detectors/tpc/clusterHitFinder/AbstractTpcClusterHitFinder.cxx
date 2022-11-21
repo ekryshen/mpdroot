@@ -19,7 +19,7 @@
 
 //__________________________________________________________________________
 
-AbstractTpcClusterHitFinder::AbstractTpcClusterHitFinder(BaseTpcGeo &tpcGeo, const char *name, Bool_t val)
+AbstractTpcClusterHitFinder::AbstractTpcClusterHitFinder(BaseTpcSectorGeo &tpcGeo, const char *name, Bool_t val)
    : FairTask(name), persistence(val)
 {
    secGeo = &tpcGeo;

@@ -51,7 +51,7 @@ using namespace std;
 
 //__________________________________________________________________________
 
-TpcClusterHitFinderMlem::TpcClusterHitFinderMlem(BaseTpcGeo &tpcGeo)
+TpcClusterHitFinderMlem::TpcClusterHitFinderMlem(BaseTpcSectorGeo &tpcGeo)
    : AbstractTpcClusterHitFinder(tpcGeo, "TPC Cluster finder Mlem", kFALSE)
 {
    /*

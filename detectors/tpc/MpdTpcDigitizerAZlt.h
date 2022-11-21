@@ -39,7 +39,7 @@ struct DigOrigArray {
 class MpdTpcDigitizerAZlt : public FairTask {
 public:
    // Constructors/Destructors ---------
-   MpdTpcDigitizerAZlt(BaseTpcGeo& secGeo);
+   MpdTpcDigitizerAZlt(BaseTpcSectorGeo &secGeo);
    virtual ~MpdTpcDigitizerAZlt();
 
    Bool_t isSubtrackInInwards(const TpcPoint *p1, const TpcPoint *p2);
@@ -89,26 +89,26 @@ private:
    TF1                         *fPRF;           // pad response function
    FairField                   *fMagField;      // magnetic field
 
-   Float_t          fGain;           // coefficient for avalanches calculating
-   Float_t          zCathode;        // length of TPC
-   Float_t          fNoiseThreshold; // threshold for signal separation
-   Float_t          fOverflow;       // ADC overflow value
-   const Int_t     *fNumOfPadsInRow; // array of pads quantity in every TPC rows
-   UInt_t           nSectors;        // number of TPC sectors
-   UInt_t           fNTimeBins;      // number of time samples in TPC
-   UInt_t           nRows;           // number of rows in TPC sector
-   UInt_t           nInRows;         // number of rows in inner part of TPC sector
-   UInt_t           nOutRows;        // number of rows in outer part of TPC sector
-   Float_t          fSectInHeight;   // height of inner part of TPC sector
-   Float_t          fSectHeight;     // height of TPC sector
-   Float_t          r_min;           // minimal radius of TPC
-   Float_t          fSpread;         // sigma for pad response function
-   Float_t          k1, k2;          // coefficients for padRespose calculating
-   Float_t          pwIn;            // inner pad width
-   Float_t          phIn;            // inner pad height
-   Float_t          pwOut;           // outer pad width
-   Float_t          phOut;           // outer pad height
-   TpcSectorGeoAZ  *fSecGeo;         // sector geometry
+   Float_t         fGain;           // coefficient for avalanches calculating
+   Float_t         zCathode;        // length of TPC
+   Float_t         fNoiseThreshold; // threshold for signal separation
+   Float_t         fOverflow;       // ADC overflow value
+   const Int_t    *fNumOfPadsInRow; // array of pads quantity in every TPC rows
+   UInt_t          nSectors;        // number of TPC sectors
+   UInt_t          fNTimeBins;      // number of time samples in TPC
+   UInt_t          nRows;           // number of rows in TPC sector
+   UInt_t          nInRows;         // number of rows in inner part of TPC sector
+   UInt_t          nOutRows;        // number of rows in outer part of TPC sector
+   Float_t         fSectInHeight;   // height of inner part of TPC sector
+   Float_t         fSectHeight;     // height of TPC sector
+   Float_t         r_min;           // minimal radius of TPC
+   Float_t         fSpread;         // sigma for pad response function
+   Float_t         k1, k2;          // coefficients for padRespose calculating
+   Float_t         pwIn;            // inner pad width
+   Float_t         phIn;            // inner pad height
+   Float_t         pwOut;           // outer pad width
+   Float_t         phOut;           // outer pad height
+   TpcSectorGeoAZ *fSecGeo;         // sector geometry
 
    // set of boolean flags for manage of work process
    Bool_t fIsHistogramsInitialized; // is QA histograms initialized or not

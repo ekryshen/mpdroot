@@ -20,7 +20,7 @@
 class MpdTpcHitProducer : public FairTask {
 
 public:
-   MpdTpcHitProducer(BaseTpcGeo &secGeo);
+   MpdTpcHitProducer(BaseTpcSectorGeo &secGeo);
    ~MpdTpcHitProducer();
 
    virtual InitStatus Init();

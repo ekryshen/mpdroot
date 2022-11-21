@@ -88,7 +88,7 @@ void fullReco(TString inFile = "evetest.root")
   //rtdb->setSecondInput(parInput2);
 
   // -----  Initialize geometry   --------------------------------------------
-  BaseTpcGeo *secGeo = new TpcSectorGeoAZ(); 
+  BaseTpcSectorGeo *secGeo = new TpcSectorGeoAZ(); 
 
   // fRun->LoadGeometry();  // EL
   // ------------------------------------------------------------------------

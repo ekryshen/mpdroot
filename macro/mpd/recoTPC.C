@@ -95,7 +95,7 @@ void recoTPC(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outF
   // ------------------------------------------------------------------------
 
   // -----  Initialize geometry   --------------------------------------------
-  BaseTpcGeo *secGeo = new TpcSectorGeoAZ(); 
+  BaseTpcSectorGeo *secGeo = new TpcSectorGeoAZ(); 
 
   MpdKalmanFilter *kalman = MpdKalmanFilter::Instance("KF");
   fRun->AddTask(kalman);

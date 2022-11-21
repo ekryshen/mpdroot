@@ -58,7 +58,7 @@ static clock_t tAll    = 0;
 // FILE *lunAZ = nullptr; //fopen("gasGain.dat","w");
 //---------------------------------------------------------------------------
 
-MpdTpcDigitizerAZlt::MpdTpcDigitizerAZlt(BaseTpcGeo &secGeo)
+MpdTpcDigitizerAZlt::MpdTpcDigitizerAZlt(BaseTpcSectorGeo &secGeo)
    : FairTask("TPC digitizerAZlt"), fMCPointArray(nullptr), fMCTracksArray(nullptr), fDigits(nullptr),
      fDigits4dArray(nullptr), fSector(nullptr), fHisto(nullptr), fPRF(nullptr), fNoiseThreshold(3.0), fOverflow(1023.1),
      fNumOfPadsInRow(nullptr), fIsHistogramsInitialized(kFALSE), fMakeQA(kFALSE), fOnlyPrimary(kFALSE),

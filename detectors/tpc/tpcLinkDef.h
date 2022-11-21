@@ -39,6 +39,6 @@
 #pragma link C++ class MpdTpcEDepParams+;
 #pragma link C++ class AbstractTpcClusterHitFinder+;
 #pragma link C++ class TpcClusterHitFinderMlem+;
-#pragma link C++ class BaseTpcGeo+;
+#pragma link C++ class BaseTpcSectorGeo+;
 #pragma link C++ class TpcSectorGeoAZ+;
 #endif

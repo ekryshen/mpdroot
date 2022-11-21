@@ -83,7 +83,7 @@ void runReco(TString inFile = "evetest.root", TString outFile = "mpddst.root", I
    // ------------------------------------------------------------------------
 
    // -----  Initialize geometry   --------------------------------------------
-   BaseTpcGeo *secGeo = new TpcSectorGeoAZ(); 
+   BaseTpcSectorGeo *secGeo = new TpcSectorGeoAZ(); 
 
    // ------------------------------------------------------------------------
 

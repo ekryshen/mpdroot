@@ -51,9 +51,10 @@ using namespace std;
 
 //__________________________________________________________________________
 
-MpdTpcClusterFinderMlem::MpdTpcClusterFinderMlem(BaseTpcGeo& secGeo) : FairTask("TPC Cluster finder Mlem"), fPersistence(kFALSE)
+MpdTpcClusterFinderMlem::MpdTpcClusterFinderMlem(BaseTpcSectorGeo &secGeo)
+   : FairTask("TPC Cluster finder Mlem"), fPersistence(kFALSE)
 {
-   fSecGeo = dynamic_cast<TpcSectorGeoAZ*>(&secGeo);
+   fSecGeo = dynamic_cast<TpcSectorGeoAZ *>(&secGeo);
    if (!fSecGeo) Fatal("MpdTpcClusterFinderMlem::MpdTpcClusterFinderMlem", " !!! Wrong geometry type !!! ");
 
    /*

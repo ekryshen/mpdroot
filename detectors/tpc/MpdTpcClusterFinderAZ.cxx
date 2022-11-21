@@ -45,7 +45,7 @@ using namespace std;
 
 //__________________________________________________________________________
 
-MpdTpcClusterFinderAZ::MpdTpcClusterFinderAZ(BaseTpcGeo &secGeo)
+MpdTpcClusterFinderAZ::MpdTpcClusterFinderAZ(BaseTpcSectorGeo &secGeo)
    : FairTask("TPC Cluster finder AZ"), fPersistence(kFALSE)
 {
    fSecGeo = dynamic_cast<TpcSectorGeoAZ *>(&secGeo);

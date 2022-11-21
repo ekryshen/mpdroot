@@ -161,7 +161,7 @@ void AnalL0(Int_t n1 = 0, Int_t n2 = 0, Int_t firstFile = 1)
   TFile out("L0_10k_PVsmear.test.root","recreate");
   
   // -----  Initialize geometry   --------------------------------------------
-  BaseTpcGeo *secGeo = new TpcSectorGeoAZ(); 
+  BaseTpcSectorGeo *secGeo = new TpcSectorGeoAZ(); 
 
   FairRunAna ana;
   MpdKalmanFilter::Instance("KF")->Init();  

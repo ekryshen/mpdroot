@@ -37,7 +37,7 @@ class TH2D;
 class MpdTpcClusterFinderMlem : public FairTask {
 public:
    // Constructors/Destructors ---------
-   MpdTpcClusterFinderMlem(BaseTpcGeo& secGeo);
+   MpdTpcClusterFinderMlem(BaseTpcSectorGeo &secGeo);
    ~MpdTpcClusterFinderMlem();
 
    // Operators

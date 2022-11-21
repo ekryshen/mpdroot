@@ -1,6 +1,6 @@
 //-------------------------------------------------------------------------------------------------
 // Description:
-//      BaseTpcGeo class is the base class for TPC Geometry,
+//      BaseTpcSectorGeo class is the base class for TPC Geometry,
 //      with its configuration in ideal, non-misaligned state.
 //      Descriptive drawing:
 //      https://git.jinr.ru/nica/docs/-/blob/main/docs/mpdroot/coding/geometry/TPC_coordinates.svg
@@ -19,8 +19,8 @@
 //      JINR, October, 2022
 //-------------------------------------------------------------------------------------------------
 
-#ifndef BASETPCGEO_HH
-#define BASETPCGEO_HH
+#ifndef BASETPCSECTORGEO_HH
+#define BASETPCSECTORGEO_HH
 
 // ROOT Class Headers ---------------
 #include <TObject.h>
@@ -28,11 +28,11 @@
 #include <TVector2.h>
 #include <TVector3.h>
 
-class BaseTpcGeo : public TObject {
+class BaseTpcSectorGeo : public TObject {
 public:
    // Constructors/Destructors ---------
-   BaseTpcGeo();
-   virtual ~BaseTpcGeo();
+   BaseTpcSectorGeo();
+   virtual ~BaseTpcSectorGeo();
 
    /* transformations */
    // sectors: angle and number
@@ -58,7 +58,7 @@ public:
 
    /* constants */
    enum PadArea : int { inner, outer };
-   enum PadAreaBoundaries : int { lowerEdge, midBoundary, upperEdge };
+   enum PadAreaBoundary : int { lowerEdge, midBoundary, upperEdge };
 
    const int    SECTOR_COUNT      = 24;                     // total number of sectors
    const int    SECTOR_COUNT_HALF = 12;                     // number of sectors on one side
@@ -95,7 +95,7 @@ public:
 
 protected:
 private:
-   ClassDef(BaseTpcGeo, 1);
+   ClassDef(BaseTpcSectorGeo, 1);
 };
 
 #endif

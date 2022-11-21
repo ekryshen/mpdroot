@@ -26,7 +26,7 @@
 using namespace std;
 
 //---------------------------------------------------------------------------
-MpdTpcHitProducer::MpdTpcHitProducer(BaseTpcGeo &secGeo)
+MpdTpcHitProducer::MpdTpcHitProducer(BaseTpcSectorGeo &secGeo)
    : FairTask("TPC Hit Producer"), fModular(0), fPersistance(kFALSE)
 {
    fSecGeo = dynamic_cast<TpcSectorGeoAZ *>(&secGeo);

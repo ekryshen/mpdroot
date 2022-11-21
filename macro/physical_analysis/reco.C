@@ -91,7 +91,7 @@ void reco(TString inFile = "evetest.root")
   // ------------------------------------------------------------------------
   
   // -----  Initialize geometry   --------------------------------------------
-  BaseTpcGeo *secGeo = new TpcSectorGeoAZ(); 
+  BaseTpcSectorGeo *secGeo = new TpcSectorGeoAZ(); 
 
 //   TpcClusterizerTask* tpcClusterizer = new TpcClusterizerTask();
 //   fRun->AddTask(tpcClusterizer);

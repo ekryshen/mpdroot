@@ -34,7 +34,7 @@ class TClonesArray;
 class MpdTpcClusterFinderAZ : public FairTask {
 public:
    // Constructors/Destructors ---------
-   MpdTpcClusterFinderAZ(BaseTpcGeo &secGeo);
+   MpdTpcClusterFinderAZ(BaseTpcSectorGeo &secGeo);
    ~MpdTpcClusterFinderAZ();
 
    // Operators

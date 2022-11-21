@@ -1,6 +1,6 @@
 //-----------------------------------------------------------
 // Description:
-//      BaseTpcGeo base class source file
+//      BaseTpcSectorGeo base class source file
 //
 // Environment:
 //      Software for the MPD Detector at NICA.
@@ -10,19 +10,19 @@
 //      JINR, October, 2022
 //-----------------------------------------------------------
 
-#include "BaseTpcGeo.h"
+#include "BaseTpcSectorGeo.h"
 
 //__________________________________________________________________________
 
-BaseTpcGeo::BaseTpcGeo() {}
+BaseTpcSectorGeo::BaseTpcSectorGeo() {}
 
 //__________________________________________________________________________
 
-BaseTpcGeo::~BaseTpcGeo() {}
+BaseTpcSectorGeo::~BaseTpcSectorGeo() {}
 
 //__________________________________________________________________________
 
-int BaseTpcGeo::SectorNumberFromGlobal(const TVector3 &globalXYZ)
+int BaseTpcSectorGeo::SectorNumberFromGlobal(const TVector3 &globalXYZ)
 {
    double phiGlobalNormalized = TMath::ATan2(globalXYZ.X(), globalXYZ.Y()) / SECTOR_PHI_RAD;
    // convention: 105 deg is start of Sector 0, 75 deg is start of Sector 1, ..
@@ -40,7 +40,7 @@ int BaseTpcGeo::SectorNumberFromGlobal(const TVector3 &globalXYZ)
 
 //__________________________________________________________________________
 
-TVector2 BaseTpcGeo::PadRow2Local(double pad, double row)
+TVector2 BaseTpcSectorGeo::PadRow2Local(double pad, double row)
 {
    double x, y;
    int    rowInt = static_cast<int>(row);
@@ -57,14 +57,14 @@ TVector2 BaseTpcGeo::PadRow2Local(double pad, double row)
 
 //__________________________________________________________________________
 
-TVector2 BaseTpcGeo::PadRowCenter2Local(int padNumber, int rowNumber)
+TVector2 BaseTpcSectorGeo::PadRowCenter2Local(int padNumber, int rowNumber)
 {
    return PadRow2Local(padNumber + 0.5, rowNumber + 0.5);
 }
 
 //__________________________________________________________________________
 
-std::pair<double, double> BaseTpcGeo::Local2PadRow(const TVector3 &localXYZ)
+std::pair<double, double> BaseTpcSectorGeo::Local2PadRow(const TVector3 &localXYZ)
 {
    double                          pad, row;
    const std::pair<double, double> ROW_OUTOFRANGE(0, -1.);
@@ -89,7 +89,7 @@ std::pair<double, double> BaseTpcGeo::Local2PadRow(const TVector3 &localXYZ)
 
 //__________________________________________________________________________
 
-TVector3 BaseTpcGeo::Global2Local(const TVector3 &globalXYZ, int &iSector)
+TVector3 BaseTpcSectorGeo::Global2Local(const TVector3 &globalXYZ, int &iSector)
 {
    iSector = SectorNumberFromGlobal(globalXYZ);
 
@@ -107,7 +107,7 @@ TVector3 BaseTpcGeo::Global2Local(const TVector3 &globalXYZ, int &iSector)
 
 //__________________________________________________________________________
 
-std::pair<TVector3, int> BaseTpcGeo::Global2Local(const TVector3 &globalXYZ)
+std::pair<TVector3, int> BaseTpcSectorGeo::Global2Local(const TVector3 &globalXYZ)
 {
    int      iSector;
    TVector3 localXYZ = Global2Local(globalXYZ, iSector);
@@ -117,7 +117,7 @@ std::pair<TVector3, int> BaseTpcGeo::Global2Local(const TVector3 &globalXYZ)
 
 //__________________________________________________________________________
 
-TVector3 BaseTpcGeo::Local2Global(const TVector3 &localXYZ, int iSector)
+TVector3 BaseTpcSectorGeo::Local2Global(const TVector3 &localXYZ, int iSector)
 {
 
    TVector3 globalXYZ(localXYZ);
@@ -134,7 +134,7 @@ TVector3 BaseTpcGeo::Local2Global(const TVector3 &localXYZ, int iSector)
 
 //__________________________________________________________________________
 
-TVector3 BaseTpcGeo::Local2Global(const std::pair<TVector3, int> &localPosition)
+TVector3 BaseTpcSectorGeo::Local2Global(const std::pair<TVector3, int> &localPosition)
 {
    return Local2Global(localPosition.first, localPosition.second);
 }
