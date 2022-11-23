@@ -18,13 +18,9 @@
 #pragma link C++ class TpcGeoPar+;
 #pragma link C++ class TpcContFact+;
 #pragma link C++ class MpdParticleIdentification+;
-#pragma link C++ class MpdTpcPeak+;
-#pragma link C++ class MpdTpcFoundHit+;
 #pragma link C++ class TpcSector+;
 #pragma link C++ class TpcTimeBin+;
-#pragma link C++ class MpdTpcClusterFinderTask+;
 #pragma link C++ class MpdTpcDigit+;
-#pragma link C++ class MpdTpcClusterFinderQAHistograms+;
 #pragma link C++ class MpdTpcDigitizerTask+;
 #pragma link C++ class MpdTpcDigitizerQAHistograms+;
 #pragma link C++ class MpdTpc2dCluster+;

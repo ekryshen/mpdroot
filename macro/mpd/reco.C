@@ -16,7 +16,6 @@
 
 // MPD includes
 #include "MpdTpcHitProducer.h"
-#include "MpdTpcClusterFinderTask.h"
 #include "MpdTpcDigitizerAZlt.h"
 #include "MpdTpcClusterFinderAZ.h"
 #include "MpdTpcClusterFinderMlem.h"
@@ -93,27 +92,19 @@ void reco(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outFile
     MpdKalmanFilter *kalman = MpdKalmanFilter::Instance("KF");
     fRun->AddTask(kalman);
 
-#ifndef UseMlem
-    MpdTpcHitProducer* hitPr = new MpdTpcHitProducer(*secGeo);
-    hitPr->SetModular(0);
-    //hitPr->SetPersistance(); //AZ
-    fRun->AddTask(hitPr);
-#else
+#ifdef UseMlem
     //MpdTpcDigitizerAZ* tpcDigitizer = new MpdTpcDigitizerAZ(*secGeo);
     MpdTpcDigitizerAZlt* tpcDigitizer = new MpdTpcDigitizerAZlt(*secGeo);
     tpcDigitizer->SetPersistence(kFALSE);
     fRun->AddTask(tpcDigitizer);
-#endif
 
-    //  MpdTpcClusterFinderTask *tpcClusterFinder = new MpdTpcClusterFinderTask();
-    //  tpcClusterFinder->SetDebug(kFALSE);
-    //  tpcClusterFinder->SetMakeQA(kTRUE);
-    //  tpcClusterFinder->SetCalcResiduals(kFALSE);
-    //  fRun->AddTask(tpcClusterFinder);
-
-#ifdef UseMlem
     MpdTpcClusterFinderMlem *tpcClusAZ = new MpdTpcClusterFinderMlem(*secGeo);
     fRun->AddTask(tpcClusAZ);
+#else
+    MpdTpcHitProducer* hitPr = new MpdTpcHitProducer(*secGeo);
+    hitPr->SetModular(0);
+    //hitPr->SetPersistance(); //AZ
+    fRun->AddTask(hitPr);
 #endif
 
     FairTask* vertZ = new MpdVertexZfinder(*secGeo);

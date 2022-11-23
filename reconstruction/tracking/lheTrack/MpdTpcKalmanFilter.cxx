@@ -13,7 +13,6 @@
 #include "MpdKalmanHit.h"
 #include "MpdTpcDedxTask.h"
 #include "MpdVertexZfinder.h"
-#include "MpdTpcFoundHit.h"
 #include "TpcGeoPar.h"
 #include "TpcPoint.h"
 #include "MpdMCTrack.h"
@@ -44,6 +43,8 @@
 #include "omp.h"
 #include "sys/time.h"
 #endif
+
+using namespace std;
 
 const Double_t MpdTpcKalmanFilter::fgkChi2Cut = 20;  // 50; //20; //100;
 FILE          *lunTpc                         = 0x0; // fopen("dl.dat","w");

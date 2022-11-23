@@ -27,7 +27,6 @@
 #include "TpcPadResponseTask.h"
 //#include "TpcPadResponseTaskQA.h"
 #include "TpcADCTask.h"
-#include "MpdTpcClusterFinderTask.h"
 //#include "MpdTpcClusterFinderTaskQA.h"
 #include "TpcDistributor.h"
 #include "TpcHitFinderTask.h"
@@ -105,9 +104,6 @@ void recoTPC(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outF
 
 //  TpcDistributor* tpcDistributor = new TpcDistributor(10000, kTRUE, kTRUE);
 //  fRun->AddTask(tpcDistributor);
-
-//  MpdTpcClusterFinderTask *tpcClusterFinder = new MpdTpcClusterFinderTask();
-//  fRun->AddTask( tpcClusterFinder );
 
   MpdTpcHitProducer* hitPr = new MpdTpcHitProducer(*secGeo);
   hitPr->SetModular(0);

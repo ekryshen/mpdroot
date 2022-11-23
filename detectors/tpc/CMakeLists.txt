@@ -33,18 +33,14 @@ set(SRCS
   MpdTpc2dCluster.cxx
   MpdTpcClusterFinderAZ.cxx
   MpdTpcClusterFinderMlem.cxx
-  MpdTpcClusterFinderQAHistograms.cxx
-  MpdTpcClusterFinderTask.cxx
   MpdTpcDigit.cxx
   MpdTpcDigitizerAZ.cxx
   MpdTpcDigitizerAZlt.cxx
   MpdTpcDigitizerQAHistograms.cxx
   MpdTpcDigitizerTask.cxx
   MpdTpcEDepParams.cxx
-  MpdTpcFoundHit.cxx
   MpdTpcHit.cxx
   MpdTpcHitProducer.cxx
-  MpdTpcPeak.cxx
   MpdTPCpid.cxx
   MpdTpcSector.cxx
   TaskHelpers.cxx
