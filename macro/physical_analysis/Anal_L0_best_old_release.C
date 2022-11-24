@@ -25,6 +25,7 @@
 #include "MpdParticle.h"
 #include "MpdPid.h"
 #include "MpdVertex.h"
+#include "TpcSectorGeoAZ.h"
 
 // CBM includes
 #include "FairMCPoint.h"
@@ -158,15 +159,18 @@ void AnalL0(Int_t n1 = 0, Int_t n2 = 0, Int_t firstFile = 1)
   TBranch *mcBranch = simITS->GetBranch("MCTrack");
   
   TFile out("L0_10k_PVsmear.test.root","recreate");
-  
+
+  // -----  Initialize geometry   --------------------------------------------
+  BaseTpcSectorGeo *secGeo = new TpcSectorGeoAZ(); 
+
   FairRunAna ana;
   MpdKalmanFilter::Instance("KF")->Init();  
 #ifdef ITS
   recoIts = new MpdTrackFinderIts5spd();
   recoIts->FillGeoScheme();
 #endif
-  recoTpc = new MpdTpcKalmanFilter("TPC Kalman filter");
-  recoTpc->SetSectorGeo(MpdTpcSectorGeo::Instance());
+  recoTpc = new MpdTpcKalmanFilter(*secGeo, "TPC Kalman filter");
+  recoTpc->SetSectorGeo(*secGeo);
   recoTpc->FillGeoScheme();
   
   // n-sigma bands for PID selection

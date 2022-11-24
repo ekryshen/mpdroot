@@ -14,12 +14,13 @@
 
 #include <TVector3.h>
 #include "TClonesArray.h"
+#include "TpcSectorGeoAZ.h"
 
 //---------------------------------------------------------------------------
 class MpdTpcHitProducer : public FairTask {
 
 public:
-   MpdTpcHitProducer();
+   MpdTpcHitProducer(BaseTpcSectorGeo &secGeo);
    ~MpdTpcHitProducer();
 
    virtual InitStatus Init();
@@ -47,10 +48,11 @@ private:
 
    TClonesArray *fHitArray; // Output array of TpcHits
 
-   Int_t    fModular;     // not equal 0 if modular structure of r/out chambers
-   Int_t    fReal;        // not equal 0 if realistic effects (resolution and 2-hit resolution)
-   Double_t fZtpc;        // TPC half-length
-   Bool_t   fPersistance; // to store or not hits
+   TpcSectorGeoAZ *fSecGeo;
+   Int_t           fModular;     // not equal 0 if modular structure of r/out chambers
+   Int_t           fReal;        // not equal 0 if realistic effects (resolution and 2-hit resolution)
+   Double_t        fZtpc;        // TPC half-length
+   Bool_t          fPersistance; // to store or not hits
 
    ClassDef(MpdTpcHitProducer, 1);
 };

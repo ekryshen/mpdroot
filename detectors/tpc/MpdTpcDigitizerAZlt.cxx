@@ -17,7 +17,6 @@
 #include "MpdTpcDigit.h"
 #include "MpdMultiField.h"
 #include "MpdTpcSector.h"
-#include "MpdTpcSectorGeo.h"
 #include "TpcGas.h"
 #include "TpcPoint.h"
 
@@ -59,7 +58,7 @@ static clock_t tAll    = 0;
 // FILE *lunAZ = nullptr; //fopen("gasGain.dat","w");
 //---------------------------------------------------------------------------
 
-MpdTpcDigitizerAZlt::MpdTpcDigitizerAZlt()
+MpdTpcDigitizerAZlt::MpdTpcDigitizerAZlt(BaseTpcSectorGeo &secGeo)
    : FairTask("TPC digitizerAZlt"), fMCPointArray(nullptr), fMCTracksArray(nullptr), fDigits(nullptr),
      fDigits4dArray(nullptr), fSector(nullptr), fHisto(nullptr), fPRF(nullptr), fNoiseThreshold(3.0), fOverflow(1023.1),
      fNumOfPadsInRow(nullptr), fIsHistogramsInitialized(kFALSE), fMakeQA(kFALSE), fOnlyPrimary(kFALSE),
@@ -70,6 +69,9 @@ MpdTpcDigitizerAZlt::MpdTpcDigitizerAZlt()
      fPrintDebugInfo(kFALSE), fOneRow(kFALSE)
 // fOneRow(kTRUE) // debug
 {
+   fSecGeo = dynamic_cast<TpcSectorGeoAZ *>(&secGeo);
+   if (!fSecGeo) Fatal("MpdTpcDigitizerAZlt::MpdTpcDigitizerAZlt", " !!! Wrong geometry type !!! ");
+
    fInputBranchName  = "TpcPoint";
    fOutputBranchName = "MpdTpcDigit";
 
@@ -124,7 +126,6 @@ InitStatus MpdTpcDigitizerAZlt::Init()
    r_min = fSector->GetRmin();
    zCathode = fSector->GetLength(); //cm
    */
-   fSecGeo       = MpdTpcSectorGeo::Instance();
    fNTimeBins    = fSecGeo->GetNTimeBins();
    nSectors      = fSecGeo->NofSectors() * 2;
    pwIn          = fSecGeo->PadWidth(0);
@@ -275,7 +276,7 @@ void MpdTpcDigitizerAZlt::Exec(Option_t *opt)
       // AZ Electronics response
       SignalShaping();
 
-      UInt_t maxTimeBin = (UInt_t)MpdTpcSectorGeo::Instance()->TimeMax() / MpdTpcSectorGeo::Instance()->TimeBin() + 1;
+      UInt_t maxTimeBin = (UInt_t)fSecGeo->TimeMax() / fSecGeo->TimeBin() + 1;
       for (UInt_t iRow = 0; iRow < nRows; ++iRow) {
          for (UInt_t iPad = 0; iPad < (UInt_t)fNumOfPadsInRow[iRow] * 2; ++iPad) {
             // AZ for (UInt_t iTime = 0; iTime < fNTimeBins; ++iTime) {
@@ -315,8 +316,8 @@ void MpdTpcDigitizerAZlt::Check4Edge(UInt_t iSec, TpcPoint *&prePoint, TpcPoint 
 
    TVector3 posG, posL;
    prePoint->Position(posG);
-   Int_t row0 = MpdTpcSectorGeo::Instance()->Global2Local(posG, posL, iSec % (nSectors / 2));
-   row0       = MpdTpcSectorGeo::Instance()->PadRow(row0);
+   Int_t row0 = fSecGeo->Global2Local(posG, posL, iSec % (nSectors / 2));
+   row0       = fSecGeo->PadRow(row0);
    // cout << " Row: " << row0 << " " << iSec << " " << posL[1] << endl;
    if (row0) return;
 
@@ -327,7 +328,7 @@ void MpdTpcDigitizerAZlt::Check4Edge(UInt_t iSec, TpcPoint *&prePoint, TpcPoint 
    if (posL[1] < 0.01) return;  // do not adjust - almost at the entrance
 
    posG += mom;
-   MpdTpcSectorGeo::Instance()->Global2Local(posG, posL1, iSec % (nSectors / 2));
+   fSecGeo->Global2Local(posG, posL1, iSec % (nSectors / 2));
    mom = posL1;
    mom -= posL;               // momentum in sector frame
    if (mom[1] < 0.02) return; // do not adjust - going inward or parallel to sector lower edge
@@ -336,7 +337,7 @@ void MpdTpcDigitizerAZlt::Check4Edge(UInt_t iSec, TpcPoint *&prePoint, TpcPoint 
    mom.SetMag(mom.Mag() / scale);
    posL -= mom;
    // cout << posL[0] << " " << posL[1] << " " << posL[2] << endl;
-   MpdTpcSectorGeo::Instance()->Local2Global(iSec % (nSectors / 2), posL, posG);
+   fSecGeo->Local2Global(iSec % (nSectors / 2), posL, posG);
    virtPoint->SetPosition(posG);
    virtPoint->SetTrackID(prePoint->GetTrackID());
    // AZ prePoint->SetEnergyLoss(prePoint->GetEnergyLoss()*1.3); // 29.10.16 - correct for edge-effect
@@ -463,18 +464,18 @@ void MpdTpcDigitizerAZlt::SignalShaping()
    static Double_t    *reFilt = nullptr, *imFilt = nullptr;
    static TVirtualFFT *fft[2] = {nullptr, nullptr};
    const Double_t      sigma = 190. / 2 / TMath::Sqrt(2 * TMath::Log(2)), sigma2 = sigma * sigma; // FWHM = 190 ns
-   const Int_t         maxTimeBin = MpdTpcSectorGeo::Instance()->TimeMax() / MpdTpcSectorGeo::Instance()->TimeBin() + 1;
+   const Int_t         maxTimeBin = fSecGeo->TimeMax() / fSecGeo->TimeBin() + 1;
 
    if (first == 0) {
       first = 1;
-      nbins = MpdTpcSectorGeo::Instance()->GetNTimeBins();
+      nbins = fSecGeo->GetNTimeBins();
       if (nbins % 2 == 0) --nbins;
       n2     = nbins / 2 + 1;
       icent  = nbins / 2;
       reFilt = new Double_t[nbins];
       imFilt = new Double_t[nbins];
       for (Int_t i = 0; i < nbins; ++i) {
-         Double_t t    = (i - icent) * MpdTpcSectorGeo::Instance()->TimeBin();
+         Double_t t    = (i - icent) * fSecGeo->TimeBin();
          Double_t ampl = TMath::Exp(-t * t / 2 / sigma2);
          if (TMath::Abs(t) > 5 * sigma) ampl = 0;
          reFilt[i] = ampl;
@@ -496,7 +497,7 @@ void MpdTpcDigitizerAZlt::SignalShaping()
    Double_t         *imTot = new Double_t[nbins];
    map<Int_t, Int_t> cumul;                     // cumulative active time bin counter
    const Double_t    ScaleFactor = 0.083916084; // See ampl for details
-   // AZ Int_t nRows = MpdTpcSectorGeo::Instance()->NofRows();
+   // AZ Int_t nRows = fSecGeo->NofRows();
    for (UInt_t iRow = 0; iRow < nRows; ++iRow) {
       for (UInt_t iPad = 0; iPad < (UInt_t)fNumOfPadsInRow[iRow] * 2; ++iPad) {
          memset(reSig, 0, sizeof(Double_t) * nbins);
@@ -619,7 +620,7 @@ void MpdTpcDigitizerAZlt::GetArea(Float_t xEll, Float_t yEll, Float_t radius, ve
    for (Int_t ip = -1; ip < 2; ++ip) {
       Int_t pad1 = pad + ip;
       if (pad1 < 0) continue;
-      if (pad1 >= MpdTpcSectorGeo::Instance()->NPadsInRows()[row] * 2) break;
+      if (pad1 >= fSecGeo->NPadsInRows()[row] * 2) break;
       padIDs.push_back(pad1);
       rowIDs.push_back(row);
    }
@@ -639,7 +640,7 @@ void MpdTpcDigitizerAZlt::GetArea(Float_t xEll, Float_t yEll, Float_t radius, ve
       for (Int_t ip = -1; ip < 2; ++ip) {
          Int_t pad1 = pad + ip;
          if (pad1 < 0) continue;
-         if (pad1 >= MpdTpcSectorGeo::Instance()->NPadsInRows()[row1] * 2) break;
+         if (pad1 >= fSecGeo->NPadsInRows()[row1] * 2) break;
          padIDs.push_back(pad1);
          rowIDs.push_back(row1);
       }
@@ -802,20 +803,20 @@ void MpdTpcDigitizerAZlt::TpcProcessing(const TpcPoint *prePoint, const TpcPoint
                                         const UInt_t iPoint, const UInt_t nPoints)
 {
 
-   Float_t          dE       = 0.0;             // energy loss
-   UInt_t           qTotal   = 0;               // sum of clusters charges (=sum of electrons between two TpcPoints)
-   UInt_t           qCluster = 0;               // charge of cluster (= number of electrons)
-   TLorentzVector   curPointPos;                // coordinates for current TpcPoint
-   TLorentzVector   prePointPos;                // coordinates for previous TpcPoint
-   TLorentzVector   diffPointPos;               // steps for clusters creation
-   TVector3         diffuse;                    // vector of diffuse for every coordinates
-   TVector3         distort;                    // vector of distortion for every coordinates
-   TLorentzVector   electronPos;                // coordinates for created electrons
-   TLorentzVector   clustPos;                   // coordinates for created clusters
-   Float_t          driftl = 0.0;               // length for drifting
-   vector<UInt_t>   clustArr;                   // vector of clusters between two TpcPoints
-   Float_t          localX = 0.0, localY = 0.0; // local coordinates of electron (sector coordinates)
-   MpdTpcSectorGeo *secGeo = MpdTpcSectorGeo::Instance();
+   Float_t         dE       = 0.0;             // energy loss
+   UInt_t          qTotal   = 0;               // sum of clusters charges (=sum of electrons between two TpcPoints)
+   UInt_t          qCluster = 0;               // charge of cluster (= number of electrons)
+   TLorentzVector  curPointPos;                // coordinates for current TpcPoint
+   TLorentzVector  prePointPos;                // coordinates for previous TpcPoint
+   TLorentzVector  diffPointPos;               // steps for clusters creation
+   TVector3        diffuse;                    // vector of diffuse for every coordinates
+   TVector3        distort;                    // vector of distortion for every coordinates
+   TLorentzVector  electronPos;                // coordinates for created electrons
+   TLorentzVector  clustPos;                   // coordinates for created clusters
+   Float_t         driftl = 0.0;               // length for drifting
+   vector<UInt_t>  clustArr;                   // vector of clusters between two TpcPoints
+   Float_t         localX = 0.0, localY = 0.0; // local coordinates of electron (sector coordinates)
+   TpcSectorGeoAZ *secGeo = fSecGeo;
 
    if (fPrintDebugInfo && (iPoint % 1000 == 0))
       cout << UInt_t(iPoint * 1.0 / nPoints * 100.0) << " % of TPC points processed" << endl;

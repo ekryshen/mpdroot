@@ -10,7 +10,7 @@
 //#include "TpcPadPlane.h"
 #include "TpcPoint.h"
 #include "MpdTpcHit.h"
-#include "MpdTpcSectorGeo.h"
+#include "TpcSectorGeoAZ.h"
 #include "MpdTpcKalmanTrack.h"
 #include "MpdKalmanHit.h"
 
@@ -49,9 +49,9 @@ public:
       }
    };
 
-   MpdTpcKalmanFilter();                                                          ///< Default ctor
-   MpdTpcKalmanFilter(const char *name, const char *title = "TPC Kalman filter"); ///< Ctor
-   virtual ~MpdTpcKalmanFilter();                                                 ///< Destructor
+   MpdTpcKalmanFilter(); ///< Default ctor
+   MpdTpcKalmanFilter(BaseTpcSectorGeo &secGeo, const char *name, const char *title = "TPC Kalman filter"); ///< Ctor
+   virtual ~MpdTpcKalmanFilter(); ///< Destructor
 
    virtual InitStatus Init();
    virtual InitStatus ReInit();
@@ -69,7 +69,11 @@ public:
    Int_t         RunKalmanFilter(MpdTpcKalmanTrack *track);              ///< run Kalman filter
    Int_t         GetParticleId(Int_t id);                                ///< particle ID for track id
    void          SetModular(Int_t modular) { fModular = modular; } ///< set != 0 if modular geom. of r/out chambers
-   void          SetSectorGeo(MpdTpcSectorGeo *secGeo) { fSecGeo = secGeo; } ///< set sector geometry
+   void          SetSectorGeo(BaseTpcSectorGeo &secGeo)
+   {
+      fSecGeo = dynamic_cast<TpcSectorGeoAZ *>(&secGeo);
+      if (!fSecGeo) Fatal("MpdTpcKalmanFilter::MpdTpcKalmanFilter", " !!! Wrong geometry type !!! ");
+   } ///< set sector geometry
    // Bool_t Refit(MpdKalmanTrack *track, Double_t mass = 0.13957, Int_t charge = 1, Bool_t skip = kFALSE, Int_t iDir =
    // 1, Bool_t exclude = kFALSE, std::map<Double_t,std::tuple<TMatrixD,TMatrixD,TMatrixD,TMatrixD> > *cache = NULL);
    // ///< refit track using its points for given particle mass and charge
@@ -143,7 +147,7 @@ private:
    Int_t    fZflag;   // primary vertex position estimate quality flag
    Int_t    fModular; // not equal 0 if modular geometry of readout chambers
    // const TpcPadPlane *fPadPlane;        //! pointer to pad plane
-   MpdTpcSectorGeo             *fSecGeo;   //! pointer to sector geometry
+   TpcSectorGeoAZ              *fSecGeo;   //! pointer to sector geometry
    Bool_t                       fUseMCHit; // to use TpcHit branch (hit producer) instead of MpdTpc (clusters)
    std::map<Double_t, matrix4> *fCache;    // cached track parameters for smoother
 

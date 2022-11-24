@@ -27,7 +27,6 @@
 #include "TpcPadResponseTask.h"
 //#include "TpcPadResponseTaskQA.h"
 #include "TpcADCTask.h"
-#include "MpdTpcClusterFinderTask.h"
 //#include "MpdTpcClusterFinderTaskQA.h"
 #include "TpcDistributor.h"
 #include "TpcHitFinderTask.h"
@@ -44,6 +43,7 @@
 #include "MpdEtofMatching.h"
 #include "MpdFillDstTask.h"
 #include "MpdGetNumEvents.h"
+#include "TpcSectorGeoAZ.h"
 
 #include <iostream>
 using namespace std;
@@ -93,6 +93,9 @@ void recoTPC(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outF
 
   // ------------------------------------------------------------------------
 
+  // -----  Initialize geometry   --------------------------------------------
+  BaseTpcSectorGeo *secGeo = new TpcSectorGeoAZ(); 
+
   MpdKalmanFilter *kalman = MpdKalmanFilter::Instance("KF");
   fRun->AddTask(kalman);
 
@@ -102,17 +105,14 @@ void recoTPC(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outF
 //  TpcDistributor* tpcDistributor = new TpcDistributor(10000, kTRUE, kTRUE);
 //  fRun->AddTask(tpcDistributor);
 
-//  MpdTpcClusterFinderTask *tpcClusterFinder = new MpdTpcClusterFinderTask();
-//  fRun->AddTask( tpcClusterFinder );
-
-  MpdTpcHitProducer* hitPr = new MpdTpcHitProducer();
+  MpdTpcHitProducer* hitPr = new MpdTpcHitProducer(*secGeo);
   hitPr->SetModular(0);
   fRun->AddTask(hitPr);
 
-  FairTask* vertZ = new MpdVertexZfinder();
+  FairTask* vertZ = new MpdVertexZfinder(*secGeo);
   fRun->AddTask(vertZ);
 
-  FairTask* recoKF = new MpdTpcKalmanFilter("Kalman filter");
+  FairTask* recoKF = new MpdTpcKalmanFilter(*secGeo, "Kalman filter");
   fRun->AddTask(recoKF);
 
   FairTask* findVtx = new MpdKfPrimaryVertexFinder("Vertex finder");

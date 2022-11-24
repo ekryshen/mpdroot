@@ -24,17 +24,17 @@
 #include <map>
 
 // Collaborating Class Headers -------
+#include "TpcSectorGeoAZ.h"
 
 // Collaborating Class Declarations --
 class MpdTpc2dCluster;
 // class TpcGas;
-class MpdTpcSectorGeo;
 class TClonesArray;
 
 class MpdTpcClusterFinderAZ : public FairTask {
 public:
    // Constructors/Destructors ---------
-   MpdTpcClusterFinderAZ();
+   MpdTpcClusterFinderAZ(BaseTpcSectorGeo &secGeo);
    ~MpdTpcClusterFinderAZ();
 
    // Operators
@@ -66,8 +66,8 @@ private:
    Int_t            fFlags[fgkNpads][fgkNtimes];
    Int_t            fDigis[fgkNpads][fgkNtimes];
    // TpcGas* fGas;
-   Bool_t           fPersistence;
-   MpdTpcSectorGeo *fSecGeo;
+   Bool_t          fPersistence;
+   TpcSectorGeoAZ *fSecGeo;
 
    // Private Methods -----------------
    void ProcessPadrow(Int_t isec, Int_t irow);                     // process one padrow of a sector

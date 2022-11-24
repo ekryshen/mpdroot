@@ -19,9 +19,10 @@
 
 //__________________________________________________________________________
 
-AbstractTpcClusterHitFinder::AbstractTpcClusterHitFinder(const char *name, Bool_t val)
+AbstractTpcClusterHitFinder::AbstractTpcClusterHitFinder(BaseTpcSectorGeo &tpcGeo, const char *name, Bool_t val)
    : FairTask(name), persistence(val)
 {
+   secGeo = &tpcGeo;
 }
 
 //__________________________________________________________________________
@@ -52,18 +53,6 @@ void AbstractTpcClusterHitFinder::Exec(Option_t *opt)
 
 InitStatus AbstractTpcClusterHitFinder::ReadGeometryParameters()
 {
-   // get MpdTpc sector geometry
-   secGeo = MpdTpcSectorGeo::Instance();
-   if (!secGeo) {
-      Error("AbstractTpcClusterHitFinder::readGeometryParameters", "MpdTpcSectorGeo not instantiated!");
-      return kERROR;
-   }
-
-   nSectors  = secGeo->NofSectors() * 2;
-   nRows     = secGeo->NofRows();
-   nTimeBins = secGeo->GetNTimeBins();
-   nPads     = secGeo->NPadsInRows();
-
    return kSUCCESS;
 }
 

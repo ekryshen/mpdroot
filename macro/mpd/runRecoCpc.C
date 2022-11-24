@@ -74,36 +74,32 @@ void runRecoCpc(TString inFile = "mc.1k.root")
   //rtdb->setSecondInput(parInput2);
   // ------------------------------------------------------------------------
   
+
+  // -----  Initialize geometry   --------------------------------------------
+  BaseTpcSectorGeo *secGeo = new TpcSectorGeoAZ(); 
+
   MpdKalmanFilter *kalman = MpdKalmanFilter::Instance("KF");
   fRun->AddTask(kalman);
   //kalman->SetNumer(0);
 
-  MpdTpcDigitizerAZ* tpcDigitizer = new MpdTpcDigitizerAZ();
+  MpdTpcDigitizerAZ* tpcDigitizer = new MpdTpcDigitizerAZ(*secGeo);
   tpcDigitizer->SetPersistence(kFALSE);
   //fRun->AddTask(tpcDigitizer);
 
-  /*
-  MpdTpcClusterFinderTask *tpcClusterFinder = new MpdTpcClusterFinderTask();
-  //  tpcClusterFinder->SetDebug(kFALSE);
-  //  tpcClusterFinder->SetMakeQA(kTRUE);
-  //  tpcClusterFinder->SetCalcResiduals(kFALSE);
-  fRun->AddTask(tpcClusterFinder);
-  */
-
-  MpdTpcClusterFinderAZ *tpcClusAZ = new MpdTpcClusterFinderAZ();
-  //MpdTpcClusterFinderMlem *tpcClusAZ = new MpdTpcClusterFinderMlem();
+  MpdTpcClusterFinderAZ *tpcClusAZ = new MpdTpcClusterFinderAZ(*secGeo);
+  //MpdTpcClusterFinderMlem *tpcClusAZ = new MpdTpcClusterFinderMlem(*secGeo);
   tpcClusAZ->SetPersistence();
   //fRun->AddTask(tpcClusAZ);
 
-  MpdTpcHitProducer* hitPr = new MpdTpcHitProducer();
+  MpdTpcHitProducer* hitPr = new MpdTpcHitProducer(*secGeo);
   //hitPr->SetModular(1);
   //hitPr->SetModular(0);
   fRun->AddTask(hitPr);
 
-  FairTask* vertZ = new MpdVertexZfinder();
+  FairTask* vertZ = new MpdVertexZfinder(*secGeo);
   fRun->AddTask(vertZ);
 
-  MpdTpcKalmanFilter* recoKF = new MpdTpcKalmanFilter("Kalman filter");
+  MpdTpcKalmanFilter* recoKF = new MpdTpcKalmanFilter(*secGeo, "Kalman filter");
   //recoKF->UseTpcHit(kFALSE); // do not use hits from the hit producer
   fRun->AddTask(recoKF);
   

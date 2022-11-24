@@ -148,6 +148,7 @@ find_package(XML2 REQUIRED)
 find_package(FFTW REQUIRED)
 find_package(TDAQ)
 find_package(Eigen3 REQUIRED)
+find_package(NLOHMANN_JSON REQUIRED) # needs json-devel package
 
 #find_package(HEPMC)
 #find_package(CUDA)
@@ -188,7 +189,7 @@ find_package(GSL REQUIRED)
 # Defines all basic include directories from fairbase
 SetBasicVariables()
 set(BASE_INCLUDE_DIRECTORIES ${BASE_INCLUDE_DIRECTORIES} ${SIMPATH}/include/root ${SIMPATH}/include/vmc)
-include_directories(${SIMPATH}/include/root  ${SIMPATH}/include/vmc ${Eigen3_INCLUDE_DIRS})
+include_directories(${SIMPATH}/include/root  ${SIMPATH}/include/vmc ${Eigen3_INCLUDE_DIRS} ${NLOHMANN_JSON_INCLUDE_DIRS})
 find_package(FairLogger)
 SET(PATH ${EXECUTABLE_OUTPUT_PATH} ${PATH})
 

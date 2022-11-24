@@ -21,6 +21,7 @@
 #include "FairTask.h"
 #include "MpdMCTrack.h"
 #include "FairField.h"
+#include "TpcSectorGeoAZ.h"
 
 class TpcGas;
 
@@ -38,7 +39,7 @@ struct DigOrigArray {
 class MpdTpcDigitizerAZ : public FairTask {
 public:
    // Constructors/Destructors ---------
-   MpdTpcDigitizerAZ();
+   MpdTpcDigitizerAZ(BaseTpcSectorGeo &secGeo);
    virtual ~MpdTpcDigitizerAZ();
 
    Bool_t isSubtrackInInwards(const TpcPoint *p1, const TpcPoint *p2);
@@ -75,6 +76,8 @@ private:
    // Private Data Members ------------
    TString fInputBranchName;
    TString fOutputBranchName;
+
+   TpcSectorGeoAZ *fSecGeo;
 
    TClonesArray                *fMCPointArray;  // input array of MC points
    TClonesArray                *fMCTracksArray; // input array of MC tracks

@@ -6,7 +6,6 @@
 #include "MpdTpcKalmanFilter.h"
 #include "MpdCodeTimer.h"
 #include "MpdTpcHit.h"
-#include "MpdTpcSectorGeo.h"
 #include "MpdTpcKalmanTrack.h"
 #include "MpdKalmanFilter.h"
 #include "MpdKalmanTrack.h"
@@ -14,8 +13,6 @@
 #include "MpdKalmanHit.h"
 #include "MpdTpcDedxTask.h"
 #include "MpdVertexZfinder.h"
-#include "MpdTpcFoundHit.h"
-#include "MpdTpcSectorGeo.h"
 #include "TpcGeoPar.h"
 #include "TpcPoint.h"
 #include "MpdMCTrack.h"
@@ -47,6 +44,8 @@
 #include "sys/time.h"
 #endif
 
+using namespace std;
+
 const Double_t MpdTpcKalmanFilter::fgkChi2Cut = 20;  // 50; //20; //100;
 FILE          *lunTpc                         = 0x0; // fopen("dl.dat","w");
 
@@ -66,7 +65,7 @@ MpdTpcKalmanFilter::MpdTpcKalmanFilter()
 }
 
 //__________________________________________________________________________
-MpdTpcKalmanFilter::MpdTpcKalmanFilter(const char *name, const char *title)
+MpdTpcKalmanFilter::MpdTpcKalmanFilter(BaseTpcSectorGeo &secGeo, const char *name, const char *title)
    //: FairTask(name),
    : FairTask("TPC Kalman filter"), fNofEvents(0), fNTracks(0), fNPass(1), fHits(0x0),
      fKHits(new TClonesArray("MpdKalmanHit")), fTracks(new TClonesArray("MpdTpcKalmanTrack")),
@@ -78,6 +77,9 @@ MpdTpcKalmanFilter::MpdTpcKalmanFilter(const char *name, const char *title)
      fCache(new std::map<Double_t, matrix4>)
 {
    /// Constructor
+   fSecGeo = dynamic_cast<TpcSectorGeoAZ *>(&secGeo);
+   if (!fSecGeo) Fatal("MpdTpcKalmanFilter::MpdTpcKalmanFilter", " !!! Wrong geometry type !!! ");
+
    FairTask *dedx = new MpdTpcDedxTask();
    Add(dedx);
    fUseMCHit = kTRUE;
@@ -103,7 +105,6 @@ InitStatus MpdTpcKalmanFilter::Init()
 
    // fVerbose = 10;
    FairRootManager *manager = FairRootManager::Instance();
-   fSecGeo                  = MpdTpcSectorGeo::Instance();
 
    fhLays = new TH1F("hLays", "TPC layers", 150, 0, 150);
 
@@ -1349,9 +1350,7 @@ Int_t MpdTpcKalmanFilter::RunKalmanFilter(MpdTpcKalmanTrack *track)
       // Int_t indx0 = GetHitsInLayer(lay);
 
       if (MpdCodeTimer::Active()) MpdCodeTimer::Instance()->Start(Class()->GetName(), "Time1");
-      Double_t      dChi2Min = 1.e+6, padH = lay < MpdTpcSectorGeo::Instance()->NofRowsReg(0)
-                                                ? MpdTpcSectorGeo::Instance()->PadHeight()
-                                                : MpdTpcSectorGeo::Instance()->PadHeight(1);
+      Double_t dChi2Min = 1.e+6, padH = lay < fSecGeo->NofRowsReg(0) ? fSecGeo->PadHeight() : fSecGeo->PadHeight(1);
       MpdKalmanHit *hitMin = 0x0;
       // cout << " lay, nLay: " << lay << " " << nLay << " " << indx0 << endl;
       Int_t indxBeg = 0, indxEnd = nLay, dIndx = 1, secFirst = -1, isecHit = -1, isecDif = 0;

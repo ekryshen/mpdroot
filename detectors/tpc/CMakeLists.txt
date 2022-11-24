@@ -6,6 +6,7 @@ set(INCLUDE_DIRECTORIES
   ${BASE_INCLUDE_DIRECTORIES}
   ${CMAKE_CURRENT_LIST_DIR}
   ${CMAKE_CURRENT_LIST_DIR}/clusterHitFinder
+  ${CMAKE_CURRENT_LIST_DIR}/geometry
   ${CMAKE_SOURCE_DIR}/core/mpdField
   ${CMAKE_SOURCE_DIR}/detectors/tof
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
@@ -32,21 +33,16 @@ set(SRCS
   MpdTpc2dCluster.cxx
   MpdTpcClusterFinderAZ.cxx
   MpdTpcClusterFinderMlem.cxx
-  MpdTpcClusterFinderQAHistograms.cxx
-  MpdTpcClusterFinderTask.cxx
   MpdTpcDigit.cxx
   MpdTpcDigitizerAZ.cxx
   MpdTpcDigitizerAZlt.cxx
   MpdTpcDigitizerQAHistograms.cxx
   MpdTpcDigitizerTask.cxx
   MpdTpcEDepParams.cxx
-  MpdTpcFoundHit.cxx
   MpdTpcHit.cxx
   MpdTpcHitProducer.cxx
-  MpdTpcPeak.cxx
   MpdTPCpid.cxx
   MpdTpcSector.cxx
-  MpdTpcSectorGeo.cxx
   TaskHelpers.cxx
   TpcDetector.cxx
   TpcGas.cxx
@@ -55,6 +51,8 @@ set(SRCS
   TpcPoint.cxx
   clusterHitFinder/AbstractTpcClusterHitFinder.cxx
   clusterHitFinder/TpcClusterHitFinderMlem.cxx
+  geometry/BaseTpcSectorGeo.cxx
+  geometry/TpcSectorGeoAZ.cxx
 )
 
 Set(HEADERS)

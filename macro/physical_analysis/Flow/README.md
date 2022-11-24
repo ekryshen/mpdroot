@@ -362,12 +362,12 @@ Optionally, change `auau.09gev.mbias.98k.ftn14` to `test.f14` everywhere in the 
 
 To change from hit producer to cluster finder, find in `mpdroot/macro/mpd/reco.C` lines:
 
-        MpdTpcHitProducer* hitPr = new MpdTpcHitProducer();
+        MpdTpcHitProducer* hitPr = new MpdTpcHitProducer(*secGeo);
         hitPr->SetModular(0);
         fRun->AddTask(hitPr);
 and change them into:
 
-        MpdTpcDigitizerAZ* tpcDigitizer = new MpdTpcDigitizerAZ();
+        MpdTpcDigitizerAZ* tpcDigitizer = new MpdTpcDigitizerAZ(*secGeo);
         tpcDigitizer->SetPersistence(kFALSE);
         fRun->AddTask(tpcDigitizer);
 

@@ -14,7 +14,6 @@
 
 // MPD includes
 #include "MpdTpcHitProducer.h"
-#include "MpdTpcClusterFinderTask.h"
 #include "MpdTpcDigitizerAZ.h"
 #include "MpdTpcClusterFinderAZ.h"
 #include "MpdTpcClusterFinderMlem.h"
@@ -33,6 +32,7 @@
 #include "MpdFillDstTask.h"
 #include "MpdGetNumEvents.h"
 #include "MpdEmcHitCreation.h"
+#include "TpcSectorGeoAZ.h"
 
 #include <iostream>
 using namespace std;
@@ -91,35 +91,30 @@ void reco(TString inFile = "$VMCWORKDIR/macro/mpd/evetest.root", TString outFile
    rtdb->setOutput(parIo1);
    rtdb->saveOutput();
    // ------------------------------------------------------------------------
+   
+   // -----  Initialize geometry   --------------------------------------------
+   BaseTpcSectorGeo *secGeo = new TpcSectorGeoAZ(); 
 
    MpdKalmanFilter *kalman = MpdKalmanFilter::Instance("KF");
    fRun->AddTask(kalman);
 
 #ifdef Mlem
-   MpdTpcDigitizerAZ *tpcDigitizer = new MpdTpcDigitizerAZ();
+   MpdTpcDigitizerAZ *tpcDigitizer = new MpdTpcDigitizerAZ(*secGeo);
    tpcDigitizer->SetPersistence(kFALSE);
    fRun->AddTask(tpcDigitizer);
-#endif
 
-   //  MpdTpcClusterFinderTask *tpcClusterFinder = new MpdTpcClusterFinderTask();
-   //  tpcClusterFinder->SetDebug(kFALSE);
-   //  tpcClusterFinder->SetMakeQA(kTRUE);
-   //  tpcClusterFinder->SetCalcResiduals(kFALSE);
-   //  fRun->AddTask(tpcClusterFinder);
-
-#ifdef Mlem
-   MpdTpcClusterFinderMlem *tpcClusAZ = new MpdTpcClusterFinderMlem();
+   MpdTpcClusterFinderMlem *tpcClusAZ = new MpdTpcClusterFinderMlem(*secGeo);
    fRun->AddTask(tpcClusAZ);
 #else
-   MpdTpcHitProducer *hitPr = new MpdTpcHitProducer();
+   MpdTpcHitProducer *hitPr = new MpdTpcHitProducer(*secGeo);
    hitPr->SetModular(0);
    fRun->AddTask(hitPr);
 #endif
 
-   FairTask *vertZ = new MpdVertexZfinder();
+   FairTask *vertZ = new MpdVertexZfinder(*secGeo);
    fRun->AddTask(vertZ);
 
-   MpdTpcKalmanFilter *recoKF = new MpdTpcKalmanFilter("Kalman filter");
+   MpdTpcKalmanFilter *recoKF = new MpdTpcKalmanFilter(*secGeo,"Kalman filter");
 #ifdef Mlem
    recoKF->UseTpcHit(kFALSE); // do not use hits from the hit producer
 #endif

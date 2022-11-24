@@ -23,6 +23,7 @@
 #include "MpdTpcKalmanFilter.h"
 #include "MpdTofHitProducer.h"
 #include "MpdTofMatching.h"
+#include "TpcSectorGeoAZ.h"
 
 #include <iostream>
 using namespace std;
@@ -89,6 +90,9 @@ void reco(TString inFile = "evetest.root")
   // fRun->LoadGeometry();   // EL
   // ------------------------------------------------------------------------
   
+  // -----  Initialize geometry   --------------------------------------------
+  BaseTpcSectorGeo *secGeo = new TpcSectorGeoAZ(); 
+
 //   TpcClusterizerTask* tpcClusterizer = new TpcClusterizerTask();
 //   fRun->AddTask(tpcClusterizer);
     
@@ -104,14 +108,14 @@ void reco(TString inFile = "evetest.root")
   //FairTask* trackMS = new TpcLheHitsMaker("Hit producer");
   //fRun->AddTask(trackMS);
 
-  MpdTpcHitProducer* hitPr = new MpdTpcHitProducer();
+  MpdTpcHitProducer* hitPr = new MpdTpcHitProducer(*secGeo);
   hitPr->SetModular(0);
   fRun->AddTask(hitPr);
 
-  FairTask* vertZ = new MpdVertexZfinder();
+  FairTask* vertZ = new MpdVertexZfinder(*secGeo);
   fRun->AddTask(vertZ);
 
-  FairTask* recoKF = new MpdTpcKalmanFilter("Kalman filter");
+  FairTask* recoKF = new MpdTpcKalmanFilter(*secGeo, "Kalman filter");
   fRun->AddTask(recoKF);
 
   FairTask* findVtx = new MpdKfPrimaryVertexFinder("Vertex finder");
