@@ -115,6 +115,30 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
   return hits;
 }
 
+/// Converts a track into the MpdRoot representation.
+inline void convertTrack(MpdTpcKalmanTrack *track,
+                         const Mpd::Tpc::ProtoTrack &trajectory) {
+  // TODO: Fill the track.
+  for (const auto ihit : trajectory) {
+    // FIXME: Default track constructor => fHits == null.
+    // track->GetHits()->Add(new MpdKalmanHit());
+  }
+}
+
+/// Converts tracks into the MpdRoot representation.
+inline void convertTracks(TClonesArray *tracks,
+                          const Mpd::Tpc::ProtoTrackContainer &trajectories) {
+  tracks->Clear();
+  tracks->Expand(trajectories.size());
+
+  Int_t nTracks = 0;
+  for (const auto &trajectory : trajectories) {
+    auto *track = new ((*tracks)[nTracks++])
+        MpdTpcKalmanTrack(0., TVector3{0., 0., 0.});
+    convertTrack(track, trajectory);
+  }
+}
+
 //===----------------------------------------------------------------------===//
 // Init / ReInit Tasks
 //===----------------------------------------------------------------------===//
@@ -128,9 +152,9 @@ InitStatus MpdTpcTracker::Init() {
       Acts::Logging::DEBUG
   );
 
-  // FIXME: Should be a field.
-  auto *fTracks = new TClonesArray("MpdTpcKalmanTrack");
-  FairRootManager::Instance()->Register("TpcKalmanTrack", "MpdKalmanTrack", fTracks, kTRUE);
+  fKalmanTracks = new TClonesArray("MpdTpcKalmanTrack");
+  FairRootManager::Instance()->Register("TpcKalmanTrack", "MpdKalmanTrack",
+      fKalmanTracks, kTRUE);
 
   std::cout << "[MpdTpcTracker::Init]: Finished" << std::endl;
   return kSUCCESS;
@@ -173,20 +197,25 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
   fRunner->execute(hits);
 
-  if (PlotGraphs) {
-    const auto &trajectories =
-        context.eventStore.get<Mpd::Tpc::ProtoTrackContainer>(
-            config.trackFinding.outputTrackCandidates);
+  // Convert the found track to to the MpdRoot representation.
+  const auto &trajectories =
+      context.eventStore.get<Mpd::Tpc::ProtoTrackContainer>(
+          config.trackFinding.outputTrackCandidates);
 
+  convertTracks(fKalmanTracks, trajectories);
+  //fKalmanHits = getArray("MpdKalmanHit");
+
+  // Plot graphs if required.
+  if constexpr(PlotGraphs) {
     const auto &spacePoints =
         context.eventStore.get<Mpd::Tpc::SpacePointContainer>(
             config.spacePointMaking.outputSpacePoints);
 
-    // Get the track recognition statistics (for debugging).
+    // Get the track recognition statistics.
     auto statistics = fRunner->getStatistics();
     auto nTracks = fRunner->getTracksNumber();
 
-    // Build histagrams.
+    // Build histograms.
     buildHistograms(statistics, nTracks, eventCounter);
     plotQualityOnP(hits, trajectories, eventCounter);
 
@@ -194,15 +223,12 @@ void MpdTpcTracker::Exec(Option_t *option) {
     std::shared_ptr<const Acts::TrackingGeometry> geometry =
         config.detector->getGeometry();
 
-    Int_t lineWidth = 3;
-    Bool_t multicoloured = false;
+    const Int_t lineWidth = 3;
+    const Bool_t multicoloured = false;
     plotOutputTracks(6000, 6000, geometry, spacePoints, hits,
                      trajectories, eventCounter, multicoloured,
                      lineWidth, CoordSystem::XY);
   }
-  // Convert the output tracks.
-//  fKalmanHits = getArray("MpdKalmanHit");
-//  fKalmanTracks = getArray("MpdTpcKalmanTrack");
 
   if (MpdCodeTimer::Active()) {
     MpdCodeTimer::Instance()->Stop(Class()->GetName(), __FUNCTION__);
