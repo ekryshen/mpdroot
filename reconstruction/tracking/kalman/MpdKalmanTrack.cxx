@@ -15,23 +15,35 @@
 
 // TpcLheKalmanFilter* TpcLheKalmanTrack::fgKF = 0x0;
 
+inline TObjArray *CreateHitsArray(Int_t size) {
+  return size == 0 ? nullptr : new TObjArray(size);
+}
+
+inline TMatrixD *CloneMatrix(TMatrixD *matrix, Int_t m, Int_t n) {
+  return matrix ? new TMatrixD(*matrix) : new TMatrixD(m, n);
+}
+
+inline TMatrixDSym *CloneMatrix(TMatrixDSym *matrix, Int_t n) {
+  return matrix ? new TMatrixDSym(*matrix) : new TMatrixDSym(n);
+}
+
 //__________________________________________________________________________
-MpdKalmanTrack::MpdKalmanTrack()
+MpdKalmanTrack::MpdKalmanTrack(Int_t size)
    : TObject(), fID(0), fNhits(0), fTrackDir(kInward), fTrackType(kBarrel), fLastLay(0), fNofWrong(0), fNode(""),
      fNodeNew(""), fPartID(0), fPos(0.), fPosNew(0.), fPosAtHit(0.), fChi2(0.), fChi2Vertex(0.), fLength(0.),
      fLengAtHit(0.), fParam(0x0), fParamNew(0x0), fParamAtHit(0x0), fCovar(0x0), fWeight(0x0), fWeightAtHit(0x0),
-     fHits(0x0), fFlag(kOk)
+     fHits(CreateHitsArray(size)), fFlag(kOk)
 {
    /// Default constructor
 }
 
 //__________________________________________________________________________
-MpdKalmanTrack::MpdKalmanTrack(Double_t pos, TVector3 &vertex)
+MpdKalmanTrack::MpdKalmanTrack(Double_t pos, TVector3 &vertex, Int_t size)
    : TObject(), fID(0), fNhits(0), fTrackDir(kInward), fTrackType(kBarrel), fLastLay(0), fNofWrong(0), fNode(""),
      fNodeNew(""), fPartID(0), fPos(pos), fPosNew(pos), fPosAtHit(0.), fChi2(0.), fChi2Vertex(0.), fLength(0.),
      fLengAtHit(0.), fParam(new TMatrixD(5, 1)), fParamNew(new TMatrixD(5, 1)), fParamAtHit(new TMatrixD(5, 1)),
      fCovar(new TMatrixDSym(5)), fWeight(new TMatrixDSym(5)), fWeightAtHit(new TMatrixDSym(5)), fVertex(vertex),
-     fHits(new TObjArray(70)), fFlag(kOk)
+     fHits(CreateHitsArray(size)), fFlag(kOk)
 {
    /// Constructor from a track position and vertex
 
@@ -40,27 +52,35 @@ MpdKalmanTrack::MpdKalmanTrack(Double_t pos, TVector3 &vertex)
 
 //__________________________________________________________________________
 MpdKalmanTrack::MpdKalmanTrack(const MpdKalmanTrack &track)
-   : TObject(track), fID(track.fID), fNhits(track.fNhits), fTrackDir(track.fTrackDir), fTrackType(track.fTrackType),
-     fLastLay(track.fLastLay), fNofWrong(track.fNofWrong), fNode(track.fNode), fNodeNew(track.fNodeNew),
-     fPartID(track.fPartID), fPos(track.fPos), fPosNew(track.fPosNew), fPosAtHit(track.fPosAtHit), fChi2(track.fChi2),
-     fChi2Vertex(track.fChi2Vertex), fLength(track.fLength), fLengAtHit(track.fLengAtHit),
-     fParam(new TMatrixD(*(track.fParam))),
-     // fParamNew(new TMatrixD(*(track.fParamNew))),
-     fParamAtHit(new TMatrixD(*(track.fParamAtHit))), fCovar(new TMatrixDSym(*(track.fCovar))),
-     // fWeight(new TMatrixDSym(*(track.fWeight))),
-     fWeightAtHit(new TMatrixDSym(*(track.fWeightAtHit))), fVertex(track.fVertex), fHits(new TObjArray(70)),
-     fStepMap(track.fStepMap), fFlag(track.fFlag)
+   : TObject(track),
+     fID(track.fID),
+     fNhits(track.fNhits),
+     fTrackDir(track.fTrackDir),
+     fTrackType(track.fTrackType),
+     fLastLay(track.fLastLay),
+     fNofWrong(track.fNofWrong),
+     fNode(track.fNode),
+     fNodeNew(track.fNodeNew),
+     fPartID(track.fPartID),
+     fPos(track.fPos),
+     fPosNew(track.fPosNew),
+     fPosAtHit(track.fPosAtHit),
+     fChi2(track.fChi2),
+     fChi2Vertex(track.fChi2Vertex),
+     fLength(track.fLength),
+     fLengAtHit(track.fLengAtHit),
+     fParam(CloneMatrix(track.fParam, 5, 1)),
+     fParamNew(CloneMatrix(track.fParamNew, 5, 1)),
+     fParamAtHit(CloneMatrix(track.fParamAtHit, 5, 1)),
+     fCovar(CloneMatrix(track.fCovar, 5)),
+     fWeight(CloneMatrix(track.fWeight, 5)),
+     fWeightAtHit(CloneMatrix(track.fWeightAtHit, 5)),
+     fVertex(track.fVertex),
+     fHits(CreateHitsArray(track.fHits->GetEntriesFast())),
+     fStepMap(track.fStepMap),
+     fFlag(track.fFlag)
 {
    /// copy constructor
-
-   if (track.fParamNew)
-      fParamNew = new TMatrixD(*(track.fParamNew));
-   else
-      fParamNew = new TMatrixD(5, 1);
-   if (track.fWeight)
-      fWeight = new TMatrixDSym(*(track.fWeight));
-   else
-      fWeight = new TMatrixDSym(5);
 
    if (track.fHits == 0x0) return;
    Int_t nHits = track.fHits->GetEntriesFast();
@@ -97,23 +117,16 @@ MpdKalmanTrack &MpdKalmanTrack::operator=(const MpdKalmanTrack &track)
    fChi2Vertex  = track.fChi2Vertex;
    fLength      = track.fLength;
    fLengAtHit   = track.fLengAtHit;
-   fParam       = new TMatrixD(*(track.fParam));
-   fParamAtHit  = new TMatrixD(*(track.fParamAtHit));
-   fCovar       = new TMatrixDSym(*(track.fCovar));
-   fWeightAtHit = new TMatrixDSym(*(track.fWeightAtHit));
+   fParam       = CloneMatrix(track.fParam, 5, 1);
+   fParamNew    = CloneMatrix(track.fParamNew, 5, 1);
+   fParamAtHit  = CloneMatrix(track.fParamAtHit, 5, 1);
+   fCovar       = CloneMatrix(track.fCovar, 5);
+   fWeight      = CloneMatrix(track.fWeight, 5);
+   fWeightAtHit = CloneMatrix(track.fWeightAtHit, 5);
    fVertex      = track.fVertex;
-   fHits        = new TObjArray(70);
+   fHits        = CreateHitsArray(track.fHits->GetEntriesFast());
    fStepMap     = track.fStepMap;
    fFlag        = track.fFlag;
-
-   if (track.fParamNew)
-      fParamNew = new TMatrixD(*(track.fParamNew));
-   else
-      fParamNew = new TMatrixD(5, 1);
-   if (track.fWeight)
-      fWeight = new TMatrixDSym(*(track.fWeight));
-   else
-      fWeight = new TMatrixDSym(5);
 
    if (track.fHits == 0x0) return *this;
    Int_t nHits = track.fHits->GetEntriesFast();

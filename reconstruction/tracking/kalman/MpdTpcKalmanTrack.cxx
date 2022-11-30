@@ -25,16 +25,21 @@
 
 using namespace std;
 
+inline TClonesArray *CreateTrHitsArray(Int_t size) {
+  return size == 0 ? nullptr : new TClonesArray("MpdKalmanHit", size);
+}
+
 //__________________________________________________________________________
-MpdTpcKalmanTrack::MpdTpcKalmanTrack() : MpdKalmanTrack(), fTrHits(0x0)
+MpdTpcKalmanTrack::MpdTpcKalmanTrack(Int_t size)
+    : MpdKalmanTrack(size), fTrHits(CreateTrHitsArray(size))
 {
    /// Default constructor
 }
 
 //__________________________________________________________________________
 MpdTpcKalmanTrack::MpdTpcKalmanTrack(MpdKalmanHit *hitOut, MpdKalmanHit *hitIn, TVector3 &vertex, Double_t pt,
-                                     Double_t *params)
-   : MpdKalmanTrack(0., vertex), fTrHits(new TClonesArray("MpdKalmanHit", 70))
+                                     Double_t *params, Int_t size)
+   : MpdKalmanTrack(0., vertex), fTrHits(CreateTrHitsArray(size))
 {
    /// Constructor from 2 hits
 
@@ -49,8 +54,8 @@ MpdTpcKalmanTrack::MpdTpcKalmanTrack(MpdKalmanHit *hitOut, MpdKalmanHit *hitIn, 
 
 //__________________________________________________________________________
 MpdTpcKalmanTrack::MpdTpcKalmanTrack(MpdKalmanHit *hitOut, MpdKalmanHit *hitIn, TVector3 &vertex, TVector3 &posOut,
-                                     TVector3 &posIn, Double_t pt, Double_t *params)
-   : MpdKalmanTrack(0., vertex), fTrHits(new TClonesArray("MpdKalmanHit", 70))
+                                     TVector3 &posIn, Double_t pt, Double_t *params, Int_t size)
+   : MpdKalmanTrack(0., vertex), fTrHits(CreateTrHitsArray(size))
 {
    /// Constructor from 2 hits and 2 TVector3's (modular geometry)
 
@@ -63,7 +68,7 @@ MpdTpcKalmanTrack::MpdTpcKalmanTrack(MpdKalmanHit *hitOut, MpdKalmanHit *hitIn, 
 
 //__________________________________________________________________________
 MpdTpcKalmanTrack::MpdTpcKalmanTrack(const MpdTpcKalmanTrack &track)
-   : MpdKalmanTrack(track), fTrHits(new TClonesArray("MpdKalmanHit", 70))
+   : MpdKalmanTrack(track), fTrHits(CreateTrHitsArray(track.fTrHits->GetEntriesFast()))
 {
    /// copy constructor
 
@@ -94,9 +99,10 @@ MpdTpcKalmanTrack &MpdTpcKalmanTrack::operator=(const MpdTpcKalmanTrack &track)
       fTrHits->Delete();
       delete fTrHits;
    }
-   fTrHits = new TClonesArray("MpdKalmanHit", 70);
 
    Int_t nHits = track.fTrHits->GetEntriesFast();
+   fTrHits = CreateTrHitsArray(nHits);
+
    for (Int_t i = 0; i < nHits; ++i) {
       MpdKalmanHit *hit = (MpdKalmanHit *)(track.fTrHits->UncheckedAt(i));
       new ((*fTrHits)[i]) MpdKalmanHit(*hit);

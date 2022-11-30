@@ -46,6 +46,7 @@ static constexpr auto momScalor = Acts::UnitConstants::GeV /* MPD  */ /
 
 /// Converts MC points to the internal representation.
 inline Mpd::Tpc::InputHitContainer convertTpcPoints(TClonesArray *tpcPoints) {
+  assert(tpcPoints);
   const auto nTpcPoints = tpcPoints->GetEntriesFast();
 
   Mpd::Tpc::InputHitContainer hits;
@@ -76,6 +77,8 @@ inline Mpd::Tpc::InputHitContainer convertTpcPoints(TClonesArray *tpcPoints) {
 /// Converts TPC hits to the internal representation.
 inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
                                                   TClonesArray *tpcPoints) {
+  assert(tpcHits && tpcPoints);
+
   // Connect information on momentum (for estimating the algorithm efficiency).
   std::unordered_map<int, Acts::Vector3> momentum;
   const auto nTpcPoints = tpcPoints->GetEntriesFast();
@@ -83,9 +86,9 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
   for (Int_t i = 0; i < nTpcPoints; i++) {
     const auto *tpcPoint = static_cast<TpcPoint*>(tpcPoints->UncheckedAt(i));
     momentum[tpcPoint->GetTrackID()] = Acts::Vector3{
-                                         tpcPoint->GetPx() * momScalor,
-                                         tpcPoint->GetPx() * momScalor,
-                                         tpcPoint->GetPz() * momScalor
+                                           tpcPoint->GetPx() * momScalor,
+                                           tpcPoint->GetPx() * momScalor,
+                                           tpcPoint->GetPz() * momScalor
                                        };
   }
 
@@ -115,27 +118,56 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
   return hits;
 }
 
+/// Converts a hit into the MpdRoot representation.
+inline MpdKalmanHit *convertHit(const BaseTpcSectorGeo &secGeo,
+                                TClonesArray *tpcHits, int ihit) {
+  const auto *hit = static_cast<MpdTpcHit*>(tpcHits->UncheckedAt(ihit));
+
+  Int_t lay = hit->GetLayer();
+  Double_t err[2] = { hit->GetDx(), hit->GetDz() };
+  Double_t meas[2] = { hit->GetLocalX(), hit->GetLocalZ() };
+
+  Double_t cossin[2] = {hit->GetX(), hit->GetY()};
+  Int_t padID  = hit->GetDetectorID() & 0x1f; // FIXME: sector.
+
+  const auto yMin = secGeo.YPADAREA_LOWEREDGE;
+  const auto dPhi = secGeo.SECTOR_PHI_RAD;
+  const auto xsec = (hit->GetLocalY() + yMin) * TMath::Tan(dPhi / 2.);
+  const auto xloc = hit->GetLocalX();
+  const auto edge = xloc < 0 ? xloc + xsec : xloc - xsec;
+
+  auto *hitK = new MpdKalmanHit(lay * 1000000 + padID, 2, MpdKalmanHit::kFixedP, meas, err, cossin,
+      hit->GetEnergyLoss() / hit->GetStep(), hit->GetLocalY(), ihit, edge);
+
+  hitK->SetLength(hit->GetLength());
+  hitK->SetFlag(hitK->GetFlag() | hit->GetFlag());
+
+  return hitK;
+}
+
 /// Converts a track into the MpdRoot representation.
-inline void convertTrack(MpdTpcKalmanTrack *track,
+inline void convertTrack(const BaseTpcSectorGeo &secGeo,
+                         TClonesArray *tpcHits,
+                         MpdTpcKalmanTrack *track,
                          const Mpd::Tpc::ProtoTrack &trajectory) {
-  // TODO: Fill the track.
   for (const auto ihit : trajectory) {
-    // FIXME: Default track constructor => fHits == null.
-    // track->GetHits()->Add(new MpdKalmanHit());
+    track->GetHits()->Add(convertHit(secGeo, tpcHits, ihit));
   }
+  track->SetNofHits(trajectory.size());
 }
 
 /// Converts tracks into the MpdRoot representation.
-inline void convertTracks(TClonesArray *tracks,
+inline void convertTracks(const BaseTpcSectorGeo &secGeo,
+                          TClonesArray *tpcHits,
+                          TClonesArray *tracks,
                           const Mpd::Tpc::ProtoTrackContainer &trajectories) {
   tracks->Clear();
   tracks->Expand(trajectories.size());
 
   Int_t nTracks = 0;
   for (const auto &trajectory : trajectories) {
-    auto *track = new ((*tracks)[nTracks++])
-        MpdTpcKalmanTrack(0., TVector3{0., 0., 0.});
-    convertTrack(track, trajectory);
+    auto *track = new ((*tracks)[nTracks++]) MpdTpcKalmanTrack(trajectory.size());
+    convertTrack(secGeo, tpcHits, track, trajectory);
   }
 }
 
@@ -153,8 +185,8 @@ InitStatus MpdTpcTracker::Init() {
   );
 
   fKalmanTracks = new TClonesArray("MpdTpcKalmanTrack");
-  FairRootManager::Instance()->Register("TpcKalmanTrack", "MpdKalmanTrack",
-      fKalmanTracks, kTRUE);
+  FairRootManager::Instance()->Register(
+      "TpcKalmanTrack", "MpdKalmanTrack", fKalmanTracks, kTRUE);
 
   std::cout << "[MpdTpcTracker::Init]: Finished" << std::endl;
   return kSUCCESS;
@@ -180,12 +212,9 @@ void MpdTpcTracker::Exec(Option_t *option) {
     MpdCodeTimer::Instance()->Start(Class()->GetName(), __FUNCTION__);
   }
 
-  // Get the MC points.
+  // Get the MC points and TPC hits.
   fPoints = getArray("TpcPoint");
-  assert(fPoints);
-  // Get the TPC hits.
   fHits = getArray("TpcRecPoint");
-  assert(fHits);
 
   // Convert the input points to the internal representation.
   auto hits = UseMcHits ? convertTpcPoints(fPoints)
@@ -202,8 +231,7 @@ void MpdTpcTracker::Exec(Option_t *option) {
       context.eventStore.get<Mpd::Tpc::ProtoTrackContainer>(
           config.trackFinding.outputTrackCandidates);
 
-  convertTracks(fKalmanTracks, trajectories);
-  //fKalmanHits = getArray("MpdKalmanHit");
+  //convertTracks(fSecGeo, fHits, fKalmanTracks, trajectories);
 
   // Plot graphs if required.
   if constexpr(PlotGraphs) {

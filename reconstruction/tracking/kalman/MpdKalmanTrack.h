@@ -23,11 +23,11 @@ public:
    enum TrackFlag { kOk, kNoOut };
 
 public:
-   MpdKalmanTrack();                                       ///< Default ctor
-   MpdKalmanTrack(Double_t pos, TVector3 &vertex);         ///< Ctor from position and vertex
-   virtual ~MpdKalmanTrack();                              ///< Destructor
-   MpdKalmanTrack(const MpdKalmanTrack &track);            ///< copy constructor
-   MpdKalmanTrack &operator=(const MpdKalmanTrack &track); ///< assignment operator
+   MpdKalmanTrack(Int_t size = 0);                                  ///< Default ctor
+   MpdKalmanTrack(Double_t pos, TVector3 &vertex, Int_t size = 70); ///< Ctor from position and vertex
+   virtual ~MpdKalmanTrack();                                       ///< Destructor
+   MpdKalmanTrack(const MpdKalmanTrack &track);                     ///< copy constructor
+   MpdKalmanTrack &operator=(const MpdKalmanTrack &track);          ///< assignment operator
 
    Int_t     GetTrackID() const { return fID; }         ///< get track ID
    TrackDir  GetDirection() const { return fTrackDir; } ///< Get track direction

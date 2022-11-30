@@ -27,6 +27,7 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_SOURCE_DIR}/core/mpdBase
   ${CMAKE_SOURCE_DIR}/core/mpdField
   ${CMAKE_SOURCE_DIR}/detectors/tpc
+  ${CMAKE_SOURCE_DIR}/detectors/tpc/geometry
   ${CMAKE_SOURCE_DIR}/reconstruction/acts-tracking
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/lheTrack

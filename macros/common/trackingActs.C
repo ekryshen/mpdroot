@@ -106,7 +106,7 @@ void trackingActs(TString inFile = "evetest.root", TString outFile = "mpddst.roo
    FairTask *vertZ = new MpdVertexZfinder(*secGeo);
    fRun->AddTask(vertZ);
 
-   MpdTpcTracker *recoKF = new MpdTpcTracker();
+   MpdTpcTracker *recoKF = new MpdTpcTracker(*secGeo);
 
 #ifdef UseMlem
 //   recoKF->UseTpcHit(kFALSE); // do not use hits from the hit producer

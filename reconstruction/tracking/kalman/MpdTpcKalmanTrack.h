@@ -15,12 +15,12 @@ class TVector3;
 class MpdTpcKalmanTrack : public MpdKalmanTrack {
 
 public:
-   MpdTpcKalmanTrack();          ///< Default ctor
-   virtual ~MpdTpcKalmanTrack(); ///< Destructor
+   MpdTpcKalmanTrack(Int_t size = 0); ///< Default ctor
+   virtual ~MpdTpcKalmanTrack();      ///< Destructor
    MpdTpcKalmanTrack(MpdKalmanHit *hitOut, MpdKalmanHit *hitIn, TVector3 &vertex, Double_t pt,
-                     Double_t *params); ///< Ctor from 2 hits
+                     Double_t *params, Int_t size = 70); ///< Ctor from 2 hits
    MpdTpcKalmanTrack(MpdKalmanHit *hitOut, MpdKalmanHit *hitIn, TVector3 &vertex, TVector3 &posOut, TVector3 &posIn,
-                     Double_t pt, Double_t *params);                             ///< Ctor from 2 hits and 2 TVector3
+                     Double_t pt, Double_t *params, Int_t size = 70);            ///< Ctor from 2 hits and 2 TVector3
    MpdTpcKalmanTrack(const MpdTpcKalmanTrack &track);                            ///< copy constructor
    MpdTpcKalmanTrack &operator=(const MpdTpcKalmanTrack &track);                 // assignment operator
    Int_t              GetNofTrHits() const { return fTrHits->GetEntriesFast(); } ///< get number of track hits

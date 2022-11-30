@@ -7,10 +7,14 @@
 
 #include "MpdTpcRunner.h"
 
+#include "BaseTpcSectorGeo.h"
+
 #include <FairTask.h>
 #include <TClonesArray.h>
 
 #include <memory>
+
+class BaseTpcSectorGeo;
 
 /// @brief Acts-based track finder for TPC.
 class MpdTpcTracker final : public FairTask {
@@ -19,8 +23,10 @@ public:
   static constexpr auto UseMcHits  = false;
   static constexpr auto PlotGraphs = true;
    
-  explicit MpdTpcTracker(const char *title = TaskTitle):
-      FairTask(title) {}
+  explicit MpdTpcTracker(const BaseTpcSectorGeo &secGeo,
+                         const char *title = TaskTitle):
+      FairTask(title), fSecGeo(secGeo) {}
+
   virtual ~MpdTpcTracker() {}
 
   InitStatus Init() override;
@@ -33,8 +39,9 @@ private:
 
   TClonesArray *fPoints;
   TClonesArray *fHits;
-  TClonesArray *fKalmanHits;
   TClonesArray *fKalmanTracks;
+
+  const BaseTpcSectorGeo &fSecGeo;
 
   ClassDef(MpdTpcTracker, 0);
 };
