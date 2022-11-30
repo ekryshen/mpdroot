@@ -19,6 +19,7 @@
 # TPC
 /detectors/tpc/                          @zinchenk  @abychkov
 /detectors/tpc/clusterHitFinder/         @hnatics
+/detectors/tpc/clusterHitFinder/fast     @kryman @akrylov 
 /detectors/tpc/geometry/                 @hnatics
 
 # FFD

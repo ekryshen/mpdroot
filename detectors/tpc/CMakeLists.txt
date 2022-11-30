@@ -6,6 +6,8 @@ set(INCLUDE_DIRECTORIES
   ${BASE_INCLUDE_DIRECTORIES}
   ${CMAKE_CURRENT_LIST_DIR}
   ${CMAKE_CURRENT_LIST_DIR}/clusterHitFinder
+  ${CMAKE_CURRENT_LIST_DIR}/clusterHitFinder/fast
+  ${CMAKE_CURRENT_LIST_DIR}/clusterHitFinder/mlem
   ${CMAKE_CURRENT_LIST_DIR}/geometry
   ${CMAKE_SOURCE_DIR}/core/mpdField
   ${CMAKE_SOURCE_DIR}/detectors/tof
@@ -50,7 +52,8 @@ set(SRCS
   TpcGeoPar.cxx
   TpcPoint.cxx
   clusterHitFinder/AbstractTpcClusterHitFinder.cxx
-  clusterHitFinder/TpcClusterHitFinderMlem.cxx
+  clusterHitFinder/fast/TpcClusterHitFinderFast.cxx
+  clusterHitFinder/mlem/TpcClusterHitFinderMlem.cxx
   geometry/BaseTpcSectorGeo.cxx
   geometry/TpcSectorGeoAZ.cxx
 )
