@@ -7,8 +7,8 @@
 
 #include "MpdCodeTimer.h"
 #include "MpdKalmanHit.h"
-#include "MpdTpcKalmanTrack.h"
 #include "MpdTpcHit.h"
+#include "MpdTpcTrack.h"
 #include "TpcPoint.h"
 
 #include <Acts/Definitions/Algebra.hpp>
@@ -119,46 +119,24 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
 }
 
 /// Converts a hit into the MpdRoot representation.
-inline MpdKalmanHit *convertHit(const BaseTpcSectorGeo &secGeo,
-                                TClonesArray *tpcHits, int ihit) {
-  const auto *hit = static_cast<MpdTpcHit*>(tpcHits->UncheckedAt(ihit));
-
-  Int_t lay = hit->GetLayer();
-  Double_t err[2] = { hit->GetDx(), hit->GetDz() };
-  Double_t meas[2] = { hit->GetLocalX(), hit->GetLocalZ() };
-
-  Double_t cossin[2] = {hit->GetX(), hit->GetY()};
-  Int_t padID  = hit->GetDetectorID() & 0x1f; // FIXME: sector.
-
-  const auto yMin = secGeo.YPADAREA_LOWEREDGE;
-  const auto dPhi = secGeo.SECTOR_PHI_RAD;
-  const auto xsec = (hit->GetLocalY() + yMin) * TMath::Tan(dPhi / 2.);
-  const auto xloc = hit->GetLocalX();
-  const auto edge = xloc < 0 ? xloc + xsec : xloc - xsec;
-
-  auto *hitK = new MpdKalmanHit(lay * 1000000 + padID, 2, MpdKalmanHit::kFixedP, meas, err, cossin,
-      hit->GetEnergyLoss() / hit->GetStep(), hit->GetLocalY(), ihit, edge);
-
-  hitK->SetLength(hit->GetLength());
-  hitK->SetFlag(hitK->GetFlag() | hit->GetFlag());
-
-  return hitK;
+inline MpdTpcHit *convertHit(const BaseTpcSectorGeo &secGeo,
+                             TClonesArray *hits, int ihit) {
+  return static_cast<MpdTpcHit*>(hits->UncheckedAt(ihit));
 }
 
 /// Converts a track into the MpdRoot representation.
 inline void convertTrack(const BaseTpcSectorGeo &secGeo,
-                         TClonesArray *tpcHits,
-                         MpdTpcKalmanTrack *track,
+                         TClonesArray *hits,
+                         MpdTpcTrack *track,
                          const Mpd::Tpc::ProtoTrack &trajectory) {
   for (const auto ihit : trajectory) {
-    track->GetHits()->Add(convertHit(secGeo, tpcHits, ihit));
+    track->GetHits()->Add(convertHit(secGeo, hits, ihit));
   }
-  track->SetNofHits(trajectory.size());
 }
 
 /// Converts tracks into the MpdRoot representation.
 inline void convertTracks(const BaseTpcSectorGeo &secGeo,
-                          TClonesArray *tpcHits,
+                          TClonesArray *hits,
                           TClonesArray *tracks,
                           const Mpd::Tpc::ProtoTrackContainer &trajectories) {
   tracks->Clear();
@@ -166,8 +144,8 @@ inline void convertTracks(const BaseTpcSectorGeo &secGeo,
 
   Int_t nTracks = 0;
   for (const auto &trajectory : trajectories) {
-    auto *track = new ((*tracks)[nTracks++]) MpdTpcKalmanTrack(trajectory.size());
-    convertTrack(secGeo, tpcHits, track, trajectory);
+    auto *track = new ((*tracks)[nTracks++]) MpdTpcTrack(trajectory.size());
+    convertTrack(secGeo, hits, track, trajectory);
   }
 }
 
@@ -184,9 +162,9 @@ InitStatus MpdTpcTracker::Init() {
       Acts::Logging::DEBUG
   );
 
-  fKalmanTracks = new TClonesArray("MpdTpcKalmanTrack");
+  fTracks = new TClonesArray("MpdTpcTrack");
   FairRootManager::Instance()->Register(
-      "TpcKalmanTrack", "MpdKalmanTrack", fKalmanTracks, kTRUE);
+      "TpcKalmanTrack", "MpdKalmanTrack", fTracks, kTRUE);
 
   std::cout << "[MpdTpcTracker::Init]: Finished" << std::endl;
   return kSUCCESS;
@@ -231,7 +209,7 @@ void MpdTpcTracker::Exec(Option_t *option) {
       context.eventStore.get<Mpd::Tpc::ProtoTrackContainer>(
           config.trackFinding.outputTrackCandidates);
 
-  //convertTracks(fSecGeo, fHits, fKalmanTracks, trajectories);
+  convertTracks(fSecGeo, fHits, fTracks, trajectories);
 
   // Plot graphs if required.
   if constexpr(PlotGraphs) {

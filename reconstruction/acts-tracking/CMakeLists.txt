@@ -59,6 +59,7 @@ set(SRCS
   MpdTpcMagneticField.cxx
   MpdTpcRunner.cxx
   MpdTpcSpacePointMaking.cxx
+  MpdTpcTrack.cxx
   MpdTpcTrackEstimation.cxx
   MpdTpcTrackFinding.cxx
   MpdTpcTrackSeeding.cxx
@@ -94,6 +95,7 @@ Set(HEADERS
   MpdTpcMagneticField.h
   MpdTpcRunner.h
   MpdTpcSpacePointMaking.h
+  MpdTpcTrack.h
   MpdTpcTrackEstimation.h
   MpdTpcTrackFinding.h
   MpdTpcTrackSeeding.h

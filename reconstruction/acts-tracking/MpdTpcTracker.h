@@ -39,7 +39,7 @@ private:
 
   TClonesArray *fPoints;
   TClonesArray *fHits;
-  TClonesArray *fKalmanTracks;
+  TClonesArray *fTracks;
 
   const BaseTpcSectorGeo &fSecGeo;
 

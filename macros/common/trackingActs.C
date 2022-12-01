@@ -113,16 +113,16 @@ void trackingActs(TString inFile = "evetest.root", TString outFile = "mpddst.roo
 #endif
    fRun->AddTask(recoKF);
 
-   FairTask *findVtx = new MpdKfPrimaryVertexFinder("Vertex finder");
-   fRun->AddTask(findVtx);
+//FIXME:   FairTask *findVtx = new MpdKfPrimaryVertexFinder("Vertex finder");
+//FIXME:   fRun->AddTask(findVtx);
 
-   MpdFfdHitProducer *ffdHit = new MpdFfdHitProducer("FFDHitProducer");
-   fRun->AddTask(ffdHit);
+//FIXME:   MpdFfdHitProducer *ffdHit = new MpdFfdHitProducer("FFDHitProducer");
+//FIXME:   fRun->AddTask(ffdHit);
 
    // TOF hit producers
-   MpdTofHitProducer *tofHit = new MpdTofHitProducer("Hit producer");
-   tofHit->SetTimeResolution(0.080);
-   fRun->AddTask(tofHit);
+//FIXME:   MpdTofHitProducer *tofHit = new MpdTofHitProducer("Hit producer");
+//FIXME:   tofHit->SetTimeResolution(0.080);
+//FIXME:   fRun->AddTask(tofHit);
 
    /*
        MpdEtofHitProducer* etofHitProd = new MpdEtofHitProducer("ETOF HitProducer");
@@ -140,8 +140,8 @@ void trackingActs(TString inFile = "evetest.root", TString outFile = "mpddst.roo
    */
 
    // TOF matching
-   MpdTofMatching *tofMatch = new MpdTofMatching("TOF matching");
-   fRun->AddTask(tofMatch);
+//FIXME:   MpdTofMatching *tofMatch = new MpdTofMatching("TOF matching");
+//FIXME:   fRun->AddTask(tofMatch);
 
    // ETOF matching
    // MpdEtofMatching* etofMatch = new MpdEtofMatching("ETOF matching");
@@ -150,8 +150,8 @@ void trackingActs(TString inFile = "evetest.root", TString outFile = "mpddst.roo
    // FairTask *emcHP = new MpdEmcHitCreation();
    // fRun->AddTask(emcHP);
 
-   FairTask *tdigi = new MpdZdcDigiProducer("MpdZdcDigiProducer");
-   fRun->AddTask(tdigi);
+//FIXME:   FairTask *tdigi = new MpdZdcDigiProducer("MpdZdcDigiProducer");
+//FIXME:   fRun->AddTask(tdigi);
 
    // MpdPidRefitTrackTask* trRefit = new MpdPidRefitTrackTask("Track PID and Refit");
    // fRun->AddTask(trRefit);
