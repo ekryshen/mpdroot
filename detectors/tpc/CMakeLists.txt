@@ -8,6 +8,7 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_LIST_DIR}/clusterHitFinder
   ${CMAKE_CURRENT_LIST_DIR}/clusterHitFinder/fast
   ${CMAKE_CURRENT_LIST_DIR}/clusterHitFinder/mlem
+  ${CMAKE_CURRENT_LIST_DIR}/digitizer
   ${CMAKE_CURRENT_LIST_DIR}/geometry
   ${CMAKE_SOURCE_DIR}/core/mpdField
   ${CMAKE_SOURCE_DIR}/detectors/tof

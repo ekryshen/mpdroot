@@ -1,5 +1,3 @@
-// $Id: TofLinkDef.h,v 1.3 2006/03/07 11:51:55 friese Exp $
-
 #ifdef __CINT__
 #pragma link off all globals;
 #pragma link off all classes;
@@ -26,7 +24,6 @@
 #pragma link C++ class MpdTpc2dCluster+;
 #pragma link C++ class MpdTpcHit+;
 #pragma link C++ class MpdTpcHitProducer+;
-#pragma link C++ class MpdTpcSectorGeo+;
 #pragma link C++ class MpdTpcDigitizerAZ+;
 #pragma link C++ class MpdTpcDigitizerAZlt+;
 #pragma link C++ class MpdTpcClusterFinderAZ+;
@@ -37,6 +34,7 @@
 #pragma link C++ class TpcClusterHitFinderMlem+;
 #pragma link C++ class TpcClusterHitFinderFast+;
 #pragma link C++ class TpcClustering+;
+#pragma link C++ class BaseTpcDigit+;
 #pragma link C++ class BaseTpcSectorGeo+;
 #pragma link C++ class TpcSectorGeoAZ+;
 #endif
