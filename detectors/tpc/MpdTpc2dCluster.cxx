@@ -23,32 +23,6 @@ MpdTpc2dCluster::MpdTpc2dCluster(Int_t row, Int_t sec)
 
 //......................................................................
 
-MpdTpc2dCluster::MpdTpc2dCluster(const MpdTpc2dCluster &cl) : TObject((const TObject &)cl)
-{
-   fFlag   = cl.fFlag;
-   fId     = cl.fId;
-   fMinBkt = cl.fMinBkt;
-   fMaxBkt = cl.fMaxBkt;
-   fMinCol = cl.fMinCol;
-   fMaxCol = cl.fMaxCol;
-   fADCSum = cl.fADCSum;
-   fAvgCol = cl.fAvgCol;
-   fSigCol = cl.fSigCol;
-   fAvgBkt = cl.fAvgBkt;
-   fSigBkt = cl.fSigBkt;
-   fCorrel = cl.fCorrel;
-
-   for (UInt_t i = 0; i < cl.GetNumDigits(); ++i) {
-      fSecList.push_back(cl.fSecList[i]);
-      fRowList.push_back(cl.fRowList[i]);
-      fColList.push_back(cl.fColList[i]);
-      fBktList.push_back(cl.fBktList[i]);
-      fAdcList.push_back(cl.fAdcList[i]);
-   }
-}
-
-//......................................................................
-
 MpdTpc2dCluster::~MpdTpc2dCluster() {}
 
 //......................................................................
@@ -80,6 +54,17 @@ Bool_t MpdTpc2dCluster::Insert(Int_t row, Int_t col, Int_t bkt, Float_t adc)
 }
 
 //......................................................................
+
+std::vector<std::shared_ptr<AbstractTpcDigit>> MpdTpc2dCluster::GetClusterDigits() const
+{
+   std::vector<std::shared_ptr<AbstractTpcDigit>> clusterDigits;
+   int                                            currentRow = GetRow();
+   int                                            digitCount = fAdcList.size();
+   for (int i = 0; i < digitCount; ++i)
+      clusterDigits.emplace_back(new MpdTpcDigit(fId, fColList[i], currentRow, fBktList[i], fSector, fAdcList[i]));
+
+   return clusterDigits;
+}
 
 Int_t MpdTpc2dCluster::Row(Int_t i) const
 {

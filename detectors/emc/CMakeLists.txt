@@ -11,6 +11,8 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_LIST_DIR}/hitMaker
   ${CMAKE_SOURCE_DIR}/core/mpdBase
   ${CMAKE_SOURCE_DIR}/detectors/tpc
+  ${CMAKE_SOURCE_DIR}/detectors/tpc/clusterHitFinder
+  ${CMAKE_SOURCE_DIR}/detectors/tpc/digitizer
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
   ${CMAKE_SOURCE_DIR}/simulation/mcStack
 )

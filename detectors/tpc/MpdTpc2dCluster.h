@@ -5,20 +5,20 @@
 //  original author:
 //  Jonathan Paley   08/18/04   jpaley@indiana.edu
 //
-//  edited:
-//  Artem Basalaev 12/25/12
+//  edited: 12/25/12 Artem Basalaev
+//  interface port: December, 2022, Slavomir Hnatic, JINR
 //----------------------------------------------------//
 
 #ifndef MPDTPC2DCLUSTER_H
 #define MPDTPC2DCLUSTER_H
 
-#include "TObject.h"
+#include "AbstractTpc2dCluster.h"
+#include "MpdTpcDigit.h"
 #include "TRef.h"
 #include "TRefArray.h"
 #include <iosfwd>
-#include <vector>
 
-class MpdTpc2dCluster : public TObject {
+class MpdTpc2dCluster : public AbstractTpc2dCluster {
 
 public:
    enum Masks { kOverflowM = 5, kVirtualM = 1, kEdgeM = 1, kSinglePadM = 1, kMultMaxM = 1 };
@@ -33,10 +33,20 @@ public:
 public:
    MpdTpc2dCluster() { ; }
    MpdTpc2dCluster(Int_t row, Int_t sec);
-   MpdTpc2dCluster(const MpdTpc2dCluster &cl);
    ~MpdTpc2dCluster();
    bool   Insert(Int_t row, Int_t col, Int_t bkt, Float_t adc);
    Bool_t Insert(Int_t sec, Int_t row, Int_t col, Int_t bkt, Float_t adc);
+
+   /* interface implementation */
+   // clusterID not stored in this class instead is taken from index of fClusArray
+   int                                            GetClusterID() const { return -1; }
+   int                                            GetSector() const { return fSector; }
+   int                                            GetRow() const { return fRowList[0]; }
+   int                                            GetPadMin() const { return fMinCol; }
+   int                                            GetPadMax() const { return fMaxCol; }
+   int                                            GetTimeBinMin() const { return fMinBkt; }
+   int                                            GetTimeBinMax() const { return fMaxBkt; }
+   std::vector<std::shared_ptr<AbstractTpcDigit>> GetClusterDigits() const;
 
 public:
    UInt_t Flag() const { return fFlag; }
@@ -48,10 +58,10 @@ public:
    Int_t  ID() const { return fId; }
    Int_t  NDigits() const { return fAdcList.size(); }
    Int_t  Row() const { return Row(0); }
-   Int_t  MinCol() const { return fMinCol; }
-   Int_t  MaxCol() const { return fMaxCol; }
-   Int_t  MinBkt() const { return fMinBkt; }
-   Int_t  MaxBkt() const { return fMaxBkt; }
+   Int_t  MinCol() const { return GetPadMin(); }
+   Int_t  MaxCol() const { return GetPadMax(); }
+   Int_t  MinBkt() const { return GetTimeBinMin(); }
+   Int_t  MaxBkt() const { return GetTimeBinMax(); }
    Int_t  NTracks() const;
    //  Int_t ADCSum    () const {return fADCSum;}
 
@@ -108,7 +118,7 @@ public:
    Float_t GetErrX() const { return fErrX; }
    Float_t GetErrY() const { return fErrY; }
    Float_t GetErrZ() const { return fErrZ; }
-   Int_t   GetSect() const { return fSector; }
+   Int_t   GetSect() const { return GetSector(); }
    Float_t GetADC() const { return fADCSum; }
    Int_t   GetId() const { return fId; }
    Float_t GetCorrel() const { return fCorrel; } // pad-time correlation
