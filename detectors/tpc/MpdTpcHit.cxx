@@ -10,7 +10,7 @@
 
 //---------------------------------------------------------------------------
 MpdTpcHit::MpdTpcHit(Int_t detID, TVector3 pos, TVector3 dpos, Int_t index)
-   : FairHit(detID, pos, dpos, index), fiPad(-1), fiBin(-1), fLayer(-1), fNdigits(0), fFlag(0), fQ(0), fStep(0),
+   : AbstractTpcHit(detID, pos, dpos, index), fiPad(-1), fiBin(-1), fLayer(-1), fNdigits(0), fFlag(0), fQ(0), fStep(0),
      fLength(0), fLocalX(0), fLocalY(0), fLocalZ(0)
 {
 }

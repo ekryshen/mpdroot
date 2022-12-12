@@ -9,31 +9,31 @@
 
 #include "MpdKalmanHit.h"
 
-#include <FairHit.h>
+#include "AbstractTpcHit.h"
 #include <TObject.h>
 #include <vector>
 
 class MpdTpc2dCluster;
 
-class MpdTpcHit : public FairHit {
+class MpdTpcHit : public AbstractTpcHit {
 
 public:
    enum k_LinkType { PointIndex = 1, MCTrackIndex = 2 };
 
 public:
    MpdTpcHit()
-      : FairHit(), fiPad(-1), fiBin(-1), fLayer(-1), fNdigits(0), fFlag(0), fQ(0), fStep(0), fLength(0), fLocalX(0),
-        fLocalY(0), fLocalZ(0)
+      : fiPad(-1), fiBin(-1), fLayer(-1), fNdigits(0), fFlag(0), fQ(0), fStep(0), fLength(0), fLocalX(0), fLocalY(0),
+        fLocalZ(0)
    {
    }
 
    MpdTpcHit(Int_t iPad, Int_t iBin)
-      : FairHit(), fiPad(iPad), fiBin(iBin), fLayer(-1), fNdigits(0), fFlag(0), fQ(0), fStep(0), fLength(0), fLocalX(0),
+      : fiPad(iPad), fiBin(iBin), fLayer(-1), fNdigits(0), fFlag(0), fQ(0), fStep(0), fLength(0), fLocalX(0),
         fLocalY(0), fLocalZ(0)
    {
    }
 
-   MpdTpcHit(Int_t detUID, TVector3 posHit, TVector3 posHitErr, Int_t pointIndx);
+   MpdTpcHit(Int_t detID, TVector3 posHit, TVector3 posHitErr, Int_t pointIndx);
 
    //     TpcHit(const TpcHit &hit) : FairHit((const FairHit &)hit) {
    //         fiBin = hit.fiBin;
@@ -45,6 +45,12 @@ public:
    //     }
 
    virtual ~MpdTpcHit() {}
+
+   /* Interface implementation */
+   int    GetClusterID() const { return GetRefIndex(); }
+   double GetPadCoordinate() const { return fLocalX; }
+   double GetTimeBinCoordinate() const { return fLocalZ; }
+   float  GetTotalSignal() const { return (float)fQ; }
 
    /** Accessors **/
    Int_t    GetModular() const { return GetUniqueID(); }
@@ -137,7 +143,7 @@ private:
    Double32_t fLocalZ;
    Double32_t fXZrms[2]; // RMS of the hit (group of digits) along pad and drift directions
 
-   ClassDef(MpdTpcHit, 3);
+   ClassDef(MpdTpcHit, 4);
 };
 
 #endif // _MPDTPCHIT_H_

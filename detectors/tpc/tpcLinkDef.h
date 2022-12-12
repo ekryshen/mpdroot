@@ -32,6 +32,7 @@
 #pragma link C++ class MpdTpcEDepParams+;
 #pragma link C++ class AbstractTpcDigit+;
 #pragma link C++ class AbstractTpc2dCluster+;
+#pragma link C++ class AbstractTpcHit+;
 #pragma link C++ class AbstractTpcClusterHitFinder+;
 #pragma link C++ class TpcClusterHitFinderMlem+;
 #pragma link C++ class TpcClusterHitFinderFast+;

@@ -46,6 +46,7 @@ Set(INCLUDE_DIRECTORIES
   ${CMAKE_SOURCE_DIR}/core/mpdDst
   ${CMAKE_SOURCE_DIR}/detectors/emc
   ${CMAKE_SOURCE_DIR}/detectors/tpc
+  ${CMAKE_SOURCE_DIR}/detectors/tpc/clusterHitFinder
   ${CMAKE_SOURCE_DIR}/detectors/zdc
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/lheTrack
