@@ -47,7 +47,7 @@ void MpdAnalysisManager::Process()
    // Scan data
    int n = fChain->GetEntries();
    for (int iEvent = 0; iEvent < n; iEvent++) {
-      if (iEvent % (n / 10) == 0) {
+      if (iEvent % 100 == 0) {
          std::cout << "MpdAnalysisManager: processing event " << iEvent << " of " << n << std::endl;
       }
       fEvent.Clear();
@@ -61,11 +61,17 @@ void MpdAnalysisManager::Process()
       task->Finish();
    }
 
-   TFile output(fOutFile, "recreate");
    for (MpdAnalysisTask *task : fTasks) {
-      task->GetOutput()->Write(task->GetOutputName());
+
+      fOutFileRoot = task->GetOutputName();
+      fOutFileRoot = fOutFileRoot + ".root";
+      std::cout << "Writing output to file " << fOutFileRoot << std::endl;
+
+      TFile output(fOutFileRoot, "recreate");
+      // V      task->GetOutput()->Write(task->GetOutputName());
+      task->GetOutput()->Write();
+      output.Close();
    }
-   output.Close();
 }
 //=======================================
 bool MpdAnalysisManager::CreateChain()
@@ -120,18 +126,7 @@ bool MpdAnalysisManager::CreateChain()
    if (fBranchList == "*" || fBranchList.Contains("ZdcDigi")) {
       fChain->SetBranchAddress("ZdcDigi", &(fEvent.fZDCDigit));
    }
-   if (fBranchList == "*" || fBranchList.Contains("ELossZdc1Value")) {
-      fChain->SetBranchAddress("ELossZdc1Value", &(fEvent.fZDCEloss1Value));
-   }
-   if (fBranchList == "*" || fBranchList.Contains("ELossZdc2Value")) {
-      fChain->SetBranchAddress("ELossZdc2Value", &(fEvent.fZDCEloss1Value));
-   }
-   if (fBranchList == "*" || fBranchList.Contains("ELossZdc1Histo")) {
-      fChain->SetBranchAddress("ELossZdc1Histo", &(fEvent.fZDCEloss1Value));
-   }
-   if (fBranchList == "*" || fBranchList.Contains("ELossZdc2Histo")) {
-      fChain->SetBranchAddress("ELossZdc2Histo", &(fEvent.fZDCEloss1Value));
-   }
+
    std::cout << "Chain created" << std::endl;
 
    return true;

@@ -2,6 +2,7 @@ add_subdirectory(femto/fsiTools)
 add_subdirectory(femto/MpdFemtoMaker)
 add_subdirectory(femto/MpdFemtoMakerUser)
 add_subdirectory(photons)
+add_subdirectory(pairKK)
 
 # Create a library called "MpdPhysics" which includes the source files given in the array.
 # The extension is already found. Any number of sources could be listed here.

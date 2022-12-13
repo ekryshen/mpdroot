@@ -38,8 +38,9 @@ private:
    TString                        fInputFiles;
    TChain                        *fChain = nullptr;
    std::vector<MpdAnalysisTask *> fTasks;
-   TString                        fOutFile    = "";
-   TString                        fBranchList = "";
+   TString                        fOutFileRoot = "";
+   TString                        fOutFile     = "";
+   TString                        fBranchList  = "";
    MpdAnalysisEvent               fEvent;
    MpdKalmanFilter               *fKF = nullptr;
 
