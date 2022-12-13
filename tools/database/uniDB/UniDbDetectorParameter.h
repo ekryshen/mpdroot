@@ -131,7 +131,8 @@ public:
 
    /// get detector parameter value (integer value key is optional, default, 0)
    static UniDbDetectorParameter *GetDetectorParameter(TString detector_name, TString parameter_name, int period_number,
-                                                       int run_number, int value_key = 0);
+                                                       int run_number, int value_key = 0,
+                                                       TDatime *usage_date = nullptr);
 
    /// delete detector parameter value (integer value key is optional, default, 0)
    static int DeleteDetectorParameter(TString detector_name, TString parameter_name, int start_period, int start_run,

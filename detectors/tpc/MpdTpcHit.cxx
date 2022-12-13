@@ -42,6 +42,9 @@ Int_t MpdTpcHit::GetTrackID() const
 
    if (FairLinkManager::Instance() == NULL) return fIDs[0];
 
+   // no linked data
+   if (GetPointerToLinks() == NULL) return 0;
+
    FairMultiLinkedData links  = GetLinksWithType(MpdTpcHit::MCTrackIndex);
    Int_t               nLinks = links.GetNLinks();
    Int_t               id     = links.GetLink(0).GetIndex();

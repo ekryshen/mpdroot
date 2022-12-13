@@ -864,7 +864,8 @@ UniDbDetectorParameter *UniDbDetectorParameter::CreateDetectorParameter(TString 
 
 // get detector parameter value (integer value key is optional, default, 0)
 UniDbDetectorParameter *UniDbDetectorParameter::GetDetectorParameter(TString detector_name, TString parameter_name,
-                                                                     int period_number, int run_number, int value_key)
+                                                                     int period_number, int run_number, int value_key,
+                                                                     TDatime *usage_date)
 {
    UniConnection *connUniDb = UniConnection::Open(UNIFIED_DB);
    if (connUniDb == 0x00) return 0x00;
@@ -880,6 +881,11 @@ UniDbDetectorParameter *UniDbDetectorParameter::GetDetectorParameter(TString det
       "value_key = %d",
       detector_name.Data(), parameter_name.Data(), period_number, period_number, run_number, period_number,
       period_number, run_number, value_key);
+   if (usage_date != nullptr) {
+      sql += TString::Format(" and ((expiry_date is null) or ('%s' < expiry_date)) order by expiry_date",
+                             (*usage_date).AsSQLString());
+   }
+
    TSQLStatement *stmt = uni_db->Statement(sql);
 
    // get table record from DB

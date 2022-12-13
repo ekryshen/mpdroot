@@ -7,16 +7,15 @@
 // Author List:
 //      Sergey Merts
 //      7.12.2019 - Alexander Zinchenko: change of design
-//
+//        12.2022 - Slavomir Hnatic: BaseTpcDigit port
 //--------------------------------------------------------------------
 
 #ifndef MPDTPCDIGIT_HH
 #define MPDTPCDIGIT_HH
 
-#include <TObject.h>
-#include <map>
+#include "BaseTpcDigit.h"
 
-class MpdTpcDigit : public TObject {
+class MpdTpcDigit : public BaseTpcDigit {
 
 public:
    MpdTpcDigit();
@@ -24,27 +23,22 @@ public:
    virtual ~MpdTpcDigit();
 
    Int_t   GetOrigin() const { return fOrigin; }
-   Int_t   GetPad() const { return fPad; }
-   Int_t   GetRow() const { return fRow; }
-   Int_t   GetTimeBin() const { return fTimeBin; }
-   Float_t GetAdc() const { return fAdc; }
-   Int_t   GetSector() const { return fSector; }
+   Int_t   GetPad() const { return pad; }
+   Int_t   GetRow() const { return row; }
+   Int_t   GetTimeBin() const { return timeBin; }
+   Float_t GetAdc() const { return signal; }
+   Int_t   GetSector() const { return sector; }
 
-   void SetPad(Int_t pad) { fPad = pad; }
-   void SetRow(Int_t row) { fRow = row; }
-   void SetTimeBin(Int_t bin) { fTimeBin = bin; }
-   void SetAdc(Float_t adc) { fAdc = adc; }
-   void SetSector(Int_t sec) { fSector = sec; }
+   void SetPad(Int_t newPad) { pad = newPad; }
+   void SetRow(Int_t newRow) { row = newRow; }
+   void SetTimeBin(Int_t newTimeBin) { timeBin = newTimeBin; }
+   void SetAdc(Float_t newAdc) { signal = newAdc; }
+   void SetSector(Int_t newSector) { sector = newSector; }
 
 private:
-   Int_t   fPad;
-   Int_t   fRow;
-   Int_t   fTimeBin;
-   Int_t   fSector;
-   Float_t fAdc;
-   Int_t   fOrigin;
+   Int_t fOrigin;
 
-   ClassDef(MpdTpcDigit, 3);
+   ClassDef(MpdTpcDigit, 4);
 };
 
 #endif

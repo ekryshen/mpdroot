@@ -28,7 +28,7 @@ struct UniqueRunNumber {
 // 0 - boolean, 1 - integer, 2 - unsigned integer, 3 - double, 4 - string, 5 - binary, 6 - int+int,
 // 7 - DCH mapping, 8 - GEM mapping, 9 - GEM pedestal mapping, 10 - trigger mapping, 11 - Lorentz shift,
 // 12 - mapping with bool value (serial+channel+bool), 13 - mapping with int, 14 - mapping with double vector, 15 -
-// alignment type, 16 - TDC INL values
+// alignment type, 16 - TDC INL values, 17 - JSON
 enum enumValueType : unsigned int {
    BoolType = 0,
    IntType,
@@ -47,6 +47,7 @@ enum enumValueType : unsigned int {
    MapDVectorType,
    AlignmentType,
    TdcInlType, // detector-dependent types
+   JSONType,   // nlohmann JSON
    UndefinedType = 999
 };
 
@@ -349,6 +350,37 @@ struct TdcInlValue : public UniValue {
    }
 };
 
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
+struct JSONValue : public UniValue {
+   JSONValue() { ; }
+   JSONValue(json &val)
+   {
+      std::vector<std::uint8_t> v = json::to_cbor(val);
+      value                       = new unsigned char[v.size()];
+      memcpy(value, &v[0], v.size());
+      size = v.size();
+   }
+   bool getJSON(json &val)
+   {
+      if (size == 0) return false;
+      std::vector<std::uint8_t> v_out;
+      for (int i = 0; i < size; i++) {
+         v_out.push_back(value[i]);
+      }
+      val = json::from_cbor(v_out);
+      return true;
+   }
+   uint64_t       size;
+   unsigned char *value; // char array is stored with the size variable (+8)
+
+   enumValueType GetType() { return JSONType; }
+   size_t        GetStorageSize() { return size + 8; }
+   void          ReadValue(unsigned char *source) { Read(source, value, size); }
+   void          WriteValue(unsigned char *destination) { Write(destination, value, size); }
+};
+
 #ifndef CREATE_PARAMETER_VALUE_H
 #define CREATE_PARAMETER_VALUE_H
 // global function for creating value according to a given type name (parameter_type)
@@ -372,6 +404,7 @@ inline UniValue *CreateParameterValue(enumValueType parameter_type)
    case MapDVectorType: return new MapDVectorValue;
    case AlignmentType: return new AlignmentValue;
    case TdcInlType: return new TdcInlValue;
+   case JSONType: return new JSONValue;
    default: break;
    }
 
