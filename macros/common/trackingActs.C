@@ -33,10 +33,14 @@
 #include "MpdEmcHitCreation.h"
 #include "MpdPid.h"
 #include "TpcSectorGeoAZ.h"
+#include "TpcClusterHitFinderFast.h"
 
 #include <iostream>
 
-#define UseMlem // Choose: UseMlem HitProducer
+// Choose: UseMlem (MLEM clusterhitfinder)
+//         UseHitProducer (simple hit producer without digitizer)
+//         comment out the line for Fast clusterhitfinder
+//#define UseMlem 
 
 #include "commonFunctions.C"
 
@@ -89,26 +93,28 @@ void trackingActs(TString inFile = "evetest.root", TString outFile = "mpddst.roo
    MpdKalmanFilter *kalman = MpdKalmanFilter::Instance("KF");
    fRun->AddTask(kalman);
 
-#ifdef UseMlem
+#ifdef UseHitProducer
+   MpdTpcHitProducer *hitPr = new MpdTpcHitProducer(*secGeo);
+   hitPr->SetModular(0);
+   fRun->AddTask(hitPr);
+#else
    // MpdTpcDigitizerAZ* tpcDigitizer = new MpdTpcDigitizerAZ(*secGeo);
    MpdTpcDigitizerAZlt *tpcDigitizer = new MpdTpcDigitizerAZlt(*secGeo);
    tpcDigitizer->SetPersistence(kTRUE);
    fRun->AddTask(tpcDigitizer);
-
+ #ifdef UseMlem
    MpdTpcClusterFinderMlem *tpcClusAZ = new MpdTpcClusterFinderMlem(*secGeo);
+ #else
+   TpcClusterHitFinderFast *tpcClusAZ = new TpcClusterHitFinderFast(*secGeo);
+ #endif 
    fRun->AddTask(tpcClusAZ);
-#else
-   MpdTpcHitProducer *hitPr = new MpdTpcHitProducer(*secGeo);
-   hitPr->SetModular(0);
-   fRun->AddTask(hitPr);
 #endif
 
    FairTask *vertZ = new MpdVertexZfinder(*secGeo);
    fRun->AddTask(vertZ);
 
    MpdTpcTracker *recoKF = new MpdTpcTracker(*secGeo);
-
-#ifdef UseMlem
+#ifndef UseHitProducer
 //   recoKF->UseTpcHit(kFALSE); // do not use hits from the hit producer
 #endif
    fRun->AddTask(recoKF);
