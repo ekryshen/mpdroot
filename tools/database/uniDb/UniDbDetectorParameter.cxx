@@ -884,7 +884,8 @@ UniDbDetectorParameter *UniDbDetectorParameter::GetDetectorParameter(TString det
    if (usage_date != nullptr) {
       sql += TString::Format(" and ((expiry_date is null) or ('%s' < expiry_date)) order by expiry_date",
                              (*usage_date).AsSQLString());
-   }
+   } else
+      sql += " order by insert_time DESC";
 
    TSQLStatement *stmt = uni_db->Statement(sql);
 
