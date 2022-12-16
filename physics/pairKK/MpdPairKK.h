@@ -101,6 +101,8 @@ private:
    TH1F *mhMultiplicity = nullptr;
    // TH2F * mhEPvsCen = nullptr ;
 
+   TH1F *mInvGen;
+
    TH2F *mInvNoPID;
    TH2F *mInvOnePID;
    TH2F *mInvTwoPID;

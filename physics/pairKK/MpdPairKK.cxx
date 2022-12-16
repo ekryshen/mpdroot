@@ -42,6 +42,9 @@ void MpdPairKK::UserInit()
    mhMultiplicity = new TH1F("hMultiplicity", "Multiplicity distribution", 2000, -0.5, 1999.5);
    fOutputList->Add(mhMultiplicity);
 
+   mInvGen = new TH1F("mInvGen", "mInvGen", 100, 0., 10.);
+   fOutputList->Add(mInvGen);
+
    // Minv
    mInvNoPID = new TH2F("mInvNoPID", "mInvNoPID", 100, 0., 10., 200, 0.9, 2.0);
    fOutputList->Add(mInvNoPID);
@@ -96,7 +99,18 @@ void MpdPairKK::ProcessEvent(MpdAnalysisEvent &event)
    mKalmanTracks = event.fTPCKalmanTrack;
    if (isMC) {
       mMCTracks = event.fMCTrack;
-   }
+
+      for (int i = 0; i < mMCTracks->GetEntriesFast(); i++) {
+         MpdMCTrack *pr = (static_cast<MpdMCTrack *>(mMCTracks->At(i)));
+         if (pr->GetPdgCode() == 333) {
+            if (pr->GetStartX() * pr->GetStartX() + pr->GetStartY() * pr->GetStartY() < 1.) {
+               TVector3 momentum;
+               pr->GetMomentum(momentum);
+               mInvGen->Fill(momentum.Pt());
+            }
+         }
+      }
+   } // isMC
 
    selectPosTrack(event);
 
@@ -131,14 +145,14 @@ bool MpdPairKK::selectEvent(MpdAnalysisEvent &event)
    if (mZvtxBin >= nMixEventZ) mZvtxBin = nMixEventZ - 1;
    mhEvents->Fill(1.5);
 
-   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
-   int ntr          = mMpdGlobalTracks->GetEntriesFast();
-
-   mCenBin = (float(ntr) / 1200.) * nMixEventCent; // very rough
+   float cen = event.getCentrTPC();
+   mCenBin   = (cen / 100.) * nMixEventCent; // very rough
    if (mCenBin < 0) mCenBin = 0;
    if (mCenBin >= nMixEventCent) mCenBin = nMixEventCent - 1;
 
    // Multiplicity
+   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
+   int ntr          = mMpdGlobalTracks->GetEntriesFast();
    mhMultiplicity->Fill(ntr);
 
    // Centrality
@@ -201,13 +215,6 @@ void MpdPairKK::selectPosTrack(MpdAnalysisEvent &event)
       if (isK_TPC == 1 || isK_TOF == 1) pid = 3;
       if (isK_TPC == 1 && isK_TOF == 1) pid = 4;
 
-      // if ( trId > -1 && fabs(static_cast<MpdMCTrack *>(mMCTracks->At(trId))->GetPdgCode()) == 321)
-      // 	{
-      // 	  cout<<"Pos: "<<pmom<<" dedx: "<<dEdx_sigma_K(tr->GetDedx(), pmom)<<"  tof: "<<mpdtrack->GetTofFlag()<<"
-      // beta: "<<Beta_sigma_K(mpdtrack->GetTofBeta(), pmom)<<" isis: "<<isK_TPC<<" -  "<<isK_TOF<<"   PIDs:
-      // "<<pid<<endl;
-      // 	}
-
       if (pid < 0) continue;
 
       float mK = 0.493677;
@@ -263,13 +270,6 @@ void MpdPairKK::selectNegTrack(MpdAnalysisEvent &event)
       if (isK_TOF == 1) pid = 2;
       if (isK_TPC == 1 || isK_TOF == 1) pid = 3;
       if (isK_TPC == 1 && isK_TOF == 1) pid = 4;
-
-      // if ( trId > -1 && fabs(static_cast<MpdMCTrack *>(mMCTracks->At(trId))->GetPdgCode()) == 321)
-      // 	{
-      // 	  cout<<"NEG: "<<pmom<<" dedx: "<<dEdx_sigma_K(tr->GetDedx(), pmom)<<"  tof: "<<mpdtrack->GetTofFlag()<<"
-      // beta: "<<Beta_sigma_K(mpdtrack->GetTofBeta(), pmom)<<" isis: "<<isK_TPC<<" -  "<<isK_TOF<<"   PIDs:
-      // "<<pid<<endl;
-      // 	}
 
       if (pid < 0) continue;
 
