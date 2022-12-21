@@ -25,7 +25,10 @@ set(SRCS
   MpdGeneratorsFactory.cxx
 )
 
-Set(HEADERS)
+Set(HEADERS
+  MpdGeneratorsFactory.h
+  MpdGeneratorType.h  
+)
 Set(LINKDEF LinkDefFactory.h)
 Set(LIBRARY_NAME MpdGenFactory)
 Set(DEPENDENCIES)

@@ -1,7 +1,7 @@
 #include "TMath.h"
 
 #ifndef EMC_H
-#define EMC_H 1
+#define EMC_H
 
 namespace emc {
 Double_t z           = 0.0;

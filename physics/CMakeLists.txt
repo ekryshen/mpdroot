@@ -34,7 +34,6 @@ set(SRCS
  MpdAnalysisManager.cxx
 )
 
-#Set(HEADERS MpdAnalysisEvent.h MpdAnalysisTask.h MpdAnalysisManager.h)
 Set(HEADERS)
 Set(LINKDEF MpdPhysicsLinkDef.h)
 Set(LIBRARY_NAME MpdPhysics)

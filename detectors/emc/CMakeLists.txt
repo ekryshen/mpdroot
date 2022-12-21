@@ -79,7 +79,55 @@ set(SRCS
   hitMaker/MpdEmcHitProducerA.cxx
 )
 
-Set(HEADERS)
+set(HEADERS
+#  emc.h
+  MpdEmc.h
+  MpdEmcCalibParams.h
+  MpdEmcCluster.h
+  MpdEmcClusterCreation.h
+  MpdEmcClusterFinderAZ.h
+  MpdEmcContFact.h
+  MpdEmcDigit.h
+  MpdEmcDigitizer.h
+  MpdEmcGeo.h
+  MpdEmcGeoPar.h
+  MpdEmcGeoParams.h
+  MpdEmcHit.h
+  MpdEmcHitCreation.h
+  MpdEmcHitProducer.h
+  MpdEmcMatch.h
+  MpdEmcMatching.h
+  MpdEmcPoint.h
+
+  emcClustering/clustering/ClusterElement.h
+  emcClustering/clustering/Cluster.h
+  emcClustering/clustering/ClusterCollection.h
+  emcClustering/clustering/ClManager.h
+
+  emcClustering/EmcCLinfo.h
+  emcClustering/EmcClManager.h
+  emcClustering/EmcCluster.h
+  emcClustering/EmcClusterCollection.h
+  emcClustering/EmcClusterElement.h
+  emcClustering/EmcClusterInfo.h
+
+  emcKI/MpdEmcClusterizerKI.h
+  emcKI/MpdEmcClusterKI.h
+  emcKI/MpdEmcDigitizerKI.h
+  emcKI/MpdEmcDigitKI.h
+  emcKI/MpdEmcGeoUtils.h
+  emcKI/MpdEmcKI.h
+  emcKI/MpdEmcMatchingKI.h
+  emcKI/MpdEmcPointKI.h
+  emcKI/MpdEmcSimParams.h
+  emcKI/MpdEmcTrackExtrap.h
+
+  hitMaker/MpdEmcGeoParWrapper.h
+  hitMaker/MpdEmcHitA.h
+  hitMaker/MpdEmcHitCont.h
+  hitMaker/MpdEmcHitProducerA.h
+)
+
 Set(LINKDEF MpdEmcLinkDef.h)
 Set(LIBRARY_NAME Emc)
 Set(DEPENDENCIES MpdMCStack tpc Kalman MpdBase)

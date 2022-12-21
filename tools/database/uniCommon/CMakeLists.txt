@@ -28,9 +28,17 @@ set(SRCS
   UniSearchCondition.cxx
   UniGenerateClasses.cxx
   UniGeoConverter.cxx
-  # add definitions of the possible database structures and enums
+)
+
+set(HEADERS
   db_settings.h
   db_structures.h
+  function_set.h
+  UniConnection.h
+  UniValue.h
+  UniSearchCondition.h
+  UniGenerateClasses.h
+  UniGeoConverter.h
 )
 
 if (DEFINED LIBXML2_LIBRARIES) # if we have found XML2 library using find_package, then use this found libxml2
@@ -39,7 +47,6 @@ else()
   SET(MY_XML2 xml2)
 endif()
 
-set(HEADERS)
 Set(LINKDEF UniCommonLinkDef.h)
 Set(LIBRARY_NAME UniCommon)
 Set(DEPENDENCIES Core Geom Gpad Net ${MY_XML2})

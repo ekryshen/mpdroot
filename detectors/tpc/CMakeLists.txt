@@ -59,7 +59,38 @@ set(SRCS
   geometry/TpcSectorGeoAZ.cxx
 )
 
-Set(HEADERS)
+Set(HEADERS
+  MpdParticleIdentification.h
+  MpdTpc2dCluster.h
+  MpdTpcClusterFinderAZ.h
+  MpdTpcClusterFinderMlem.h
+  MpdTpcDigit.h
+  MpdTpcDigitizerAZ.h
+  MpdTpcDigitizerAZlt.h
+  MpdTpcDigitizerQAHistograms.h
+  MpdTpcDigitizerTask.h
+  MpdTpcEDepParams.h
+  MpdTpcHit.h
+  MpdTpcHitProducer.h
+  MpdTPCpid.h
+  MpdTpcSector.h
+  TaskHelpers.h
+  TpcDetector.h
+  TpcGas.h
+  TpcGeo.h
+  TpcGeoPar.h
+  TpcPoint.h
+  clusterHitFinder/AbstractTpc2dCluster.h
+  clusterHitFinder/AbstractTpcClusterHitFinder.h
+  clusterHitFinder/AbstractTpcHit.h
+  clusterHitFinder/fast/TpcClusterHitFinderFast.h
+  clusterHitFinder/fast/TpcClustering.h
+  clusterHitFinder/mlem/TpcClusterHitFinderMlem.h
+  digitizer/AbstractTpcDigit.h
+  geometry/BaseTpcSectorGeo.h
+  geometry/TpcSectorGeoAZ.h
+)
+
 Set(LINKDEF tpcLinkDef.h)
 Set(LIBRARY_NAME tpc)
 Set(DEPENDENCIES Base Gdml MpdField MpdMCStack Tof Kalman MpdGen)
