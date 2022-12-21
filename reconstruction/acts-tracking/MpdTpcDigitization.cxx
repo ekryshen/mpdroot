@@ -7,6 +7,7 @@
 #include "MpdTpcDigitization.h"
 #include "MpdTpcEventStorage.h"
 #include "MpdTpcInputHit.h"
+#include "geometry/BaseTpcSectorGeo.h"
 
 #include <Acts/Definitions/Algebra.hpp>
 #include <Acts/Definitions/Units.hpp>
@@ -59,7 +60,15 @@ ProcessCode Digitization::execute(Context &context) const {
     auto moduleGeoId = surface->geometryId();
     ACTS_VERBOSE("Module identifier is " << moduleGeoId);
 
-    auto result = surface->globalToLocal(context.gContext, pos, mom, 3. * Detector::DeltaR);
+    double deltaR;
+    if (Detector::useBaseTpcSectorGeo) {
+      BaseTpcSectorGeo sectorGeo = BaseTpcSectorGeo();
+      double maxPadHeight = std::max(sectorGeo.PAD_HEIGHT[0], sectorGeo.PAD_HEIGHT[1]);
+      deltaR = maxPadHeight * 1_cm;
+    } else {
+      deltaR = Detector::DeltaR;
+    }
+    auto result = surface->globalToLocal(context.gContext, pos, mom, 3. * deltaR);
     if (!result.ok()) {
       ACTS_DEBUG("Point " << pos << " is far from surface "
                           << surface->center(context.gContext));

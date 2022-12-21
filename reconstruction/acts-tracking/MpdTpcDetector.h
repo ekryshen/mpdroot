@@ -29,8 +29,21 @@ public:
   /// TPC sensitive volume.
   static constexpr auto GasVolume = "tpc01sv";
 
+  /// If true use BaseTpcSectorGeo class for geometry construction
+  /// else use numerical values from MpdTpcDetector.h
+  static constexpr auto useBaseTpcSectorGeo = true;
+
+  /// If true use Z dimensions from BaseTpcSectorGeo
+  /// else use numerical values from MpdTpcDetector.h
+  /// it is used as points are outside the detector when Z dimensions is taken from BaseTpcSectorGeo
+  static constexpr auto  getZFromSectorGeo = false;
+
   /// TPC is represented as two symmetric nodes.
   static constexpr auto HasTwoNodes = true;
+
+//===----------------------------------------------------------------------===//
+// The numerical values for creating geometry based on cilinders
+//===----------------------------------------------------------------------===//
 
   static constexpr auto Rmin       =  40.0_cm;    // FIXME
   static constexpr auto Rmax       =  Rmin + 85.5_cm; //132.15_cm;   // FIXME
