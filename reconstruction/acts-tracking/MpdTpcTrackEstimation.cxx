@@ -3,7 +3,6 @@
 // Copyright (C) 2022 JINR
 
 #include "MpdTpcContext.h"
-#include "MpdTpcEventStorage.h"
 #include "MpdTpcTrackEstimation.h"
 
 #include <Acts/Geometry/TrackingGeometry.hpp>

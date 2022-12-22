@@ -3,7 +3,6 @@
 // Copyright (C) 2022 JINR
 
 #include "MpdTpcContext.h"
-#include "MpdTpcEventStorage.h"
 #include "MpdTpcSpacePointMaking.h"
 
 #include "ActsExamples/EventData/GeometryContainers.hpp"

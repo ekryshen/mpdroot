@@ -3,7 +3,6 @@
 // Copyright (C) 2022 JINR
 
 #include "MpdTpcContext.h"
-#include "MpdTpcEventStorage.h"
 #include "MpdTpcTrackSeeding.h"
 
 #include <Acts/Seeding/BinFinder.hpp>

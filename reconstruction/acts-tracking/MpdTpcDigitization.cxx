@@ -5,7 +5,6 @@
 #include "MpdTpcContext.h"
 #include "MpdTpcDetector.h"
 #include "MpdTpcDigitization.h"
-#include "MpdTpcEventStorage.h"
 #include "MpdTpcInputHit.h"
 #include "geometry/BaseTpcSectorGeo.h"
 

@@ -6,7 +6,6 @@
 #include "MpdTpcConfig.h"
 #include "MpdTpcDigitization.h"
 #include "MpdTpcEventData.h"
-#include "MpdTpcEventStorage.h"
 #include "MpdTpcInputHit.h"
 #include "MpdTpcRunner.h"
 #include "MpdTpcSpacePointMaking.h"
@@ -21,16 +20,13 @@
 
 namespace Mpd::Tpc {
 
-void Runner::execute(const InputHitContainer &hits) {
-  // Clear the storage.
-  m_context.eventStore.clear();
-
+void Runner::execute(const InputHitContainer &hits, Context &context) {
   // Store the input hits.
-  m_context.eventStore.add(
+  context.eventStore.add(
       m_config.digitization.inputSimHits, InputHitContainer{hits});
 
   // Log the input hits.
-  logInput();
+  logInput(context);
 
   // Run the track finding pipeline.
   Digitization digitization(m_config.digitization, m_level);
@@ -39,20 +35,20 @@ void Runner::execute(const InputHitContainer &hits) {
   TrackEstimation trackEstimation(m_config.trackEstimation, m_level);
   TrackFinding trackFinding(m_config.trackFinding, m_level);
 
-  digitization.execute(m_context);
-  spacePointMaking.execute(m_context);
-  trackSeeding.execute(m_context);
-  trackEstimation.execute(m_context);
-  trackFinding.execute(m_context);
+  digitization.execute(context);
+  spacePointMaking.execute(context);
+  trackSeeding.execute(context);
+  trackEstimation.execute(context);
+  trackFinding.execute(context);
 
   // Log the output tracks.
-  logOutput();
+  logOutput(context);
 }
 
-Statistics Runner::getStatistics() const {
-  const auto &hits = m_context.eventStore.get<InputHitContainer>(
+Statistics Runner::getStatistics(const Context &context) const {
+  const auto &hits = context.eventStore.get<InputHitContainer>(
       m_config.digitization.inputSimHits);
-  const auto &tracks = m_context.eventStore.get<ProtoTrackContainer>(
+  const auto &tracks = context.eventStore.get<ProtoTrackContainer>(
       m_config.trackFinding.outputTrackCandidates);
 
   Statistics statistics;
@@ -67,8 +63,8 @@ Statistics Runner::getStatistics() const {
   return statistics;
 }
 
-size_t Runner::getTracksNumber() const {
-  const auto &hits = m_context.eventStore.get<InputHitContainer>(
+size_t Runner::getTracksNumber(const Context &context) const {
+  const auto &hits = context.eventStore.get<InputHitContainer>(
       m_config.digitization.inputSimHits);
 
   std::unordered_set<int> tracks;
@@ -81,8 +77,8 @@ size_t Runner::getTracksNumber() const {
   return tracks.size();
 }
 
-void Runner::logInput() const {
-  const auto &hits = m_context.eventStore.get<InputHitContainer>(
+void Runner::logInput(const Context &context) const {
+  const auto &hits = context.eventStore.get<InputHitContainer>(
       m_config.digitization.inputSimHits);
 
   std::unordered_map<int, ProtoTrack> tracks;
@@ -101,12 +97,12 @@ void Runner::logInput() const {
   ACTS_DEBUG(">> Real tracks: " << tracks.size());
 }
 
-void Runner::logOutput() const {
-  const auto &protos = m_context.eventStore.get<ProtoTrackContainer>(
+void Runner::logOutput(const Context &context) const {
+  const auto &protos = context.eventStore.get<ProtoTrackContainer>(
       m_config.trackSeeding.outputProtoTracks);
-  const auto &params = m_context.eventStore.get<TrackParametersContainer>(
+  const auto &params = context.eventStore.get<TrackParametersContainer>(
       m_config.trackEstimation.outputTrackParameters);
-  const auto &tracks = m_context.eventStore.get<ProtoTrackContainer>(
+  const auto &tracks = context.eventStore.get<ProtoTrackContainer>(
       m_config.trackFinding.outputTrackCandidates);
 
   logTracks("Proto track", protos);

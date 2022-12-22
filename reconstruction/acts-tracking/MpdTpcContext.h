@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "MpdTpcEventStorage.h"
+#include "ActsExamples/Framework/WhiteBoard.hpp"
 
 #include <Acts/Geometry/GeometryContext.hpp>
 #include <Acts/MagneticField/MagneticFieldContext.hpp>
@@ -14,11 +14,9 @@
 
 namespace Mpd::Tpc {
 
-class EventStorage;
-
 /// @brief Common context of the tracking subtasks.
 struct Context {
-  EventStorage eventStore;             ///< Event data storage.
+  ActsExamples::WhiteBoard eventStore; ///< Event data storage.
   Acts::GeometryContext gContext;      ///< Geometry context.
   Acts::MagneticFieldContext mContext; ///< Magnetic field context.
   Acts::CalibrationContext cContext;   ///< Calibration context.

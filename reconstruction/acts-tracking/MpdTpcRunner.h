@@ -7,7 +7,6 @@
 #include "MpdTpcConfig.h"
 #include "MpdTpcContext.h"
 #include "MpdTpcEventData.h"
-#include "MpdTpcEventStorage.h"
 #include "MpdTpcInputHit.h"
 
 #include <Acts/Utilities/Logger.hpp>
@@ -51,18 +50,17 @@ public:
       m_level(level),
       m_config(secGeo, rootFile, jsonFile, m_level) {}
 
-  void execute(const InputHitContainer &hits);
+  void execute(const InputHitContainer &hits, Context &context);
   const Config &config() const { return m_config; }
-  const Context &context() const { return m_context; }
 
-  size_t getTracksNumber() const;
-  Statistics getStatistics() const;
+  size_t getTracksNumber(const Context &context) const;
+  Statistics getStatistics(const Context &context) const;
 
 private:
 
   // Logging.
-  void logInput() const;
-  void logOutput() const;
+  void logInput(const Context &context) const;
+  void logOutput(const Context &context) const;
 
   void logHit(size_t hitId, const InputHit &hit) const;
   void logHits(const InputHitContainer &hits) const;
@@ -94,7 +92,6 @@ private:
   Acts::Logging::Level m_level;
 
   Config m_config;
-  Context m_context;
 };
 
 } // namespace Mpd::Tpc

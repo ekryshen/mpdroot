@@ -201,9 +201,9 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
   // Run the track finding algorithm.
   const auto &config = fRunner->config();
-  const auto &context = fRunner->context();
 
-  fRunner->execute(hits);
+  Mpd::Tpc::Context context;
+  fRunner->execute(hits, context);
 
   // Convert the found track to to the MpdRoot representation.
   const auto &trajectories =
@@ -219,8 +219,8 @@ void MpdTpcTracker::Exec(Option_t *option) {
             config.spacePointMaking.outputSpacePoints);
 
     // Get the track recognition statistics.
-    auto statistics = fRunner->getStatistics();
-    auto nTracks = fRunner->getTracksNumber();
+    auto statistics = fRunner->getStatistics(context);
+    auto nTracks = fRunner->getTracksNumber(context);
 
     // Build histograms.
     buildHistograms(statistics, nTracks, eventCounter);

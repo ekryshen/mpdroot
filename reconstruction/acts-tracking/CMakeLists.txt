@@ -107,7 +107,6 @@ Set(HEADERS
   MpdTpcDetector.h
   MpdTpcDigitization.h
   MpdTpcEventData.h
-  MpdTpcEventStorage.h
   MpdTpcInputHit.h
   MpdTpcMagneticField.h
   MpdTpcRunner.h
