@@ -87,7 +87,7 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
     const auto *tpcPoint = static_cast<TpcPoint*>(tpcPoints->UncheckedAt(i));
     momentum[tpcPoint->GetTrackID()] = Acts::Vector3{
                                            tpcPoint->GetPx() * momScalor,
-                                           tpcPoint->GetPx() * momScalor,
+                                           tpcPoint->GetPy() * momScalor,
                                            tpcPoint->GetPz() * momScalor
                                        };
   }
