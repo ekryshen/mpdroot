@@ -8,10 +8,11 @@
 
 namespace Mpd::Tpc {
 
-Config::Config(const std::string &rootFile,
+Config::Config(const BaseTpcSectorGeo &secGeo,
+               const std::string &rootFile,
                const std::string &jsonFile,
                Acts::Logging::Level level):
-    detector(std::make_shared<Detector>(rootFile, jsonFile, level)) {
+    detector(std::make_shared<Detector>(secGeo, rootFile, jsonFile, level)) {
   auto trackingGeometry = detector->getGeometry();
   assert(trackingGeometry && "Missing tracking geometry");
 

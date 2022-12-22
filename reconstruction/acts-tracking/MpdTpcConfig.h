@@ -105,11 +105,13 @@ struct Config final {
   static constexpr auto NewHitsInRow        = 3u;
   static constexpr auto NewHitsRatio        = 0.25;
 
-  Config(const std::string &jsonFile,
+  Config(const BaseTpcSectorGeo &secGeo,
+         const std::string &jsonFile,
          Acts::Logging::Level level = Acts::Logging::DEBUG):
-      Config("" /* No import */, jsonFile, level) {}
+      Config(secGeo, "" /* No import */, jsonFile, level) {}
 
-  Config(const std::string &rootFile,
+  Config(const BaseTpcSectorGeo &secGeo,
+         const std::string &rootFile,
          const std::string &jsonFile,
          Acts::Logging::Level level = Acts::Logging::DEBUG);
 

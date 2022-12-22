@@ -51,6 +51,7 @@ link_directories(${LINK_DIRECTORIES})
 
 # List of source files
 set(SRCS
+  ActsExamples/Io/Performance/CKFPerformanceWriter.cxx
   ActsExamples/TGeoDetector/TGeoDetector.cxx
   ActsExamples/TGeoDetector/TGeoITkModuleSplitter.cxx
   MpdTpcConfig.cxx
@@ -75,15 +76,31 @@ Set(HEADERS
   ActsExamples/EventData/Measurement.hpp
   ActsExamples/EventData/ProtoTrack.hpp
   ActsExamples/EventData/SimSpacePoint.hpp
+  ActsExamples/EventData/SimParticle.hpp
   ActsExamples/EventData/Track.hpp
   ActsExamples/EventData/Trajectories.hpp
+  ActsExamples/Framework/AlgorithmContext.hpp
+  ActsExamples/Framework/IAlgorithm.hpp
+  ActsExamples/Framework/IWriter.hpp
+  ActsExamples/Framework/ProcessCode.hpp
+  ActsExamples/Framework/WhiteBoard.hpp
+  ActsExamples/Framework/WriterT.hpp
+  ActsExamples/Io/Performance/CKFPerformanceWriter.hpp
   ActsExamples/TGeoDetector/JsonTGeoDetectorConfig.hpp
   ActsExamples/TGeoDetector/TGeoDetector.hpp
   ActsExamples/TGeoDetector/TGeoITkModuleSplitter.hpp
   ActsExamples/Utilities/GroupBy.hpp
+  ActsExamples/Utilities/Helpers.hpp
   ActsExamples/Utilities/Options.hpp
   ActsExamples/Utilities/OptionsFwd.hpp
+  ActsExamples/Utilities/Paths.hpp
   ActsExamples/Utilities/Range.hpp
+  ActsExamples/Validation/DuplicationPlotTool.hpp
+  ActsExamples/Validation/EffPlotTool.hpp
+  ActsExamples/Validation/FakeRatePlotTool.hpp
+  ActsExamples/Validation/ResPlotTool.hpp
+  ActsExamples/Validation/TrackClassification.hpp
+  ActsExamples/Validation/TrackSummaryPlotTool.hpp
   MpdTpcAlgorithm.h
   MpdTpcConfig.h
   MpdTpcContext.h
@@ -105,6 +122,6 @@ Set(HEADERS
 
 Set(LINKDEF MpdTpcTrackerLinkDef.h)
 Set(LIBRARY_NAME MpdTpcActsTracker)
-Set(DEPENDENCIES Kalman MpdField ActsCore ActsFatras ActsPluginTGeo boost_program_options)
+Set(DEPENDENCIES Kalman MpdField ActsCore ActsFatras ActsPluginTGeo ActsExamplesCommon boost_program_options)
 
 GENERATE_LIBRARY()

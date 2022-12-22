@@ -158,6 +158,7 @@ InitStatus MpdTpcTracker::Init() {
 
   // Geometry must already be loaded (gGeoManager != nullptr).
   fRunner = std::make_unique<Mpd::Tpc::Runner>(
+      fSecGeo,
       "../../geometry/tpc_acts_tracking.json", // FIXME:
       Acts::Logging::DEBUG
   );

@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "ActsExamples/Framework/ProcessCode.hpp"
+
 #include <Acts/Utilities/Logger.hpp>
 
 #include <memory>
@@ -13,7 +15,7 @@ namespace Mpd::Tpc {
 
 class Context;
 
-enum class ProcessCode { SUCCESS, ABORT, END };
+using ProcessCode = ActsExamples::ProcessCode;
 
 /// @brief Base class for algorithms (subtasks) used in the Acts-based tracker.
 class Algorithm {

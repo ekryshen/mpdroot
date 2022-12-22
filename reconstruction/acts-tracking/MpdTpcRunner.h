@@ -38,16 +38,18 @@ using Statistics = std::map<int, Quality>;
 /// @brief Provides an API for the tracker.
 class Runner final {
 public:
-  Runner(const std::string &jsonFile,
+  Runner(const BaseTpcSectorGeo &secGeo,
+         const std::string &jsonFile,
          Acts::Logging::Level level = Acts::Logging::DEBUG):
-      Runner("" /* No import */, jsonFile, level) {}
+      Runner(secGeo, "" /* No import */, jsonFile, level) {}
 
-  Runner(const std::string &rootFile,
+  Runner(const BaseTpcSectorGeo &secGeo,
+         const std::string &rootFile,
          const std::string &jsonFile,
          Acts::Logging::Level level = Acts::Logging::DEBUG):
       m_logger(Acts::getDefaultLogger("Runner", level)),
       m_level(level),
-      m_config(rootFile, jsonFile, m_level) {}
+      m_config(secGeo, rootFile, jsonFile, m_level) {}
 
   void execute(const InputHitContainer &hits);
   const Config &config() const { return m_config; }

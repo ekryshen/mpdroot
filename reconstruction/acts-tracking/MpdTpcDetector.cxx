@@ -23,6 +23,7 @@
 #include <sstream>
 
 namespace Mpd::Tpc {
+
 /// Converts Acts length (in mm) to ROOT units.
 inline Double_t toRootLength(Acts::ActsScalar actsLength) {
   // ROOT uses both cm (TGeoManager::kRootUnits) and mm (TGeoManager::kG4Units).
@@ -60,7 +61,7 @@ inline TGeoVolume *makeSensorVolume(TGeoManager *geoManager,
 }
 
 //===----------------------------------------------------------------------===//
-// Functions for creating geometry based on cylinders
+// Virtual surfaces arranged in cylindrical layers
 //===----------------------------------------------------------------------===//
 
 /// Adds a sensor at the given position.
@@ -96,7 +97,6 @@ inline void addSensorsPhi(TGeoVolume *gasVolume,
   }
 }
 
-/// Adds sensors along the Z axis.
 inline void addSensorsZPhi(TGeoVolume *gasVolume,
                            TGeoVolume *sensorVolume,
                            Double_t r,
@@ -177,46 +177,45 @@ inline uint64_t toBitsForCylinder(const Acts::Vector3 &position,
 }
 
 //===----------------------------------------------------------------------===//
-// Functions for creating geometry based on sectors
+// Virtual surfaces based real geometry
 //===----------------------------------------------------------------------===//
 
-inline Acts::ActsScalar getPhi(Acts::ActsScalar x,
-                               Acts::ActsScalar y) {
-  auto phi = std::acos(x / std::hypot(x, y));
-  if (y < 0) { phi = 2*M_PI - phi; }
-  return phi;
+//inline Acts::ActsScalar getPhi(Acts::ActsScalar x, Acts::ActsScalar y) {
+//  auto phi = std::acos(x / std::hypot(x, y));
+//  if (y < 0) { phi = 2*M_PI - phi; }
+//  return phi;
+//}
+
+int getSector(const BaseTpcSectorGeo &secGeo, double x, double y) {
+  int nSectors = secGeo.SECTOR_COUNT_HALF;
+
+  const double phiSector = 2*M_PI / nSectors;
+  const double phi = getPhi(x, y, phiSector/2.);
+
+//  double phiForSector = phi + phiSector/2.;
+
+//  if (phiForSector < 0) {
+//    phiForSector += 2*M_PI;
+//  } else if (phiForSector >= 2*M_PI) {
+//    phiForSector -= 2*M_PI;
+//  }
+
+  return /*phiForSector*/ phi / phiSector;
 }
 
-int getSector(const double x,
-              const double y) {
-  BaseTpcSectorGeo sectorGeo = BaseTpcSectorGeo();
-
-  int nSectors = sectorGeo.SECTOR_COUNT_HALF;
-  double phiSector = 2*M_PI / nSectors;
-  double phi = getPhi(x, y);
-  double phiForSector = phi + phiSector/2.;
-  if (phiForSector  < 0) {
-    phiForSector += 2*M_PI;
-  } else if (phiForSector >= 2*M_PI) {
-    phiForSector -= 2*M_PI;
-  }
-  return phiForSector / phiSector;
-}
-
-void getSectorRowPad(const double x,
-                     const double y,
-                     int *sector,
-                     double *row,
-                     double *pad) {
-  BaseTpcSectorGeo sectorGeo = BaseTpcSectorGeo();
-
-  int iSector = getSector(x, y);
+void getSectorRowPad(const BaseTpcSectorGeo &secGeo,
+                     double x,
+                     double y,
+                     int &sector,
+                     double &row,
+                     double &pad) {
+  int iSector = getSector(secGeo, x, y);
 
 // iSector * 30grad;
-  double iSectorPhi = sectorGeo.SectorAxisAngleRad(iSector);
+  double iSectorPhi = const_cast<BaseTpcSectorGeo&>(secGeo).SectorAxisAngleRad(iSector); // FIXME:
 
 // distance from the Z axis to sector with pads
-  double yPadAreaLowerEdge = sectorGeo.YPADAREA_LOWEREDGE;
+  double yPadAreaLowerEdge = secGeo.YPADAREA_LOWEREDGE;
 
   double x0 = yPadAreaLowerEdge * std::cos(iSectorPhi);
   double y0 = yPadAreaLowerEdge * std::sin(iSectorPhi);
@@ -224,20 +223,20 @@ void getSectorRowPad(const double x,
 // Angle of rotation of the coordinate axes (pad, row) with respect to (x, y)
   double phiCoord = iSectorPhi - M_PI / 2.;
 
-  double iPad = (x - x0) * std::cos(-phiCoord) - (y - y0) * std::sin(-phiCoord);
+  double iPad = (x - x0) * std::cos(-phiCoord) - (y - y0) * std::sin(-phiCoord); // FIXME
   double iRow = (x - x0) * std::sin(-phiCoord) + (y - y0) * std::cos(-phiCoord);
 
-  double lengthPads0 = sectorGeo.YPADAREA_LENGTH[0];
+  double lengthPads0 = secGeo.YPADAREA_LENGTH[0];
 
-  if ( iRow < lengthPads0) {
-    iRow = iRow / sectorGeo.PAD_HEIGHT[0] ;
-    iPad = iPad / sectorGeo.PAD_WIDTH[0];
+  if (iRow < lengthPads0) {
+    iRow = iRow / secGeo.PAD_HEIGHT[0] ;
+    iPad = iPad / secGeo.PAD_WIDTH[0];
   } else {
-    iRow = sectorGeo.ROW_COUNT[0] + (iRow - lengthPads0) / sectorGeo.PAD_HEIGHT[1] ;
-    iPad = iPad / sectorGeo.PAD_WIDTH[1];
+    iRow = secGeo.ROW_COUNT[0] + (iRow - lengthPads0) / secGeo.PAD_HEIGHT[1] ;
+    iPad = iPad / secGeo.PAD_WIDTH[1];
   }
 
-  int maxRows = sectorGeo.ROW_COUNT[0] + sectorGeo.ROW_COUNT[1];
+  int maxRows = secGeo.ROW_COUNT[0] + secGeo.ROW_COUNT[1];
   if (iRow < 0) {
     iRow = 0.5;
     std::cout << "MpdTpcDetector.cxx::getSectorRowPad() ERROR: " <<
@@ -254,9 +253,9 @@ void getSectorRowPad(const double x,
   int extraPads = 0;
 
 // Shift to be >= 0
-  double iPadShifted = iPad + sectorGeo.PAD_COUNT[(int)iRow] + extraPads;
+  double iPadShifted = iPad + secGeo.PAD_COUNT[(int)iRow] + extraPads;
 
-  int maxPads = sectorGeo.PAD_COUNT[(int)iRow] + extraPads;
+  int maxPads = secGeo.PAD_COUNT[(int)iRow] + extraPads;
   if (fabs(iPad) >= maxPads) {
     int sign = (0 <= iPad) - (iPad < 0);
     iPad = sign * (maxPads - 0.5);
@@ -266,152 +265,151 @@ void getSectorRowPad(const double x,
         "row = " << iRow << ". " <<
         "Setting pad = " << iPad << std::endl;
   }
-  *sector = iSector;
-  *row    = iRow;
-  *pad    = iPadShifted;
+
+  sector = iSector;
+  row    = iRow;
+  pad    = iPadShifted;
 }
 
 // rotate vector (xIn, yIn) on phi
-void rotateXY(const double xIn,
-              const double yIn,
-              const double phi,
-              double *xOut,
-              double *yOut) {
+inline void rotateXY(double xIn,
+                     double yIn,
+                     double phi,
+                     double &xOut,
+                     double &yOut) {
   double x = xIn * std::cos(phi) - yIn * std::sin(phi);
   double y = xIn * std::sin(phi) + yIn * std::cos(phi);
-  *xOut = x;
-  *yOut = y;
+  xOut = x;
+  yOut = y;
 }
 
-inline uint64_t toBitsForSector(const Acts::Vector3 &position,
+inline uint64_t toBitsForSector(const BaseTpcSectorGeo &secGeo,
+                                const Acts::Vector3 &position,
                                 const Acts::ActsScalar deltaPhi) {
   // from mm to cm
-  double x = toRootLength( position[0] );
-  double y = toRootLength( position[1] );
+  double x = toRootLength(position[0]);
+  double y = toRootLength(position[1]);
   double z;
 
-  BaseTpcSectorGeo sectorGeo = BaseTpcSectorGeo();
-
   if (Detector::getZFromSectorGeo) {
-    z = toRootLength( position[2] );
-    assert(-sectorGeo.Z_MAX <= z && z <= sectorGeo.Z_MAX);
+    z = toRootLength(position[2]);
+    assert(-secGeo.Z_MAX <= z && z <= secGeo.Z_MAX);
   } else {
     z = position[2];
     assert(Detector::Zmin <= z && z <= Detector::Zmax);
   }
 
-  rotateXY(x, y, deltaPhi, &x, &y);
+  rotateXY(x, y, deltaPhi, x, y);
 
   int iSector;
   double iRow;
   double iPad;
 
-  getSectorRowPad(x, y, &iSector, &iRow, &iPad);
+  getSectorRowPad(secGeo, x, y, iSector, iRow, iPad);
 
   auto sBits = static_cast<uint64_t>(iSector);
   auto rBits = static_cast<uint64_t>(iRow);
   auto pBits = static_cast<uint64_t>(iPad);
 
-  uint64_t zBits;
+  const auto deltaZ = Detector::getZFromSectorGeo
+      ? secGeo.DRIFT_LENGTH : Detector::DeltaZ;
+  const auto zMax = Detector::getZFromSectorGeo
+      ? secGeo.Z_MAX : Detector::Zmax;
 
-  if (Detector::getZFromSectorGeo) {
-    int numZ = Detector::NumZ;
-    double deltaZ = sectorGeo.DRIFT_LENGTH / 1 ;
-    zBits = static_cast<uint64_t>((z + sectorGeo.Z_MAX) / deltaZ);
-  } else {
-    zBits = static_cast<uint64_t>((z - Detector::Zmin) / Detector::DeltaZ);
-  }
+  auto zBits = static_cast<uint64_t>((z + zMax) / deltaZ);
+
   return (sBits << 48) | (rBits << 32) | (pBits << 16) | zBits;
 }
 
-void addSensorsPad(TGeoVolume *sensorVol0, TGeoVolume *sensorVol1, TGeoVolume *gasVolume,
-                   const int iSector, const double phi,
-                   const int iRow, TGeoRotation *rot,
-                   int &iSensor, const int extraPads) {
+void addSensorsPad(const BaseTpcSectorGeo &secGeo,
+                   TGeoVolume *sensorVol0, TGeoVolume *sensorVol1, TGeoVolume *gasVolume,
+                   int iSector, double phi,
+                   int iRow, TGeoRotation *rot,
+                   int &iSensor, int extraPads) {
+  const int nRowsInner = secGeo.ROW_COUNT[0];
 
-  BaseTpcSectorGeo sectorGeo = BaseTpcSectorGeo();
-
-  const int nRowsInner = sectorGeo.ROW_COUNT[0];
-
-  const double yPadAreaLowerEdge = sectorGeo.YPADAREA_LOWEREDGE;
-  const double h0 = sectorGeo.PAD_HEIGHT[0]; // cm
-  const double h1 = sectorGeo.PAD_HEIGHT[1]; // cm
+  const double yPadAreaLowerEdge = secGeo.YPADAREA_LOWEREDGE;
+  const double h0 = secGeo.PAD_HEIGHT[0]; // cm
+  const double h1 = secGeo.PAD_HEIGHT[1]; // cm
   const double x0 = (iRow < nRowsInner) ?
       yPadAreaLowerEdge + h0 * (iRow + 0.5) :
       yPadAreaLowerEdge + h0 * nRowsInner + h1 * (iRow - nRowsInner + 0.5);
 
-  const double w = (iRow < nRowsInner) ? sectorGeo.PAD_WIDTH[0] :
-                                         sectorGeo.PAD_WIDTH[1];
-  const auto nPadsInRow = sectorGeo.PAD_COUNT[iRow];
+  const double w = (iRow < nRowsInner) ? secGeo.PAD_WIDTH[0] :
+                                         secGeo.PAD_WIDTH[1];
 
-//for (auto iPad = -maxPads; iPad < maxPads ; iPad++) {}
+  const auto nPadsInRow = secGeo.PAD_COUNT[iRow];
+
   for (int iPadLeftRight = -1; iPadLeftRight < 2; iPadLeftRight +=2) {
     for (auto iPad = 0; iPad < nPadsInRow + extraPads ; iPad++) {
+      int maxPads = nPadsInRow + extraPads;
 
-    int maxPads = nPadsInRow + extraPads;
+      double y0 = iPadLeftRight * w * (iPad + 0.5);
+      double z0 = 0;
 
-    double y0 = iPadLeftRight * w * (iPad + 0.5);
-    double z0 = 0;
+      double xRotated0;
+      double yRotated0;
+      rotateXY(x0, y0, phi, xRotated0, yRotated0);
 
-    double xRotated0;
-    double yRotated0;
-    rotateXY(x0, y0, phi, &xRotated0, &yRotated0);
+      auto loc = new TGeoCombiTrans(xRotated0, yRotated0, z0, rot);
 
-    auto loc = new TGeoCombiTrans(xRotated0, yRotated0, z0, rot);
-
-    gasVolume->AddNode(sensorVol0, iSensor++, loc);
+      gasVolume->AddNode(sensorVol0, iSensor++, loc);
     }
   }
 }
 
-void addSensorsRowPad(TGeoVolume *sensorVol0, TGeoVolume *sensorVol1, TGeoVolume *gasVolume,
-                      const int iSector, const double phi,
-                      TGeoRotation *rot, int &iSensor) {
-  BaseTpcSectorGeo sectorGeo = BaseTpcSectorGeo();
-
-  const int nRowsInner = sectorGeo.ROW_COUNT[0];
-  const int nRowsOuter = sectorGeo.ROW_COUNT[1];
+void addSensorsRowPad(const BaseTpcSectorGeo &secGeo,
+                      TGeoVolume *sensorVol0,
+                      TGeoVolume *sensorVol1,
+                      TGeoVolume *gasVolume,
+                      int iSector,
+                      double phi,
+                      TGeoRotation *rot,
+                      int &iSensor) {
+  const int nRowsInner = secGeo.ROW_COUNT[0];
+  const int nRowsOuter = secGeo.ROW_COUNT[1];
 
   const int extraPads = 0;
 
   for (auto iRow = 0; iRow < nRowsInner + nRowsOuter; iRow++) {
-    addSensorsPad(sensorVol0, sensorVol1, gasVolume, iSector, phi, iRow, rot, iSensor, extraPads);
+    addSensorsPad(secGeo, sensorVol0, sensorVol1, gasVolume,
+                  iSector, phi, iRow, rot, iSensor, extraPads);
   }
 }
 
-void addSensorsSecRowPad(TGeoVolume *sensorVol0, TGeoVolume *sensorVol1, TGeoVolume *gasVolume) {
+void addSensorsSecRowPad(const BaseTpcSectorGeo &secGeo,
+                         TGeoVolume *sensorVol0,
+                         TGeoVolume *sensorVol1,
+                         TGeoVolume *gasVolume) {
+  const int nSectors = secGeo.SECTOR_COUNT_HALF;
 
-  BaseTpcSectorGeo sectorGeo = BaseTpcSectorGeo();
-
-  const int nSectors = sectorGeo.SECTOR_COUNT_HALF;
   TGeoRotation *rot;
   int iSensor = 0;
 
   for (int iSector = 0; iSector < nSectors; iSector++) {
 
-    double phi = sectorGeo.SectorAxisAngleRad(iSector) +  // = iSector * 30_grad
-                 sectorGeo.SECTOR_PHI0_RAD;               //   - 15_grad
+    double phi = const_cast<BaseTpcSectorGeo&>(secGeo).SectorAxisAngleRad(iSector) +  // = iSector * 30_grad // FIXME
+                 secGeo.SECTOR_PHI0_RAD;               //   - 15_grad
     double phiDegree = phi * TMath::RadToDeg();
 
     auto rotName = makeName("tpc_rotation_sec", iSector);
     rot = new TGeoRotation(rotName.c_str(), phiDegree, 0., 0.);
 
-    addSensorsRowPad(sensorVol0, sensorVol1, gasVolume, iSector, phi, rot, iSensor);
+    addSensorsRowPad(secGeo, sensorVol0, sensorVol1, gasVolume, iSector, phi, rot, iSensor);
   }
 }
 
-void addSectorSensors(TGeoManager *geoManager, TGeoVolume *gasVolume) {
-
-  BaseTpcSectorGeo sectorGeo = BaseTpcSectorGeo();
-
-  auto dZ = Detector::getZFromSectorGeo ? sectorGeo.DRIFT_LENGTH :
+void addSectorSensors(const BaseTpcSectorGeo &secGeo,
+                      TGeoManager *geoManager,
+                      TGeoVolume *gasVolume) {
+  auto dZ = Detector::getZFromSectorGeo ? secGeo.DRIFT_LENGTH :
                                           toRootLength(Detector::DeltaZ);
   Int_t iVolume = 0;
   auto *medium = gasVolume->GetMedium();
 
-  const double w0 = sectorGeo.PAD_WIDTH[0];  // cm
-  const double h0 = sectorGeo.PAD_HEIGHT[0]; // cm
-  TGeoVolume *sensorVol0 = makeSensorVolume (
+  const double w0 = secGeo.PAD_WIDTH[0];  // cm
+  const double h0 = secGeo.PAD_HEIGHT[0]; // cm
+  TGeoVolume *sensorVol0 = makeSensorVolume(
       geoManager,
       medium,
       0.5 * h0,
@@ -419,9 +417,9 @@ void addSectorSensors(TGeoManager *geoManager, TGeoVolume *gasVolume) {
       0.5 * dZ,
       iVolume++ );
 
-  const double w1 = sectorGeo.PAD_WIDTH[1];  // cm
-  const double h1 = sectorGeo.PAD_HEIGHT[1]; // cm
-  TGeoVolume *sensorVol1 = makeSensorVolume (
+  const double w1 = secGeo.PAD_WIDTH[1];  // cm
+  const double h1 = secGeo.PAD_HEIGHT[1]; // cm
+  TGeoVolume *sensorVol1 = makeSensorVolume(
       geoManager,
       medium,
       0.5 * h1,
@@ -429,9 +427,9 @@ void addSectorSensors(TGeoManager *geoManager, TGeoVolume *gasVolume) {
       0.5 * dZ,
       iVolume++ );
 
-  assert (Detector::HasTwoNodes && "addSectorSensors() Detector::HasTwoNodes must be true");
+  assert(Detector::HasTwoNodes && "addSectorSensors() Detector::HasTwoNodes must be true");
 
-  addSensorsSecRowPad(sensorVol0, sensorVol1, gasVolume);
+  addSensorsSecRowPad(secGeo, sensorVol0, sensorVol1, gasVolume);
 }
 
 //===----------------------------------------------------------------------===//
@@ -459,6 +457,7 @@ const Acts::TrackingVolume *findVolume(
 }
 
 void fillSurfaces(
+    const BaseTpcSectorGeo &secGeo,
     const Acts::GeometryContext &context,
     const std::shared_ptr<const Acts::TrackingGeometry> &geometry,
     std::unordered_map<uint64_t,
@@ -482,8 +481,8 @@ void fillSurfaces(
       auto surface = surfaceVector.at(j)->getSharedPtr();
       auto center = surface->center(context);
 
-      auto bits = Detector::useBaseTpcSectorGeo ?
-          toBitsForSector(center, 0) :
+      auto bits = Detector::useBaseTpcSectorGeo ? // FIXME:
+          toBitsForSector(secGeo, center, 0) :
           toBitsForCylinder(center, 0.5 * Detector::DeltaPhi);
       assert(surfaces.find(bits) == surfaces.end()
           && "There are surfaces with the same bit keys");
@@ -492,10 +491,12 @@ void fillSurfaces(
   }
 }
 
-Detector::Detector(const std::string &rootFile,
+Detector::Detector(const BaseTpcSectorGeo &secGeo,
+                   const std::string &rootFile,
                    const std::string &jsonFile,
                    Acts::Logging::Level level):
-    m_logger(Acts::getDefaultLogger("Detector", level)) {
+  m_secGeo(secGeo),
+  m_logger(Acts::getDefaultLogger("Detector", level)) {
   geoEditor = [this](auto *gm){ return editGeometry(gm); };
 
   m_config.surfaceLogLevel = level;
@@ -517,7 +518,7 @@ bool Detector::editGeometry(TGeoManager *geoManager) {
   gasVolume->Print();
 
   if (Detector::useBaseTpcSectorGeo) {
-    addSectorSensors(geoManager, gasVolume);
+    addSectorSensors(m_secGeo, geoManager, gasVolume);
   } else {
     addCylinderSensors(geoManager, gasVolume);
   }
@@ -567,13 +568,13 @@ std::shared_ptr<const Acts::Surface> Detector::getSurface(
     const Acts::Vector3 &position) {
 
   if (m_surfaces.empty()) {
-    fillSurfaces(gcontext, m_trackingGeometry, m_surfaces);
+    fillSurfaces(m_secGeo, gcontext, m_trackingGeometry, m_surfaces);
     ACTS_DEBUG("Constructed " << m_surfaces.size() << " surfaces");
   }
 
   ACTS_VERBOSE("Finding a surface for " << position);
   auto bits = Detector::useBaseTpcSectorGeo ?
-      toBitsForSector  (position, 0) :
+      toBitsForSector  (m_secGeo, position, 0) : // FIXME:
       toBitsForCylinder(position, 0.5 * Detector::DeltaPhi);
   auto iter = m_surfaces.find(bits);
   assert(iter != m_surfaces.end() && "Surface not found");

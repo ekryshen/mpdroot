@@ -6,6 +6,8 @@
 
 #include "ActsExamples/TGeoDetector/TGeoDetector.hpp"
 
+#include "BaseTpcSectorGeo.h"
+
 #include <Acts/Definitions/Algebra.hpp>
 #include <Acts/Definitions/Units.hpp>
 #include <Acts/Geometry/GeometryContext.hpp>
@@ -41,10 +43,6 @@ public:
   /// TPC is represented as two symmetric nodes.
   static constexpr auto HasTwoNodes = true;
 
-//===----------------------------------------------------------------------===//
-// The numerical values for creating geometry based on cilinders
-//===----------------------------------------------------------------------===//
-
   static constexpr auto Rmin       =  40.0_cm;    // FIXME
   static constexpr auto Rmax       =  Rmin + 85.5_cm; //132.15_cm;   // FIXME
   static constexpr auto Zmin       = -2.*82.5_cm; // FIXME: 81.95
@@ -57,11 +55,13 @@ public:
   static constexpr auto DeltaPhi   =  (2.*M_PI) / NumSectors;
   static constexpr auto PhiStart   =  0.5*DeltaPhi;
 
-  Detector(const std::string &jsonFile,
+  Detector(const BaseTpcSectorGeo &secGeo,
+           const std::string &jsonFile,
            Acts::Logging::Level level = Acts::Logging::DEBUG):
-      Detector("" /* No import */, jsonFile, level) {}
+      Detector(secGeo, "" /* No import */, jsonFile, level) {}
 
-  Detector(const std::string &rootFile,
+  Detector(const BaseTpcSectorGeo &secGeo,
+           const std::string &rootFile,
            const std::string &jsonFile,
            Acts::Logging::Level level = Acts::Logging::DEBUG);
 
@@ -79,6 +79,7 @@ private:
 private:
   const Acts::Logger &logger() const { return *m_logger; }
 
+  const BaseTpcSectorGeo &m_secGeo;
   ActsExamples::TGeoDetector::Config m_config;
   std::unique_ptr<const Acts::Logger> m_logger;
   std::shared_ptr<const Acts::TrackingGeometry> m_trackingGeometry;
