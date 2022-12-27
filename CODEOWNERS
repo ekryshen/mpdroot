@@ -30,7 +30,7 @@
 /detectors/emc/                          @boiana2012
 
 # MCORD
-/detectors/mcord/                        @Wielanek
+# unsupported as of 12.2022 /detectors/mcord/                        @Wielanek
 
 # STS  (ITS)
 /detectors/sts/                          @vkondrat

@@ -93,7 +93,7 @@ void MpdMCTrack::Print(Int_t trackId) const
         << ", ETOF " << GetNPoints(kETOF) << ", FFD " << GetNPoints(kFFD) << ", ECT " << GetNPoints(kECT) << ", ECAL "
         << GetNPoints(kECAL) << ", NDET " << GetNPoints(kNDET) << ", CPC " << GetNPoints(kCPC) << ", BBC "
         << GetNPoints(kBBC) << ", ZDC " << GetNPoints(kZDC) << ", FSA " << GetNPoints(kFSA) << ", BMD "
-        << GetNPoints(kBMD) << ", MCORD " << GetNPoints(kMCORD) << endl;
+        << GetNPoints(kBMD) << /* unsupported as of 12.2022 ", MCORD " << GetNPoints(kMCORD) */ << endl;
 }
 // -------------------------------------------------------------------------
 
@@ -124,9 +124,10 @@ Double_t MpdMCTrack::GetRapidity() const
 Int_t MpdMCTrack::GetNPoints(DetectorIdMPD detId) const
 {
 
-   // kSTS, kTPC, kTOF, kETOF, kFD, kECT, kECAL, kNDET, kCPC, kBBC, kZDC, kFSA, kBMD,KMCORD
+   // kSTS, kTPC, kTOF, kETOF, kFD, kECT, kECAL, kNDET, kCPC, kBBC, kZDC, kFSA, kBMD, kMCORD
 
-   if ((detId <= kMCORD) && (detId >= kSTS))
+   // as of 12.2022 MCORD is unsupported. Hence the change from <=kMCORD to <kMCORD
+   if ((detId < kMCORD) && (detId >= kSTS))
       return (fNPoints & (1 << detId));
    else {
       cout << "-E- FairMCTrack::GetNPoints: Unknown detector ID " << detId << endl;
@@ -139,11 +140,12 @@ Int_t MpdMCTrack::GetNPoints(DetectorIdMPD detId) const
 void MpdMCTrack::SetNPoints(Int_t iDet, Int_t nPoints)
 {
 
-   // kSTS, kTPC, kTOF, kETOF, kFD, kECT, kECAL, kNDET, kCPC, kBBC, kZDC, kFSA, kBMD,KMCORD
+   // kSTS, kTPC, kTOF, kETOF, kFD, kECT, kECAL, kNDET, kCPC, kBBC, kZDC, kFSA, kBMD,kMCORD
 
    Int_t mpd_nPoints = (nPoints > 0) * (1 << iDet);
 
-   if ((iDet <= kMCORD) && (iDet >= kSTS)) {
+   // as of 12.2022 MCORD is unsupported. Hence the change from <=kMCORD to <kMCORD
+   if ((iDet < kMCORD) && (iDet >= kSTS)) {
       fNPoints = (fNPoints & (~(1 << iDet))) | mpd_nPoints;
    } else
       cout << "-E- FairMCTrack::SetNPoints: Unknown detector ID " << iDet << endl;
