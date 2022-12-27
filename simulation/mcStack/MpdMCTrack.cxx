@@ -93,7 +93,7 @@ void MpdMCTrack::Print(Int_t trackId) const
         << ", ETOF " << GetNPoints(kETOF) << ", FFD " << GetNPoints(kFFD) << ", ECT " << GetNPoints(kECT) << ", ECAL "
         << GetNPoints(kECAL) << ", NDET " << GetNPoints(kNDET) << ", CPC " << GetNPoints(kCPC) << ", BBC "
         << GetNPoints(kBBC) << ", ZDC " << GetNPoints(kZDC) << ", FSA " << GetNPoints(kFSA) << ", BMD "
-        << GetNPoints(kBMD) << /* unsupported as of 12.2022 ", MCORD " << GetNPoints(kMCORD) */ << endl;
+        << GetNPoints(kBMD) << /* unsupported as of 12.2022 ", MCORD " << GetNPoints(kMCORD) <<  */ endl;
 }
 // -------------------------------------------------------------------------
 
