@@ -76,7 +76,7 @@ add_subdirectory (core/mpdDst) # Base
 add_subdirectory (core/mpdField) # INDEPENDENT
 add_subdirectory (core/mpdPassive) # INDEPENDENT
 add_subdirectory (core/mpdPid) # INDEPENDENT
-add_subdirectory (detectors/bmd) # INDEPENDENT
+# unsupported as of 01.2023 add_subdirectory (detectors/bmd) # INDEPENDENT
 add_subdirectory (detectors/emc) # INDEPENDENT
 add_subdirectory (detectors/etof) # INDEPENDENT
 add_subdirectory (detectors/ffd) # INDEPENDENT
