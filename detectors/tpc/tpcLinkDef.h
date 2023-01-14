@@ -39,4 +39,5 @@
 #pragma link C++ class TpcClustering+;
 #pragma link C++ class BaseTpcSectorGeo+;
 #pragma link C++ class TpcSectorGeoAZ+;
+#pragma link C++ class TpcSectorGeoAlignmentVAK+;
 #endif

@@ -57,6 +57,7 @@ set(SRCS
   clusterHitFinder/mlem/TpcClusterHitFinderMlem.cxx
   geometry/BaseTpcSectorGeo.cxx
   geometry/TpcSectorGeoAZ.cxx
+  geometry/TpcSectorGeoAlignmentVAK.cxx
 )
 
 Set(HEADERS
@@ -89,6 +90,7 @@ Set(HEADERS
   digitizer/AbstractTpcDigit.h
   geometry/BaseTpcSectorGeo.h
   geometry/TpcSectorGeoAZ.h
+  geometry/TpcSectorGeoAlignmentVAK.h
 )
 
 Set(LINKDEF tpcLinkDef.h)
