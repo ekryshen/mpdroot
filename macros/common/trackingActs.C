@@ -163,10 +163,10 @@ void trackingActs(TString inFile = "evetest.root", TString outFile = "mpddst.roo
    // fRun->AddTask(trRefit);
 
    MpdFillDstTask *fillDST = new MpdFillDstTask("MpdDst task");
-   fRun->AddTask(fillDST);
+   //fRun->AddTask(fillDST);
 
    MpdMiniDstFillTask *miniDst = new MpdMiniDstFillTask(outFile);
-   fRun->AddTask(miniDst);
+   //fRun->AddTask(miniDst);
 
    // -----   Intialise   ----------------------------------------------------
    fRun->Init();
