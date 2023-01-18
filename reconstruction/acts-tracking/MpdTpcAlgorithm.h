@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "ActsExamples/Framework/IAlgorithm.hpp"
 #include "ActsExamples/Framework/ProcessCode.hpp"
 
 #include <Acts/Utilities/Logger.hpp>
@@ -13,12 +14,8 @@
 
 namespace Mpd::Tpc {
 
-class Context;
-
-using ProcessCode = ActsExamples::ProcessCode;
-
 /// @brief Base class for algorithms (subtasks) used in the Acts-based tracker.
-class Algorithm {
+class Algorithm : public ActsExamples::IAlgorithm {
 public:
   Algorithm(std::string name,
             Acts::Logging::Level level = Acts::Logging::INFO):
@@ -27,10 +24,21 @@ public:
 
   virtual ~Algorithm() = default;
 
-  std::string name() const { return m_name; }
+  std::string name() const override { return m_name; }
 
   /// Executes the algorithm for one event.
-  virtual ProcessCode execute(Context &context) const = 0;
+  ActsExamples::ProcessCode execute(
+    const ActsExamples::AlgorithmContext &context) const override = 0;
+
+  /// Initialize the algorithm
+  ActsExamples::ProcessCode initialize() const override {
+    return ActsExamples::ProcessCode::SUCCESS;
+  };
+
+  /// Finalize the algorithm
+  ActsExamples::ProcessCode finalize() const override {
+    return ActsExamples::ProcessCode::SUCCESS;
+  };
 
 protected:
   const Acts::Logger &logger() const { return *m_logger; }

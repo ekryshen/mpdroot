@@ -5,7 +5,6 @@
 #pragma once
 
 #include "MpdTpcConfig.h"
-#include "MpdTpcContext.h"
 #include "MpdTpcEventData.h"
 #include "MpdTpcInputHit.h"
 
@@ -50,17 +49,19 @@ public:
       m_level(level),
       m_config(secGeo, rootFile, jsonFile, m_level) {}
 
-  void execute(const InputHitContainer &hits, Context &context);
+  void execute(const InputHitContainer &hits,
+               ActsExamples::AlgorithmContext &context);
+
   const Config &config() const { return m_config; }
 
-  size_t getTracksNumber(const Context &context) const;
-  Statistics getStatistics(const Context &context) const;
+  size_t getTracksNumber(const ActsExamples::AlgorithmContext &context) const;
+  Statistics getStatistics(const ActsExamples::AlgorithmContext &context) const;
 
 private:
 
   // Logging.
-  void logInput(const Context &context) const;
-  void logOutput(const Context &context) const;
+  void logInput(const ActsExamples::AlgorithmContext &context) const;
+  void logOutput(const ActsExamples::AlgorithmContext &context) const;
 
   void logHit(size_t hitId, const InputHit &hit) const;
   void logHits(const InputHitContainer &hits) const;

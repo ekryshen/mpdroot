@@ -2,8 +2,9 @@
 //
 // Copyright (C) 2022 JINR
 
-#include "MpdTpcContext.h"
 #include "MpdTpcTrackSeeding.h"
+
+#include "ActsExamples/Framework/WhiteBoard.hpp"
 
 #include <Acts/Seeding/BinFinder.hpp>
 #include <Acts/Seeding/BinnedSPGroup.hpp>
@@ -104,7 +105,8 @@ TrackSeeding::TrackSeeding(Config config, Acts::Logging::Level level):
           m_config.seedFilterConfig);
 }
 
-ProcessCode TrackSeeding::execute(Context &context) const {
+ActsExamples::ProcessCode TrackSeeding::execute(
+    const ActsExamples::AlgorithmContext &context) const {
   ACTS_DEBUG("Track seeding");
 
   const auto &spacePoints =
@@ -192,7 +194,7 @@ ProcessCode TrackSeeding::execute(Context &context) const {
   context.eventStore.add(
       m_config.outputProtoTracks, ProtoTrackContainer{protoTracks});
 
-  return ProcessCode::SUCCESS;
+  return ActsExamples::ProcessCode::SUCCESS;
 }
 
 } // namespace Mpd::Tpc

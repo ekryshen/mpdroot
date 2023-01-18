@@ -2,10 +2,10 @@
 //
 // Copyright (C) 2022 JINR
 
-#include "MpdTpcContext.h"
 #include "MpdTpcSpacePointMaking.h"
 
 #include "ActsExamples/EventData/GeometryContainers.hpp"
+#include "ActsExamples/Framework/WhiteBoard.hpp"
 
 #include <Acts/Definitions/Algebra.hpp>
 #include <Acts/Definitions/TrackParametrization.hpp>
@@ -70,7 +70,8 @@ SpacePointMaking::SpacePointMaking(Config config, Acts::Logging::Level level):
   }
 }
 
-ProcessCode SpacePointMaking::execute(Context &context) const {
+ActsExamples::ProcessCode SpacePointMaking::execute(
+    const ActsExamples::AlgorithmContext &context) const {
   ACTS_DEBUG("Space point making");
 
   const auto &sourceLinks =
@@ -93,13 +94,13 @@ ProcessCode SpacePointMaking::execute(Context &context) const {
 
       if (!surface) {
         ACTS_ERROR("Could not find surface " << moduleGeoId);
-        return ProcessCode::ABORT;
+        return ActsExamples::ProcessCode::ABORT;
       }
 
       for (auto &sourceLink : moduleSourceLinks) {
         auto index = sourceLink.get().index();
         auto [globalPos, var] = localToGlobal(
-            surface, context.gContext, measurements, index);
+            surface, context.geoContext, measurements, index);
         ACTS_DEBUG("Space point " << index << ": ("
                                   << globalPos[0] << ", "
                                   << globalPos[1] << ", "
@@ -116,12 +117,12 @@ ProcessCode SpacePointMaking::execute(Context &context) const {
   ACTS_DEBUG("Created " << spacePoints.size() << " space points");
   context.eventStore.add(m_config.outputSpacePoints, std::move(spacePoints));
 
-  return ProcessCode::SUCCESS;
+  return ActsExamples::ProcessCode::SUCCESS;
 }
 
 SpacePointMaking::GlobalPosition SpacePointMaking::localToGlobal(
     const Acts::Surface *surface,
-    const Acts::GeometryContext &gContext,
+    const Acts::GeometryContext &geoContext,
     const MeasurementContainer &measurements,
     Index index) const {
   assert(surface && "Missing surface");
@@ -146,9 +147,9 @@ SpacePointMaking::GlobalPosition SpacePointMaking::localToGlobal(
 
   // Transform the local position to global coordinates.
   Acts::Vector3 fakeMom(1, 1, 1);
-  Acts::Vector3 globalPos = surface->localToGlobal(gContext, localPos, fakeMom);
+  Acts::Vector3 globalPos = surface->localToGlobal(geoContext, localPos, fakeMom);
   Acts::RotationMatrix3 rotLocalToGlobal =
-      surface->referenceFrame(gContext, globalPos, fakeMom);
+      surface->referenceFrame(geoContext, globalPos, fakeMom);
 
   // The space point requires only the variance of the transverse and
   // longitudinal position. Reduce computations by transforming the

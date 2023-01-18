@@ -2,11 +2,12 @@
 //
 // Copyright (C) 2022 JINR
 
-#include "MpdTpcContext.h"
 #include "MpdTpcDetector.h"
 #include "MpdTpcDigitization.h"
 #include "MpdTpcInputHit.h"
 #include "geometry/BaseTpcSectorGeo.h"
+
+#include "ActsExamples/Framework/WhiteBoard.hpp"
 
 #include <Acts/Definitions/Algebra.hpp>
 #include <Acts/Definitions/Units.hpp>
@@ -35,7 +36,8 @@ Digitization::Digitization(Config config, Acts::Logging::Level level):
     && "Missing detector");
 }
 
-ProcessCode Digitization::execute(Context &context) const {
+ActsExamples::ProcessCode Digitization::execute(
+    const ActsExamples::AlgorithmContext &context) const {
   ACTS_DEBUG("Digitization");
 
   const auto &simHits =
@@ -55,7 +57,7 @@ ProcessCode Digitization::execute(Context &context) const {
     const auto &pos = simHit.position;
     const auto &mom = simHit.momentum;
 
-    auto surface = m_config.detector->getSurface(context.gContext, pos);
+    auto surface = m_config.detector->getSurface(context.geoContext, pos);
     auto moduleGeoId = surface->geometryId();
     ACTS_VERBOSE("Module identifier is " << moduleGeoId);
 
@@ -67,10 +69,10 @@ ProcessCode Digitization::execute(Context &context) const {
     } else {
       deltaR = Detector::DeltaR;
     }
-    auto result = surface->globalToLocal(context.gContext, pos, mom, 3. * deltaR);
+    auto result = surface->globalToLocal(context.geoContext, pos, mom, 3. * deltaR);
     if (!result.ok()) {
       ACTS_DEBUG("Point " << pos << " is far from surface "
-                          << surface->center(context.gContext));
+                          << surface->center(context.geoContext));
       assert(false);
     }
  
@@ -104,7 +106,7 @@ ProcessCode Digitization::execute(Context &context) const {
   context.eventStore.add(
       m_config.outputSourceLinks + "_storage", std::move(sourceLinkStorage));
 
-  return ProcessCode::SUCCESS;
+  return ActsExamples::ProcessCode::SUCCESS;
 }
 
 } // namespace Mpd::Tpc

@@ -2,7 +2,6 @@
 //
 // Copyright (C) 2022 JINR
 
-#include "MpdTpcContext.h"
 #include "MpdTpcConfig.h"
 #include "MpdTpcDigitization.h"
 #include "MpdTpcEventData.h"
@@ -20,7 +19,8 @@
 
 namespace Mpd::Tpc {
 
-void Runner::execute(const InputHitContainer &hits, Context &context) {
+void Runner::execute(const InputHitContainer &hits,
+                     ActsExamples::AlgorithmContext &context) {
   // Store the input hits.
   context.eventStore.add(
       m_config.digitization.inputSimHits, InputHitContainer{hits});
@@ -34,18 +34,21 @@ void Runner::execute(const InputHitContainer &hits, Context &context) {
   TrackSeeding trackSeeding(m_config.trackSeeding, m_level);
   TrackEstimation trackEstimation(m_config.trackEstimation, m_level);
   TrackFinding trackFinding(m_config.trackFinding, m_level);
+  ActsExamples::CKFPerformanceWriter perfWriting(m_config.perfWriting, m_level);
 
-  digitization.execute(context);
-  spacePointMaking.execute(context);
-  trackSeeding.execute(context);
-  trackEstimation.execute(context);
-  trackFinding.execute(context);
+  digitization.execute(++context);
+  spacePointMaking.execute(++context);
+  trackSeeding.execute(++context);
+  trackEstimation.execute(++context);
+  trackFinding.execute(++context);
+  perfWriting.write(++context);
 
   // Log the output tracks.
   logOutput(context);
 }
 
-Statistics Runner::getStatistics(const Context &context) const {
+Statistics Runner::getStatistics(
+    const ActsExamples::AlgorithmContext &context) const {
   const auto &hits = context.eventStore.get<InputHitContainer>(
       m_config.digitization.inputSimHits);
   const auto &tracks = context.eventStore.get<ProtoTrackContainer>(
@@ -63,7 +66,8 @@ Statistics Runner::getStatistics(const Context &context) const {
   return statistics;
 }
 
-size_t Runner::getTracksNumber(const Context &context) const {
+size_t Runner::getTracksNumber(
+    const ActsExamples::AlgorithmContext &context) const {
   const auto &hits = context.eventStore.get<InputHitContainer>(
       m_config.digitization.inputSimHits);
 
@@ -77,7 +81,8 @@ size_t Runner::getTracksNumber(const Context &context) const {
   return tracks.size();
 }
 
-void Runner::logInput(const Context &context) const {
+void Runner::logInput(
+    const ActsExamples::AlgorithmContext &context) const {
   const auto &hits = context.eventStore.get<InputHitContainer>(
       m_config.digitization.inputSimHits);
 
@@ -97,7 +102,8 @@ void Runner::logInput(const Context &context) const {
   ACTS_DEBUG(">> Real tracks: " << tracks.size());
 }
 
-void Runner::logOutput(const Context &context) const {
+void Runner::logOutput(
+    const ActsExamples::AlgorithmContext &context) const {
   const auto &protos = context.eventStore.get<ProtoTrackContainer>(
       m_config.trackSeeding.outputProtoTracks);
   const auto &params = context.eventStore.get<TrackParametersContainer>(

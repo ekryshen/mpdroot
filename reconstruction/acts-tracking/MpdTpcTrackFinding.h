@@ -84,7 +84,10 @@ public:
   };
 
   TrackFinding(Config config, Acts::Logging::Level level);
-  ProcessCode execute(Context &context) const override;
+
+  ActsExamples::ProcessCode execute(
+      const ActsExamples::AlgorithmContext &context) const override;
+
   const Config &config() const { return m_config; }
 
 private:
@@ -92,7 +95,7 @@ private:
   void computeSharedHits(const Container &sourceLinks, Results &results) const;
 
   /// Post-processing: removes duplicates and constructs track candidates.
-  void constructTrackCandidates(Context &context,
+  void constructTrackCandidates(const ActsExamples::AlgorithmContext &context,
                                 const Container &sourceLinks,
                                 Results &results) const;
 

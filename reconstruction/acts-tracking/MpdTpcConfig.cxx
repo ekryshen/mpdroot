@@ -130,6 +130,15 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
   trackFinding.trackMinLength = TrackMinLength;
   trackFinding.newHitsInRow = NewHitsInRow;
   trackFinding.newHitsRatio = NewHitsRatio;
+
+  // Performance writing.
+  perfWriting.inputTrajectories = TrajectoriesID;
+  perfWriting.inputParticles = ParticlesID;
+  perfWriting.inputMeasurementParticlesMap = MeasParticlesMapID;
+  perfWriting.filePath = PerfFilePath;
+  perfWriting.truthMatchProbMin = TruthMatchProbMin;
+  perfWriting.nMeasurementsMin = MeasurementsMin;
+  perfWriting.ptMin = PtMin;
 }
 
 } // namespace Mpd::Tpc

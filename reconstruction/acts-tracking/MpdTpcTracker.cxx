@@ -5,6 +5,8 @@
 #include "MpdTpcTracker.h"
 #include "PlotUtils.h"
 
+#include "ActsExamples/Framework/WhiteBoard.hpp"
+
 #include "MpdCodeTimer.h"
 #include "MpdKalmanHit.h"
 #include "MpdTpcHit.h"
@@ -200,7 +202,8 @@ void MpdTpcTracker::Exec(Option_t *option) {
   // Run the track finding algorithm.
   const auto &config = fRunner->config();
 
-  Mpd::Tpc::Context context;
+  ActsExamples::WhiteBoard whiteBoard;
+  ActsExamples::AlgorithmContext context(0, eventCounter, whiteBoard);
   fRunner->execute(hits, context);
 
   // Convert the found track to to the MpdRoot representation.

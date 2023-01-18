@@ -12,6 +12,8 @@
 #include "MpdTpcTrackFinding.h"
 #include "MpdTpcTrackSeeding.h"
 
+#include "ActsExamples/Io/Performance/CKFPerformanceWriter.hpp"
+
 #include <Acts/Definitions/Units.hpp>
 #include <Acts/Utilities/Logger.hpp>
 
@@ -39,7 +41,9 @@ struct Config final {
   static constexpr auto EstProtoTracksID    = "estimatedprototracks";
   static constexpr auto TrajectoriesID      = "trajectories";
   static constexpr auto TrackCandidatesID   = "trackcandidates";
-
+  static constexpr auto ParticlesID         = "inputparticles";
+  static constexpr auto MeasParticlesMapID  = "measurementparticles";
+ 
   //===--------------------------------------------------------------------===//
   // Track seeding
   //===--------------------------------------------------------------------===//
@@ -105,6 +109,22 @@ struct Config final {
   static constexpr auto NewHitsInRow        = 3u;
   static constexpr auto NewHitsRatio        = 0.25;
 
+  //===--------------------------------------------------------------------===//
+  // Performance writer
+  //===--------------------------------------------------------------------===//
+
+  static constexpr auto PerfFilePath        = "performance_ckf.root";
+  /// Min reco-truth matching probability.
+  static constexpr auto TruthMatchProbMin   = 0.5;
+  /// Min number of measurements.
+  static constexpr auto MeasurementsMin     = 9u;
+  /// Min transverse momentum.
+  static constexpr auto PtMin               = 1._GeV;
+
+  //===--------------------------------------------------------------------===//
+  // Constructor
+  //===--------------------------------------------------------------------===//
+
   Config(const BaseTpcSectorGeo &secGeo,
          const std::string &jsonFile,
          Acts::Logging::Level level = Acts::Logging::DEBUG):
@@ -122,6 +142,7 @@ struct Config final {
   TrackSeeding::Config trackSeeding;
   TrackEstimation::Config trackEstimation;
   TrackFinding::Config trackFinding;
+  ActsExamples::CKFPerformanceWriter::Config perfWriting;
 };
 
 } // namespace Mpd::Tpc

@@ -103,7 +103,6 @@ Set(HEADERS
   ActsExamples/Validation/TrackSummaryPlotTool.hpp
   MpdTpcAlgorithm.h
   MpdTpcConfig.h
-  MpdTpcContext.h
   MpdTpcDetector.h
   MpdTpcDigitization.h
   MpdTpcEventData.h

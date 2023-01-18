@@ -2,9 +2,10 @@
 //
 // Copyright (C) 2022 JINR
 
-#include "MpdTpcContext.h"
 #include "MpdTpcMagneticField.h"
 #include "MpdTpcTrackFinding.h"
+
+#include "ActsExamples/Framework/WhiteBoard.hpp"
 
 #include <Acts/Definitions/Units.hpp>
 #include <Acts/EventData/TrackParameters.hpp>
@@ -35,7 +36,8 @@ TrackFinding::TrackFinding(Config config, Acts::Logging::Level level):
     && "Missing trajectories output collection");
 }
 
-ProcessCode TrackFinding::execute(Context &context) const {
+ActsExamples::ProcessCode TrackFinding::execute(
+    const ActsExamples::AlgorithmContext &context) const {
   using TrackParametersContainer = ActsExamples::TrackParametersContainer;
   using AccessorDelegate = Acts::SourceLinkAccessorDelegate<Iterator>;
 
@@ -75,9 +77,9 @@ ProcessCode TrackFinding::execute(Context &context) const {
   Filter trackFinder(std::move(propagator));
 
   Options options(
-    context.gContext,
-    context.mContext,
-    context.cContext,
+    context.geoContext,
+    context.magFieldContext,
+    context.calibContext,
     accessorDelegate,
     extensions,
     Acts::LoggerWrapper{logger()},
@@ -134,7 +136,7 @@ ProcessCode TrackFinding::execute(Context &context) const {
   context.eventStore.add(m_config.outputTrajectories, std::move(trajectories));
 
 
-  return ProcessCode::SUCCESS;
+  return ActsExamples::ProcessCode::SUCCESS;
 }
 
 void TrackFinding::computeSharedHits(const Container &sourceLinks,
@@ -199,9 +201,10 @@ void TrackFinding::computeSharedHits(const Container &sourceLinks,
   }
 }
 
-void TrackFinding::constructTrackCandidates(Context &context,
-                                            const Container &sourceLinks,
-                                            Results &results) const {
+void TrackFinding::constructTrackCandidates(
+    const ActsExamples::AlgorithmContext &context,
+    const Container &sourceLinks,
+    Results &results) const {
   const auto nHits = sourceLinks.size();
   const auto invalid = std::numeric_limits<size_t>::max();
 

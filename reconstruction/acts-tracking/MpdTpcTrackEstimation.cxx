@@ -2,8 +2,9 @@
 //
 // Copyright (C) 2022 JINR
 
-#include "MpdTpcContext.h"
 #include "MpdTpcTrackEstimation.h"
+
+#include "ActsExamples/Framework/WhiteBoard.hpp"
 
 #include <Acts/Geometry/TrackingGeometry.hpp>
 #include <Acts/MagneticField/MagneticFieldProvider.hpp>
@@ -53,7 +54,8 @@ TrackEstimation::TrackEstimation(Config config, Acts::Logging::Level level):
       m_config.sigmaT0;
 }
 
-ProcessCode TrackEstimation::execute(Context &context) const {
+ActsExamples::ProcessCode TrackEstimation::execute(
+    const ActsExamples::AlgorithmContext &context) const {
   // Measurements are necesary for retrieving the geometry identifier.
   const auto &measurements =
       context.eventStore.get<MeasurementContainer>(m_config.inputMeasurements);
@@ -81,7 +83,7 @@ ProcessCode TrackEstimation::execute(Context &context) const {
   ProtoTrackContainer tracks;
   tracks.reserve(seeds.size());
 
-  auto bCache = m_config.magneticField->makeCache(context.mContext);
+  auto bCache = m_config.magneticField->makeCache(context.magFieldContext);
 
   // Loop over all found seeds to estimate track parameters.
   for (size_t iseed = 0; iseed < seeds.size(); ++iseed) {
@@ -110,12 +112,12 @@ ProcessCode TrackEstimation::execute(Context &context) const {
     auto field = m_config.magneticField->getField({x, y, z}, bCache);
     if (!field.ok()) {
       ACTS_ERROR("Field lookup error: " << field.error());
-      return ProcessCode::ABORT;
+      return ActsExamples::ProcessCode::ABORT;
     }
 
     // Estimate the track parameters from seed.
     auto optParams = Acts::estimateTrackParamsFromSeed(
-        context.gContext,
+        context.geoContext,
         seed.sp().begin(),
         seed.sp().end(),
         *surface,
@@ -150,7 +152,7 @@ ProcessCode TrackEstimation::execute(Context &context) const {
   context.eventStore.add(m_config.outputTrackParameters, std::move(trackParameters));
   context.eventStore.add(m_config.outputProtoTracks, std::move(tracks));
  
-  return ProcessCode::SUCCESS;
+  return ActsExamples::ProcessCode::SUCCESS;
 }
 
 SeedContainer TrackEstimation::createSeeds(

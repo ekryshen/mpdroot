@@ -32,7 +32,10 @@ public:
   };
 
   Digitization(Config config, Acts::Logging::Level level);
-  ProcessCode execute(Context &context) const override;
+
+  ActsExamples::ProcessCode execute(
+      const ActsExamples::AlgorithmContext &context) const override;
+
   const Config &config() const { return m_config; }
 
 private:
