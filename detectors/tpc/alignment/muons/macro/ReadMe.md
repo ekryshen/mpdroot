@@ -74,6 +74,18 @@ tpcAlignment.C(const char* InDataFile,const char* InAlignmentFile=" ")
 - the macro uses track hits, found by a given alignment, to find the alignment which produces a minimum xi2 for the sum of all tracks.  
 - InDataFile - the file with track hits and the information about the detector magnetic field.  
 - InAlignmentFile==" " - InDataFile has the miniMC DST stucture, which includes real and used for reconstruction alignments and track hits.  
+
+*Important*:  
+- to be able to use tpcAlignment.C macro you must recompile tpcAlignment library with ALIGNMENT_XI2 option
+~~~
+cd ~/mpdroot/build && rm -rf lib/libtpcAlignment.*
+cmake -DALIGNMENT_XI2=ON .. && make -j8 install
+~~~  
+- if you want to use again scripts missMC.C and missMF.C you have to recompile without ALIGNMENT_XI2 option
+~~~
+cd ~/mpdroot/build && rm -rf lib/libtpcAlignment.*
+cmake .. && make -j8 install
+~~~  
                              
  *Examples*   
  ~~~

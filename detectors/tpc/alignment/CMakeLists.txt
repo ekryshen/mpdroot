@@ -28,7 +28,7 @@ set(SRCS
   muons/DerLMpdTpc.cxx
   muons/DerHMpdTpc.cxx
   muons/RecoMiniMC.cxx
-  muons/TpcMiniMC.cxx
+  #muons/TpcMiniMC.cxx
 )
 
 Set(HEADERS
@@ -38,8 +38,17 @@ Set(HEADERS
   muons/DerLMpdTpc.h
   muons/DerHMpdTpc.h
   muons/RecoMiniMC.h
-  muons/TpcMiniMC.h
+  #muons/TpcMiniMC.h
 )
+
+# see alignment/muons/macro/ReadMe.md
+if(ALIGNMENT_XI2)
+    set (SRCS ${SRCS} muons/TpcMiniMC.cxx)
+    set (HEADERS ${HEADERS} muons/TpcMiniMC.h)
+else()
+    set (SRCS ${SRCS} muons/TpcMissAlignment.cxx)
+    set (HEADERS ${HEADERS} muons/TpcMissAlignment.h)
+endif(ALIGNMENT_XI2)
 
 Set(LINKDEF tpcAlignmentLinkDef.h)
 Set(LIBRARY_NAME tpcAlignment)
