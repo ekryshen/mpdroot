@@ -46,8 +46,8 @@ Detailed description of other parameters is in file TpcMissAlignment.h
 
  **missMF.C** --- The macro generate a sample of miniMC events in a magnetic field.
  ~~~
- void missMC(const char *aReal = "0r5_0g5.root", const char *aUsed = "0r0_0g0.root", const char *outDir = "miniDST",
-            const char *outFile = "0r5_0g5_80R130_dt08_evt10000")
+ void missMF(const char *aReal = "0r5_0g5.root", const char *aUsed = "0r0_0g0.root", const char *outDir = "miniDST",
+             const char *outFile = "0r5_0g5_80R130_dt08_evt10000")
  ~~~
 - aReal: file name with simulated alignment
 - aUsed: file name with zero alignment
@@ -62,7 +62,26 @@ Detailed description of other parameters is in file TpcMissAlignment.h
  ~~~
  - generate file: ~/alignment/miniDST/0r5_0g5_80R130_dt08_evt10000.root with track hits from muons. Magnetic field is on. Muon momentums
  are in the interval when radii of the helix trajectory is  in the interval [80,130]cm 
-   
+     
 -----------------------------------------------------------------------------   
 
 -----------------------------------------------------------------------------   
+  
+**tpcAlignment.C** 
+~~~
+tpcAlignment.C(const char* InDataFile,const char* InAlignmentFile=" ")
+~~~ 
+- the macro uses track hits, found by a given alignment, to find the alignment which produces a minimum xi2 for the sum of all tracks.  
+- InDataFile - the file with track hits and the information about the detector magnetic field.  
+- InAlignmentFile==" " - InDataFile has the miniMC DST stucture, which includes real and used for reconstruction alignments and track hits.  
+                             
+ *Examples*   
+ ~~~
+ root -b -l -q 'tpcAlignment.C("~/alignment/miniDST/lrc0_0r5_0g5_cl0_dt08evt10000.root"," ")' > ~/alignment/log/tpcAlignment.txt
+ ~~~
+ The input file has track hits reconstructed using zero-alignment when the real one is from the file ~/alignment/data/0r5_0g5.root.
+  
+-----------------------------------------------------------------------------   
+
+-----------------------------------------------------------------------------   
+  

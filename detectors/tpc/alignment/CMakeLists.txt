@@ -22,11 +22,23 @@ link_directories(${LINK_DIRECTORIES})
 
 # List of source files
 set(SRCS
-  muons/TpcMissAlignment.cxx
+  #muons/TpcMissAlignment.cxx
+  muons/TpcAlignment.cxx
+  muons/Mille.cxx
+  muons/DerLMpdTpc.cxx
+  muons/DerHMpdTpc.cxx
+  muons/RecoMiniMC.cxx
+  muons/TpcMiniMC.cxx
 )
 
 Set(HEADERS
- muons/TpcMissAlignment.h
+  #muons/TpcMissAlignment.h
+  muons/TpcAlignment.h
+  muons/Mille.h
+  muons/DerLMpdTpc.h
+  muons/DerHMpdTpc.h
+  muons/RecoMiniMC.h
+  muons/TpcMiniMC.h
 )
 
 Set(LINKDEF tpcAlignmentLinkDef.h)
