@@ -43,5 +43,26 @@ Detailed description of other parameters is in file TpcMissAlignment.h
 -----------------------------------------------------------------------------   
 
 -----------------------------------------------------------------------------  
-  
-  
+
+ **missMF.C** --- The macro generate a sample of miniMC events in a magnetic field.
+ ~~~
+ void missMC(const char *aReal = "0r5_0g5.root", const char *aUsed = "0r0_0g0.root", const char *outDir = "miniDST",
+            const char *outFile = "0r5_0g5_80R130_dt08_evt10000")
+ ~~~
+- aReal: file name with simulated alignment
+- aUsed: file name with zero alignment
+- outDir: directory where output root file with track hits is stored
+- outFile: name of the output file without the .root suffix     
+
+Detailed description of other parameters is in file TpcMissAlignment.h
+ 
+ *Examples* 
+ ~~~
+ root -b -l -q 'missMF.C("~/alignment/data/0r5_0g5.root", "~/alignment/data/0r0_0g0.root", "~/alignment/miniDST", "0r5_0g5_80R130_dt08_evt10000")' > ~/alignment/log/0r5_0g5_80R130_dt08_evt10000.txt
+ ~~~
+ - generate file: ~/alignment/miniDST/0r5_0g5_80R130_dt08_evt10000.root with track hits from muons. Magnetic field is on. Muon momentums
+ are in the interval when radii of the helix trajectory is  in the interval [80,130]cm 
+   
+-----------------------------------------------------------------------------   
+
+-----------------------------------------------------------------------------   
