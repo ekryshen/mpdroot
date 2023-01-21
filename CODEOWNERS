@@ -14,10 +14,17 @@
 /scripts/                                @hnatics 
 
 
+# Build
+#----------------------------------------------------------------------------------
+/cmake/                                  @busa 
+
+
 # Detectors
 #----------------------------------------------------------------------------------
 # TPC
 /detectors/tpc/                          @zinchenk  @abychkov
+/detectors/tpc/alignment/                @hnatics
+/detectors/tpc/alignment/muons/          @kuzmin
 /detectors/tpc/clusterHitFinder/         @hnatics
 /detectors/tpc/clusterHitFinder/fast     @kryman @akrylov 
 /detectors/tpc/digitizer/                @hnatics
@@ -29,8 +36,6 @@
 # EMC
 /detectors/emc/                          @boiana2012
 
-# MCORD
-# unsupported as of 12.2022 /detectors/mcord/                        @Wielanek
 
 # STS  (ITS)
 /detectors/sts/                          @vkondrat
