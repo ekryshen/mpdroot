@@ -26,7 +26,7 @@
 /detectors/tpc/alignment/                @hnatics
 /detectors/tpc/alignment/muons/          @kuzmin
 /detectors/tpc/clusterHitFinder/         @hnatics
-/detectors/tpc/clusterHitFinder/fast     @kryman @akrylov 
+/detectors/tpc/clusterHitFinder/fast/    @kryman @akrylov 
 /detectors/tpc/digitizer/                @hnatics
 /detectors/tpc/geometry/                 @hnatics
 
