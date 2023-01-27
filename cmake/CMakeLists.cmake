@@ -101,6 +101,7 @@ endif()
 # LEVEL 2
 add_subdirectory (detectors/tpc) # tof
 add_subdirectory (detectors/tpc/alignment) 
+add_subdirectory (detectors/tpc/clusterHitFinder) 
 add_subdirectory (reconstruction/tracking/kalman) # mpdfield
 add_subdirectory (physics) # mpdbase mpddst
 add_subdirectory (simulation/mcDst)

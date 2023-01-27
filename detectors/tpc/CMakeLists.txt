@@ -52,9 +52,6 @@ set(SRCS
   TpcGeo.cxx
   TpcGeoPar.cxx
   TpcPoint.cxx
-  clusterHitFinder/AbstractTpcClusterHitFinder.cxx
-  clusterHitFinder/fast/TpcClusterHitFinderFast.cxx
-  clusterHitFinder/mlem/TpcClusterHitFinderMlem.cxx
   geometry/BaseTpcSectorGeo.cxx
   geometry/TpcSectorGeoAZ.cxx
   geometry/TpcSectorGeoAlignmentVAK.cxx
@@ -81,12 +78,6 @@ Set(HEADERS
   TpcGeo.h
   TpcGeoPar.h
   TpcPoint.h
-  clusterHitFinder/AbstractTpc2dCluster.h
-  clusterHitFinder/AbstractTpcClusterHitFinder.h
-  clusterHitFinder/AbstractTpcHit.h
-  clusterHitFinder/fast/TpcClusterHitFinderFast.h
-  clusterHitFinder/fast/TpcClustering.h
-  clusterHitFinder/mlem/TpcClusterHitFinderMlem.h
   digitizer/AbstractTpcDigit.h
   geometry/BaseTpcSectorGeo.h
   geometry/TpcSectorGeoAZ.h
