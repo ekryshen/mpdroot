@@ -52,9 +52,6 @@ set(SRCS
   TpcGeo.cxx
   TpcGeoPar.cxx
   TpcPoint.cxx
-  geometry/BaseTpcSectorGeo.cxx
-  geometry/TpcSectorGeoAZ.cxx
-  geometry/TpcSectorGeoAlignmentVAK.cxx
 )
 
 Set(HEADERS
@@ -79,13 +76,10 @@ Set(HEADERS
   TpcGeoPar.h
   TpcPoint.h
   digitizer/AbstractTpcDigit.h
-  geometry/BaseTpcSectorGeo.h
-  geometry/TpcSectorGeoAZ.h
-  geometry/TpcSectorGeoAlignmentVAK.h
 )
 
 Set(LINKDEF tpcLinkDef.h)
 Set(LIBRARY_NAME tpc)
-Set(DEPENDENCIES Base Gdml MpdField MpdMCStack Tof Kalman MpdGen tpcClusterHitFinder)
+Set(DEPENDENCIES Base Gdml MpdField MpdMCStack Tof Kalman MpdGen tpcClusterHitFinder tpcGeometry)
 
 GENERATE_LIBRARY()
