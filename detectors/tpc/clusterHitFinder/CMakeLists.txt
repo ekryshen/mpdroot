@@ -43,6 +43,6 @@ Set(HEADERS
 
 Set(LINKDEF tpcClusterHitFinderLinkDef.h)
 Set(LIBRARY_NAME tpcClusterHitFinder)
-Set(DEPENDENCIES tpc MpdField MpdBase)
+Set(DEPENDENCIES MpdField MpdBase)
 
 GENERATE_LIBRARY()

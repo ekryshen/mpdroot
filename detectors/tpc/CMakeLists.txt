@@ -86,6 +86,6 @@ Set(HEADERS
 
 Set(LINKDEF tpcLinkDef.h)
 Set(LIBRARY_NAME tpc)
-Set(DEPENDENCIES Base Gdml MpdField MpdMCStack Tof Kalman MpdGen)
+Set(DEPENDENCIES Base Gdml MpdField MpdMCStack Tof Kalman MpdGen tpcClusterHitFinder)
 
 GENERATE_LIBRARY()
