@@ -75,11 +75,10 @@ Set(HEADERS
   TpcGeo.h
   TpcGeoPar.h
   TpcPoint.h
-  digitizer/AbstractTpcDigit.h
 )
 
 Set(LINKDEF tpcLinkDef.h)
 Set(LIBRARY_NAME tpc)
-Set(DEPENDENCIES Base Gdml MpdField MpdMCStack Tof Kalman MpdGen tpcClusterHitFinder tpcGeometry)
+Set(DEPENDENCIES Base Gdml MpdField MpdMCStack Tof Kalman MpdGen tpcClusterHitFinder tpcDigitizer tpcGeometry)
 
 GENERATE_LIBRARY()
