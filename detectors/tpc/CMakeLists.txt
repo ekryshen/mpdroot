@@ -34,7 +34,6 @@ link_directories(${LINK_DIRECTORIES})
 set(SRCS
   MpdParticleIdentification.cxx
   MpdTpc2dCluster.cxx
-  MpdTpcClusterFinderAZ.cxx
   MpdTpcClusterFinderMlem.cxx
   MpdTpcDigit.cxx
   MpdTpcDigitizerAZlt.cxx
@@ -56,7 +55,6 @@ set(SRCS
 Set(HEADERS
   MpdParticleIdentification.h
   MpdTpc2dCluster.h
-  MpdTpcClusterFinderAZ.h
   MpdTpcClusterFinderMlem.h
   MpdTpcDigit.h
   MpdTpcDigitizerAZlt.h

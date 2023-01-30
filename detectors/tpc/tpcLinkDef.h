@@ -25,7 +25,6 @@
 #pragma link C++ class MpdTpcHit+;
 #pragma link C++ class MpdTpcHitProducer+;
 #pragma link C++ class MpdTpcDigitizerAZlt+;
-#pragma link C++ class MpdTpcClusterFinderAZ+;
 #pragma link C++ class MpdTPCpid+;
 #pragma link C++ class MpdTpcClusterFinderMlem+;
 #pragma link C++ class MpdTpcEDepParams+;
