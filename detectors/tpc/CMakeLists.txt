@@ -37,7 +37,6 @@ set(SRCS
   MpdTpcClusterFinderAZ.cxx
   MpdTpcClusterFinderMlem.cxx
   MpdTpcDigit.cxx
-  MpdTpcDigitizerAZ.cxx
   MpdTpcDigitizerAZlt.cxx
   MpdTpcDigitizerQAHistograms.cxx
   MpdTpcDigitizerTask.cxx
@@ -60,7 +59,6 @@ Set(HEADERS
   MpdTpcClusterFinderAZ.h
   MpdTpcClusterFinderMlem.h
   MpdTpcDigit.h
-  MpdTpcDigitizerAZ.h
   MpdTpcDigitizerAZlt.h
   MpdTpcDigitizerQAHistograms.h
   MpdTpcDigitizerTask.h

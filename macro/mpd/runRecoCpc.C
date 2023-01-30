@@ -82,7 +82,7 @@ void runRecoCpc(TString inFile = "mc.1k.root")
   fRun->AddTask(kalman);
   //kalman->SetNumer(0);
 
-  MpdTpcDigitizerAZ* tpcDigitizer = new MpdTpcDigitizerAZ(*secGeo);
+  MpdTpcDigitizerAZlt* tpcDigitizer = new MpdTpcDigitizerAZlt(*secGeo);
   tpcDigitizer->SetPersistence(kFALSE);
   //fRun->AddTask(tpcDigitizer);
 

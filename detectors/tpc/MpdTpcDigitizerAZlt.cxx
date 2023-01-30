@@ -304,7 +304,7 @@ void MpdTpcDigitizerAZlt::Exec(Option_t *opt)
    tAll    = tAll + (tFinish - tStart);
    delete[] pointsM;
    delete virtPoint;
-   cout << "MpdTpcDigitizerAZ::Exec finished" << endl;
+   cout << "MpdTpcDigitizerAZlt::Exec finished" << endl;
 }
 
 //---------------------------------------------------------------------------
@@ -348,7 +348,6 @@ void MpdTpcDigitizerAZlt::Check4Edge(UInt_t iSec, TpcPoint *&prePoint, TpcPoint 
 
 //---------------------------------------------------------------------------
 
-// AZ Int_t MpdTpcDigitizerAZ::CalcOrigin(const DigOrigArray dig) {
 Int_t MpdTpcDigitizerAZlt::CalcOrigin(DigOrigArray &dig)
 {
 
