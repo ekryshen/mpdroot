@@ -5,10 +5,12 @@
 #include "MpdTpcTracker.h"
 #include "PlotUtils.h"
 
+#include "ActsExamples/EventData/Index.hpp"
 #include "ActsExamples/Framework/WhiteBoard.hpp"
 
 #include "MpdCodeTimer.h"
 #include "MpdKalmanHit.h"
+#include "MpdMCTrack.h"
 #include "MpdTpcHit.h"
 #include "MpdTpcTrack.h"
 #include "TpcPoint.h"
@@ -16,6 +18,8 @@
 #include <Acts/Definitions/Algebra.hpp>
 #include <Acts/Definitions/Units.hpp>
 #include <Acts/Utilities/Logger.hpp>
+#include <ActsFatras/EventData/Barcode.hpp>
+#include <ActsFatras/EventData/Particle.hpp>
 
 #include <iostream>
 
@@ -119,8 +123,7 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
 }
 
 /// Converts a hit into the MpdRoot representation.
-inline MpdTpcHit *convertHit(const BaseTpcSectorGeo &secGeo,
-                             TClonesArray *hits, int ihit) {
+inline MpdTpcHit *convertHit(TClonesArray *hits, int ihit) {
   return static_cast<MpdTpcHit*>(hits->UncheckedAt(ihit));
 }
 
@@ -130,7 +133,7 @@ inline void convertTrack(const BaseTpcSectorGeo &secGeo,
                          MpdTpcTrack *track,
                          const Mpd::Tpc::ProtoTrack &trajectory) {
   for (const auto ihit : trajectory) {
-    track->GetHits()->Add(convertHit(secGeo, hits, ihit));
+    track->GetHits()->Add(convertHit(hits, ihit));
   }
 }
 
@@ -147,6 +150,60 @@ inline void convertTracks(const BaseTpcSectorGeo &secGeo,
     auto *track = new ((*tracks)[nTracks++]) MpdTpcTrack(trajectory.size());
     convertTrack(secGeo, hits, track, trajectory);
   }
+}
+
+//===----------------------------------------------------------------------===//
+// Get input particles
+//===----------------------------------------------------------------------===//
+
+ActsExamples::SimParticleContainer getInputParticles(TClonesArray *mcTracks) {
+  ActsExamples::SimParticleContainer particles;
+
+  Int_t nMC = mcTracks->GetEntriesFast();
+  for (Int_t i = 0; i < nMC; i++) {
+    auto track = static_cast<MpdMCTrack*>(mcTracks->UncheckedAt(i));
+    Int_t pdgCode  = track->GetPdgCode();
+    Double_t x0 = track->GetStartX() * lenScalor;
+    Double_t y0 = track->GetStartY() * lenScalor;
+    Double_t z0 = track->GetStartZ() * lenScalor;
+    Double_t t0 = track->GetStartT();
+    Double_t px = track->GetPx() * momScalor;
+    Double_t py = track->GetPy() * momScalor;
+    Double_t pz = track->GetPz() * momScalor;
+    Double_t p  = track->GetP()  * momScalor;
+
+    ActsFatras::Barcode barCode = ActsFatras::Barcode(). // FIXME
+        setVertexPrimary(1).
+        setVertexSecondary(2).
+        setParticle(3);
+
+    ActsFatras::Particle particle =
+        ActsFatras::Particle(barCode, Acts::PdgParticle(pdgCode)).
+        setPosition4(x0, y0, z0, t0).
+        setAbsoluteMomentum(p).
+        setDirection(px, py, pz);
+
+    particles.insert(std::move(particle));
+  }
+  return particles;
+}
+
+//===----------------------------------------------------------------------===//
+// Get multimap hits -> particles
+//===----------------------------------------------------------------------===//
+ActsExamples::IndexMultimap<ActsFatras::Barcode> getMultimapHitToPart(
+    TClonesArray *hits) {
+  ActsExamples::IndexMultimap<ActsFatras::Barcode> res;
+  Int_t nHits = hits->GetEntriesFast();
+  res.reserve(nHits);
+  for (Int_t i = 0; i < nHits; i++) {
+     ActsFatras::Barcode barCode = ActsFatras::Barcode(). // FIXME
+        setVertexPrimary(1).
+        setVertexSecondary(2).
+        setParticle(3);
+     res.emplace_hint(res.end(), i, barCode);
+  }
+  return res;
 }
 
 //===----------------------------------------------------------------------===//
@@ -199,12 +256,16 @@ void MpdTpcTracker::Exec(Option_t *option) {
   auto hits = UseMcHits ? convertTpcPoints(fPoints)
                         : convertTpcHits(fHits, fPoints);
 
+  auto mcTracks = getArray("MCTrack");
+  auto inputParticles = getInputParticles(mcTracks);
+  auto mapHitsToParticles = getMultimapHitToPart(fHits);
+
   // Run the track finding algorithm.
   const auto &config = fRunner->config();
 
   ActsExamples::WhiteBoard whiteBoard;
   ActsExamples::AlgorithmContext context(0, eventCounter, whiteBoard);
-  fRunner->execute(hits, context);
+  fRunner->execute(hits, inputParticles, mapHitsToParticles, context);
 
   // Convert the found track to to the MpdRoot representation.
   const auto &trajectories =

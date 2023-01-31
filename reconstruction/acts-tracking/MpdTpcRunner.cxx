@@ -19,11 +19,25 @@
 
 namespace Mpd::Tpc {
 
-void Runner::execute(const InputHitContainer &hits,
-                     ActsExamples::AlgorithmContext &context) {
+void Runner::execute(
+    const InputHitContainer &hits,
+    const ActsExamples::SimParticleContainer &inputParticles,
+    const ActsExamples::IndexMultimap<ActsFatras::Barcode> &hitsToParticles,
+    ActsExamples::AlgorithmContext &context) {
+
   // Store the input hits.
   context.eventStore.add(
       m_config.digitization.inputSimHits, InputHitContainer{hits});
+
+  // Store the input particles.
+  context.eventStore.add(
+      m_config.perfWriting.inputParticles,
+      ActsExamples::SimParticleContainer{inputParticles});
+
+  // Store the multimap hits to particles.
+  context.eventStore.add(
+      m_config.perfWriting.inputMeasurementParticlesMap,
+      ActsExamples::IndexMultimap<ActsFatras::Barcode>{hitsToParticles});
 
   // Log the input hits.
   logInput(context);
@@ -34,7 +48,8 @@ void Runner::execute(const InputHitContainer &hits,
   TrackSeeding trackSeeding(m_config.trackSeeding, m_level);
   TrackEstimation trackEstimation(m_config.trackEstimation, m_level);
   TrackFinding trackFinding(m_config.trackFinding, m_level);
-  ActsExamples::CKFPerformanceWriter perfWriting(m_config.perfWriting, m_level);
+  ActsExamples::CKFPerformanceWriter perfWriting(
+      m_config.perfWriting, m_level);
 
   digitization.execute(++context);
   spacePointMaking.execute(++context);

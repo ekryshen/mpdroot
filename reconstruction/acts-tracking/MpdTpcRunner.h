@@ -8,6 +8,8 @@
 #include "MpdTpcEventData.h"
 #include "MpdTpcInputHit.h"
 
+#include "ActsExamples/EventData/SimParticle.hpp"
+
 #include <Acts/Utilities/Logger.hpp>
 
 #include <map>
@@ -49,8 +51,11 @@ public:
       m_level(level),
       m_config(secGeo, rootFile, jsonFile, m_level) {}
 
-  void execute(const InputHitContainer &hits,
-               ActsExamples::AlgorithmContext &context);
+  void execute(
+      const InputHitContainer &hits,
+      const ActsExamples::SimParticleContainer &inputParticles,
+      const ActsExamples::IndexMultimap<ActsFatras::Barcode> &hitsToParticles,
+      ActsExamples::AlgorithmContext &context);
 
   const Config &config() const { return m_config; }
 
