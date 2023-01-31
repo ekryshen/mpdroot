@@ -201,16 +201,13 @@ public:
    }
 };
 class AdcHit {
-   uint             _nTimeBin; // timebin number [0..310)
-   float            _fAdc;
-   std::vector<int> _vTrackId; //_vTrackId- all unique tracks ID (TpcPoint->getTrackID())
+   uint                               _nTimeBin; // timebin number [0..310)
+   float                              _fAdc;
+   std::vector<std::pair<int, float>> _vTrackId; //_vTrackId- all unique tracks ID (TpcPoint->getTrackID())
 public:
    AdcHit() : _fAdc(0), _nTimeBin(0) {}
    AdcHit(int n, float f) : _nTimeBin(n), _fAdc(f) {}
-   AdcHit(int n, float f, int nId) : _nTimeBin(n), _fAdc(f)
-   {
-      if (std::find(_vTrackId.begin(), _vTrackId.end(), nId) == _vTrackId.end()) _vTrackId.push_back(nId);
-   } //_vTrackId
+   AdcHit(int n, float f, int nId) : _nTimeBin(n), _fAdc(f) { _vTrackId.push_back(std::make_pair(nId, f)); } //_nTrackId
    AdcHit(const AdcHit &r) : _nTimeBin(r._nTimeBin), _fAdc(r._fAdc) { _vTrackId = r._vTrackId; }
    ~AdcHit() { _vTrackId.clear(); }
    const AdcHit &operator=(const AdcHit &r)
@@ -222,10 +219,10 @@ public:
       }
       return *this;
    }
-   inline std::vector<int> getTrackID() const
+   inline std::vector<std::pair<int, float>> getTrackID() const
    {
-      return _vTrackId;
-   } //_vTrackId - all unique tracks ID (TpcPoint->getTrackID())
+      return _vTrackId; //_vTrackId - all unique tracks ID (TpcPoint->getTrackID())
+   }
    inline float getAdc() const { return _fAdc; }
    inline void  setAdc(float f) { _fAdc = f; }
    inline uint  getTimeBin() const { return _nTimeBin; }

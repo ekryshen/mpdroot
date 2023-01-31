@@ -4,8 +4,8 @@
 // author: A.V.Krylov JINR/LNP
 // email: avkrylov@jinr.ru
 //
-#ifndef TPCCLUSTERHITFINDERFAST_HH
-#define TPCCLUSTERHITFINDERFAST_HH
+#ifndef TpcClusterHitFinderFast_HH
+#define TpcClusterHitFinderFast_HH
 
 // Base Class Headers ----------------
 #include "FairTask.h"

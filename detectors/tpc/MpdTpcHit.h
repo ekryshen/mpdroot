@@ -69,14 +69,15 @@ public:
    Double_t GetRphi() const { return fLocalX; }
    Double_t GetEnergyLoss() const { return fQ; }
 
-   Double_t            GetLocalX() const { return fLocalX; }
-   Double_t            GetLocalY() const { return fLocalY; }
-   Double_t            GetLocalZ() const { return fLocalZ; }
-   void                LocalPosition(TVector3 &pos) const { pos.SetXYZ(fLocalX, fLocalY, fLocalZ); }
-   Double_t            GetRMS(Int_t ixz = 0) const { return fXZrms[ixz]; }
-   Int_t               GetNdigits() const { return fNdigits; }
-   Int_t               GetNtracks() const { return fIDs.size(); }
-   std::vector<Int_t> &GetIDs() { return fIDs; }
+   Double_t                            GetLocalX() const { return fLocalX; }
+   Double_t                            GetLocalY() const { return fLocalY; }
+   Double_t                            GetLocalZ() const { return fLocalZ; }
+   void                                LocalPosition(TVector3 &pos) const { pos.SetXYZ(fLocalX, fLocalY, fLocalZ); }
+   Double_t                            GetRMS(Int_t ixz = 0) const { return fXZrms[ixz]; }
+   Int_t                               GetNdigits() const { return fNdigits; }
+   Int_t                               GetNtracks() const { return fIDs.size(); }
+   std::vector<Int_t>                 &GetIDs() { return fIDs; }
+   std::vector<std::pair<int, float>> &GetTrackIDs() { return vpTrackIDs; }
 
    /**Get different flags **/
    Int_t IsOverflow() const { return (fFlag & MpdKalmanHit::kOverflow); }
@@ -120,18 +121,20 @@ public:
    void SetRMS(Double_t rms, Int_t ixz = 0) { fXZrms[ixz] = rms; }
    void SetNdigits(Int_t ndigs) { fNdigits = ndigs; }
    void AddID(Int_t id) { fIDs.push_back(id); }
+   void AddTrackID(int id, float charge) { vpTrackIDs.push_back(std::make_pair(id, charge)); }
    void SetFlags(const MpdTpc2dCluster *clus);
 
    Bool_t IsSortable() const { return kTRUE; }
    Int_t  Compare(const TObject *hit) const; // "Compare" function for sorting
 
 private:
-   Int_t              fiPad;
-   Int_t              fiBin;
-   Int_t              fLayer;
-   Int_t              fNdigits; // number of digits in the hit
-   Int_t              fFlag;
-   std::vector<Int_t> fIDs; // track IDs with the highest charge contribution
+   Int_t                              fiPad;
+   Int_t                              fiBin;
+   Int_t                              fLayer;
+   Int_t                              fNdigits; // number of digits in the hit
+   Int_t                              fFlag;
+   std::vector<Int_t>                 fIDs;       // track IDs with the highest charge contribution
+   std::vector<std::pair<int, float>> vpTrackIDs; // track IDs with its' charge contribution
 
    Double32_t fQ;
    Double32_t fStep;
