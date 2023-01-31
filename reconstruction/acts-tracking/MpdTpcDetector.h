@@ -37,8 +37,13 @@ public:
 
   /// If true use Z dimensions from BaseTpcSectorGeo
   /// else use numerical values from MpdTpcDetector.h
-  /// it is used as points are outside the detector when Z dimensions is taken from BaseTpcSectorGeo
+  /// it is used as points are outside the detector
+  /// when Z dimensions is taken from BaseTpcSectorGeo
   static constexpr auto  getZFromSectorGeo = false;
+
+  // Add additional pads in row
+  // as LMEM algorithm may generate points outside pads in row
+  static constexpr auto extraPads = 0;
 
   /// TPC is represented as two symmetric nodes.
   static constexpr auto HasTwoNodes = true;

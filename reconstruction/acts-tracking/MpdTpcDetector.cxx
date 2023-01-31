@@ -185,11 +185,12 @@ inline Double_t halfPhiSector(const BaseTpcSectorGeo &secGeo) {
   return M_PI / secGeo.SECTOR_COUNT_HALF;
 }
 
-inline Int_t getSector(const BaseTpcSectorGeo &secGeo, Double_t x, Double_t y) {
+inline Int_t getSector(const BaseTpcSectorGeo &secGeo,
+                       Double_t x, Double_t y) {
 
   const Double_t halfPhiSec = halfPhiSector(secGeo);
   const Double_t phi = getPhi(x, y, halfPhiSec, 0);
-  return phi / (2.*halfPhiSec);
+  return static_cast<Int_t>(phi / (2.*halfPhiSec));
 }
 
 // Rotate vector (x, y) on phi
@@ -211,27 +212,25 @@ inline std::pair<Double_t, Double_t> coordinateTransform(
   return rotateXY(x - x0, y - y0, phi);
 }
 
-std::tuple <Int_t, Double_t, Double_t> getSectorRowPad(
+std::tuple <Int_t, Int_t, Int_t> getSectorRowPad (
     const BaseTpcSectorGeo &secGeo,
     Double_t x,
     Double_t y,
     Double_t phi) { // The -1*angle by which Acts rotates the geometry
 
-  Double_t xBak = x;
-  Double_t yBak = y;
-
   std::tie(x, y) = rotateXY(x, y, phi - halfPhiSector(secGeo));
 
   Int_t iSector = getSector(secGeo, x, y);
 
-// iSector * 30grad;
-  Double_t iSectorPhi = const_cast<BaseTpcSectorGeo&>(secGeo).SectorAxisAngleRad(iSector); // FIXME:
+  // iSector * 30grad;
+  Double_t iSectorPhi = const_cast<BaseTpcSectorGeo&>
+      (secGeo).SectorAxisAngleRad(iSector); // FIXME:
 
   Double_t r0 = secGeo.YPADAREA_LOWEREDGE;
   Double_t x0 = r0 * std::cos(iSectorPhi);
   Double_t y0 = r0 * std::sin(iSectorPhi);
 
-// Angle of rotation of the coordinate axes (pad, row) with respect to (x, y)
+  // Angle of rotation of the coordinate axes (pad, row) with respect to (x, y)
   Double_t phiCoord = iSectorPhi - M_PI / 2.;
 
   auto [iPad, iRow] = coordinateTransform(x, y, x0, y0, -phiCoord);
@@ -239,48 +238,78 @@ std::tuple <Int_t, Double_t, Double_t> getSectorRowPad(
   Double_t lengthPads0 = secGeo.YPADAREA_LENGTH[0];
 
   if (iRow < lengthPads0) {
-    iRow = iRow / secGeo.PAD_HEIGHT[0] ;
+    iRow = iRow / secGeo.PAD_HEIGHT[0];
     iPad = iPad / secGeo.PAD_WIDTH[0];
   } else {
-    iRow = secGeo.ROW_COUNT[0] + (iRow - lengthPads0) / secGeo.PAD_HEIGHT[1] ;
+    iRow = secGeo.ROW_COUNT[0] + (iRow - lengthPads0) / secGeo.PAD_HEIGHT[1];
     iPad = iPad / secGeo.PAD_WIDTH[1];
   }
+  assert(iRow >= 0 && "The point is under the sector");
+  Int_t maxPad = secGeo.PAD_COUNT[static_cast<Int_t>(iRow)];
 
+  // Fixes the fact that the fast cluster finder algorithm generates
+  // MC points not in the center, but on the boundary of the pad.
+  // As a result of calculations the current pad can go beyond the
+  // maximum pad for a small eps
+  Double_t eps = 0.001;
+  if ((maxPad < iPad) && (iPad < maxPad + eps)) {
+    iPad -= eps;
+  }
+  if ((-maxPad - eps < iPad) && (iPad < -maxPad)) {
+    iPad += eps;
+  }
+
+  // Shift to be >= 0
+  Double_t iPadShifted = iPad + maxPad + Detector::extraPads;
+
+  return std::make_tuple(iSector,
+                         static_cast<Int_t>(iRow),
+                         static_cast<Int_t>(iPadShifted));
+}
+
+// Checks if row and pad number are within bounds and fix if they are not
+void checkAndFixSecRowPad(const BaseTpcSectorGeo &secGeo,
+                          const Acts::Vector3 &position,
+                          Int_t sector,
+                          Int_t &row, Int_t &pad) {
+  double x = position[0];
+  double y = position[1];
+  double z = position[2];
+
+  std::string msgPrefix =
+      "MpdTpcDetector.cxx::checkAndFixSecRowPad() ERROR: point " +
+      std::to_string(x) + ", " +
+      std::to_string(y) + ", " +
+      std::to_string(z);
+  std::string msgMiddle =
+      "sector = " + std::to_string(sector) + ", " +
+      "row = "    + std::to_string(row)    + ", " +
+      "pad = "    + std::to_string(pad)    + ". ";
   Int_t maxRows = secGeo.ROW_COUNT[0] + secGeo.ROW_COUNT[1];
-  if (iRow < 0) {
-    iRow = 0.5;
-    std::cout << "MpdTpcDetector.cxx::getSectorRowPad() ERROR: " <<
-        "point " << xBak << ", " << yBak << "z, is under first row. " <<
-        "Setting row = " << iRow << std::endl;
-  } else if (iRow >= maxRows) {
-    iRow = maxRows - 0.5;
-    std::cout << "MpdTpcDetector.cxx::getSectorRowPad() ERROR: " <<
-        "point " << xBak << ", " << yBak << ", z is far from last row. " <<
-        "Setting row = " << iRow << std::endl;
+  if (row < 0) {
+    row = 0;
+    std::cout << msgPrefix << " is under first row. " <<
+        msgMiddle << "Setting row = " << row << std::endl;
+  } else if (row >= maxRows) {
+    row = maxRows - 1;
+    std::cout << msgPrefix << " is far from last row. " <<
+        msgMiddle << "Setting row = " << row << std::endl;
   }
-
-// Additional pads in row, as LMEM algorithm generates points outside pads in row
-  Int_t extraPads = 0;
-
-// Shift to be >= 0
-  Double_t iPadShifted = iPad + secGeo.PAD_COUNT[static_cast<Int_t>(iRow)] + extraPads;
-
-  Int_t maxPads = secGeo.PAD_COUNT[static_cast<Int_t>(iRow)] + extraPads;
-  if (fabs(iPad) >= maxPads) {
-    Int_t sign = (0 <= iPad) - (iPad < 0);
-    iPad = sign * (maxPads - 0.5);
-    iPadShifted = iPad + maxPads;
-    std::cout << "MpdTpcDetector.cxx::getSectorRowPad() ERROR: " <<
-        "point " << xBak << ", " << yBak << ", z goes beyond pads. " <<
-        "row = " << iRow << ". " <<
-        "Setting pad = " << iPad << std::endl;
+  Int_t maxPads = 2*(secGeo.PAD_COUNT[row] + Detector::extraPads);
+  if (pad < 0) {
+    pad = 0;
+    std::cout << msgPrefix << " goes beyond pads. " <<
+        msgMiddle << "Setting pad = " << pad << std::endl;
+  } else if (pad >= maxPads) {
+    pad = maxPads - 1;
+    std::cout << msgPrefix << " goes beyond pads. " <<
+        msgMiddle << "Setting pad = " << pad << std::endl;
   }
-  return std::make_tuple(iSector, iRow, iPadShifted);
 }
 
 inline uint64_t toBitsForSector(const BaseTpcSectorGeo &secGeo,
                                 const Acts::Vector3 &position,
-                                const Acts::ActsScalar deltaPhi) {
+                                Acts::ActsScalar deltaPhi) {
   // From mm to cm
   Double_t x = toRootLength(position[0]);
   Double_t y = toRootLength(position[1]);
@@ -295,6 +324,8 @@ inline uint64_t toBitsForSector(const BaseTpcSectorGeo &secGeo,
     assert(Detector::Zmin <= z && z <= Detector::Zmax);
   }
   auto [iSector, iRow, iPad] = getSectorRowPad(secGeo, x, y, deltaPhi);
+
+  checkAndFixSecRowPad(secGeo, position, iSector, iRow, iPad);
 
   auto sBits = static_cast<uint64_t>(iSector);
   auto rBits = static_cast<uint64_t>(iRow);
@@ -313,7 +344,7 @@ inline uint64_t toBitsForSector(const BaseTpcSectorGeo &secGeo,
 void addSensorsPad(const BaseTpcSectorGeo &secGeo,
                    TGeoVolume *sensorVol, TGeoVolume *gasVolume,
                    Double_t phi, Int_t iRow, TGeoRotation *rot,
-                   Int_t &iSensor, Int_t extraPads) {
+                   Int_t &iSensor) {
   const Int_t nRowsInner = secGeo.ROW_COUNT[0];
 
   const Double_t yPadAreaLowerEdge = secGeo.YPADAREA_LOWEREDGE;
@@ -325,11 +356,10 @@ void addSensorsPad(const BaseTpcSectorGeo &secGeo,
 
   const Double_t w = (iRow < nRowsInner) ? secGeo.PAD_WIDTH[0] :
                                            secGeo.PAD_WIDTH[1];
-
   const Int_t nPadsInRow = secGeo.PAD_COUNT[iRow];
 
   for (Int_t iPadLeftRight = -1; iPadLeftRight < 2; iPadLeftRight +=2) {
-    for (size_t iPad = 0; iPad < nPadsInRow + extraPads; iPad++) {
+    for (size_t iPad = 0; iPad < nPadsInRow + Detector::extraPads; iPad++) {
 
       Double_t y0 = iPadLeftRight * w * (iPad + 0.5);
       Double_t z0 = 0;
@@ -350,13 +380,12 @@ void addSensorsRowPad(const BaseTpcSectorGeo &secGeo,
                       TGeoRotation *rot,
                       Int_t &iSensor) {
   const Int_t nRows = secGeo.ROW_COUNT[0] + secGeo.ROW_COUNT[1];
-  const Int_t extraPads = 0;
 
   for (size_t iRow = 0; iRow < nRows; iRow++) {
     auto curVol = (iRow < secGeo.ROW_COUNT[0]) ? sensorVol0 :
                                                  sensorVol1;
     addSensorsPad(secGeo, curVol, gasVolume,
-                  phi, iRow, rot, iSensor, extraPads);
+                  phi, iRow, rot, iSensor);
   }
 }
 
@@ -364,13 +393,15 @@ void addSensorsSecRowPad(const BaseTpcSectorGeo &secGeo,
                          TGeoVolume *sensorVol0,
                          TGeoVolume *sensorVol1,
                          TGeoVolume *gasVolume) {
-  const Int_t nSectors = secGeo.SECTOR_COUNT_HALF;
+  const size_t nSectors = secGeo.SECTOR_COUNT_HALF;
 
   TGeoRotation *rot;
   Int_t iSensor = 0;
   for (size_t iSector = 0; iSector < nSectors; iSector++) {
-    Double_t phi = const_cast<BaseTpcSectorGeo&>(secGeo).SectorAxisAngleRad(iSector) +  // = iSector * 30_grad // FIXME
-                   secGeo.SECTOR_PHI0_RAD;                                              //   - 15_grad
+    // Setting phi = iSector * 30_grad - 15_grad
+    Double_t phi =
+        const_cast<BaseTpcSectorGeo&>(secGeo).SectorAxisAngleRad(iSector) + // FIXME
+        secGeo.SECTOR_PHI0_RAD;
 
     Double_t phiDegree = phi * TMath::RadToDeg();
 
@@ -397,7 +428,7 @@ void addSectorSensors(const BaseTpcSectorGeo &secGeo,
       0.5 * h0,
       0.5 * w0,
       0.5 * dZ,
-      iVolume++ );
+      iVolume++);
 
   const Double_t w1 = secGeo.PAD_WIDTH[1];  // cm
   const Double_t h1 = secGeo.PAD_HEIGHT[1]; // cm
@@ -407,7 +438,7 @@ void addSectorSensors(const BaseTpcSectorGeo &secGeo,
       0.5 * h1,
       0.5 * w1,
       0.5 * dZ,
-      iVolume++ );
+      iVolume++);
 
   assert(Detector::HasTwoNodes && "addSectorSensors() Detector::HasTwoNodes must be true");
 
