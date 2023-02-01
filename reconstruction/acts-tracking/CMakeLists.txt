@@ -8,31 +8,25 @@ function (GET_ACTS_DIR)
     set (ACTS_PATH "" PARENT_SCOPE)
     return()
   endif()
-  if (UNIX)
-    SET (_path_separator "/")
-    string(REGEX REPLACE "^(.*[:])?([^:]*Acts[^:]+).*" "\\2" ACTS_PATH $ENV{PATH})
-  else()
-    SET (_path_separator "\\")
-    string(REGEX REPLACE "^(.*[;])?([^;]*Acts[^;]+).*" "\\2" ACTS_PATH $ENV{PATH})
-  endif()
-  SET (_path_separator ${_path_separator} PARENT_SCOPE)
-  set (ACTS_PATH ${ACTS_PATH}${_path_separator}..${_path_separator}  PARENT_SCOPE)
+  string(REGEX REPLACE "^(.*[:])?([^:]*Acts[^:]+).*" "\\2" ACTS_PATH $ENV{PATH})
+  set (ACTS_PATH ${ACTS_PATH}/..  PARENT_SCOPE)
 endfunction()
 
 GET_ACTS_DIR()
 
 set(INCLUDE_DIRECTORIES
+  ${ACTS_PATH}/include
   ${BASE_INCLUDE_DIRECTORIES}
   ${CMAKE_CURRENT_LIST_DIR}
   ${CMAKE_SOURCE_DIR}/core/mpdBase
   ${CMAKE_SOURCE_DIR}/core/mpdField
   ${CMAKE_SOURCE_DIR}/detectors/tpc
+  ${CMAKE_SOURCE_DIR}/detectors/tpc/clusterHitFinder
   ${CMAKE_SOURCE_DIR}/detectors/tpc/geometry
   ${CMAKE_SOURCE_DIR}/reconstruction/acts-tracking
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/lheTrack
   ${CMAKE_SOURCE_DIR}/simulation/mcStack
-  ${ACTS_PATH}/include
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
@@ -43,9 +37,8 @@ include_directories(${INCLUDE_DIRECTORIES})
 
 set(LINK_DIRECTORIES
   ${ACTS_PATH}/lib64
-  ${Boost_INCLUDE_DIRS}${_path_separator}..${_path_separator}lib
+  ${Boost_INCLUDE_DIRS}/../lib
 )
-set (_path_separator)
 
 link_directories(${LINK_DIRECTORIES})
 
