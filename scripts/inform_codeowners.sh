@@ -31,7 +31,7 @@ main() {
   MERGE_REQUEST_URL="https://git.jinr.ru/api/v4/projects/$CI_MERGE_REQUEST_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID"
 
   CHANGED_FILES=$(curl -s -X GET -H "PRIVATE-TOKEN: $COMMENT_TOKEN" "$MERGE_REQUEST_URL/changes" \
-                     | sed 's/{"old_path/\n&/g' | grep "old_path" | cut -d '"' -f 4)
+                     | sed 's/"old_path/\n&/g' | grep "old_path" | cut -d '"' -f 4)
 
   echo "Changed files in this merge request are:"  $CHANGED_FILES
 
