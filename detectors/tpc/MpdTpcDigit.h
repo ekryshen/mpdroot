@@ -7,15 +7,15 @@
 // Author List:
 //      Sergey Merts
 //      7.12.2019 - Alexander Zinchenko: change of design
-//        12.2022 - Slavomir Hnatic: BaseTpcDigit port
+//        12.2022 - Slavomir Hnatic: AbstractTpcDigit port
 //--------------------------------------------------------------------
 
 #ifndef MPDTPCDIGIT_HH
 #define MPDTPCDIGIT_HH
 
-#include "BaseTpcDigit.h"
+#include "AbstractTpcDigit.h"
 
-class MpdTpcDigit : public BaseTpcDigit {
+class MpdTpcDigit : public AbstractTpcDigit {
 
 public:
    MpdTpcDigit();
@@ -23,22 +23,35 @@ public:
    virtual ~MpdTpcDigit();
 
    Int_t   GetOrigin() const { return fOrigin; }
-   Int_t   GetPad() const { return pad; }
-   Int_t   GetRow() const { return row; }
-   Int_t   GetTimeBin() const { return timeBin; }
-   Float_t GetAdc() const { return signal; }
-   Int_t   GetSector() const { return sector; }
+   Int_t   GetPad() const { return fPad; }
+   Int_t   GetRow() const { return fRow; }
+   Int_t   GetTimeBin() const { return fTimeBin; }
+   Float_t GetSignal() const { return fAdc; }
+   Int_t   GetSector() const { return fSector; }
 
-   void SetPad(Int_t newPad) { pad = newPad; }
-   void SetRow(Int_t newRow) { row = newRow; }
-   void SetTimeBin(Int_t newTimeBin) { timeBin = newTimeBin; }
-   void SetAdc(Float_t newAdc) { signal = newAdc; }
-   void SetSector(Int_t newSector) { sector = newSector; }
+   std::map<int, float> GetTrackSignals() const
+   {
+      std::map<int, float> trackID{{fOrigin, -1.}};
+      return trackID;
+   }
+   // port to interface: function alias GetAdc = GetSignal
+   inline Float_t GetAdc() const { return GetSignal(); }
+
+   void SetPad(Int_t pad) { fPad = pad; }
+   void SetRow(Int_t row) { fRow = row; }
+   void SetTimeBin(Int_t timeBin) { fTimeBin = timeBin; }
+   void SetAdc(Float_t adc) { fAdc = adc; }
+   void SetSector(Int_t sector) { fSector = sector; }
 
 private:
-   Int_t fOrigin;
+   Int_t   fOrigin;
+   Int_t   fPad;
+   Int_t   fRow;
+   Int_t   fTimeBin;
+   Int_t   fSector;
+   Float_t fAdc;
 
-   ClassDef(MpdTpcDigit, 4);
+   ClassDef(MpdTpcDigit, 5);
 };
 
 #endif

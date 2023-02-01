@@ -41,7 +41,9 @@ void geometry_stage1(FairRunSim *fRun) {
       "zdc_oldnames_7sect_v1_no_overlaps_w_pipe_magnet.root");
   fRun->AddModule(Zdc);
 
+  /* unsupported as of 12.2022
   FairDetector *mcord = new MpdMcord("MCORD",kTRUE);
   mcord->SetGeometryFileName("mcord_v3.root");
   fRun->AddModule(mcord);
+  */
 }

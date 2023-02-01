@@ -86,14 +86,6 @@ runMC(TString outFile="./AuAu_25AGeV_ee_central.root", Int_t nSkip=100)
   primGen->AddGenerator(urqmdGen);
   urqmdGen->SkipEvents(nSkip);
 #else
-#ifdef PLUTO
-  // Pluto  Generator
-
-  MpdPlutoGenerator* plutoGen = new MpdPlutoGenerator(dataFile, 25);
-
-  primGen->AddGenerator(plutoGen);
-  plutoGen->SkipEvents(nSkip);
-#else
 #ifdef PART
   // ------- Particle Generator
   FairParticleGenerator* partGen =
@@ -117,7 +109,6 @@ runMC(TString outFile="./AuAu_25AGeV_ee_central.root", Int_t nSkip=100)
   boxGen->SetThetaRange(0, 180); // Polar angle in lab system range [degree]
   boxGen->SetXYZ(0., 0., 0.); // mm o cm ??
   primGen->AddGenerator(boxGen);
-#endif
 #endif
 #endif
 #endif

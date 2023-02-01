@@ -1,17 +1,14 @@
 #include "MpdTpcDigit.h"
-using std::map;
 
 ClassImp(MpdTpcDigit);
 
-MpdTpcDigit::MpdTpcDigit() : BaseTpcDigit()
-{
-   fOrigin = -1;
-}
+MpdTpcDigit::MpdTpcDigit() : fPad(-1), fRow(-1), fTimeBin(-1), fSector(-1), fAdc(-1.0), fOrigin(-1) {}
+
+//......................................................................
 
 MpdTpcDigit::MpdTpcDigit(Int_t ori, Int_t pad, Int_t row, Int_t bin, Int_t sec, Float_t adc)
-   : BaseTpcDigit(sec, row, pad, bin, adc)
+   : fPad(pad), fRow(row), fTimeBin(bin), fSector(sec), fAdc(adc), fOrigin(ori)
 {
-   fOrigin = ori;
 }
 
 MpdTpcDigit::~MpdTpcDigit() {}

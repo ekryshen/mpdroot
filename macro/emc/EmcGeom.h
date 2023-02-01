@@ -2,15 +2,11 @@
 #define EmcGeom_H
 
 #include <iostream>
+#include <vector>
+
 #include "TObject.h"
 #include "TObjArray.h"
 #include "TMath.h"
-
-//#include "mpdshape.class.C"
-#include "emc.h"
-#include <vector>
-
-using namespace std;
 
 class EmcGeom : public TObject {
 

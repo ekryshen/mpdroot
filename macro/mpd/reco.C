@@ -17,7 +17,6 @@
 // MPD includes
 #include "MpdTpcHitProducer.h"
 #include "MpdTpcDigitizerAZlt.h"
-#include "MpdTpcClusterFinderAZ.h"
 #include "MpdTpcClusterFinderMlem.h"
 #include "MpdKalmanFilter.h"
 #include "MpdVertexZfinder.h"

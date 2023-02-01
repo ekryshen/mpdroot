@@ -201,25 +201,31 @@ public:
    }
 };
 class AdcHit {
-   uint  _nTimeBin; // timebin number [0..310)
-   float _fAdc;
-   int   _nTrackId; //_nTrackId
+   uint             _nTimeBin; // timebin number [0..310)
+   float            _fAdc;
+   std::vector<int> _vTrackId; //_vTrackId- all unique tracks ID (TpcPoint->getTrackID())
 public:
-   AdcHit() : _fAdc(0), _nTimeBin(0), _nTrackId(-1) {} //_nTrackId
-   AdcHit(int n, float f) : _nTimeBin(n), _fAdc(f), _nTrackId(-1) {}
-   AdcHit(int n, float f, int nId) : _nTimeBin(n), _fAdc(f), _nTrackId(nId) {} //_nTrackId
-   AdcHit(const AdcHit &r) : _nTimeBin(r._nTimeBin), _fAdc(r._fAdc), _nTrackId(r._nTrackId) {}
-   ~AdcHit() {}
+   AdcHit() : _fAdc(0), _nTimeBin(0) {}
+   AdcHit(int n, float f) : _nTimeBin(n), _fAdc(f) {}
+   AdcHit(int n, float f, int nId) : _nTimeBin(n), _fAdc(f)
+   {
+      if (std::find(_vTrackId.begin(), _vTrackId.end(), nId) == _vTrackId.end()) _vTrackId.push_back(nId);
+   } //_vTrackId
+   AdcHit(const AdcHit &r) : _nTimeBin(r._nTimeBin), _fAdc(r._fAdc) { _vTrackId = r._vTrackId; }
+   ~AdcHit() { _vTrackId.clear(); }
    const AdcHit &operator=(const AdcHit &r)
    {
       if (this != &r) {
          _nTimeBin = r._nTimeBin;
          _fAdc     = r._fAdc;
-         _nTrackId = r._nTrackId; //_nTrackId
+         _vTrackId = r._vTrackId; //_vTrackId
       }
       return *this;
    }
-   inline float getTrackID() const { return _nTrackId; } //_nTrackId
+   inline std::vector<int> getTrackID() const
+   {
+      return _vTrackId;
+   } //_vTrackId - all unique tracks ID (TpcPoint->getTrackID())
    inline float getAdc() const { return _fAdc; }
    inline void  setAdc(float f) { _fAdc = f; }
    inline uint  getTimeBin() const { return _nTimeBin; }

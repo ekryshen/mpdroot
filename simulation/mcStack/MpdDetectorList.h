@@ -22,8 +22,8 @@ enum DetectorIdMPD {
    kZDC,
    kFSA,
    kSFT,
-   kBMD,
-   kMCORD,
+   kBMD,   // unsupported as of 01.2023, left for compatibility reasons
+   kMCORD, // unsupported as of 12.2022, left for compatibility reasons
    kRECOIL
 };
 

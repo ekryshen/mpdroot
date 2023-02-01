@@ -34,10 +34,8 @@ link_directories(${LINK_DIRECTORIES})
 set(SRCS
   MpdParticleIdentification.cxx
   MpdTpc2dCluster.cxx
-  MpdTpcClusterFinderAZ.cxx
   MpdTpcClusterFinderMlem.cxx
   MpdTpcDigit.cxx
-  MpdTpcDigitizerAZ.cxx
   MpdTpcDigitizerAZlt.cxx
   MpdTpcDigitizerQAHistograms.cxx
   MpdTpcDigitizerTask.cxx
@@ -52,16 +50,31 @@ set(SRCS
   TpcGeo.cxx
   TpcGeoPar.cxx
   TpcPoint.cxx
-  clusterHitFinder/AbstractTpcClusterHitFinder.cxx
-  clusterHitFinder/fast/TpcClusterHitFinderFast.cxx
-  clusterHitFinder/mlem/TpcClusterHitFinderMlem.cxx
-  geometry/BaseTpcSectorGeo.cxx
-  geometry/TpcSectorGeoAZ.cxx
 )
 
-Set(HEADERS)
+Set(HEADERS
+  MpdParticleIdentification.h
+  MpdTpc2dCluster.h
+  MpdTpcClusterFinderMlem.h
+  MpdTpcDigit.h
+  MpdTpcDigitizerAZlt.h
+  MpdTpcDigitizerQAHistograms.h
+  MpdTpcDigitizerTask.h
+  MpdTpcEDepParams.h
+  MpdTpcHit.h
+  MpdTpcHitProducer.h
+  MpdTPCpid.h
+  MpdTpcSector.h
+  TaskHelpers.h
+  TpcDetector.h
+  TpcGas.h
+  TpcGeo.h
+  TpcGeoPar.h
+  TpcPoint.h
+)
+
 Set(LINKDEF tpcLinkDef.h)
 Set(LIBRARY_NAME tpc)
-Set(DEPENDENCIES Base Gdml MpdField MpdMCStack Tof Kalman MpdGen)
+Set(DEPENDENCIES Base Gdml MpdField MpdMCStack Tof Kalman MpdGen tpcClusterHitFinder tpcDigitizer tpcGeometry)
 
 GENERATE_LIBRARY()

@@ -367,7 +367,7 @@ To change from hit producer to cluster finder, find in `mpdroot/macro/mpd/reco.C
         fRun->AddTask(hitPr);
 and change them into:
 
-        MpdTpcDigitizerAZ* tpcDigitizer = new MpdTpcDigitizerAZ(*secGeo);
+        MpdTpcDigitizerAZlt* tpcDigitizer = new MpdTpcDigitizerAZlt(*secGeo);
         tpcDigitizer->SetPersistence(kFALSE);
         fRun->AddTask(tpcDigitizer);
 

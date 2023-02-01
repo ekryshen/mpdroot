@@ -76,11 +76,11 @@ add_subdirectory (core/mpdDst) # Base
 add_subdirectory (core/mpdField) # INDEPENDENT
 add_subdirectory (core/mpdPassive) # INDEPENDENT
 add_subdirectory (core/mpdPid) # INDEPENDENT
-add_subdirectory (detectors/bmd) # INDEPENDENT
+# unsupported as of 01.2023 add_subdirectory (detectors/bmd) # INDEPENDENT
 add_subdirectory (detectors/emc) # INDEPENDENT
 add_subdirectory (detectors/etof) # INDEPENDENT
 add_subdirectory (detectors/ffd) # INDEPENDENT
-add_subdirectory (detectors/mcord) # INDEPENDENT
+# unsupported as of 12.2022 add_subdirectory (detectors/mcord)
 add_subdirectory (detectors/sts) # INDEPENDENT
 add_subdirectory (detectors/tof) # INDEPENDENT
 add_subdirectory (detectors/zdc) # INDEPENDENT
@@ -100,6 +100,10 @@ endif()
 
 # LEVEL 2
 add_subdirectory (detectors/tpc) # tof
+add_subdirectory (detectors/tpc/alignment) 
+add_subdirectory (detectors/tpc/clusterHitFinder) 
+add_subdirectory (detectors/tpc/digitizer)
+add_subdirectory (detectors/tpc/geometry) 
 add_subdirectory (reconstruction/tracking/kalman) # mpdfield
 add_subdirectory (physics) # mpdbase mpddst
 add_subdirectory (simulation/mcDst)

@@ -1,8 +1,10 @@
-#include "MpdEmcGeoPar.h"
+#include <iostream>
+
 #include "FairParamList.h"
 #include "TObjArray.h"
+
 #include "emc.h"
-#include <iostream>
+#include "MpdEmcGeoPar.h"
 
 ClassImp(MpdEmcGeoPar);
 

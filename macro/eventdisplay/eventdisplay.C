@@ -78,8 +78,9 @@ void SetTasks(MpdEventManager* fMan)
     fMan->AddTask(ZdcPoint);
     MpdMCPointDraw* EmcPoint = new MpdMCPointDraw("EmcPoint", mcPointColor, kDot);
     fMan->AddTask(EmcPoint);
+    /* unsupported as of 12.2022
     MpdMCPointDraw* McordPoint = new MpdMCPointDraw("McordPoint", mcPointColor, kDot);
-    fMan->AddTask(McordPoint);
+    fMan->AddTask(McordPoint); */
 
     // draw MC geometry tracks
     MpdMCTracks* GeoTrack = new MpdMCTracks("GeoTracks");
