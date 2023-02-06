@@ -104,18 +104,30 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
   hits.reserve(nTpcHits);
 
   for (Int_t i = 0; i < nTpcHits; i++) {
-    const auto *tpcHit = static_cast<MpdTpcHit*>(tpcHits->UncheckedAt(i));
-    const auto iter = momentum.find(tpcHit->GetTrackID());
+    auto *tpcHit = static_cast<MpdTpcHit*>(tpcHits->UncheckedAt(i));
 
+    std::vector <std::pair<int, float>> trackIDs = tpcHit->GetTrackIDs();
+    // Get the first element of MC tracks, correspoinding to hit.
+    Int_t trackId = trackIDs[0].first;
+
+    const auto mFind = momentum.find(trackId);
+    Acts::Vector3 mom;
+    if (mFind == momentum.end()) {
+      mom = Acts::Vector3{0., 0., 0.};
+      std::cout << "[MpdTpcTracker]: WARNING: can't find MC track " <<
+          "which corresponds to MpdTpcHit with index " << i << std::endl;
+    } else {
+      mom = mFind->second;
+    }
     hits.emplace_back(Mpd::Tpc::InputHit{
-        tpcHit->GetTrackID(),
+        trackId,
         tpcHit->GetDetectorID(),
         Acts::Vector3{
             tpcHit->GetX() * lenScalor,
             tpcHit->GetY() * lenScalor,
             tpcHit->GetZ() * lenScalor
         },
-        (iter != momentum.end()) ? iter->second : Acts::Vector3{0., 0., 0.} // FIXME:
+        mom
     });
   }
 
@@ -128,8 +140,7 @@ inline MpdTpcHit *convertHit(TClonesArray *hits, int ihit) {
 }
 
 /// Converts a track into the MpdRoot representation.
-inline void convertTrack(const BaseTpcSectorGeo &secGeo,
-                         TClonesArray *hits,
+inline void convertTrack(TClonesArray *hits,
                          MpdTpcTrack *track,
                          const Mpd::Tpc::ProtoTrack &trajectory) {
   for (const auto ihit : trajectory) {
@@ -138,8 +149,7 @@ inline void convertTrack(const BaseTpcSectorGeo &secGeo,
 }
 
 /// Converts tracks into the MpdRoot representation.
-inline void convertTracks(const BaseTpcSectorGeo &secGeo,
-                          TClonesArray *hits,
+inline void convertTracks(TClonesArray *hits,
                           TClonesArray *tracks,
                           const Mpd::Tpc::ProtoTrackContainer &trajectories) {
   tracks->Clear();
@@ -148,37 +158,120 @@ inline void convertTracks(const BaseTpcSectorGeo &secGeo,
   Int_t nTracks = 0;
   for (const auto &trajectory : trajectories) {
     auto *track = new ((*tracks)[nTracks++]) MpdTpcTrack(trajectory.size());
-    convertTrack(secGeo, hits, track, trajectory);
+    convertTrack(hits, track, trajectory);
   }
+}
+
+//===----------------------------------------------------------------------===//
+// Create map MC track -> ints for creating Act's Barcode
+//===----------------------------------------------------------------------===//
+
+using mcTrackToBarcodeInts =
+    std::map<Int_t, std::tuple<size_t, size_t, size_t, size_t, size_t>>;
+
+mcTrackToBarcodeInts createBarcodesMap(TClonesArray *mcTracks) {
+
+  mcTrackToBarcodeInts mcTrackToBarcode;
+
+  Int_t nMC = mcTracks->GetEntriesFast();
+  size_t primary     = 1;
+  size_t secondary   = 0;
+  size_t curParticle = 0;
+
+  // loop over primary particles.
+  for (Int_t iMC = 0; iMC < nMC; iMC++) {
+    auto track = static_cast<MpdMCTrack*>(mcTracks->UncheckedAt(iMC));
+    Int_t motherId = track->GetMotherId();
+    if (motherId != -1) {
+      continue;
+    }
+    size_t particle   = ++curParticle;
+    size_t generation = 0;
+    size_t subpart    = 0;
+    mcTrackToBarcode[iMC] = {primary, secondary, particle, generation, subpart};
+  }
+
+  // loop over secondary particles.
+  std::map<std::tuple<size_t, size_t>, size_t> partGenToSubpart;
+  Int_t iMC;
+  std::string msgPrefix = "[MpdTpcTracker]: createBarcodesMap(): ERROR: ";
+  for (iMC = 0; iMC < nMC; iMC++) {
+    auto track = static_cast<MpdMCTrack*>(mcTracks->UncheckedAt(iMC));
+    Int_t motherId = track->GetMotherId();
+    Int_t motherIdBak = motherId;
+    if (motherId == -1) {
+      continue;
+    }
+    MpdMCTrack *curTrack;
+    size_t generation = 0;
+    while (motherId != -1) {
+      generation++;
+      motherIdBak = motherId;
+      curTrack = static_cast<MpdMCTrack*>(mcTracks->UncheckedAt(motherId));
+      motherId = curTrack->GetMotherId();
+    }
+    if ((generation == 0) || (motherIdBak == -1)) {
+      std::cout << msgPrefix <<
+          "can't find top track for MC track with index " << iMC << std::endl;
+      continue;
+    }
+    auto findBarcode = mcTrackToBarcode.find(motherIdBak);
+    if (findBarcode == mcTrackToBarcode.end()) {
+       std::cout << msgPrefix <<
+          "can't process MC track with index " << iMC << std::endl;
+       continue;
+    }
+    auto fiveNums = findBarcode->second;
+    auto particle = std::get<2>(fiveNums);
+
+    size_t subpart = partGenToSubpart[{particle, generation}];
+    mcTrackToBarcode[iMC] = {primary, secondary, particle, generation, subpart};
+    partGenToSubpart[{particle, generation}] += 1;
+  }
+  return mcTrackToBarcode;
 }
 
 //===----------------------------------------------------------------------===//
 // Get input particles
 //===----------------------------------------------------------------------===//
 
-ActsExamples::SimParticleContainer getInputParticles(TClonesArray *mcTracks) {
+ActsExamples::SimParticleContainer getInputParticles(
+    TClonesArray *mcTracks,
+    const mcTrackToBarcodeInts &mcTrackToBarcode) {
+
   ActsExamples::SimParticleContainer particles;
 
   Int_t nMC = mcTracks->GetEntriesFast();
   for (Int_t i = 0; i < nMC; i++) {
     auto track = static_cast<MpdMCTrack*>(mcTracks->UncheckedAt(i));
-    Int_t pdgCode  = track->GetPdgCode();
-    Double_t x0 = track->GetStartX() * lenScalor;
-    Double_t y0 = track->GetStartY() * lenScalor;
-    Double_t z0 = track->GetStartZ() * lenScalor;
-    Double_t t0 = track->GetStartT();
-    Double_t px = track->GetPx() * momScalor;
-    Double_t py = track->GetPy() * momScalor;
-    Double_t pz = track->GetPz() * momScalor;
-    Double_t p  = track->GetP()  * momScalor;
 
-    ActsFatras::Barcode barCode = ActsFatras::Barcode(). // FIXME
-        setVertexPrimary(1).
-        setVertexSecondary(2).
-        setParticle(3);
+    if (auto search = mcTrackToBarcode.find(i);
+             search == mcTrackToBarcode.end()) {
+      std::cout << "[MpdTpcTracker.cxx]: getInputParticles(): ERROR: " <<
+          "can't find Barcode for MC track with index " << i << std::endl;
+      continue;
+    }
+
+    const auto [pri, sec, part, gen, sub] =  mcTrackToBarcode.at(i);
+    ActsFatras::Barcode barcode = ActsFatras::Barcode().
+        setVertexPrimary(pri).
+        setVertexSecondary(sec).
+        setParticle(part).
+        setGeneration(gen).
+        setSubParticle(sub);
+
+    auto pdgCode = track->GetPdgCode();
+    auto x0      = track->GetStartX() * lenScalor;
+    auto y0      = track->GetStartY() * lenScalor;
+    auto z0      = track->GetStartZ() * lenScalor;
+    auto t0      = track->GetStartT();
+    auto px      = track->GetPx() * momScalor;
+    auto py      = track->GetPy() * momScalor;
+    auto pz      = track->GetPz() * momScalor;
+    auto p       = track->GetP()  * momScalor;
 
     ActsFatras::Particle particle =
-        ActsFatras::Particle(barCode, Acts::PdgParticle(pdgCode)).
+        ActsFatras::Particle(barcode, Acts::PdgParticle(pdgCode)).
         setPosition4(x0, y0, z0, t0).
         setAbsoluteMomentum(p).
         setDirection(px, py, pz);
@@ -191,19 +284,39 @@ ActsExamples::SimParticleContainer getInputParticles(TClonesArray *mcTracks) {
 //===----------------------------------------------------------------------===//
 // Get multimap hits -> particles
 //===----------------------------------------------------------------------===//
-ActsExamples::IndexMultimap<ActsFatras::Barcode> getMultimapHitToPart(
-    TClonesArray *hits) {
-  ActsExamples::IndexMultimap<ActsFatras::Barcode> res;
-  Int_t nHits = hits->GetEntriesFast();
-  res.reserve(nHits);
+
+ActsExamples::IndexMultimap<ActsFatras::Barcode> getHitToParticlesMultiMap(
+    TClonesArray *tpcHits,
+    const mcTrackToBarcodeInts &mcTrackToBarcode) {
+
+  ActsExamples::IndexMultimap<ActsFatras::Barcode> mapHitsToParticles;
+  Int_t nHits = tpcHits->GetEntriesFast();
+
   for (Int_t i = 0; i < nHits; i++) {
-     ActsFatras::Barcode barCode = ActsFatras::Barcode(). // FIXME
-        setVertexPrimary(1).
-        setVertexSecondary(2).
-        setParticle(3);
-     res.emplace_hint(res.end(), i, barCode);
+
+    auto *tpcHit = static_cast<MpdTpcHit*>(tpcHits->UncheckedAt(i));
+    std::vector <std::pair<int, float>> trackIDs = tpcHit->GetTrackIDs();
+
+    for (auto particle : trackIDs) {
+      auto trackId = particle.first;
+      if (auto search = mcTrackToBarcode.find(trackId);
+               search == mcTrackToBarcode.end()) {
+        std::cout << "[MpdTpcTracker.cxx]: getHitToParticlesMultiMap(): ERROR: " <<
+            "can't find Barcode for MC track with index " << trackId << std::endl;
+        continue;
+      }
+
+      const auto [pri, sec, part, gen, sub] =  mcTrackToBarcode.at(trackId);
+      ActsFatras::Barcode barcode = ActsFatras::Barcode().
+          setVertexPrimary(pri).
+          setVertexSecondary(sec).
+          setParticle(part).
+          setGeneration(gen).
+          setSubParticle(sub);
+      mapHitsToParticles.emplace(i, barcode);
+    }
   }
-  return res;
+  return mapHitsToParticles;
 }
 
 //===----------------------------------------------------------------------===//
@@ -256,9 +369,11 @@ void MpdTpcTracker::Exec(Option_t *option) {
   auto hits = UseMcHits ? convertTpcPoints(fPoints)
                         : convertTpcHits(fHits, fPoints);
 
+  // Get the information necessary to collect Acts statistics.
   auto mcTracks = getArray("MCTrack");
-  auto inputParticles = getInputParticles(mcTracks);
-  auto mapHitsToParticles = getMultimapHitToPart(fHits);
+  auto mcTrackToBarcode = createBarcodesMap(mcTracks);
+  auto inputParticles = getInputParticles(mcTracks, mcTrackToBarcode);
+  auto mapHitsToParticles = getHitToParticlesMultiMap(fHits, mcTrackToBarcode);
 
   // Run the track finding algorithm.
   const auto &config = fRunner->config();
@@ -272,7 +387,7 @@ void MpdTpcTracker::Exec(Option_t *option) {
       context.eventStore.get<Mpd::Tpc::ProtoTrackContainer>(
           config.trackFinding.outputTrackCandidates);
 
-  convertTracks(fSecGeo, fHits, fTracks, trajectories);
+  convertTracks(fHits, fTracks, trajectories);
 
   // Plot graphs if required.
   if constexpr(PlotGraphs) {

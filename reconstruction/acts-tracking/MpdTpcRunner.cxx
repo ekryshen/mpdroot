@@ -57,6 +57,7 @@ void Runner::execute(
   trackEstimation.execute(++context);
   trackFinding.execute(++context);
   perfWriting.write(++context);
+  perfWriting.endRun();
 
   // Log the output tracks.
   logOutput(context);

@@ -43,13 +43,13 @@ struct Config final {
   static constexpr auto TrackCandidatesID   = "trackcandidates";
   static constexpr auto ParticlesID         = "inputparticles";
   static constexpr auto MeasParticlesMapID  = "measurementparticles";
- 
+
   //===--------------------------------------------------------------------===//
   // Track seeding
   //===--------------------------------------------------------------------===//
 
   static constexpr auto Rmin                =  Detector::Rmin;      // ~ 0.4 m
-  static constexpr auto Rmax                =  Detector::Rmax;      // ~ 1.4 m 
+  static constexpr auto Rmax                =  Detector::Rmax;      // ~ 1.4 m
   static constexpr auto Zmin                =  Detector::Zmin;      // ~-1.7 m
   static constexpr auto Zmax                =  Detector::Zmax;      // ~ 1.7 m
   static constexpr auto CollisionZmin       = -30._cm;              // Close to 0
@@ -120,6 +120,29 @@ struct Config final {
   static constexpr auto MeasurementsMin     = 9u;
   /// Min transverse momentum.
   static constexpr auto PtMin               = 1._GeV;
+
+  // Parameters for EffPlotTool, FakeRatePlotTool,
+  // DuplicationPlotTool, TrackSummaryPlotTool.
+
+  static constexpr auto PlotToolEtaName     = "#eta";
+  static constexpr auto PlotToolEtaNBins    = 40;
+  static constexpr auto PlotToolEtaMin      = -4;
+  static constexpr auto PlotToolEtaMax      = 4;
+
+  static constexpr auto PlotToolPhiName     = "#phi";
+  static constexpr auto PlotToolPhiNBins    = 100;
+  static constexpr auto PlotToolPhiMin      = -3.15;
+  static constexpr auto PlotToolPhiMax      = 3.15;
+
+  static constexpr auto PlotToolPtName      = "pT [GeV/c]";
+  static constexpr auto PlotToolPtNBins     = 40;
+  static constexpr auto PlotToolPtMin       = 0._GeV;
+  static constexpr auto PlotToolPtMax       = 2.5_GeV;
+
+  static constexpr auto PlotToolNumName     = "N";
+  static constexpr auto PlotToolNumNBins    = 30;
+  static constexpr auto PlotToolNumMin      = -0.5;
+  static constexpr auto PlotToolNumMax      = 29.5;
 
   //===--------------------------------------------------------------------===//
   // Constructor

@@ -16,7 +16,6 @@
 // MPD includes
 #include "MpdTpcHitProducer.h"
 #include "MpdTpcDigitizerAZlt.h"
-#include "MpdTpcClusterFinderAZ.h"
 #include "MpdTpcClusterFinderMlem.h"
 #include "MpdKalmanFilter.h"
 #include "MpdVertexZfinder.h"
@@ -103,11 +102,12 @@ void trackingActs(TString inFile = "evetest.root", TString outFile = "mpddst.roo
    tpcDigitizer->SetPersistence(kTRUE);
    fRun->AddTask(tpcDigitizer);
  #ifdef UseMlem
-   MpdTpcClusterFinderMlem *tpcClusAZ = new MpdTpcClusterFinderMlem(*secGeo);
+   MpdTpcClusterFinderMlem *tpcClus = new MpdTpcClusterFinderMlem(*secGeo);
  #else
-   TpcClusterHitFinderFast *tpcClusAZ = new TpcClusterHitFinderFast(*secGeo);
+   TpcClusterHitFinderFast *tpcClus = new TpcClusterHitFinderFast(*secGeo);
+   tpcClus->SetPersistence(kTRUE);
  #endif 
-   fRun->AddTask(tpcClusAZ);
+   fRun->AddTask(tpcClus);
 #endif
 
    FairTask *vertZ = new MpdVertexZfinder(*secGeo);

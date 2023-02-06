@@ -4,6 +4,8 @@
 
 #include "MpdTpcConfig.h"
 
+#include "ActsExamples/Utilities/Helpers.hpp"
+
 #include <Acts/Surfaces/PerigeeSurface.hpp>
 
 namespace Mpd::Tpc {
@@ -139,6 +141,93 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
   perfWriting.truthMatchProbMin = TruthMatchProbMin;
   perfWriting.nMeasurementsMin = MeasurementsMin;
   perfWriting.ptMin = PtMin;
+
+  ActsExamples::EffPlotTool::Config effConfig;
+  effConfig.varBinning["Eta"] = ActsExamples::PlotHelpers::Binning(
+      PlotToolEtaName,
+      PlotToolEtaNBins,
+      PlotToolEtaMin,
+      PlotToolEtaMax);
+  effConfig.varBinning["Phi"] = ActsExamples::PlotHelpers::Binning(
+      PlotToolPhiName,
+      PlotToolPhiNBins,
+      PlotToolPhiMin,
+      PlotToolPhiMax);
+  effConfig.varBinning["Pt"]  = ActsExamples::PlotHelpers::Binning(
+      PlotToolPtName,
+       PlotToolPtNBins,
+      PlotToolPtMin,
+      PlotToolPtMax);
+  perfWriting.effPlotToolConfig = effConfig;
+
+  ActsExamples::DuplicationPlotTool::Config fakeConfig;
+  fakeConfig.varBinning["Eta"] = ActsExamples::PlotHelpers::Binning(
+      PlotToolEtaName,
+      PlotToolEtaNBins,
+      PlotToolEtaMin,
+      PlotToolEtaMax);
+  fakeConfig.varBinning["Phi"] = ActsExamples::PlotHelpers::Binning(
+      PlotToolPhiName,
+      PlotToolPhiNBins,
+      PlotToolPhiMin,
+      PlotToolPhiMax);
+  fakeConfig.varBinning["Pt"]  = ActsExamples::PlotHelpers::Binning(
+      PlotToolPtName,
+      PlotToolPtNBins,
+      PlotToolPtMin,
+      PlotToolPtMax);
+  fakeConfig.varBinning["Num"] = ActsExamples::PlotHelpers::Binning(
+      PlotToolNumName,
+      PlotToolNumNBins,
+      PlotToolNumMin,
+      PlotToolNumMax);
+  perfWriting.duplicationPlotToolConfig = fakeConfig;
+
+  ActsExamples::DuplicationPlotTool::Config duplicationConfig;
+  duplicationConfig.varBinning["Eta"] = ActsExamples::PlotHelpers::Binning(
+      PlotToolEtaName,
+      PlotToolEtaNBins,
+      PlotToolEtaMin,
+      PlotToolEtaMax);
+  duplicationConfig.varBinning["Phi"] = ActsExamples::PlotHelpers::Binning(
+      PlotToolPhiName,
+      PlotToolPhiNBins,
+      PlotToolPhiMin,
+      PlotToolPhiMax);
+  duplicationConfig.varBinning["Pt"] = ActsExamples::PlotHelpers::Binning(
+      PlotToolPtName,
+      PlotToolPtNBins,
+      PlotToolPtMin,
+      PlotToolPtMax);
+  duplicationConfig.varBinning["Num"] = ActsExamples::PlotHelpers::Binning(
+      PlotToolNumName,
+      PlotToolNumNBins,
+      PlotToolNumMin,
+      PlotToolNumMax);
+  perfWriting.duplicationPlotToolConfig = duplicationConfig;
+
+  ActsExamples::TrackSummaryPlotTool::Config trackSummaryConfig;
+  trackSummaryConfig.varBinning["Eta"] = ActsExamples::PlotHelpers::Binning(
+      PlotToolEtaName,
+      PlotToolEtaNBins,
+      PlotToolEtaMin,
+      PlotToolEtaMax);
+  trackSummaryConfig.varBinning["Phi"] = ActsExamples::PlotHelpers::Binning(
+      PlotToolPhiName,
+      PlotToolPhiNBins,
+      PlotToolPhiMin,
+      PlotToolPhiMax);
+  trackSummaryConfig.varBinning["Pt"] = ActsExamples::PlotHelpers::Binning(
+      PlotToolPtName,
+      PlotToolPtNBins,
+      PlotToolPtMin,
+      PlotToolPtMax);
+  trackSummaryConfig.varBinning["Num"] = ActsExamples::PlotHelpers::Binning(
+      PlotToolNumName,
+      PlotToolNumNBins,
+      PlotToolNumMin,
+      PlotToolNumMax);
+  perfWriting.trackSummaryPlotToolConfig = trackSummaryConfig;
 }
 
 } // namespace Mpd::Tpc

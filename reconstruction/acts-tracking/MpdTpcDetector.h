@@ -33,7 +33,7 @@ public:
 
   /// If true use BaseTpcSectorGeo class for geometry construction
   /// else use numerical values from MpdTpcDetector.h
-  static constexpr auto useBaseTpcSectorGeo = true;
+  static constexpr auto useBaseTpcSectorGeo = false;
 
   /// If true use Z dimensions from BaseTpcSectorGeo
   /// else use numerical values from MpdTpcDetector.h
