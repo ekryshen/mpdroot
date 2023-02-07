@@ -48,6 +48,8 @@ void Runner::execute(
   TrackSeeding trackSeeding(m_config.trackSeeding, m_level);
   TrackEstimation trackEstimation(m_config.trackEstimation, m_level);
   TrackFinding trackFinding(m_config.trackFinding, m_level);
+  m_config.perfWriting.filePath = std::string(m_config.PerfFilePrefixPath) +
+      "_event_" + std::to_string(context.eventNumber) + ".root";
   ActsExamples::CKFPerformanceWriter perfWriting(
       m_config.perfWriting, m_level);
 

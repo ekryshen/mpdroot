@@ -137,7 +137,6 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
   perfWriting.inputTrajectories = TrajectoriesID;
   perfWriting.inputParticles = ParticlesID;
   perfWriting.inputMeasurementParticlesMap = MeasParticlesMapID;
-  perfWriting.filePath = PerfFilePath;
   perfWriting.truthMatchProbMin = TruthMatchProbMin;
   perfWriting.nMeasurementsMin = MeasurementsMin;
   perfWriting.ptMin = PtMin;
@@ -160,7 +159,7 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
       PlotToolPtMax);
   perfWriting.effPlotToolConfig = effConfig;
 
-  ActsExamples::DuplicationPlotTool::Config fakeConfig;
+  ActsExamples::FakeRatePlotTool::Config fakeConfig;
   fakeConfig.varBinning["Eta"] = ActsExamples::PlotHelpers::Binning(
       PlotToolEtaName,
       PlotToolEtaNBins,
@@ -181,7 +180,7 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
       PlotToolNumNBins,
       PlotToolNumMin,
       PlotToolNumMax);
-  perfWriting.duplicationPlotToolConfig = fakeConfig;
+  perfWriting.fakeRatePlotToolConfig = fakeConfig;
 
   ActsExamples::DuplicationPlotTool::Config duplicationConfig;
   duplicationConfig.varBinning["Eta"] = ActsExamples::PlotHelpers::Binning(

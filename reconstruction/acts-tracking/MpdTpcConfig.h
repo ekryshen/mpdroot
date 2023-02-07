@@ -113,7 +113,8 @@ struct Config final {
   // Performance writer
   //===--------------------------------------------------------------------===//
 
-  static constexpr auto PerfFilePath        = "performance_ckf.root";
+  // File name will be PerfFilePrefixPath + "_event_<n>.root"
+  static constexpr auto PerfFilePrefixPath  = "performance_ckf";
   /// Min reco-truth matching probability.
   static constexpr auto TruthMatchProbMin   = 0.5;
   /// Min number of measurements.
