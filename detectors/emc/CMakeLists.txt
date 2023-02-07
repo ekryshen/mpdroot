@@ -13,6 +13,7 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_SOURCE_DIR}/detectors/tpc
   ${CMAKE_SOURCE_DIR}/detectors/tpc/clusterHitFinder
   ${CMAKE_SOURCE_DIR}/detectors/tpc/digitizer
+  ${CMAKE_SOURCE_DIR}/detectors/tpc/digitizer/AZlt
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
   ${CMAKE_SOURCE_DIR}/simulation/mcStack
 )

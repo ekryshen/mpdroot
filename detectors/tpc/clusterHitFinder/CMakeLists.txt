@@ -7,6 +7,7 @@ set(INCLUDE_DIRECTORIES
  ${CMAKE_CURRENT_LIST_DIR}/mlem
  ${CMAKE_SOURCE_DIR}/detectors/tpc
  ${CMAKE_SOURCE_DIR}/detectors/tpc/digitizer
+ ${CMAKE_SOURCE_DIR}/detectors/tpc/digitizer/AZlt
  ${CMAKE_SOURCE_DIR}/detectors/tpc/geometry
  ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
  ${CMAKE_SOURCE_DIR}/simulation/generators/mpdGen

@@ -9,6 +9,7 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_LIST_DIR}/clusterHitFinder/fast
   ${CMAKE_CURRENT_LIST_DIR}/clusterHitFinder/mlem
   ${CMAKE_CURRENT_LIST_DIR}/digitizer
+  ${CMAKE_CURRENT_LIST_DIR}/digitizer/AZlt
   ${CMAKE_CURRENT_LIST_DIR}/fairTpc
   ${CMAKE_CURRENT_LIST_DIR}/geometry
   ${CMAKE_SOURCE_DIR}/core/mpdField
@@ -36,32 +37,19 @@ set(SRCS
   MpdParticleIdentification.cxx
   MpdTpc2dCluster.cxx
   MpdTpcClusterFinderMlem.cxx
-  MpdTpcDigit.cxx
-  MpdTpcDigitizerAZlt.cxx
-  MpdTpcDigitizerQAHistograms.cxx
-  MpdTpcDigitizerTask.cxx
   MpdTpcHit.cxx
   MpdTpcHitProducer.cxx
   MpdTPCpid.cxx
-  MpdTpcSector.cxx
-  TaskHelpers.cxx
 )
 
 Set(HEADERS
   MpdParticleIdentification.h
   MpdTpc2dCluster.h
   MpdTpcClusterFinderMlem.h
-  MpdTpcDigit.h
-  MpdTpcDigitizerAZlt.h
-  MpdTpcDigitizerQAHistograms.h
-  MpdTpcDigitizerTask.h
   MpdTpcHit.h
   MpdTpcHitProducer.h
   MpdTPCpid.h
-  MpdTpcSector.h
-  TaskHelpers.h
 )
-
 
 
 Set(LINKDEF tpcLinkDef.h)
