@@ -9,7 +9,10 @@
 #pragma link C++ class AbstractTpcHit+;
 #pragma link C++ class TpcClusterHitFinderFast+;
 #pragma link C++ class TpcClustering+;
+#pragma link C++ class MpdTpcHitProducer+;
 #pragma link C++ class TpcClusterHitFinderMlem+;
+#pragma link C++ class MpdTpc2dCluster+;
+#pragma link C++ class MpdTpcHit+;
 
 #endif
 

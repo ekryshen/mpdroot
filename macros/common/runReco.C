@@ -16,7 +16,6 @@
 // MPD includes
 #include "MpdTpcHitProducer.h"
 #include "MpdTpcDigitizerAZlt.h"
-#include "MpdTpcClusterFinderMlem.h"
 #include "MpdKalmanFilter.h"
 #include "MpdVertexZfinder.h"
 #include "MpdTpcKalmanFilter.h"
@@ -33,6 +32,7 @@
 #include "MpdPid.h"
 #include "TpcSectorGeoAZ.h"
 #include "TpcClusterHitFinderFast.h"
+#include "TpcClusterHitFinderMlem.h"
 
 #include <iostream>
 
@@ -101,7 +101,7 @@ void runReco(TString inFile = "evetest.root", TString outFile = "mpddst.root", I
    tpcDigitizer->SetPersistence(kTRUE);
    fRun->AddTask(tpcDigitizer);
  #ifdef UseMlem
-   MpdTpcClusterFinderMlem *tpcClus = new MpdTpcClusterFinderMlem(*secGeo);
+   TpcClusterHitFinderMlem *tpcClus = new TpcClusterHitFinderMlem(*secGeo);
  #else
    TpcClusterHitFinderFast *tpcClus = new TpcClusterHitFinderFast(*secGeo);
  #endif 

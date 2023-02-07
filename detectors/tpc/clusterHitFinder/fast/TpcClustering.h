@@ -1087,7 +1087,7 @@ inline std::ostringstream &DrawPadClusters(std::ostringstream                   
       std::list<PadCluster *>::iterator iPadClusterLast = rviPadClusters[i + 1];
       oss << std::setw(3) << (*iPadCluster)->getPad() << ":";
       uint nPos = 0;
-      for (iPadCluster; iPadCluster != iPadClusterLast; iPadCluster++) {
+      for (; iPadCluster != iPadClusterLast; iPadCluster++) {
          PadCluster *pPadCluster = *iPadCluster;
          uint        nMin        = pPadCluster->getTimeBinMin();
          if (nMin < nPos) { // shift back to the 'n' positions (for combined PadClusters!!!)
@@ -1120,7 +1120,7 @@ inline std::ostringstream &PrintPadClusters(std::ostringstream                  
       oss << "    ---------------- id: " << i << std::endl;
       std::list<PadCluster *>::iterator iPadCluster     = rviPadClusters[i];
       std::list<PadCluster *>::iterator iPadClusterLast = rviPadClusters[i + 1];
-      for (iPadCluster; iPadCluster != iPadClusterLast; iPadCluster++) {
+      for (; iPadCluster != iPadClusterLast; iPadCluster++) {
          oss << "\t";
          (*iPadCluster)->Print(oss);
       }
@@ -1247,7 +1247,7 @@ public:
             std::list<PadCluster *>::iterator iPadCluster     = rviPadClusters[i];
             std::list<PadCluster *>::iterator iPadClusterLast = rviPadClusters[i + 1];
             oss << "    ---------------- id: " << i << std::endl;
-            for (iPadCluster; iPadCluster != iPadClusterLast; iPadCluster++) {
+            for (; iPadCluster != iPadClusterLast; iPadCluster++) {
                oss << "\t";
                (*iPadCluster)->Print(oss);
             }

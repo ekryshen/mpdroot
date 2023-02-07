@@ -35,19 +35,11 @@ link_directories(${LINK_DIRECTORIES})
 # List of source files
 set(SRCS
   MpdParticleIdentification.cxx
-  MpdTpc2dCluster.cxx
-  MpdTpcClusterFinderMlem.cxx
-  MpdTpcHit.cxx
-  MpdTpcHitProducer.cxx
   MpdTPCpid.cxx
 )
 
 Set(HEADERS
   MpdParticleIdentification.h
-  MpdTpc2dCluster.h
-  MpdTpcClusterFinderMlem.h
-  MpdTpcHit.h
-  MpdTpcHitProducer.h
   MpdTPCpid.h
 )
 

@@ -86,7 +86,7 @@ void runRecoCpc(TString inFile = "mc.1k.root")
   tpcDigitizer->SetPersistence(kFALSE);
   //fRun->AddTask(tpcDigitizer);
 
-  MpdTpcClusterFinderMlem *tpcClusAZ = new MpdTpcClusterFinderMlem(*secGeo);
+  TpcClusterHitFinderMlem *tpcClusAZ = new TpcClusterHitFinderMlem(*secGeo);
   tpcClusAZ->SetPersistence();
   //fRun->AddTask(tpcClusAZ);
 

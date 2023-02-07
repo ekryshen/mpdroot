@@ -8,6 +8,7 @@ set(INCLUDE_DIRECTORIES
  ${CMAKE_SOURCE_DIR}/detectors/tpc
  ${CMAKE_SOURCE_DIR}/detectors/tpc/digitizer
  ${CMAKE_SOURCE_DIR}/detectors/tpc/digitizer/AZlt
+ ${CMAKE_SOURCE_DIR}/detectors/tpc/fairTpc
  ${CMAKE_SOURCE_DIR}/detectors/tpc/geometry
  ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
  ${CMAKE_SOURCE_DIR}/simulation/generators/mpdGen
@@ -30,7 +31,10 @@ link_directories(${LINK_DIRECTORIES})
 set(SRCS
   AbstractTpcClusterHitFinder.cxx
   fast/TpcClusterHitFinderFast.cxx
+  hitProducer/MpdTpcHitProducer.cxx
   mlem/TpcClusterHitFinderMlem.cxx
+  mlem/MpdTpc2dCluster.cxx
+  mlem/MpdTpcHit.cxx
 )
 
 Set(HEADERS
@@ -39,11 +43,14 @@ Set(HEADERS
   AbstractTpcHit.h
   fast/TpcClusterHitFinderFast.h
   fast/TpcClustering.h
+  hitProducer/MpdTpcHitProducer.h
   mlem/TpcClusterHitFinderMlem.h
+  mlem/MpdTpc2dCluster.h
+  mlem/MpdTpcHit.h
 )
 
 Set(LINKDEF tpcClusterHitFinderLinkDef.h)
 Set(LIBRARY_NAME tpcClusterHitFinder)
-Set(DEPENDENCIES MpdField MpdBase)
+Set(DEPENDENCIES Kalman MpdField MpdBase tpcGeometry)
 
 GENERATE_LIBRARY()
