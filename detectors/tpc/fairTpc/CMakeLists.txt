@@ -1,10 +1,11 @@
-# Create a library called "libtpcAlignment"
+# Create a library called "libtpcFairTpc"
+# this library is old and will be replaced
 
 set(INCLUDE_DIRECTORIES
  ${BASE_INCLUDE_DIRECTORIES}
  ${CMAKE_CURRENT_LIST_DIR}
  ${CMAKE_SOURCE_DIR}/detectors/tpc
- ${CMAKE_SOURCE_DIR}/detectors/tpc/fairTpc
+ ${CMAKE_SOURCE_DIR}/simulation/mcStack
 )
 
 set(SYSTEM_INCLUDE_DIRECTORIES
@@ -22,19 +23,23 @@ link_directories(${LINK_DIRECTORIES})
 
 # List of source files
 set(SRCS
-  BaseTpcSectorGeo.cxx
-  TpcSectorGeoAlignmentVAK.cxx
-  TpcSectorGeoAZ.cxx
+ TpcDetector.cxx
+ TpcGas.cxx 
+ TpcGeo.cxx 
+ TpcGeoPar.cxx 
+ TpcPoint.cxx 
 )
 
 Set(HEADERS
-BaseTpcSectorGeo.h
-TpcSectorGeoAlignmentVAK.h
-TpcSectorGeoAZ.h
+ TpcDetector.h
+ TpcGas.h 
+ TpcGeo.h 
+ TpcGeoPar.h 
+ TpcPoint.h 
 )
 
-Set(LINKDEF tpcGeometryLinkDef.h)
-Set(LIBRARY_NAME tpcGeometry)
-Set(DEPENDENCIES MpdField MpdBase tpcFairTpc)
+Set(LINKDEF tpcFairTpcLinkDef.h)
+Set(LIBRARY_NAME tpcFairTpc)
+Set(DEPENDENCIES Gdml MpdMCStack)
 
 GENERATE_LIBRARY()

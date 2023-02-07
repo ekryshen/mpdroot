@@ -9,6 +9,7 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_LIST_DIR}/clusterHitFinder/fast
   ${CMAKE_CURRENT_LIST_DIR}/clusterHitFinder/mlem
   ${CMAKE_CURRENT_LIST_DIR}/digitizer
+  ${CMAKE_CURRENT_LIST_DIR}/fairTpc
   ${CMAKE_CURRENT_LIST_DIR}/geometry
   ${CMAKE_SOURCE_DIR}/core/mpdField
   ${CMAKE_SOURCE_DIR}/detectors/tof
@@ -45,11 +46,6 @@ set(SRCS
   MpdTPCpid.cxx
   MpdTpcSector.cxx
   TaskHelpers.cxx
-  TpcDetector.cxx
-  TpcGas.cxx
-  TpcGeo.cxx
-  TpcGeoPar.cxx
-  TpcPoint.cxx
 )
 
 Set(HEADERS
@@ -66,15 +62,10 @@ Set(HEADERS
   MpdTPCpid.h
   MpdTpcSector.h
   TaskHelpers.h
-  TpcDetector.h
-  TpcGas.h
-  TpcGeo.h
-  TpcGeoPar.h
-  TpcPoint.h
 )
 
 Set(LINKDEF tpcLinkDef.h)
 Set(LIBRARY_NAME tpc)
-Set(DEPENDENCIES Base Gdml MpdField MpdMCStack Tof Kalman MpdGen tpcClusterHitFinder tpcDigitizer tpcGeometry)
+Set(DEPENDENCIES Base MpdField MpdMCStack Tof Kalman MpdGen tpcClusterHitFinder tpcDigitizer tpcGeometry tpcFairTpc)
 
 GENERATE_LIBRARY()

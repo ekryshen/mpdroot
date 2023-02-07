@@ -3,21 +3,8 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ class MpdMcDst++;
-#pragma link C++ class MpdMcDstReader++;
-#pragma link C++ class MpdMcEvent++;
-#pragma link C++ class MpdMcParticle++;
-#pragma link C++ class MpdMcPIDConverter++;
-#pragma link C++ class MpdMcRun++;
-
-#pragma link C++ class TpcDetector+;
-#pragma link C++ class TpcPoint+;
-#pragma link C++ class TpcGeo+;
-#pragma link C++ class TpcGeoPar+;
-#pragma link C++ class TpcContFact+;
 #pragma link C++ class MpdParticleIdentification+;
 #pragma link C++ class TpcSector+;
-#pragma link C++ class TpcTimeBin+;
 #pragma link C++ class MpdTpcDigit+;
 #pragma link C++ class MpdTpcDigitizerTask+;
 #pragma link C++ class MpdTpcDigitizerQAHistograms+;

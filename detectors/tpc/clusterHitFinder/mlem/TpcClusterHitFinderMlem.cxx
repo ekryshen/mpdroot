@@ -22,7 +22,6 @@
 #include "MpdTpc2dCluster.h"
 #include "MpdTpcDigit.h"
 #include "MpdTpcHit.h"
-#include "TpcPoint.h"
 
 #include "FairRootManager.h"
 

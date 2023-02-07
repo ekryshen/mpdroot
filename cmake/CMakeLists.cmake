@@ -103,6 +103,7 @@ add_subdirectory (detectors/tpc) # tof
 add_subdirectory (detectors/tpc/alignment) 
 add_subdirectory (detectors/tpc/clusterHitFinder) 
 add_subdirectory (detectors/tpc/digitizer)
+add_subdirectory (detectors/tpc/fairTpc)
 add_subdirectory (detectors/tpc/geometry) 
 add_subdirectory (reconstruction/tracking/kalman) # mpdfield
 add_subdirectory (physics) # mpdbase mpddst
