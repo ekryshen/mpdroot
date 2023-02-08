@@ -1,4 +1,4 @@
-# Create a library called "libtpcAlignment"
+# Create a library called "libtpcDigitizer"
 
 set(INCLUDE_DIRECTORIES
  ${BASE_INCLUDE_DIRECTORIES}

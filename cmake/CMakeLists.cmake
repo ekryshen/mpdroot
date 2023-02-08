@@ -105,6 +105,7 @@ add_subdirectory (detectors/tpc/clusterHitFinder)
 add_subdirectory (detectors/tpc/digitizer)
 add_subdirectory (detectors/tpc/fairTpc)
 add_subdirectory (detectors/tpc/geometry) 
+add_subdirectory (detectors/tpc/pid) 
 add_subdirectory (reconstruction/tracking/kalman) # mpdfield
 add_subdirectory (physics) # mpdbase mpddst
 add_subdirectory (simulation/mcDst)
