@@ -28,6 +28,7 @@ set(SRCS
  TpcGeo.cxx 
  TpcGeoPar.cxx 
  TpcPoint.cxx 
+ MpdTpcEDepParams.cxx
 )
 
 Set(HEADERS
@@ -36,6 +37,7 @@ Set(HEADERS
  TpcGeo.h 
  TpcGeoPar.h 
  TpcPoint.h 
+ MpdTpcEDepParams.h  # this is the only place where this class is used
 )
 
 Set(LINKDEF tpcFairTpcLinkDef.h)

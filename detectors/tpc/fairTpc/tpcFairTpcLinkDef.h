@@ -9,6 +9,7 @@
 #pragma link C++ class TpcGeo+;
 #pragma link C++ class TpcGeoPar+;
 #pragma link C++ class TpcPoint+;
+#pragma link C++ class MpdTpcEDepParams+;
 
 #endif
 

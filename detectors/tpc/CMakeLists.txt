@@ -40,7 +40,6 @@ set(SRCS
   MpdTpcDigitizerAZlt.cxx
   MpdTpcDigitizerQAHistograms.cxx
   MpdTpcDigitizerTask.cxx
-  MpdTpcEDepParams.cxx
   MpdTpcHit.cxx
   MpdTpcHitProducer.cxx
   MpdTPCpid.cxx
@@ -56,13 +55,14 @@ Set(HEADERS
   MpdTpcDigitizerAZlt.h
   MpdTpcDigitizerQAHistograms.h
   MpdTpcDigitizerTask.h
-  MpdTpcEDepParams.h
   MpdTpcHit.h
   MpdTpcHitProducer.h
   MpdTPCpid.h
   MpdTpcSector.h
   TaskHelpers.h
 )
+
+
 
 Set(LINKDEF tpcLinkDef.h)
 Set(LIBRARY_NAME tpc)
