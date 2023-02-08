@@ -34,7 +34,6 @@ set(SRCS
 )
 
 Set(HEADERS
- AbstractTpcDigit.h
  AZlt/MpdTpcDigit.h
  AZlt/MpdTpcDigitizerAZlt.h
  AZlt/MpdTpcDigitizerQAHistograms.h
@@ -45,6 +44,6 @@ Set(HEADERS
 
 Set(LINKDEF tpcDigitizerLinkDef.h)
 Set(LIBRARY_NAME tpcDigitizer)
-Set(DEPENDENCIES MpdMCStack MpdField)
+Set(DEPENDENCIES MpdMCStack MpdField tpc)
 
 GENERATE_LIBRARY()

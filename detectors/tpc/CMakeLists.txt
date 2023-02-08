@@ -1,22 +1,8 @@
-# Create a library called "libtpc" which includes the source files given in
-# the array .
-# The extension is already found.  Any number of sources could be listed here.
+# Create a library called "libtpc" which is an API for MPD TPC detector
 
 set(INCLUDE_DIRECTORIES
   ${BASE_INCLUDE_DIRECTORIES}
   ${CMAKE_CURRENT_LIST_DIR}
-  ${CMAKE_CURRENT_LIST_DIR}/clusterHitFinder
-  ${CMAKE_CURRENT_LIST_DIR}/clusterHitFinder/fast
-  ${CMAKE_CURRENT_LIST_DIR}/clusterHitFinder/mlem
-  ${CMAKE_CURRENT_LIST_DIR}/digitizer
-  ${CMAKE_CURRENT_LIST_DIR}/digitizer/AZlt
-  ${CMAKE_CURRENT_LIST_DIR}/fairTpc
-  ${CMAKE_CURRENT_LIST_DIR}/geometry
-  ${CMAKE_SOURCE_DIR}/core/mpdField
-  ${CMAKE_SOURCE_DIR}/detectors/tof
-  ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
-  ${CMAKE_SOURCE_DIR}/simulation/generators/mpdGen
-  ${CMAKE_SOURCE_DIR}/simulation/mcStack
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
@@ -34,14 +20,21 @@ link_directories(${LINK_DIRECTORIES})
 
 # List of source files
 set(SRCS
+ AbstractTpcClusterHitFinder.cxx
+ BaseTpcSectorGeo.cxx
 )
 
 Set(HEADERS
+ AbstractTpc2dCluster.h
+ AbstractTpcClusterHitFinder.h
+ AbstractTpcHit.h
+ AbstractTpcDigit.h
+ BaseTpcSectorGeo.h
 )
 
 
 Set(LINKDEF tpcLinkDef.h)
 Set(LIBRARY_NAME tpc)
-Set(DEPENDENCIES Base MpdField MpdMCStack Tof Kalman MpdGen tpcClusterHitFinder tpcDigitizer tpcGeometry tpcFairTpc)
+Set(DEPENDENCIES )
 
 GENERATE_LIBRARY()

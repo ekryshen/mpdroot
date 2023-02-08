@@ -22,13 +22,11 @@ link_directories(${LINK_DIRECTORIES})
 
 # List of source files
 set(SRCS
-  BaseTpcSectorGeo.cxx
   TpcSectorGeoAlignmentVAK.cxx
   TpcSectorGeoAZ.cxx
 )
 
 Set(HEADERS
-BaseTpcSectorGeo.h
 TpcSectorGeoAlignmentVAK.h
 TpcSectorGeoAZ.h
 )

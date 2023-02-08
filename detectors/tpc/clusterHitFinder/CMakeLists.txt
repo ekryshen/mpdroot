@@ -29,7 +29,6 @@ link_directories(${LINK_DIRECTORIES})
 
 # List of source files
 set(SRCS
-  AbstractTpcClusterHitFinder.cxx
   fast/TpcClusterHitFinderFast.cxx
   hitProducer/MpdTpcHitProducer.cxx
   mlem/TpcClusterHitFinderMlem.cxx
@@ -38,9 +37,6 @@ set(SRCS
 )
 
 Set(HEADERS
-  AbstractTpc2dCluster.h
-  AbstractTpcClusterHitFinder.h
-  AbstractTpcHit.h
   fast/TpcClusterHitFinderFast.h
   fast/TpcClustering.h
   hitProducer/MpdTpcHitProducer.h

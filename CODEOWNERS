@@ -22,20 +22,18 @@
 # Detectors
 #----------------------------------------------------------------------------------
 # TPC
-/detectors/tpc/                          @zinchenk  @abychkov
-/detectors/tpc/alignment/                @hnatics
+/detectors/tpc/                          @hnatics
 /detectors/tpc/alignment/muons/          @kuzmin
-/detectors/tpc/clusterHitFinder/         @hnatics
 /detectors/tpc/clusterHitFinder/fast/    @kryman @akrylov 
-/detectors/tpc/digitizer/                @hnatics
-/detectors/tpc/geometry/                 @hnatics
+/detectors/tpc/clusterHitFinder/mlem/    @zinchenk @abychkov
+/detectors/tpc/digitizer/AZlt            @zinchenk @abychkov
+/detectors/tpc/geometry/                 @zinchenk @abychkov @hnatics
 
 # FFD
 /detectors/ffd/                          @nlashmanov
 
 # EMC
 /detectors/emc/                          @boiana2012
-
 
 # STS  (ITS)
 /detectors/sts/                          @vkondrat
