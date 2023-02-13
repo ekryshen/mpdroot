@@ -31,7 +31,7 @@ void Runner::execute(
 
   // Store the input particles.
   context.eventStore.add(
-      m_config.perfWriting.inputParticles,
+      m_config.ParticlesID,
       ActsExamples::SimParticleContainer{inputParticles});
 
   // Store the multimap hits to particles.
@@ -44,6 +44,8 @@ void Runner::execute(
 
   // Run the track finding pipeline.
   Digitization digitization(m_config.digitization, m_level);
+  ActsExamples::TruthSeedSelector particleSelector(m_config.truthSeedSelector,
+      m_level);
   SpacePointMaking spacePointMaking(m_config.spacePointMaking, m_level);
   TrackSeeding trackSeeding(m_config.trackSeeding, m_level);
   TrackEstimation trackEstimation(m_config.trackEstimation, m_level);
@@ -54,6 +56,7 @@ void Runner::execute(
       m_config.perfWriting, m_level);
 
   digitization.execute(++context);
+  particleSelector.execute(++context);
   spacePointMaking.execute(++context);
   trackSeeding.execute(++context);
   trackEstimation.execute(++context);

@@ -47,6 +47,7 @@ set(SRCS
   ActsExamples/Io/Performance/CKFPerformanceWriter.cxx
   ActsExamples/TGeoDetector/TGeoDetector.cxx
   ActsExamples/TGeoDetector/TGeoITkModuleSplitter.cxx
+  ActsExamples/TruthTracking/TruthSeedSelector.cxx
   MpdTpcConfig.cxx
   MpdTpcDetector.cxx
   MpdTpcDigitization.cxx
@@ -73,6 +74,7 @@ Set(HEADERS
   ActsExamples/EventData/Track.hpp
   ActsExamples/EventData/Trajectories.hpp
   ActsExamples/Framework/AlgorithmContext.hpp
+  ActsExamples/Framework/BareAlgorithm.hpp
   ActsExamples/Framework/IAlgorithm.hpp
   ActsExamples/Framework/IWriter.hpp
   ActsExamples/Framework/ProcessCode.hpp
@@ -82,6 +84,7 @@ Set(HEADERS
   ActsExamples/TGeoDetector/JsonTGeoDetectorConfig.hpp
   ActsExamples/TGeoDetector/TGeoDetector.hpp
   ActsExamples/TGeoDetector/TGeoITkModuleSplitter.hpp
+  ActsExamples/TruthTracking/TruthSeedSelector.hpp
   ActsExamples/Utilities/GroupBy.hpp
   ActsExamples/Utilities/Helpers.hpp
   ActsExamples/Utilities/Options.hpp

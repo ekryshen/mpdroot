@@ -33,6 +33,26 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
   digitization.sigmaLoc1 = SigmaLoc1;
   digitization.detector = detector;
 
+  // Particle selector.
+  truthSeedSelector.inputParticles = ParticlesID;
+  truthSeedSelector.inputMeasurementParticlesMap = MeasParticlesMapID;
+  truthSeedSelector.outputParticles = SelectedID;
+  truthSeedSelector.rhoMin = RhoMin;
+  truthSeedSelector.rhoMax = RhoMax;
+  truthSeedSelector.zMin = ZminSelector;
+  truthSeedSelector.zMax = ZmaxSelector;
+  truthSeedSelector.phiMin = PhiMin;
+  truthSeedSelector.phiMax = PhiMax;
+  truthSeedSelector.etaMin = EtaMin;
+  truthSeedSelector.etaMax = EtaMax;
+  truthSeedSelector.absEtaMin = AbsEtaMin;
+  truthSeedSelector.absEtaMax = AbsEtaMax;
+  truthSeedSelector.ptMin = PtMinSelector;
+  truthSeedSelector.ptMax = PtMaxSelector;
+  truthSeedSelector.keepNeutral = KeepNeutral;
+  truthSeedSelector.nHitsMin = NHitsMin;
+  truthSeedSelector.nHitsMax = NHitsMax;
+
   // Space point making.
   spacePointMaking.inputSourceLinks = SourceLinksID;
   spacePointMaking.inputMeasurements = MeasurementsID;
@@ -135,7 +155,7 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
 
   // Performance writing.
   perfWriting.inputTrajectories = TrajectoriesID;
-  perfWriting.inputParticles = ParticlesID;
+  perfWriting.inputParticles = SelectedID;
   perfWriting.inputMeasurementParticlesMap = MeasParticlesMapID;
   perfWriting.truthMatchProbMin = TruthMatchProbMin;
   perfWriting.nMeasurementsMin = MeasurementsMin;

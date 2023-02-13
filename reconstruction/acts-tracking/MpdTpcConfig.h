@@ -13,6 +13,7 @@
 #include "MpdTpcTrackSeeding.h"
 
 #include "ActsExamples/Io/Performance/CKFPerformanceWriter.hpp"
+#include "ActsExamples/TruthTracking/TruthSeedSelector.hpp"
 
 #include <Acts/Definitions/Units.hpp>
 #include <Acts/Utilities/Logger.hpp>
@@ -42,6 +43,7 @@ struct Config final {
   static constexpr auto TrajectoriesID      = "trajectories";
   static constexpr auto TrackCandidatesID   = "trackcandidates";
   static constexpr auto ParticlesID         = "inputparticles";
+  static constexpr auto SelectedID          = "selectedparticles";
   static constexpr auto MeasParticlesMapID  = "measurementparticles";
 
   //===--------------------------------------------------------------------===//
@@ -110,6 +112,33 @@ struct Config final {
   static constexpr auto NewHitsRatio        = 0.25;
 
   //===--------------------------------------------------------------------===//
+  // Particle selector
+  //===--------------------------------------------------------------------===//
+
+  /// Minimum distance from the origin in the transverse plane.
+  static constexpr auto RhoMin              = 0.;
+  /// Maximum distance from the origin in the transverse plane.
+  static constexpr auto RhoMax              = std::numeric_limits<double>::max();
+  /// Minimum absolute distance from the origin along z.
+  static constexpr auto ZminSelector        = Zmin;
+  /// Maximum absolute distance from the origin along z.
+  static constexpr auto ZmaxSelector        = Zmax;
+  // Truth particle kinematic cuts.
+  static constexpr auto PhiMin              = std::numeric_limits<double>::lowest();
+  static constexpr auto PhiMax              = std::numeric_limits<double>::max();
+  static constexpr auto EtaMin              = std::numeric_limits<double>::lowest();
+  static constexpr auto EtaMax              = std::numeric_limits<double>::max();
+  static constexpr auto AbsEtaMin           = std::numeric_limits<double>::lowest();
+  static constexpr auto AbsEtaMax           = std::numeric_limits<double>::max();
+  static constexpr auto PtMinSelector       = 0.0;
+  static constexpr auto PtMaxSelector       = std::numeric_limits<double>::max();
+  /// Keep neutral particles.
+  static constexpr auto KeepNeutral         = false;
+  /// Requirement on number of recorded hits.
+  static constexpr auto NHitsMin            = 9;
+  static constexpr auto NHitsMax            = std::numeric_limits<size_t>::max();
+
+  //===--------------------------------------------------------------------===//
   // Performance writer
   //===--------------------------------------------------------------------===//
 
@@ -125,6 +154,7 @@ struct Config final {
   // Parameters for EffPlotTool, FakeRatePlotTool,
   // DuplicationPlotTool, TrackSummaryPlotTool.
 
+  // Pseudorapidity.
   static constexpr auto PlotToolEtaName     = "#eta";
   static constexpr auto PlotToolEtaNBins    = 40;
   static constexpr auto PlotToolEtaMin      = -4;
@@ -162,6 +192,7 @@ struct Config final {
   std::shared_ptr<Detector> detector;
 
   Digitization::Config digitization;
+  ActsExamples::TruthSeedSelector::Config truthSeedSelector;
   SpacePointMaking::Config spacePointMaking;
   TrackSeeding::Config trackSeeding;
   TrackEstimation::Config trackEstimation;
