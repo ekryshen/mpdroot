@@ -159,7 +159,7 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
   perfWriting.inputMeasurementParticlesMap = MeasParticlesMapID;
   perfWriting.truthMatchProbMin = TruthMatchProbMin;
   perfWriting.nMeasurementsMin = MeasurementsMin;
-  perfWriting.ptMin = PtMin;
+  perfWriting.ptMin = PtMinPerf;
 
   ActsExamples::EffPlotTool::Config effConfig;
   effConfig.varBinning["Eta"] = ActsExamples::PlotHelpers::Binning(
@@ -174,7 +174,7 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
       PlotToolPhiMax);
   effConfig.varBinning["Pt"]  = ActsExamples::PlotHelpers::Binning(
       PlotToolPtName,
-       PlotToolPtNBins,
+      PlotToolPtNBins,
       PlotToolPtMin,
       PlotToolPtMax);
   perfWriting.effPlotToolConfig = effConfig;

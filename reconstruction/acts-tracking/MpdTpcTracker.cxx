@@ -108,6 +108,7 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
 
     std::vector <std::pair<int, float>> trackIDs = tpcHit->GetTrackIDs();
     // Get the first element of MC tracks, correspoinding to hit.
+
     Int_t trackId = trackIDs[0].first;
 
     const auto mFind = momentum.find(trackId);
@@ -115,7 +116,7 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
     if (mFind == momentum.end()) {
       mom = Acts::Vector3{0., 0., 0.};
       std::cout << "[MpdTpcTracker]: WARNING: can't find MC track " <<
-          "which corresponds to MpdTpcHit with index " << i << std::endl;
+          "for MpdTpcHit with index " << i << std::endl;
     } else {
       mom = mFind->second;
     }
@@ -163,9 +164,10 @@ inline void convertTracks(TClonesArray *hits,
 }
 
 //===----------------------------------------------------------------------===//
-// Create map MC track -> ints for creating Act's Barcode
+// Collect informations for Acts statistics
 //===----------------------------------------------------------------------===//
 
+/// Create map MC track -> ints for creating Act's Barcode
 using mcTrackToBarcodeInts =
     std::map<Int_t, std::tuple<size_t, size_t, size_t, size_t, size_t>>;
 
@@ -181,6 +183,7 @@ mcTrackToBarcodeInts createBarcodesMap(TClonesArray *mcTracks) {
   // loop over primary particles.
   for (Int_t iMC = 0; iMC < nMC; iMC++) {
     auto track = static_cast<MpdMCTrack*>(mcTracks->UncheckedAt(iMC));
+
     Int_t motherId = track->GetMotherId();
     if (motherId != -1) {
       continue;
@@ -231,10 +234,7 @@ mcTrackToBarcodeInts createBarcodesMap(TClonesArray *mcTracks) {
   return mcTrackToBarcode;
 }
 
-//===----------------------------------------------------------------------===//
-// Get input particles
-//===----------------------------------------------------------------------===//
-
+/// Get input particles
 ActsExamples::SimParticleContainer getInputParticles(
     TClonesArray *mcTracks,
     const mcTrackToBarcodeInts &mcTrackToBarcode) {
@@ -253,7 +253,7 @@ ActsExamples::SimParticleContainer getInputParticles(
     }
 
     const auto [pri, sec, part, gen, sub] =  mcTrackToBarcode.at(i);
-    ActsFatras::Barcode barcode = ActsFatras::Barcode().
+    const auto barcode = ActsFatras::Barcode().
         setVertexPrimary(pri).
         setVertexSecondary(sec).
         setParticle(part).
@@ -270,8 +270,7 @@ ActsExamples::SimParticleContainer getInputParticles(
     auto pz      = track->GetPz() * momScalor;
     auto p       = track->GetP()  * momScalor;
 
-    ActsFatras::Particle particle =
-        ActsFatras::Particle(barcode, Acts::PdgParticle(pdgCode)).
+    auto particle = ActsFatras::Particle(barcode, Acts::PdgParticle(pdgCode)).
         setPosition4(x0, y0, z0, t0).
         setAbsoluteMomentum(p).
         setDirection(px, py, pz);
@@ -281,10 +280,7 @@ ActsExamples::SimParticleContainer getInputParticles(
   return particles;
 }
 
-//===----------------------------------------------------------------------===//
-// Get multimap hits -> particles
-//===----------------------------------------------------------------------===//
-
+/// Get multimap hits -> particles
 ActsExamples::IndexMultimap<ActsFatras::Barcode> getHitToParticlesMultiMap(
     TClonesArray *tpcHits,
     const mcTrackToBarcodeInts &mcTrackToBarcode) {
@@ -299,15 +295,17 @@ ActsExamples::IndexMultimap<ActsFatras::Barcode> getHitToParticlesMultiMap(
 
     for (auto particle : trackIDs) {
       auto trackId = particle.first;
+
       if (auto search = mcTrackToBarcode.find(trackId);
                search == mcTrackToBarcode.end()) {
-        std::cout << "[MpdTpcTracker.cxx]: getHitToParticlesMultiMap(): ERROR: " <<
-            "can't find Barcode for MC track with index " << trackId << std::endl;
+        std::cout << "[MpdTpcTracker.cxx]: getHitToParticlesMultiMap():" <<
+            " ERROR: can't find Barcode for MC track with index " <<
+            trackId << std::endl;
         continue;
       }
 
       const auto [pri, sec, part, gen, sub] =  mcTrackToBarcode.at(trackId);
-      ActsFatras::Barcode barcode = ActsFatras::Barcode().
+      const auto barcode = ActsFatras::Barcode().
           setVertexPrimary(pri).
           setVertexSecondary(sec).
           setParticle(part).
@@ -352,7 +350,7 @@ InitStatus MpdTpcTracker::ReInit() {
 
 void MpdTpcTracker::Exec(Option_t *option) {
   // For naming files during debug.
-  static int eventCounter = -1;
+  static Int_t eventCounter = -1;
   eventCounter++;
 
   std::cout << "[MpdTpcTracker::Exec]: Started" << std::endl;

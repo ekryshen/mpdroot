@@ -10,21 +10,24 @@ enum CoordSystem {
   ZR
 };
 
-void buildHistograms(const Mpd::Tpc::Statistics &statistics,
-                     const int nTracks,
-                     const int eventCounter);
+void buildHistograms(
+    const Mpd::Tpc::Statistics &statistics,
+    Int_t nTracks,
+    Int_t eventCounter);
 
-void plotQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
-                    const Mpd::Tpc::ProtoTrackContainer &trajectories,
-                    const int eventCounter);
+void plotQualityOnP(
+    const Mpd::Tpc::InputHitContainer &hits,
+    const Mpd::Tpc::ProtoTrackContainer &trajectories,
+    Int_t eventCounter);
 
-void plotOutputTracks(const int canvasX,
-                      const int canvasY,
-                      const std::shared_ptr<const Acts::TrackingGeometry> &geometry,
-                      const Mpd::Tpc::SpacePointContainer &spacePoints,
-                      const Mpd::Tpc::InputHitContainer &hits,
-                      const Mpd::Tpc::ProtoTrackContainer &trajectories,
-                      const int eventCounter,
-                      const bool multicoloured,
-                      const int lineWidth,
-                      const CoordSystem coordSystem);
+void plotOutputTracks(
+    Int_t canvasX,
+    Int_t canvasY,
+    const std::shared_ptr<const Acts::TrackingGeometry> &geometry,
+    const Mpd::Tpc::SpacePointContainer &spacePoints,
+    const Mpd::Tpc::InputHitContainer &hits,
+    const Mpd::Tpc::ProtoTrackContainer &trajectories,
+    Int_t eventCounter,
+    bool multicoloured,
+    Int_t lineWidth,
+    CoordSystem coordSystem);

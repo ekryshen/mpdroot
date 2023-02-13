@@ -149,7 +149,7 @@ struct Config final {
   /// Min number of measurements.
   static constexpr auto MeasurementsMin     = 9u;
   /// Min transverse momentum.
-  static constexpr auto PtMin               = 1._GeV;
+  static constexpr auto PtMinPerf           = MinPt;
 
   // Parameters for EffPlotTool, FakeRatePlotTool,
   // DuplicationPlotTool, TrackSummaryPlotTool.
