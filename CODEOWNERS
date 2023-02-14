@@ -24,6 +24,7 @@
 # TPC
 /detectors/tpc/                          @hnatics
 /detectors/tpc/alignment/muons/          @kuzmin
+/detectors/tpc/alignment/laserRays       @a
 /detectors/tpc/clusterHitFinder/fast/    @kryman @akrylov 
 /detectors/tpc/clusterHitFinder/mlem/    @zinchenk @abychkov
 /detectors/tpc/digitizer/AZlt            @zinchenk @abychkov
