@@ -39,16 +39,19 @@ inline boost::container::flat_multimap<value_t, Index> invertIndexMultimap(
   using InverseMultimap = boost::container::flat_multimap<value_t, Index>;
 
   // switch key-value without enforcing the new ordering (linear copy)
-  typename InverseMultimap::sequence_type unordered;
-  unordered.reserve(multimap.size());
+//===--------------------------------------------------------------------===//
+// Modification begin (fix exit on assert)
+//===--------------------------------------------------------------------===//
+  InverseMultimap inverse;
+  inverse.reserve(multimap.size());
   for (auto&& [index, value] : multimap) {
     // value is now the key and the index is now the value
-    unordered.emplace_back(value, index);
+    inverse.insert(std::make_pair(value, index));
   }
 
-  // adopting the unordered sequence will reestablish the correct order
-  InverseMultimap inverse;
-  inverse.insert(unordered.begin(), unordered.end());
+//===--------------------------------------------------------------------===//
+// Modification end
+//===--------------------------------------------------------------------===//
   return inverse;
 }
 
