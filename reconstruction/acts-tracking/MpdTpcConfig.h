@@ -126,8 +126,8 @@ struct Config final {
   // Truth particle kinematic cuts.
   static constexpr auto PhiMin              = std::numeric_limits<double>::lowest();
   static constexpr auto PhiMax              = std::numeric_limits<double>::max();
-  static constexpr auto EtaMin              = std::numeric_limits<double>::lowest();
-  static constexpr auto EtaMax              = std::numeric_limits<double>::max();
+  static constexpr auto EtaMin              = -1.2;
+  static constexpr auto EtaMax              =  1.2;
   static constexpr auto AbsEtaMin           = std::numeric_limits<double>::lowest();
   static constexpr auto AbsEtaMax           = std::numeric_limits<double>::max();
   static constexpr auto PtMinSelector       = 0.0;
