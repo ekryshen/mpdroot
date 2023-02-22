@@ -99,6 +99,7 @@ else()
 endif()
 
 # LEVEL 2
+add_subdirectory (detectors/multi)
 add_subdirectory (detectors/tpc) # tof
 add_subdirectory (detectors/tpc/alignment) 
 add_subdirectory (detectors/tpc/clusterHitFinder) 

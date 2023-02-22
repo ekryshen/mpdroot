@@ -1,8 +1,10 @@
-# Create a library called "libtpcPid"
+# Create a library called "libmulti"
 
 set(INCLUDE_DIRECTORIES
  ${BASE_INCLUDE_DIRECTORIES}
  ${CMAKE_CURRENT_LIST_DIR}
+ ${CMAKE_SOURCE_DIR}/detectors/tof
+ ${CMAKE_SOURCE_DIR}/detectors/tpc/pid
 )
 
 set(SYSTEM_INCLUDE_DIRECTORIES
@@ -20,15 +22,15 @@ link_directories(${LINK_DIRECTORIES})
 
 # List of source files
 set(SRCS
- MpdTPCpid.cxx
+ MpdParticleIdentification.cxx
 )
 
 Set(HEADERS
- MpdTPCpid.h
+ MpdParticleIdentification.h 
 )
 
-Set(LINKDEF tpcPidLinkDef.h)
-Set(LIBRARY_NAME tpcPid)
-Set(DEPENDENCIES )
+Set(LINKDEF multiLinkDef.h)
+Set(LIBRARY_NAME multi)
+Set(DEPENDENCIES tpcPid)
 
 GENERATE_LIBRARY()

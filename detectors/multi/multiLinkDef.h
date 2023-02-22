@@ -4,7 +4,7 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ class MpdTPCpid+;
+#pragma link C++ class MpdParticleIdentification+;
 
 #endif
 
