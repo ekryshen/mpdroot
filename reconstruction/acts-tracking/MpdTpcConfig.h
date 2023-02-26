@@ -142,8 +142,7 @@ struct Config final {
   // Performance writer
   //===--------------------------------------------------------------------===//
 
-  // File name will be PerfFilePrefixPath + "_event_<n>.root"
-  static constexpr auto PerfFilePrefixPath  = "performance_ckf";
+  static constexpr auto PerfFilePath        = "performance_ckf.root";
   /// Min reco-truth matching probability.
   static constexpr auto TruthMatchProbMin   = 0.5;
   /// Min number of measurements.
@@ -157,8 +156,8 @@ struct Config final {
   // Pseudorapidity.
   static constexpr auto PlotToolEtaName     = "#eta";
   static constexpr auto PlotToolEtaNBins    = 40;
-  static constexpr auto PlotToolEtaMin      = -4;
-  static constexpr auto PlotToolEtaMax      = 4;
+  static constexpr auto PlotToolEtaMin      = EtaMin;
+  static constexpr auto PlotToolEtaMax      = EtaMax;
 
   static constexpr auto PlotToolPhiName     = "#phi";
   static constexpr auto PlotToolPhiNBins    = 100;
@@ -189,6 +188,8 @@ struct Config final {
          const std::string &jsonFile,
          Acts::Logging::Level level = Acts::Logging::DEBUG);
 
+  ActsExamples::CKFPerformanceWriter::Config perfWriterCfg() const;
+
   std::shared_ptr<Detector> detector;
 
   Digitization::Config digitization;
@@ -197,7 +198,6 @@ struct Config final {
   TrackSeeding::Config trackSeeding;
   TrackEstimation::Config trackEstimation;
   TrackFinding::Config trackFinding;
-  ActsExamples::CKFPerformanceWriter::Config perfWriting;
 };
 
 } // namespace Mpd::Tpc

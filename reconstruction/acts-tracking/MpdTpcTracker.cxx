@@ -324,12 +324,16 @@ ActsExamples::IndexMultimap<ActsFatras::Barcode> getHitToParticlesMultiMap(
 InitStatus MpdTpcTracker::Init() {
   std::cout << "[MpdTpcTracker::Init]: Started" << std::endl;
 
+  auto level = Acts::Logging::DEBUG;
   // Geometry must already be loaded (gGeoManager != nullptr).
   fRunner = std::make_unique<Mpd::Tpc::Runner>(
       fSecGeo,
       "../../geometry/tpc_acts_tracking.json", // FIXME:
-      Acts::Logging::DEBUG
+      level
   );
+
+  auto perfCfg = fRunner->config().perfWriterCfg();
+  fPerfWriter = new ActsExamples::CKFPerformanceWriter(perfCfg, level);
 
   fTracks = new TClonesArray("MpdTpcTrack");
   FairRootManager::Instance()->Register(
@@ -378,7 +382,8 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
   ActsExamples::WhiteBoard whiteBoard;
   ActsExamples::AlgorithmContext context(0, eventCounter, whiteBoard);
-  fRunner->execute(hits, inputParticles, mapHitsToParticles, context);
+  fRunner->execute(hits, inputParticles, mapHitsToParticles,
+                   fPerfWriter, context);
 
   // Convert the found track to to the MpdRoot representation.
   const auto &trajectories =

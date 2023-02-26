@@ -33,26 +33,6 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
   digitization.sigmaLoc1 = SigmaLoc1;
   digitization.detector = detector;
 
-  // Particle selector.
-  truthSeedSelector.inputParticles = ParticlesID;
-  truthSeedSelector.inputMeasurementParticlesMap = MeasParticlesMapID;
-  truthSeedSelector.outputParticles = SelectedID;
-  truthSeedSelector.rhoMin = RhoMin;
-  truthSeedSelector.rhoMax = RhoMax;
-  truthSeedSelector.zMin = ZminSelector;
-  truthSeedSelector.zMax = ZmaxSelector;
-  truthSeedSelector.phiMin = PhiMin;
-  truthSeedSelector.phiMax = PhiMax;
-  truthSeedSelector.etaMin = EtaMin;
-  truthSeedSelector.etaMax = EtaMax;
-  truthSeedSelector.absEtaMin = AbsEtaMin;
-  truthSeedSelector.absEtaMax = AbsEtaMax;
-  truthSeedSelector.ptMin = PtMinSelector;
-  truthSeedSelector.ptMax = PtMaxSelector;
-  truthSeedSelector.keepNeutral = KeepNeutral;
-  truthSeedSelector.nHitsMin = NHitsMin;
-  truthSeedSelector.nHitsMax = NHitsMax;
-
   // Space point making.
   spacePointMaking.inputSourceLinks = SourceLinksID;
   spacePointMaking.inputMeasurements = MeasurementsID;
@@ -153,13 +133,35 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
   trackFinding.newHitsInRow = NewHitsInRow;
   trackFinding.newHitsRatio = NewHitsRatio;
 
-  // Performance writing.
-  perfWriting.inputTrajectories = TrajectoriesID;
-  perfWriting.inputParticles = SelectedID;
-  perfWriting.inputMeasurementParticlesMap = MeasParticlesMapID;
-  perfWriting.truthMatchProbMin = TruthMatchProbMin;
-  perfWriting.nMeasurementsMin = MeasurementsMin;
-  perfWriting.ptMin = PtMinPerf;
+  // Particle selector.
+  truthSeedSelector.inputParticles = ParticlesID;
+  truthSeedSelector.inputMeasurementParticlesMap = MeasParticlesMapID;
+  truthSeedSelector.outputParticles = SelectedID;
+  truthSeedSelector.rhoMin = RhoMin;
+  truthSeedSelector.rhoMax = RhoMax;
+  truthSeedSelector.zMin = ZminSelector;
+  truthSeedSelector.zMax = ZmaxSelector;
+  truthSeedSelector.phiMin = PhiMin;
+  truthSeedSelector.phiMax = PhiMax;
+  truthSeedSelector.etaMin = EtaMin;
+  truthSeedSelector.etaMax = EtaMax;
+  truthSeedSelector.absEtaMin = AbsEtaMin;
+  truthSeedSelector.absEtaMax = AbsEtaMax;
+  truthSeedSelector.ptMin = PtMinSelector;
+  truthSeedSelector.ptMax = PtMaxSelector;
+  truthSeedSelector.keepNeutral = KeepNeutral;
+  truthSeedSelector.nHitsMin = NHitsMin;
+  truthSeedSelector.nHitsMax = NHitsMax;
+}
+
+ActsExamples::CKFPerformanceWriter::Config Config::perfWriterCfg() const {
+  ActsExamples::CKFPerformanceWriter::Config result;
+  result.inputTrajectories = TrajectoriesID;
+  result.inputParticles = SelectedID;
+  result.inputMeasurementParticlesMap = MeasParticlesMapID;
+  result.truthMatchProbMin = TruthMatchProbMin;
+  result.nMeasurementsMin = MeasurementsMin;
+  result.ptMin = PtMinPerf;
 
   ActsExamples::EffPlotTool::Config effConfig;
   effConfig.varBinning["Eta"] = ActsExamples::PlotHelpers::Binning(
@@ -177,7 +179,7 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
       PlotToolPtNBins,
       PlotToolPtMin,
       PlotToolPtMax);
-  perfWriting.effPlotToolConfig = effConfig;
+  result.effPlotToolConfig = effConfig;
 
   ActsExamples::FakeRatePlotTool::Config fakeConfig;
   fakeConfig.varBinning["Eta"] = ActsExamples::PlotHelpers::Binning(
@@ -200,7 +202,7 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
       PlotToolNumNBins,
       PlotToolNumMin,
       PlotToolNumMax);
-  perfWriting.fakeRatePlotToolConfig = fakeConfig;
+  result.fakeRatePlotToolConfig = fakeConfig;
 
   ActsExamples::DuplicationPlotTool::Config duplicationConfig;
   duplicationConfig.varBinning["Eta"] = ActsExamples::PlotHelpers::Binning(
@@ -223,7 +225,7 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
       PlotToolNumNBins,
       PlotToolNumMin,
       PlotToolNumMax);
-  perfWriting.duplicationPlotToolConfig = duplicationConfig;
+  result.duplicationPlotToolConfig = duplicationConfig;
 
   ActsExamples::TrackSummaryPlotTool::Config trackSummaryConfig;
   trackSummaryConfig.varBinning["Eta"] = ActsExamples::PlotHelpers::Binning(
@@ -246,7 +248,10 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
       PlotToolNumNBins,
       PlotToolNumMin,
       PlotToolNumMax);
-  perfWriting.trackSummaryPlotToolConfig = trackSummaryConfig;
+  result.trackSummaryPlotToolConfig = trackSummaryConfig;
+  result.filePath = Config::PerfFilePath;
+
+  return result;
 }
 
 } // namespace Mpd::Tpc

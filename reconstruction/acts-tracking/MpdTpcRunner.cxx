@@ -23,6 +23,7 @@ void Runner::execute(
     const InputHitContainer &hits,
     const ActsExamples::SimParticleContainer &inputParticles,
     const ActsExamples::IndexMultimap<ActsFatras::Barcode> &hitsToParticles,
+    ActsExamples::CKFPerformanceWriter *perfWriter,
     ActsExamples::AlgorithmContext &context) {
 
   // Store the input hits.
@@ -36,7 +37,7 @@ void Runner::execute(
 
   // Store the multimap hits to particles.
   context.eventStore.add(
-      m_config.perfWriting.inputMeasurementParticlesMap,
+      m_config.MeasParticlesMapID,
       ActsExamples::IndexMultimap<ActsFatras::Barcode>{hitsToParticles});
 
   // Log the input hits.
@@ -50,19 +51,15 @@ void Runner::execute(
   TrackSeeding trackSeeding(m_config.trackSeeding, m_level);
   TrackEstimation trackEstimation(m_config.trackEstimation, m_level);
   TrackFinding trackFinding(m_config.trackFinding, m_level);
-  m_config.perfWriting.filePath = std::string(m_config.PerfFilePrefixPath) +
-      "_event_" + std::to_string(context.eventNumber) + ".root";
-  ActsExamples::CKFPerformanceWriter perfWriting(
-      m_config.perfWriting, m_level);
 
   digitization.execute(++context);
-  particleSelector.execute(++context);
   spacePointMaking.execute(++context);
   trackSeeding.execute(++context);
   trackEstimation.execute(++context);
   trackFinding.execute(++context);
-  perfWriting.write(++context);
-  perfWriting.endRun();
+  particleSelector.execute(++context);
+  perfWriter->write(++context);
+  perfWriter->endRun();
 
   // Log the output tracks.
   logOutput(context);

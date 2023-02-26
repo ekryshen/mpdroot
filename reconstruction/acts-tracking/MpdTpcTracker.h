@@ -42,6 +42,7 @@ private:
   TClonesArray *fTracks;
 
   const BaseTpcSectorGeo &fSecGeo;
+  ActsExamples::CKFPerformanceWriter *fPerfWriter;
 
   ClassDef(MpdTpcTracker, 0);
 };
