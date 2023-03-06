@@ -45,12 +45,13 @@ void Runner::execute(
 
   // Run the track finding pipeline.
   Digitization digitization(m_config.digitization, m_level);
-  ActsExamples::TruthSeedSelector particleSelector(m_config.truthSeedSelector,
-      m_level);
   SpacePointMaking spacePointMaking(m_config.spacePointMaking, m_level);
   TrackSeeding trackSeeding(m_config.trackSeeding, m_level);
   TrackEstimation trackEstimation(m_config.trackEstimation, m_level);
+  m_config.trackFinding.dump = m_config.DumpData;
   TrackFinding trackFinding(m_config.trackFinding, m_level);
+  ActsExamples::TruthSeedSelector particleSelector(m_config.truthSeedSelector,
+      m_level);
 
   digitization.execute(++context);
   spacePointMaking.execute(++context);

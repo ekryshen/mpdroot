@@ -45,6 +45,7 @@ struct Config final {
   static constexpr auto ParticlesID         = "inputparticles";
   static constexpr auto SelectedID          = "selectedparticles";
   static constexpr auto MeasParticlesMapID  = "measurementparticles";
+  static constexpr auto DumpDataID          = "dumpdata";
 
   //===--------------------------------------------------------------------===//
   // Track seeding
@@ -173,6 +174,12 @@ struct Config final {
   static constexpr auto PlotToolNumNBins    = 30;
   static constexpr auto PlotToolNumMin      = -0.5;
   static constexpr auto PlotToolNumMax      = 29.5;
+
+  //===--------------------------------------------------------------------===//
+  // System parameters
+  //===--------------------------------------------------------------------===//
+
+  static constexpr auto DumpData            = true;
 
   //===--------------------------------------------------------------------===//
   // Constructor

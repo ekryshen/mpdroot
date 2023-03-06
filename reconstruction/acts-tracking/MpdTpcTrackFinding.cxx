@@ -5,6 +5,7 @@
 #include "MpdTpcMagneticField.h"
 #include "MpdTpcTrackFinding.h"
 
+#include "ActsExamples/EventData/SimSpacePoint.hpp"
 #include "ActsExamples/Framework/WhiteBoard.hpp"
 
 #include <Acts/Definitions/Units.hpp>
@@ -114,7 +115,7 @@ ActsExamples::ProcessCode TrackFinding::execute(
       const auto &fittedStates = trajectory.fittedStates;
       const auto &lastIndices = trajectory.lastMeasurementIndices;
       const auto &fittedParams = trajectory.fittedParameters;
- 
+
       ACTS_VERBOSE("Found multi-trajectory of " << lastIndices.size() << "/"
                                                 << fittedStates.size()
                                                 << " trajectories/states");
@@ -211,7 +212,25 @@ void TrackFinding::constructTrackCandidates(
   // Track candidates ordered by descending length.
   std::multimap<size_t, ProtoTrack> trackCandidates;
 
+  size_t eventNumber = context.eventNumber;
+  std::string fname = std::string("event_") + std::to_string(eventNumber) +
+      "_prototracks.txt";
+  std::ofstream fout;
+  SpacePointContainer spacePoints;
+
+  if (m_config.dump) {
+    fout.open(fname);
+    spacePoints = context.eventStore.get<SpacePointContainer>(m_config.spacePointsID);
+    std::sort(spacePoints.begin(), spacePoints.end(),
+        [](ActsExamples::SimSpacePoint a,
+           ActsExamples::SimSpacePoint b) {
+          return a.measurementIndex() < b.measurementIndex();
+        }
+    );
+  }
+
   // Iterate over the seeds.
+
   for (size_t itrack = 0; itrack < results.size(); itrack++) {
     if (!results.at(itrack).ok()) {
       // No trajectory found for the given seed.
@@ -232,6 +251,7 @@ void TrackFinding::constructTrackCandidates(
       ProtoTrack trackCandidate;
       trackCandidate.reserve(fittedStates.size());
 
+      bool first = true;
       fittedStates.visitBackwards(lastIndex, [&](const auto &state) {
         // Do nothing unless the state is a real measurement.
         if (!state.typeFlags().test(Acts::TrackStateFlag::MeasurementFlag)) {
@@ -240,8 +260,37 @@ void TrackFinding::constructTrackCandidates(
 
         auto &sourceLink = static_cast<const SourceLink&>(state.uncalibrated());
         auto hitIndex = sourceLink.index();
+        if (m_config.dump) {
+          if (!first) {
+            fout << ", ";
+          }
+          first = false;
+
+          fout << hitIndex;
+          auto spacePoint = spacePoints[hitIndex];
+          if (hitIndex != spacePoint.measurementIndex()) {
+            ACTS_WARNING("Error while dumping prototracks:"
+                " can't find space point corresponding to hit " << hitIndex);
+            fout << ", 0, 0, 0";
+          } else {
+            fout << ", " << spacePoint.x() << ", " <<
+                            spacePoint.y() << ", " <<
+                            spacePoint.z();
+          }
+          auto params = state.parameters();
+
+          // Skip 2 first parameters which are local coordinates
+          for (auto i = 2; i < params.size(); i++) {
+            fout << ", " << params[i];
+          }
+          fout << ", " << state.chi2();
+        }
         trackCandidate.push_back(hitIndex);
       });
+
+      if (m_config.dump) {
+        fout << std::endl;
+      }
 
       // Ignore short tracks.
       if (trackCandidate.size() < m_config.trackMinLength) {
@@ -258,12 +307,12 @@ void TrackFinding::constructTrackCandidates(
 
   ProtoTrackContainer protoTracks;
   protoTracks.reserve(trackCandidates.size());
- 
+
   // Naive coverage-based track filtering.
   for (const auto &[quality, track] : trackCandidates) {
     size_t nNewHits = 0;  // Number of uncovered hits in a track.
     size_t nNewInRow = 0; // Length of a current segment (new hits in a row).
-    size_t nSegments = 0; // Number of segments w/ length > threshold. 
+    size_t nSegments = 0; // Number of segments w/ length > threshold.
 
     for (size_t i = 0; i < track.size(); i++) {
       auto hitIndex = track.at(i);

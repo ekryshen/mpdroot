@@ -81,6 +81,12 @@ public:
     size_t newHitsInRow;
     /// Coverage ratio (new hits in a track / track size).
     double newHitsRatio;
+
+    // Dump options.
+    /// Whether to dump prototracks to file.
+    bool dump;
+    /// Storage ID for SpacePoints.
+    std::string spacePointsID;
   };
 
   TrackFinding(Config config, Acts::Logging::Level level);

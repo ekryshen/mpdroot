@@ -132,6 +132,7 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
   trackFinding.trackMinLength = TrackMinLength;
   trackFinding.newHitsInRow = NewHitsInRow;
   trackFinding.newHitsRatio = NewHitsRatio;
+  trackFinding.spacePointsID = SpacePointsID;
 
   // Particle selector.
   truthSeedSelector.inputParticles = ParticlesID;

@@ -80,6 +80,31 @@ inline Mpd::Tpc::InputHitContainer convertTpcPoints(TClonesArray *tpcPoints) {
   return hits;
 }
 
+/// Dump hits to file in Acts units.
+void dumpData(TClonesArray *tpcHits,
+              Int_t eventNumber) {
+  auto fname = std::string("event_") + std::to_string(eventNumber) +
+      "_hits.txt";
+  std::ofstream fout(fname);
+
+  const auto nTpcHits = tpcHits->GetEntriesFast();
+
+  for (size_t i = 0; i < nTpcHits; i++) {
+    auto *tpcHit = static_cast<MpdTpcHit*>(tpcHits->UncheckedAt(i));
+    fout << tpcHit->GetX() * lenScalor << ", " <<
+            tpcHit->GetY() * lenScalor << ", " <<
+            tpcHit->GetZ() * lenScalor << ", ";
+
+    std::vector <std::pair<int, float>> pairs = tpcHit->GetTrackIDs();
+    for (auto trackIdandQ : pairs) {
+      auto trackID = trackIdandQ.first;
+      auto q       = trackIdandQ.second;
+      fout << trackID << ", " <<
+              q << std::endl;
+    }
+  }
+}
+
 /// Converts TPC hits to the internal representation.
 inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
                                                   TClonesArray *tpcPoints) {
@@ -107,8 +132,8 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
     auto *tpcHit = static_cast<MpdTpcHit*>(tpcHits->UncheckedAt(i));
 
     std::vector <std::pair<int, float>> trackIDs = tpcHit->GetTrackIDs();
-    // Get the first element of MC tracks, correspoinding to hit.
 
+    // Get the first element of MC tracks, correspoinding to hit.
     Int_t trackId = trackIDs[0].first;
 
     const auto mFind = momentum.find(trackId);
@@ -384,6 +409,12 @@ void MpdTpcTracker::Exec(Option_t *option) {
   ActsExamples::AlgorithmContext context(0, eventCounter, whiteBoard);
   fRunner->execute(hits, inputParticles, mapHitsToParticles,
                    fPerfWriter, context);
+
+  // Dump hits to file.
+  context.eventStore.add(config.DumpDataID, config.DumpData);
+  if (config.DumpData) {
+    dumpData(fHits, eventCounter);
+  }
 
   // Convert the found track to to the MpdRoot representation.
   const auto &trajectories =
