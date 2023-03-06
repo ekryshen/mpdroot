@@ -45,6 +45,7 @@ checkPath(EIGEN3_ROOT EIGEN3_ROOT "Eigen3 root")
 checkPath(FAIRROOT_ROOT FAIRROOT_ROOT "FairRoot root")
 checkPath(FAIRLOGGER_ROOT FAIRLOGGER_ROOT "FairLogger root")
 checkPath(GEANT3_ROOT GEANT3_ROOT "Geant3 root")
+checkPath(GSL_ROOT_DIR GSL_ROOT_DIR "GSL root")
 checkPath(NLOHMANN_JSON_ROOT NLOHMANN_JSON_ROOT "NLOHMANN_JSON root")
 
 if ((NOT ("${PC_LIBXML_INCLUDEDIR}" STREQUAL "")) AND (NOT ("${PC_LIBXML_LIBDIR}" STREQUAL ""))) # if user has provided LIBXML path, don't look for LIBXML2_ROOT

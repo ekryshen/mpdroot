@@ -22,8 +22,10 @@ SET(FAIRROOT_LIBRARY_PROPERTIES ${FAIRROOT_LIBRARY_PROPERTIES}
     SUFFIX ".so"
 )
 
-list(PREPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
-list(APPEND CMAKE_MODULE_PATH "$ENV{FAIRROOT_ROOT}/share/fairbase/cmake/modules")
+list(PREPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")               # default modules are our private
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_ROOT}/Modules")                            # next we take default cmake modules (GSL!)
+list(APPEND CMAKE_MODULE_PATH "$ENV{FAIRROOT_ROOT}/share/fairbase/cmake/modules") # all other modules follow
+
 set(FairRoot_DIR ${FAIRROOT_ROOT}) # needed by ROOTMacros.cmake
 
 include(FairMacros) # needed by find_package(ROOT)
@@ -41,6 +43,7 @@ find_package(FairLogger REQUIRED)
 find_package(FairRoot REQUIRED)
 find_package(FMT REQUIRED)
 find_package(Geant3 REQUIRED)
+find_package(GSL REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(NLOHMANN_JSON REQUIRED)
 find_package(Pythia8 REQUIRED)
@@ -51,13 +54,16 @@ find_package(VMC QUIET)
 list(APPEND BASE_INCLUDE_DIR ${ROOT_INCLUDE_DIR} ${FAIRROOT_INCLUDE_DIR} ${FairLogger_INCDIR} ${FMT_INCLUDE_DIRS}
                              ${PYTHIA8_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIRS}
                              ${Geant3_INCLUDE_DIRS} ${Eigen3_INCLUDE_DIRS} ${NLOHMANN_JSON_INCLUDE_DIRS}
+                             ${GSL_INCLUDE_DIRS}
                              )
 
 if(VMC_FOUND)
   list(APPEND BASE_INCLUDE_DIR ${VMC_INCLUDE_DIRS})
 endif()
 
-list(APPEND BASE_LIBRARY_DIR ${ROOT_LIB_DIR} ${FAIRROOT_LIB_DIR} ${FairLogger_LIBDIR} ${LIBXML2_LIBRARIES})
+list(APPEND BASE_LIBRARY_DIR ${ROOT_LIB_DIR} ${FAIRROOT_LIB_DIR} ${FairLogger_LIBDIR} ${LIBXML2_LIBRARIES}
+                             ${GSL_LIBRARIES}
+                             )
 
 # START this is for compatibility with legacy, remove later
 set(BASE_INCLUDE_DIRECTORIES ${BASE_INCLUDE_DIR})
