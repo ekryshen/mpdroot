@@ -34,5 +34,3 @@ They all inherit directly from FairRoot (except for MpdTpcEDepParams) and will b
 - legacy directory are unused old files not included in the build. 
 - clusterHitFinder directory (tpcClusterHitFinder library) apart from implementations of hit finding algorithms contains also
 hitProducer folder with MpdTpcHitProducer class. This algorithm directly produces hits instead of finding them from digitized data and will not be subject to API port.
-- pid directory contains MpdParticleIdentification class which should be placed somewhere outside /detectors/tpc/ directory as 
-by definition it takes inputs from both TPC and TOF detectors.

@@ -11,6 +11,8 @@
 //-----------------------------------------------------------
 
 #include "AbstractTpcClusterHitFinder.h"
+#include "QA_TpcClusterHitFinder.h"
+#include "FairLogger.h"
 
 // ROOT Headers --------
 #include "TClonesArray.h"
@@ -47,6 +49,18 @@ void AbstractTpcClusterHitFinder::Exec(Option_t *opt)
    TransformInputData();
    FindClusters();
    FindHits();
+}
+
+//__________________________________________________________________________
+
+void AbstractTpcClusterHitFinder::Finish()
+{
+
+   if (AbstractQA::qaEngineMode == EQAMode::TPCCLUSTERHITFINDER) {
+      TString infoMessage =
+         TString("QA Engine turned on in TpcClusterHitFinder mode: ") + ModuleNameSuffix() + TString(" module");
+      LOG(info) << infoMessage;
+   }
 }
 
 //__________________________________________________________________________

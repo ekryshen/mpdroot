@@ -24,6 +24,7 @@
 #include "FairTask.h"
 #include <TMatrixD.h>
 #include <TVector3.h>
+#include <TString.h>
 #include <set>
 #include <vector>
 #include <map>
@@ -44,9 +45,10 @@ public:
    ~TpcClusterHitFinderMlem();
 
    // Interface Implementation
-   void TransformInputData();
-   void FindClusters();
-   void FindHits();
+   TString ModuleNameSuffix() { return TString("Mlem"); }
+   void    TransformInputData();
+   void    FindClusters();
+   void    FindHits();
 
    // Accessors -----------------------
 

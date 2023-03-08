@@ -33,6 +33,7 @@
 #include "TpcSectorGeoAZ.h"
 #include "TpcClusterHitFinderFast.h"
 #include "TpcClusterHitFinderMlem.h"
+#include "AbstractQA.h"
 
 #include <iostream>
 
@@ -45,11 +46,12 @@
 
 // Macro for running reconstruction:
 // inFile - input file with MC data, default: evetest.root
+// outFile - output file with reconstructed data, default: mpddst.root
 // nStartEvent - number (start with zero) of first event to process, default: 0
 // nEvents - number of events to process, 0 - all events of given file will be proccessed, default: 1
-// outFile - output file with reconstructed data, default: mpddst.root
+// qaSetting - stored in static qaEngineMode enum variable to generate desired QA plots
 void runReco(TString inFile = "evetest.root", TString outFile = "mpddst.root", Int_t nStartEvent = 0,
-             Int_t nEvents = 10)
+             Int_t nEvents = 10, EQAMode qaSetting = EQAMode::OFF)
 {
 
    if (!CheckFileExist(inFile)) return;
@@ -61,7 +63,10 @@ void runReco(TString inFile = "evetest.root", TString outFile = "mpddst.root", I
    TStopwatch timer;
    timer.Start();
 
-   // -----   Digitization run   -------------------------------------------
+   // -----   set QA Engine Mode   -------------------------------------------
+   AbstractQA::qaEngineMode = qaSetting; 
+
+   // -----   Digitization run   ---------------------------------------------
    FairRunAna *fRun;
    fRun = new FairRunAna();
 

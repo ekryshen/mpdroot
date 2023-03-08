@@ -22,7 +22,8 @@
 // MpdRoot Class Headers -----------------
 #include "BaseTpcSectorGeo.h"
 
-// ROOT Class Declarations ---------------
+// ROOT Class Headers & Declarations ---------------
+#include <TString.h>
 class TClonesArray;
 
 class AbstractTpcClusterHitFinder : public FairTask {
@@ -36,11 +37,13 @@ public:
    // specific implementation of this interface should not implement them
    virtual InitStatus Init();
    virtual void       Exec(Option_t *opt);
+   void               Finish();
 
    // Methods to be implemented by specific algorithm
-   virtual void TransformInputData() = 0;
-   virtual void FindClusters()       = 0;
-   virtual void FindHits()           = 0;
+   virtual TString ModuleNameSuffix()   = 0;
+   virtual void    TransformInputData() = 0;
+   virtual void    FindClusters()       = 0;
+   virtual void    FindHits()           = 0;
 
 protected:
    FairRootManager  *ioman;
