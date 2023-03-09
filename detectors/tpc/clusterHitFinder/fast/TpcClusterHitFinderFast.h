@@ -4,8 +4,12 @@
 // author: A.V.Krylov JINR/LNP
 // email: avkrylov@jinr.ru
 //
+// Interface port: Slavomir Hnatic MLIT JINR - March 2023
 #ifndef TpcClusterHitFinderFast_HH
 #define TpcClusterHitFinderFast_HH
+
+// Interface Header
+#include "AbstractTpcClusterHitFinder.h"
 
 // Base Class Headers ----------------
 #include "FairTask.h"
@@ -18,17 +22,22 @@
 class TpcSectorGeoAZ;
 class TClonesArray;
 
-class TpcClusterHitFinderFast : public FairTask {
+class TpcClusterHitFinderFast : public AbstractTpcClusterHitFinder {
 public:
    // Constructors/Destructors ---------
    TpcClusterHitFinderFast(BaseTpcSectorGeo &secGeo);
    ~TpcClusterHitFinderFast();
 
+   // Interface Implementation
+   TString ModuleNameSuffix() { return TString("Fast"); }
+   void    TransformInputData() {}
+   void    FindClusters() {}
+   void    FindHits() {}
+
    // Modifiers -----------------------
    void SetPersistence(Bool_t opt = kTRUE) { fPersistence = opt; }
 
    virtual InitStatus Init();
-   void               FinishTask();
    virtual void       Exec(Option_t *opt);
 
    // Not needed yet methods
@@ -45,9 +54,6 @@ private:
    int _nRow;
 
    int _nTime;
-
-   TClonesArray *_pTpcBinDataAZlt; // input data
-   TClonesArray *_pTpcHitFinder;   // output data
 
    // TH1 *ExecTime;
    // float fTime[1000];

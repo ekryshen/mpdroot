@@ -25,7 +25,7 @@ using namespace tpcClustering;
 using namespace chrono;
 
 TpcClusterHitFinderFast::TpcClusterHitFinderFast(BaseTpcSectorGeo &secGeo)
-   : FairTask("TPC Cluster finder"), fPersistence(kFALSE), _nEvent(-1), _nSector(-1), _nRow(-1)
+   : AbstractTpcClusterHitFinder(secGeo, "TPC Cluster finder Fast", kFALSE)
 {
    _pSecGeo = dynamic_cast<TpcSectorGeoAZ *>(&secGeo);
    if (!_pSecGeo) Fatal("TpcClusterHitFinderFast::TpcClusterHitFinderFast", " !!! Wrong geometry type !!! ");
@@ -34,22 +34,6 @@ TpcClusterHitFinderFast::TpcClusterHitFinderFast(BaseTpcSectorGeo &secGeo)
 //__________________________________________________________________________
 
 TpcClusterHitFinderFast::~TpcClusterHitFinderFast() {}
-
-//__________________________________________________________________________
-
-void TpcClusterHitFinderFast::FinishTask()
-{
-   // Time managment part
-   /* cout << "MLEM cluster finder work time = " << ((Float_t)tAllMlem) / CLOCKS_PER_SEC << endl;
-   ExecTime->Write();
-    cout << "Average Execution Time: " << _nTime/1000 << " milliseconds" << endl;
-    float fError = 0;
-    for (int i = 0; i < 1000; i++) {
-    fError += (fTime[i] - _nTime/1000) * (fTime[i] - _nTime/1000);
-   }
-   cout << "Execution Time Error: " << sqrt(fError/999) << endl;
-   */
-}
 
 //__________________________________________________________________________
 
@@ -67,15 +51,15 @@ InitStatus TpcClusterHitFinderFast::Init()
    }
 
    // Get input collection
-   _pTpcBinDataAZlt = (TClonesArray *)ioman->GetObject("MpdTpcDigit");
+   digiArray = (TClonesArray *)ioman->GetObject("MpdTpcDigit");
 
-   if (_pTpcBinDataAZlt == 0) {
+   if (!digiArray) {
       Error("TpcClusterFinderFast::Init", "Array of digits not found!");
       return kERROR;
    }
 
-   _pTpcHitFinder = new TClonesArray("MpdTpcHit");
-   ioman->Register("TpcRecPoint", "Tpc", _pTpcHitFinder, fPersistence);
+   hitArray = new TClonesArray("MpdTpcHit");
+   ioman->Register("TpcRecPoint", "Tpc", hitArray, fPersistence);
 
    std::cout << "TpcClusterHitFinderFast::Init finished" << std::endl;
    return kSUCCESS;
@@ -85,7 +69,7 @@ InitStatus TpcClusterHitFinderFast::Init()
 
 void TpcClusterHitFinderFast::Exec(Option_t *opt)
 {
-   _pTpcHitFinder->Delete();
+   hitArray->Delete();
 
    std::ostringstream oss;
 
@@ -108,9 +92,9 @@ void TpcClusterHitFinderFast::Exec(Option_t *opt)
    std::list<PadCluster *>                        lstPadClusters;
    std::vector<std::list<PadCluster *>::iterator> viPadClusters;
 
-   Int_t nPoints = _pTpcBinDataAZlt->GetEntriesFast();
+   Int_t nPoints = digiArray->GetEntriesFast();
    for (Int_t i = 0; i < nPoints; i++) {
-      MpdTpcDigit *pdigit   = (MpdTpcDigit *)_pTpcBinDataAZlt->UncheckedAt(i); // Input digit
+      MpdTpcDigit *pdigit   = (MpdTpcDigit *)digiArray->UncheckedAt(i); // Input digit
       uint         nSector  = pdigit->GetSector();
       uint         nRow     = pdigit->GetRow();
       uint         nPad     = pdigit->GetPad();
@@ -263,9 +247,8 @@ void TpcClusterHitFinderFast::calcSector(const EventClusters *pEventClusters)
             if (nSect >= _pSecGeo->NofSectors()) p3loc[2] = -p3loc[2];
             _pSecGeo->Local2Global(nSect, p3loc, p3glob);
 
-            nHit = _pTpcHitFinder->GetEntriesFast();
-            MpdTpcHit *hit =
-               new ((*_pTpcHitFinder)[nHit++]) MpdTpcHit(padID, p3glob, tv3GlobErr, nClus++); // Add new hit
+            nHit           = hitArray->GetEntriesFast();
+            MpdTpcHit *hit = new ((*hitArray)[nHit++]) MpdTpcHit(padID, p3glob, tv3GlobErr, nClus++); // Add new hit
             hit->SetLayer(nRow);
             hit->SetLocalPosition(p3loc); // point position
             hit->SetEnergyLoss(pCluster->getAdcSum());

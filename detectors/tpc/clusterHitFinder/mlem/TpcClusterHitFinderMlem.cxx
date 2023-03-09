@@ -50,8 +50,8 @@ using namespace std;
 
 //__________________________________________________________________________
 
-TpcClusterHitFinderMlem::TpcClusterHitFinderMlem(BaseTpcSectorGeo &tpcGeo)
-   : AbstractTpcClusterHitFinder(tpcGeo, "TPC Cluster finder Mlem", kFALSE)
+TpcClusterHitFinderMlem::TpcClusterHitFinderMlem(BaseTpcSectorGeo &secGeo)
+   : AbstractTpcClusterHitFinder(secGeo, "TPC Cluster finder Mlem", kFALSE)
 {
    /*
    std::string tpcGasFile = gSystem->Getenv("VMCWORKDIR");
@@ -59,7 +59,7 @@ TpcClusterHitFinderMlem::TpcClusterHitFinderMlem(BaseTpcSectorGeo &tpcGeo)
    fGas= new TpcGas(tpcGasFile, 130);
    std::cout<<*fGas<<std::endl;
    */
-   fSecGeo = dynamic_cast<TpcSectorGeoAZ *>(secGeo);
+   fSecGeo = dynamic_cast<TpcSectorGeoAZ *>(&secGeo);
    if (!fSecGeo) Fatal("TpcClusterHitFinderMlem::TpcClusterHitFinderMlem", " !!! Wrong geometry type !!! ");
 
    for (Int_t i = 0; i < fgkNsec2; ++i) fDigiSet[i] = new set<Int_t>[fgkNrows];
