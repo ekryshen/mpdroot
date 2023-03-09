@@ -32,13 +32,10 @@ public:
    TString ModuleNameSuffix() { return TString("Fast"); }
    void    TransformInputData() {}
    void    FindClusters() {}
-   void    FindHits() {}
+   void    FindHits();
 
    // Modifiers -----------------------
    void SetPersistence(Bool_t opt = kTRUE) { fPersistence = opt; }
-
-   virtual InitStatus Init();
-   virtual void       Exec(Option_t *opt);
 
    // Not needed yet methods
    inline void SetEvent(uint nEvent) { _nEvent = nEvent; }

@@ -37,44 +37,11 @@ TpcClusterHitFinderFast::~TpcClusterHitFinderFast() {}
 
 //__________________________________________________________________________
 
-InitStatus TpcClusterHitFinderFast::Init()
+void TpcClusterHitFinderFast::FindHits()
 {
-   std::cout << "TpcClusterHitFinderFast::Init started" << std::endl;
-   // ExecTime = new TH1F("ExecTime", "Execution Time", 50, 0, 50);
-   //_nTime = 0;
-
-   // Get ROOT Manager
-   FairRootManager *ioman = FairRootManager::Instance();
-   if (ioman == 0) {
-      Error("TpcClusterHitFinderFast::Init", "RootManager not instantiated!");
-      return kERROR;
-   }
-
-   // Get input collection
-   digiArray = (TClonesArray *)ioman->GetObject("MpdTpcDigit");
-
-   if (!digiArray) {
-      Error("TpcClusterFinderFast::Init", "Array of digits not found!");
-      return kERROR;
-   }
-
-   hitArray = new TClonesArray("MpdTpcHit");
-   ioman->Register("TpcRecPoint", "Tpc", hitArray, fPersistence);
-
-   std::cout << "TpcClusterHitFinderFast::Init finished" << std::endl;
-   return kSUCCESS;
-}
-
-//__________________________________________________________________________
-
-void TpcClusterHitFinderFast::Exec(Option_t *opt)
-{
-   hitArray->Delete();
-
    std::ostringstream oss;
 
-   FairRootManager *ioman = FairRootManager::Instance();
-   _nEvent                = ioman->GetEntryNr();
+   _nEvent = ioman->GetEntryNr();
 
    std::cout << "TpcClusterHitFinderFast::Exec started: Event " << _nEvent << std::endl;
 
