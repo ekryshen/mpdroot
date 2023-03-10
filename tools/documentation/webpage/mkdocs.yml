@@ -5,6 +5,8 @@ nav:
       - Database: database/sources.md
     - 'MPDroot reference guide':
       - Reference guide: mpdRootRefMan/quickStart.md
+    - 'Debugging MACROS using gdb and VS Code':
+      - How to debug: debugging/debuggingROOTMacros.md
 extra:
     version: 0.1
 
