@@ -39,11 +39,6 @@ void MpdPairKK::UserInit()
    fOutputList->Add(mhVertex);
    mhCentrality = new TH1F("hCentrality", "Centrality distribution", 100, 0., 100.);
    fOutputList->Add(mhCentrality);
-   mhMultiplicity = new TH1F("hMultiplicity", "Multiplicity distribution", 2000, -0.5, 1999.5);
-   fOutputList->Add(mhMultiplicity);
-
-   mInvGen = new TH1F("mInvGen", "mInvGen", 100, 0., 10.);
-   fOutputList->Add(mInvGen);
 
    // Minv
    mInvNoPID = new TH2F("mInvNoPID", "mInvNoPID", 100, 0., 10., 200, 0.9, 2.0);
@@ -61,8 +56,35 @@ void MpdPairKK::UserInit()
    mInvMixTwoPID = new TH2F("mInvMixTwoPID", "mInvMixTwoPID", 100, 0., 10., 200, 0.9, 2.0);
    fOutputList->Add(mInvMixTwoPID);
 
+   for (int bin = 0; bin < nCenBinsAna; bin++) {
+      mInvNoPIDBin[bin] =
+         new TH2F(Form("mInvNoPIDBin_%d", bin), Form("mInvNoPIDBin_%d", bin), 100, 0., 10., 200, 0.9, 2.0);
+      fOutputList->Add(mInvNoPIDBin[bin]);
+      mInvOnePIDBin[bin] =
+         new TH2F(Form("mInvOnePIDBin_%d", bin), Form("mInvOnePIDBin_%d", bin), 100, 0., 10., 200, 0.9, 2.0);
+      fOutputList->Add(mInvOnePIDBin[bin]);
+      mInvTwoPIDBin[bin] =
+         new TH2F(Form("mInvTwoPIDBin_%d", bin), Form("mInvTwoPIDBin_%d", bin), 100, 0., 10., 200, 0.9, 2.0);
+      fOutputList->Add(mInvTwoPIDBin[bin]);
+
+      mInvMixNoPIDBin[bin] =
+         new TH2F(Form("mInvMixNoPIDBin_%d", bin), Form("mInvMixNoPIDBin_%d", bin), 100, 0., 10., 200, 0.9, 2.0);
+      fOutputList->Add(mInvMixNoPIDBin[bin]);
+      mInvMixOnePIDBin[bin] =
+         new TH2F(Form("mInvMixOnePIDBin_%d", bin), Form("mInvMixOnePIDBin_%d", bin), 100, 0., 10., 200, 0.9, 2.0);
+      fOutputList->Add(mInvMixOnePIDBin[bin]);
+      mInvMixTwoPIDBin[bin] =
+         new TH2F(Form("mInvMixTwoPIDBin_%d", bin), Form("mInvMixTwoPIDBin_%d", bin), 100, 0., 10., 200, 0.9, 2.0);
+      fOutputList->Add(mInvMixTwoPIDBin[bin]);
+   }
+
    // MC
    if (isMC) {
+
+      // Generated signals
+      mInvGen = new TH1F("mInvGen", "mInvGen", 100, 0., 10.);
+      fOutputList->Add(mInvGen);
+
       mInvTrueNoPID = new TH2F("mInvTrueNoPID", "mInvTrueNoPID", 100, 0., 10., 200, 0.9, 2.0);
       fOutputList->Add(mInvTrueNoPID);
       mInvTrueNoPIDPhi = new TH2F("mInvTrueNoPIDPhi", "mInvTrueNoPIDPhi", 100, 0., 10., 200, 0.9, 2.0);
@@ -75,6 +97,20 @@ void MpdPairKK::UserInit()
       fOutputList->Add(mInvTrueTwoPID);
       mInvTrueTwoPIDPhi = new TH2F("mInvTrueTwoPIDPhi", "mInvTrueTwoPIDPhi", 100, 0., 10., 200, 0.9, 2.0);
       fOutputList->Add(mInvTrueTwoPIDPhi);
+
+      for (int bin = 0; bin < nCenBinsAna; bin++) {
+         mInvGenBin[bin] = new TH1F(Form("mInvGenBin_%d", bin), Form("mInvGenBin_%d", bin), 100, 0., 10.);
+         fOutputList->Add(mInvGenBin[bin]);
+         mInvTrueNoPIDPhiBin[bin] = new TH2F(Form("mInvTrueNoPIDPhiBin_%d", bin), Form("mInvTrueNoPIDPhiBin_%d", bin),
+                                             100, 0., 10., 200, 0.9, 2.0);
+         fOutputList->Add(mInvTrueNoPIDPhiBin[bin]);
+         mInvTrueOnePIDPhiBin[bin] = new TH2F(Form("mInvTrueOnePIDPhiBin_%d", bin),
+                                              Form("mInvTrueOnePIDPhiBin_%d", bin), 100, 0., 10., 200, 0.9, 2.0);
+         fOutputList->Add(mInvTrueOnePIDPhiBin[bin]);
+         mInvTrueTwoPIDPhiBin[bin] = new TH2F(Form("mInvTrueTwoPIDPhiBin_%d", bin),
+                                              Form("mInvTrueTwoPIDPhiBin_%d", bin), 100, 0., 10., 200, 0.9, 2.0);
+         fOutputList->Add(mInvTrueTwoPIDPhiBin[bin]);
+      }
    }
 
    for (long int i = 0; i < nMixTot; i++) {
@@ -95,8 +131,8 @@ void MpdPairKK::ProcessEvent(MpdAnalysisEvent &event)
       return;
    }
 
-   // mEMCClusters  = event.fEMCCluster;
    mKalmanTracks = event.fTPCKalmanTrack;
+
    if (isMC) {
       mMCTracks = event.fMCTrack;
 
@@ -107,6 +143,7 @@ void MpdPairKK::ProcessEvent(MpdAnalysisEvent &event)
                TVector3 momentum;
                pr->GetMomentum(momentum);
                mInvGen->Fill(momentum.Pt());
+               mInvGenBin[anaBin]->Fill(momentum.Pt());
             }
          }
       }
@@ -129,46 +166,55 @@ bool MpdPairKK::selectEvent(MpdAnalysisEvent &event)
 {
 
    mhEvents->Fill(0.5);
-   // first test if event filled?
+
    if (!event.fVertex) { // if even vertex not filled, skip event
       return false;
    }
-   // Vertex z coordinate
+
+   mhEvents->Fill(1.5);
+
    MpdVertex *vertex = (MpdVertex *)event.fVertex->First();
    vertex->Position(mPrimaryVertex);
-   mhVertex->Fill(mPrimaryVertex.Z());
-   if (fabs(mPrimaryVertex.Z()) > mParams.mZvtxCut) {
+
+   if (mPrimaryVertex.Z() == 0) { // not reconstructed (==0)
       return false;
    }
+
+   if (fabs(mPrimaryVertex.Z()) > mParams.mZvtxCut) { // beyond the limits
+      return false;
+   }
+
+   mhEvents->Fill(2.5);
+
+   float cen = event.getCentrTPC();
+
+   if (cen < 0 || cen >= 100) { // TPC centrality not defined
+      return false;
+   }
+
+   mhEvents->Fill(3.5);
+
    mZvtxBin = 0.5 * (mPrimaryVertex.Z() / mParams.mZvtxCut + 1) * nMixEventZ;
    if (mZvtxBin < 0) mZvtxBin = 0;
    if (mZvtxBin >= nMixEventZ) mZvtxBin = nMixEventZ - 1;
-   mhEvents->Fill(1.5);
 
-   float cen = event.getCentrTPC();
-   mCenBin   = (cen / 100.) * nMixEventCent; // very rough
+   mCenBin = (cen / 100.) * nMixEventCent; // very rough
    if (mCenBin < 0) mCenBin = 0;
    if (mCenBin >= nMixEventCent) mCenBin = nMixEventCent - 1;
 
-   // Multiplicity
-   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
-   int ntr          = mMpdGlobalTracks->GetEntriesFast();
-   mhMultiplicity->Fill(ntr);
+   mixBin = mZvtxBin * nMixEventCent + mCenBin;
 
-   // Centrality
+   mhVertex->Fill(mPrimaryVertex.Z());
    mhCentrality->Fill(mCenBin);
-   // mCenBin = 0;
-   mhEvents->Fill(2.5);
 
-   // ZCD vs TPC (pileup?)
-   mhEvents->Fill(3.5);
-
-   // Eventplane  TODO
-   mRPBin = 0;
-   mhEvents->Fill(4.5);
-
-   mixBin = (mCenBin + 1) * (mZvtxBin + 1) * (mRPBin + 1);
-   // cout<<"Mixing bin: "<<mixBin<<" = "<<mCenBin<<" "<<mZvtxBin<<" "<<mRPBin<<endl;
+   anaBin = -1;
+   if (cen >= 0 && cen < 10) anaBin = 0;
+   if (cen >= 10 && cen < 20) anaBin = 1;
+   if (cen >= 20 && cen < 30) anaBin = 2;
+   if (cen >= 30 && cen < 40) anaBin = 3;
+   if (cen >= 40 && cen < 50) anaBin = 4;
+   if (cen >= 50 && cen < 60) anaBin = 5;
+   if (cen >= 60 && cen < 100) anaBin = 6;
 
    return true;
 }
@@ -295,8 +341,15 @@ void MpdPairKK::processHistograms(MpdAnalysisEvent &event)
       for (int j = 0; j < nNeg; j++) {
          TLorentzVector sum = mP1[i] + mP2[j];
          mInvNoPID->Fill(sum.Pt(), sum.M());
-         if (mP1[i].getPID() == 4 || mP2[j].getPID() == 4) mInvOnePID->Fill(sum.Pt(), sum.M());
-         if (mP1[i].getPID() == 4 && mP2[j].getPID() == 4) mInvTwoPID->Fill(sum.Pt(), sum.M());
+         mInvNoPIDBin[anaBin]->Fill(sum.Pt(), sum.M());
+         if (mP1[i].getPID() == 4 || mP2[j].getPID() == 4) {
+            mInvOnePID->Fill(sum.Pt(), sum.M());
+            mInvOnePIDBin[anaBin]->Fill(sum.Pt(), sum.M());
+         }
+         if (mP1[i].getPID() == 4 && mP2[j].getPID() == 4) {
+            mInvTwoPID->Fill(sum.Pt(), sum.M());
+            mInvTwoPIDBin[anaBin]->Fill(sum.Pt(), sum.M());
+         }
 
          long int ip = IsSameParent(mP1[i].primary(), mP2[j].primary());
          if (ip >= 0) {
@@ -307,8 +360,15 @@ void MpdPairKK::processHistograms(MpdAnalysisEvent &event)
 
             if (static_cast<MpdMCTrack *>(mMCTracks->At(ip))->GetPdgCode() == 333) {
                mInvTrueNoPIDPhi->Fill(sum.Pt(), sum.M());
-               if (mP1[i].getPID() == 4 || mP2[j].getPID() == 4) mInvTrueOnePIDPhi->Fill(sum.Pt(), sum.M());
-               if (mP1[i].getPID() == 4 && mP2[j].getPID() == 4) mInvTrueTwoPIDPhi->Fill(sum.Pt(), sum.M());
+               mInvTrueNoPIDPhiBin[anaBin]->Fill(sum.Pt(), sum.M());
+               if (mP1[i].getPID() == 4 || mP2[j].getPID() == 4) {
+                  mInvTrueOnePIDPhi->Fill(sum.Pt(), sum.M());
+                  mInvTrueOnePIDPhiBin[anaBin]->Fill(sum.Pt(), sum.M());
+               }
+               if (mP1[i].getPID() == 4 && mP2[j].getPID() == 4) {
+                  mInvTrueTwoPIDPhi->Fill(sum.Pt(), sum.M());
+                  mInvTrueTwoPIDPhiBin[anaBin]->Fill(sum.Pt(), sum.M());
+               }
             }
 
          } // ip
@@ -323,8 +383,16 @@ void MpdPairKK::processHistograms(MpdAnalysisEvent &event)
             double          m  = (mP1[i] + *p2).M();
             double          pt = (mP1[i] + *p2).Pt();
             mInvMixNoPID->Fill(pt, m);
-            if (mP1[i].getPID() == 4 || p2->getPID() == 4) mInvMixOnePID->Fill(pt, m);
-            if (mP1[i].getPID() == 4 && p2->getPID() == 4) mInvMixTwoPID->Fill(pt, m);
+            mInvMixNoPIDBin[anaBin]->Fill(pt, m);
+            if (mP1[i].getPID() == 4 || p2->getPID() == 4) {
+               mInvMixOnePID->Fill(pt, m);
+               mInvMixOnePIDBin[anaBin]->Fill(pt, m);
+            }
+            if (mP1[i].getPID() == 4 && p2->getPID() == 4) {
+               // cout<<anaBin<<" "<<pt<<"  "<<m<<endl;
+               mInvMixTwoPID->Fill(pt, m);
+               mInvMixTwoPIDBin[anaBin]->Fill(pt, m);
+            }
          }
       } // ma
 

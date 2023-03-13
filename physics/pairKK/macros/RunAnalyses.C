@@ -11,8 +11,8 @@ void RunAnalyses(){
    MpdCentralityAll pCentr("pCentr","pCentr") ;
    man.AddTask(&pCentr) ;
    
-   MpdConvPi0 pDef("pi0Def","ConvDef") ; //name, parametes file
-   man.AddTask(&pDef) ;
+//   MpdConvPi0 pDef("pi0Def","ConvDef") ; //name, parametes file
+//   man.AddTask(&pDef) ;
 
    MpdPairKK pKK("pKK","pKK") ;
    man.AddTask(&pKK) ;

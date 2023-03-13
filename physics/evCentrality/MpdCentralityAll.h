@@ -18,6 +18,7 @@
 #include "MpdAnalysisTask.h"
 #include "MpdParticle.h"
 #include "MpdCentralityAllParams.h"
+#include "TRandom.h"
 
 class MpdTpcKalmanTrack;
 
@@ -50,6 +51,9 @@ private:
    bool     isInitialized = false;
    bool     isMC          = true;
    TVector3 mPrimaryVertex;
+   TRandom  RND;
+   float    TrigEffMult[15] = {0.,       0.745693, 0.806211, 0.860199, 0.912567, 0.951407, 0.96941, 0.983502,
+                            0.992123, 0.995581, 0.998052, 0.99874,  0.999466, 0.999515, 0.999899};
 
    std::string            mParamConfig;
    MpdCentralityAllParams mParams;
@@ -68,13 +72,18 @@ private:
    TList mHistoList;
 
    // General QA
-   TH1F *mhEvents       = nullptr;
-   TH1F *mhVertex       = nullptr;
-   TH1F *mhHits         = nullptr;
-   TH1F *mhEta          = nullptr;
-   TH1F *mhPt           = nullptr;
-   TH1F *mhMultiplicity = nullptr;
-   TH1F *mhCentrality   = nullptr;
+   TH1F *mhEvents          = nullptr;
+   TH1F *mhVertex          = nullptr;
+   TH1F *mhVertexAcc       = nullptr;
+   TH1F *mhHits            = nullptr;
+   TH1F *mhEta             = nullptr;
+   TH1F *mhDca             = nullptr;
+   TH1F *mhPt              = nullptr;
+   TH1F *mhMultiplicity    = nullptr;
+   TH1F *mhMultiplicityEff = nullptr;
+   TH1F *mhCentrality      = nullptr;
+   TH1F *mhCentConvert     = nullptr;
+   TH2F *mhTrEff           = nullptr;
 
    ClassDef(MpdCentralityAll, 1);
 };

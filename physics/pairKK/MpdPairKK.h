@@ -60,7 +60,6 @@ private:
    bool     isMC          = true;
    int      mCenBin       = 0;
    int      mZvtxBin      = 0;
-   int      mRPBin        = 0;
    TVector3 mPrimaryVertex;
 
    std::string     mParamConfig;
@@ -81,13 +80,14 @@ private:
    std::vector<MpdPairKKTrack> mP2; //(V) Negative tracks
    std::vector<MpdPairKKTrack> mP1; //(V) Positive tracks
 
-   static constexpr short nMixEventZ    = 10; //(V) number of bins in z direction
-   static constexpr short nMixEventCent = 10; //(V) number of bins of centrality
-   static constexpr short nMixEventRP   = 1;  //(V) number of bins of Reaction Plane orientation
-   static constexpr short nMixTot       = nMixEventZ * nMixEventCent * nMixEventRP + 1; //(V)
+   static constexpr short nCenBinsAna   = 7;                          //(V) number of bins in centrality for analysis
+   static constexpr short nMixEventZ    = 10;                         //(V) number of bins in z direction for mixing
+   static constexpr short nMixEventCent = 10;                         //(V) number of bins in centrality for mixing
+   static constexpr short nMixTot       = nMixEventZ * nMixEventCent; //(V)
 
    const int nMixed = 10; //(V) Depth of mixing
    int       mixBin;
+   int       anaBin;
 
    TList *mixedEvents[nMixTot];
 
@@ -95,11 +95,9 @@ private:
    TList                  mHistoList;
    static constexpr short mHistoCentBins = 5;
    // General QA
-   TH1F *mhEvents       = nullptr;
-   TH1F *mhVertex       = nullptr;
-   TH1F *mhCentrality   = nullptr;
-   TH1F *mhMultiplicity = nullptr;
-   // TH2F * mhEPvsCen = nullptr ;
+   TH1F *mhEvents     = nullptr;
+   TH1F *mhVertex     = nullptr;
+   TH1F *mhCentrality = nullptr;
 
    TH1F *mInvGen;
 
@@ -119,6 +117,20 @@ private:
 
    TH2F *mInvTrueTwoPID;
    TH2F *mInvTrueTwoPIDPhi;
+
+   TH1F *mInvGenBin[nCenBinsAna];
+
+   TH2F *mInvTrueNoPIDPhiBin[nCenBinsAna];
+   TH2F *mInvTrueOnePIDPhiBin[nCenBinsAna];
+   TH2F *mInvTrueTwoPIDPhiBin[nCenBinsAna];
+
+   TH2F *mInvNoPIDBin[nCenBinsAna];
+   TH2F *mInvOnePIDBin[nCenBinsAna];
+   TH2F *mInvTwoPIDBin[nCenBinsAna];
+
+   TH2F *mInvMixNoPIDBin[nCenBinsAna];
+   TH2F *mInvMixOnePIDBin[nCenBinsAna];
+   TH2F *mInvMixTwoPIDBin[nCenBinsAna];
 
    ClassDef(MpdPairKK, 1);
 };

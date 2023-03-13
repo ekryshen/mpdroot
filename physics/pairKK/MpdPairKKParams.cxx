@@ -27,7 +27,7 @@ void MpdPairKKParams::ReadFromFile(std::string fname)
 
    std::ifstream ifs(fInputFileTtx);
    if (!ifs) {
-      cout << "File " << fInputFileTtx << "can not be opened -> using input parameters from the header file instead"
+      cout << "File " << fInputFileTtx << " can not be opened -> using input parameters from the header file instead"
            << endl;
       return;
    }
@@ -60,16 +60,16 @@ void MpdPairKKParams::Print() const
 {
    cout << "#-------Parameters used for PairKK analysis------" << endl;
    cout << "# Event selection: " << endl;
-   cout << "mZvtxCut " << mZvtxCut << " // cut on vertex z coordinate" << endl;
+   cout << "mZvtxCut      " << mZvtxCut << " // cut on vertex z coordinate" << endl;
 
-   cout << "# PID cuts: " << endl;
-   cout << "mPIDsigTPC   " << mPIDsigTPC << "  // dEdx PID parameters" << endl;
-   cout << "mPIDsigTOF   " << mPIDsigTOF << "  // Beta PID parameters" << endl;
+   cout << "# PID cuts:   " << endl;
+   cout << "mPIDsigTPC:   " << mPIDsigTPC << "  // dEdx PID parameters" << endl;
+   cout << "mPIDsigTOF:   " << mPIDsigTOF << "  // Beta PID parameters" << endl;
 
-   cout << "mNofHitsCut  " << mNofHitsCut << "  // minimal number of hits to accept track" << endl;
-   cout << "mEtaCut      " << mEtaCut << "  // maximal pseudorapidity accepted" << endl;
-   cout << "mPtminCut   " << mPtminCut << "  // minimal pt used in analysis" << endl;
-   cout << "------------------------------------------" << endl;
+   cout << "mNofHitsCut:  " << mNofHitsCut << "  // minimal number of hits to accept track" << endl;
+   cout << "mEtaCut:      " << mEtaCut << "  // maximal pseudorapidity accepted" << endl;
+   cout << "mPtminCut:    " << mPtminCut << "  // minimal pt used in analysis" << endl;
+   cout << "------------------------------------------" << endl << endl;
 }
 
 void MpdPairKKParams::read(std::string name, bool &b)
