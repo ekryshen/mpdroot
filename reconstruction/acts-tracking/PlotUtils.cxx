@@ -13,9 +13,10 @@
 
 void buildHistograms(const Mpd::Tpc::Statistics &statistics,
                      Int_t nTracks,
-                     Int_t eventCounter) {
-  std::string fileName = "stat_" + std::to_string(eventCounter) + ".root";
-  TFile rootFile(fileName.c_str(), "RECREATE");
+                     Int_t eventCounter,
+                     std::string outPath) {
+  auto fname = outPath + "/stat_" + std::to_string(eventCounter) + ".root";
+  TFile rootFile(fname.c_str(), "RECREATE");
   std::string histoName = "The number of real tracks: " +
       std::to_string(nTracks);
   TH1I h1("statistics", histoName.c_str(), 10, 0.0, 100.0);
@@ -290,7 +291,8 @@ void drawGraph(
 //   for all events
 void plotQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
                     const Mpd::Tpc::ProtoTrackContainer &trajectories,
-                    Int_t eventCounter) {
+                    Int_t eventCounter,
+                    std::string outPath) {
   const Double_t rightBound = 2.5; // GeV
   const Int_t kTrackId = 1000000;
   if (eventCounter == 0) {
@@ -372,11 +374,12 @@ void plotQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
     }
   }
 
-  const Int_t nIntervals = 50;
+  Int_t nIntervals = 50;
+  auto fnamePrefix = outPath + "/quality_momentum_ev_";
   drawGraph(nIntervals,
             realTracksMap,
             recoTrackParams,
-            "quality_momentum_ev_" + std::to_string(eventCounter) + ".png",
+            fnamePrefix + std::to_string(eventCounter) + ".png",
             eventCounter,
             recoLastIndex,
             kTrackId,
@@ -385,7 +388,7 @@ void plotQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
   drawGraph(nIntervals,
             realTracksMap,
             recoTrackParams,
-            std::string("quality_momentum_ev_all.png"),
+            fnamePrefix + "all.png",
             -1,
             0,
             kTrackId,
@@ -398,7 +401,7 @@ struct PointP {
   PointP(Double_t x, Double_t y, Double_t z):
       x(x), y(y), z(z) {}
 
-  Int_t transform(const CoordSystem coordSystem) {
+  Int_t transform(const CoordSystem &coordSystem) {
     Int_t res = 0;
     Double_t xTmp = 0;
     Double_t yTmp = 0;
@@ -439,6 +442,7 @@ void plotOutputTracks(
     const Mpd::Tpc::InputHitContainer &hits,
     const Mpd::Tpc::ProtoTrackContainer &trajectories,
     Int_t eventCounter,
+    std::string outPath,
     bool multicoloured,
     Int_t lineWidth,
     CoordSystem coordSystem) {
@@ -554,12 +558,8 @@ void plotOutputTracks(
   }
   multiGraph.Draw("A");
 
-  std::string dotPlotFileName = "event_" + std::to_string(eventCounter);
-  if (lineWidth == 0) {
-    dotPlotFileName += "_w0";
-  }
-  dotPlotFileName += ".png";
-  canvas.Print(dotPlotFileName.c_str());
+  auto fname = outPath + "/event_" + std::to_string(eventCounter) + ".png";
+  canvas.Print(fname.c_str());
 
   for (auto surfGraph : surfGraphs) {
     delete surfGraph;

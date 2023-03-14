@@ -155,7 +155,8 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
   truthSeedSelector.nHitsMax = NHitsMax;
 }
 
-ActsExamples::CKFPerformanceWriter::Config Config::perfWriterCfg() const {
+ActsExamples::CKFPerformanceWriter::Config Config::perfWriterCfg(
+    std::string outPath) const {
   ActsExamples::CKFPerformanceWriter::Config result;
   result.inputTrajectories = TrajectoriesID;
   result.inputParticles = SelectedID;
@@ -250,7 +251,7 @@ ActsExamples::CKFPerformanceWriter::Config Config::perfWriterCfg() const {
       PlotToolNumMin,
       PlotToolNumMax);
   result.trackSummaryPlotToolConfig = trackSummaryConfig;
-  result.filePath = Config::PerfFilePath;
+  result.filePath = outPath + "/" + Config::PerfFilePath;
 
   return result;
 }

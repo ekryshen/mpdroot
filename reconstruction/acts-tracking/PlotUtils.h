@@ -13,12 +13,14 @@ enum CoordSystem {
 void buildHistograms(
     const Mpd::Tpc::Statistics &statistics,
     Int_t nTracks,
-    Int_t eventCounter);
+    Int_t eventCounter,
+    std::string outPath);
 
 void plotQualityOnP(
     const Mpd::Tpc::InputHitContainer &hits,
     const Mpd::Tpc::ProtoTrackContainer &trajectories,
-    Int_t eventCounter);
+    Int_t eventCounter,
+    std::string outPath);
 
 void plotOutputTracks(
     Int_t canvasX,
@@ -28,6 +30,7 @@ void plotOutputTracks(
     const Mpd::Tpc::InputHitContainer &hits,
     const Mpd::Tpc::ProtoTrackContainer &trajectories,
     Int_t eventCounter,
+    std::string outPath,
     bool multicoloured,
     Int_t lineWidth,
     CoordSystem coordSystem);

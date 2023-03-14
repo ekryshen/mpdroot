@@ -213,7 +213,7 @@ void TrackFinding::constructTrackCandidates(
   std::multimap<size_t, ProtoTrack> trackCandidates;
 
   size_t eventNumber = context.eventNumber;
-  std::string fname = std::string("event_") + std::to_string(eventNumber) +
+  auto fname = m_config.outPath +  "/event_" + std::to_string(eventNumber) +
       "_prototracks.txt";
   std::ofstream fout;
   SpacePointContainer spacePoints;

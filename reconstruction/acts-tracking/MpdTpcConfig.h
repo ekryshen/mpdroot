@@ -195,7 +195,8 @@ struct Config final {
          const std::string &jsonFile,
          Acts::Logging::Level level = Acts::Logging::DEBUG);
 
-  ActsExamples::CKFPerformanceWriter::Config perfWriterCfg() const;
+  ActsExamples::CKFPerformanceWriter::Config perfWriterCfg(
+    std::string outPath) const;
 
   std::shared_ptr<Detector> detector;
 

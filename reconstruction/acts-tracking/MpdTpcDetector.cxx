@@ -544,10 +544,6 @@ bool Detector::editGeometry(TGeoManager *geoManager) {
   geoManager->CloseGeometry();
   gasVolume->CheckOverlaps();
 
-  if (m_logger->doPrint(Acts::Logging::DEBUG)) {
-    geoManager->Export("tpc_acts_tracking.root");
-  }
-
   return true;
 }
 

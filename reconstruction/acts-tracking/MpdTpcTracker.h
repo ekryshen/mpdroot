@@ -24,8 +24,9 @@ public:
   static constexpr auto PlotGraphs = true;
    
   explicit MpdTpcTracker(const BaseTpcSectorGeo &secGeo,
+                         std::string outPath,
                          const char *title = TaskTitle):
-      FairTask(title), fSecGeo(secGeo) {}
+      FairTask(title), fSecGeo(secGeo), fOutPath(std::move(outPath)) {}
 
   virtual ~MpdTpcTracker() {}
 
@@ -42,6 +43,7 @@ private:
   TClonesArray *fTracks;
 
   const BaseTpcSectorGeo &fSecGeo;
+  std::string fOutPath;
   ActsExamples::CKFPerformanceWriter *fPerfWriter;
 
   ClassDef(MpdTpcTracker, 0);

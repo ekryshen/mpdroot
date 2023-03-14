@@ -82,9 +82,9 @@ inline Mpd::Tpc::InputHitContainer convertTpcPoints(TClonesArray *tpcPoints) {
 
 /// Dump hits to file in Acts units.
 void dumpData(TClonesArray *tpcHits,
-              Int_t eventNumber) {
-  auto fname = std::string("event_") + std::to_string(eventNumber) +
-      "_hits.txt";
+              Int_t eventNumber,
+              std::string outPath) {
+  auto fname = outPath + "/event_" + std::to_string(eventNumber) + "_hits.txt";
   std::ofstream fout(fname);
 
   const auto nTpcHits = tpcHits->GetEntriesFast();
@@ -349,15 +349,18 @@ ActsExamples::IndexMultimap<ActsFatras::Barcode> getHitToParticlesMultiMap(
 InitStatus MpdTpcTracker::Init() {
   std::cout << "[MpdTpcTracker::Init]: Started" << std::endl;
 
+  auto binPath = getenv("VMCWORKDIR");
+  assert(binPath && "VMCWORKDIR environment variable is empty!");
+
   auto level = Acts::Logging::DEBUG;
   // Geometry must already be loaded (gGeoManager != nullptr).
   fRunner = std::make_unique<Mpd::Tpc::Runner>(
       fSecGeo,
-      "../../geometry/tpc_acts_tracking.json", // FIXME:
+      std::string(binPath) + "/geometry/tpc_acts_tracking.json",
       level
   );
 
-  auto perfCfg = fRunner->config().perfWriterCfg();
+  auto perfCfg = fRunner->config().perfWriterCfg(fOutPath);
   fPerfWriter = new ActsExamples::CKFPerformanceWriter(perfCfg, level);
 
   fTracks = new TClonesArray("MpdTpcTrack");
@@ -408,12 +411,12 @@ void MpdTpcTracker::Exec(Option_t *option) {
   ActsExamples::WhiteBoard whiteBoard;
   ActsExamples::AlgorithmContext context(0, eventCounter, whiteBoard);
   fRunner->execute(hits, inputParticles, mapHitsToParticles,
-                   fPerfWriter, context);
+                   fPerfWriter, context, fOutPath);
 
   // Dump hits to file.
   context.eventStore.add(config.DumpDataID, config.DumpData);
   if (config.DumpData) {
-    dumpData(fHits, eventCounter);
+    dumpData(fHits, eventCounter, fOutPath);
   }
 
   // Convert the found track to to the MpdRoot representation.
@@ -434,8 +437,8 @@ void MpdTpcTracker::Exec(Option_t *option) {
     auto nTracks = fRunner->getTracksNumber(context);
 
     // Build histograms.
-    buildHistograms(statistics, nTracks, eventCounter);
-    plotQualityOnP(hits, trajectories, eventCounter);
+    buildHistograms(statistics, nTracks, eventCounter, fOutPath);
+    plotQualityOnP(hits, trajectories, eventCounter, fOutPath);
 
     // Plot the output tracks.
     std::shared_ptr<const Acts::TrackingGeometry> geometry =
@@ -444,8 +447,8 @@ void MpdTpcTracker::Exec(Option_t *option) {
     const Int_t lineWidth = 3;
     const Bool_t multicoloured = false;
     plotOutputTracks(6000, 6000, geometry, spacePoints, hits,
-                     trajectories, eventCounter, multicoloured,
-                     lineWidth, CoordSystem::XY);
+                     trajectories, eventCounter, fOutPath,
+                     multicoloured, lineWidth, CoordSystem::XY);
   }
 
   if (MpdCodeTimer::Active()) {

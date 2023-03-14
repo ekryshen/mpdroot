@@ -24,7 +24,8 @@ void Runner::execute(
     const ActsExamples::SimParticleContainer &inputParticles,
     const ActsExamples::IndexMultimap<ActsFatras::Barcode> &hitsToParticles,
     ActsExamples::CKFPerformanceWriter *perfWriter,
-    ActsExamples::AlgorithmContext &context) {
+    ActsExamples::AlgorithmContext &context,
+    std::string outPath) {
 
   // Store the input hits.
   context.eventStore.add(
@@ -48,7 +49,8 @@ void Runner::execute(
   SpacePointMaking spacePointMaking(m_config.spacePointMaking, m_level);
   TrackSeeding trackSeeding(m_config.trackSeeding, m_level);
   TrackEstimation trackEstimation(m_config.trackEstimation, m_level);
-  m_config.trackFinding.dump = m_config.DumpData;
+  m_config.trackFinding.dump    = m_config.DumpData;
+  m_config.trackFinding.outPath = outPath;
   TrackFinding trackFinding(m_config.trackFinding, m_level);
   ActsExamples::TruthSeedSelector particleSelector(m_config.truthSeedSelector,
       m_level);

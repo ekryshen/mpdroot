@@ -56,7 +56,8 @@ public:
       const ActsExamples::SimParticleContainer &inputParticles,
       const ActsExamples::IndexMultimap<ActsFatras::Barcode> &hitsToParticles,
       ActsExamples::CKFPerformanceWriter *perfWriter,
-      ActsExamples::AlgorithmContext &context);
+      ActsExamples::AlgorithmContext &context,
+      std::string outPath);
 
   const Config &config() const { return m_config; }
 

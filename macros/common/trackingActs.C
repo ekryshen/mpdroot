@@ -35,6 +35,7 @@
 #include "TpcClusterHitFinderFast.h"
 
 #include <iostream>
+#include <filesystem>
 
 // Choose: UseMlem (MLEM clusterhitfinder)
 //         UseHitProducer (simple hit producer without digitizer)
@@ -42,6 +43,24 @@
 //#define UseMlem 
 
 #include "commonFunctions.C"
+
+std::string getPath(TString fileName) {
+   filesystem::path outFileFs(fileName.Data());
+   std::string parentPath = outFileFs.parent_path().string();
+   if (parentPath.size() > 0) {
+     if (parentPath[0] == '~') {
+       auto home = getenv("HOME");
+       if (strlen(home) == 0) {
+         std::cout << "Can`t expand '~' path!" << std::endl;
+       } else {
+         parentPath.replace(0, 1, home);
+       }
+     }
+   }
+   return parentPath == ""
+       ? "."
+       : parentPath;
+}
 
 // Macro for running reconstruction:
 // inFile - input file with MC data, default: evetest.root
@@ -113,7 +132,7 @@ void trackingActs(TString inFile = "evetest.root", TString outFile = "mpddst.roo
    FairTask *vertZ = new MpdVertexZfinder(*secGeo);
    fRun->AddTask(vertZ);
 
-   MpdTpcTracker *recoKF = new MpdTpcTracker(*secGeo);
+   MpdTpcTracker *recoKF = new MpdTpcTracker(*secGeo, getPath(outFile));
 #ifndef UseHitProducer
 //   recoKF->UseTpcHit(kFALSE); // do not use hits from the hit producer
 #endif

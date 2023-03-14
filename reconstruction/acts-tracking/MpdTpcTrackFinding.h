@@ -87,6 +87,7 @@ public:
     bool dump;
     /// Storage ID for SpacePoints.
     std::string spacePointsID;
+    std::string outPath;
   };
 
   TrackFinding(Config config, Acts::Logging::Level level);
