@@ -50,6 +50,7 @@ public:
    int    GetClusterID() const { return GetRefIndex(); }
    double GetPadCoordinate() const { return fLocalX; }
    double GetTimeBinCoordinate() const { return fLocalZ; }
+   double GetDriftTime() const { return fDriftTime; }
    float  GetTotalSignal() const { return (float)fQ; }
 
    /** Accessors **/
@@ -92,6 +93,7 @@ public:
    void SetModular(Int_t imod) { SetUniqueID(imod); }
    void SetPad(Int_t ipad) { fiPad = ipad; }
    void SetBin(Int_t ibin) { fiBin = ibin; }
+   void SetDriftTime(double driftTime) { fDriftTime = driftTime; }
    void SetLayer(Int_t lay) { fLayer = lay; }
    void SetQ(Double_t q) { fQ = q; }
    void SetStep(Double_t step) { fStep = step; }
@@ -133,6 +135,7 @@ private:
    Int_t                              fLayer;
    Int_t                              fNdigits; // number of digits in the hit
    Int_t                              fFlag;
+   double                             fDriftTime; // physical drift time of electron to pad area
    std::vector<Int_t>                 fIDs;       // track IDs with the highest charge contribution
    std::vector<std::pair<int, float>> vpTrackIDs; // track IDs with its' charge contribution
 
@@ -146,7 +149,7 @@ private:
    Double32_t fLocalZ;
    Double32_t fXZrms[2]; // RMS of the hit (group of digits) along pad and drift directions
 
-   ClassDef(MpdTpcHit, 4);
+   ClassDef(MpdTpcHit, 5);
 };
 
 #endif // _MPDTPCHIT_H_

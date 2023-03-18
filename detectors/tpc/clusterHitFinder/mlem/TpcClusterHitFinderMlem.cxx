@@ -406,6 +406,7 @@ void TpcClusterHitFinderMlem::findHits()
       hit->SetRMS(rmsX, 0);
       hit->SetRMS(rmsZ, 1);
       hit->SetNdigits(nDigis);
+      hit->SetDriftTime(timeMean * fSecGeo->TimeBin());
       hit->SetFlags(clus);
 
       // !!! Warning: FairLinks are not persistent !!!
@@ -1340,6 +1341,7 @@ void TpcClusterHitFinderMlem::CreateHits(const vector<pixel> &pixels, multimap<D
       hit->SetRMS(rmsX, 0);
       hit->SetRMS(rmsZ, 1);
       hit->SetNdigits(-selPix.size()); // negative value
+      hit->SetDriftTime((timeMean - 0.5 + hMlem->GetXaxis()->GetXmin()) * fSecGeo->TimeBin());
       hit->SetFlags(clus);
       ++nHitsAdd;
 
