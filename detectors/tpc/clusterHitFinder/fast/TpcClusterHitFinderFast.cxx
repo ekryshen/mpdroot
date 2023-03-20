@@ -1,11 +1,9 @@
 #include "TpcClusterHitFinderFast.h"
-
-// Collaborating Class Headers --------
+#include "Tpc2dClusterFast.h"
 #include "MpdTpcDigit.h"
 #include "MpdTpcHit.h"
-#include "TpcClustering.h"
-#include "FairRootManager.h"
 
+// ROOT Class Headers --------
 #include <TClonesArray.h>
 #include <TMath.h>
 #include <TROOT.h>
@@ -39,11 +37,11 @@ TpcClusterHitFinderFast::~TpcClusterHitFinderFast() {}
 
 void TpcClusterHitFinderFast::FindHits()
 {
-   std::ostringstream oss;
+   ostringstream oss;
 
    _nEvent = ioman->GetEntryNr();
 
-   std::cout << "TpcClusterHitFinderFast::Exec started: Event " << _nEvent << std::endl;
+   cout << "TpcClusterHitFinderFast::Exec started: Event " << _nEvent << endl;
 
    auto start = high_resolution_clock::now();
 
@@ -54,13 +52,13 @@ void TpcClusterHitFinderFast::FindHits()
    int nRow_    = nR;
    if (nS >= 0) pEventClusters->Add(new SectorClusters(nS));
 
-   std::string strRows = std::string(nTPC_ROWS, '-');
+   string strRows = string(nTPC_ROWS, '-');
 
-   std::list<PadCluster *>                        lstPadClusters;
-   std::vector<std::list<PadCluster *>::iterator> viPadClusters;
+   list<PadCluster *>                   lstPadClusters;
+   vector<list<PadCluster *>::iterator> viPadClusters;
 
    Int_t nPoints = digiArray->GetEntriesFast();
-   for (Int_t i = 0; i < nPoints; i++) {
+   for (int i = 0; i < nPoints; i++) {
       MpdTpcDigit *pdigit   = (MpdTpcDigit *)digiArray->UncheckedAt(i); // Input digit
       uint         nSector  = pdigit->GetSector();
       uint         nRow     = pdigit->GetRow();
@@ -176,28 +174,19 @@ void TpcClusterHitFinderFast::FindHits()
 
 void TpcClusterHitFinderFast::calcSector(const EventClusters *pEventClusters)
 {
-   Int_t                              nClus = 0;
-   Int_t                              nHit  = 0;
-   TVector3                           tv3GlobErr(0.05, 0.0, 0.2);
-   TVector3                           p3glob(0.0, 0.0, 0.0);
-   const std::list<SectorClusters *> &rlstEventClusters = pEventClusters->getSectorClusters();
-   for (std::list<SectorClusters *>::const_iterator i0 = rlstEventClusters.begin(); i0 != rlstEventClusters.end();
-        i0++) { // Sectors
-      const std::list<RowClusters *> &rlstRowClusters = (*i0)->getRowClusters();
-      for (std::list<RowClusters *>::const_iterator i1 = rlstRowClusters.begin(); i1 != rlstRowClusters.end();
+   int                           nClus = 0;
+   int                           nHit  = 0;
+   TVector3                      tv3GlobErr(0.05, 0.0, 0.2);
+   TVector3                      p3glob(0.0, 0.0, 0.0);
+   const list<SectorClusters *> &rlstEventClusters = pEventClusters->getSectorClusters();
+   for (list<SectorClusters *>::const_iterator i0 = rlstEventClusters.begin(); i0 != rlstEventClusters.end(); i0++) {
+      // Sectors
+      const list<RowClusters *> &rlstRowClusters = (*i0)->getRowClusters();
+      for (list<RowClusters *>::const_iterator i1 = rlstRowClusters.begin(); i1 != rlstRowClusters.end();
            i1++) { // Rows
-         const std::list<Cluster *> &rlstClusters = (*i1)->getClusters();
-         for (std::list<Cluster *>::const_iterator i2 = rlstClusters.begin(); i2 != rlstClusters.end();
-              i2++) { // Clusters
-            vector<std::pair<int, float>>        vnTrackId;
-            const std::list<const PadCluster *> &rlstPadClusters = (*i2)->getPadClusters();
-            for (std::list<const PadCluster *>::const_iterator i3 = rlstPadClusters.begin(); // PadClusters
-                 i3 != rlstPadClusters.end(); i3++) {
-               const std::vector<AdcHit> &rvAdcHits = (*i3)->getAdcHits();
-               for (std::vector<AdcHit>::const_iterator i4 = rvAdcHits.begin(); i4 != rvAdcHits.end(); i4++) { // Digits
-                  vnTrackId = i4->getTrackID();
-               }
-            }
+         const list<Cluster *> &rlstClusters = (*i1)->getClusters();
+         for (list<Cluster *>::const_iterator i2 = rlstClusters.begin(); i2 != rlstClusters.end(); i2++) { // Clusters
+
             const Cluster *pCluster = *i2;
 
             int   nRow  = (*i1)->getRow();
@@ -205,23 +194,47 @@ void TpcClusterHitFinderFast::calcSector(const EventClusters *pEventClusters)
             float fPad  = pCluster->getPad();
             float fTime = pCluster->getTime();
 
-            // --------------------------------MpdTpcSectorGeo--------------------------------------------------
-            Double_t xloc  = _pSecGeo->Pad2Xloc(fPad, nRow);
-            Int_t    padID = _pSecGeo->PadID(nSect % _pSecGeo->NofSectors(), nRow);
-            Double_t yloc  = _pSecGeo->LocalPadPosition(padID).Y();
-            Double_t zloc  = _pSecGeo->TimeBin2Z(fTime);
+            // --------------------------------TpcSectorGeoAZ--------------------------------------------------
+            double   xloc  = _pSecGeo->Pad2Xloc(fPad, nRow);
+            int      padID = _pSecGeo->PadID(nSect % _pSecGeo->NofSectors(), nRow);
+            double   yloc  = _pSecGeo->LocalPadPosition(padID).Y();
+            double   zloc  = _pSecGeo->TimeBin2Z(fTime);
             TVector3 p3loc(xloc, yloc, zloc);
             if (nSect >= _pSecGeo->NofSectors()) p3loc[2] = -p3loc[2];
             _pSecGeo->Local2Global(nSect, p3loc, p3glob);
 
-            nHit           = hitArray->GetEntriesFast();
+            /* write cluster(s) */
+            nHit                   = hitArray->GetEntriesFast();
+            Tpc2dClusterFast *clus = new ((*clusArray)[nHit]) Tpc2dClusterFast(); // Add new cluster
+            clus->SetClusterID(nHit);
+            clus->SetSector(nSect);
+            clus->SetRow(nRow);
+            clus->SetTimeBinMin(pCluster->getTimeBinMin());
+            clus->SetTimeBinMax(pCluster->getTimeBinMax());
+            clus->SetPadMin(pCluster->getPadMin());
+            clus->SetPadMax(pCluster->getPadMax());
+            // write digits into cluster
+            vector<pair<int, float>>        vnTrackId;
+            const list<const PadCluster *> &rlstPadClusters = (*i2)->getPadClusters();
+            for (list<const PadCluster *>::const_iterator i3 = rlstPadClusters.begin(); i3 != rlstPadClusters.end();
+                 i3++) {
+               const vector<AdcHit> &rvAdcHits = (*i3)->getAdcHits();
+               for (vector<AdcHit>::const_iterator i4 = rvAdcHits.begin(); i4 != rvAdcHits.end(); i4++) { // Digits
+                  vnTrackId = i4->getTrackID();
+                  AbstractTpcDigit *pDigit =
+                     new MpdTpcDigit(vnTrackId[0].first, (int)fPad, nRow, (int)fTime, nSect, (float)i4->getAdc());
+                  clus->AddDigit(pDigit);
+               }
+            }
+
+            /* write hit(s) */
             MpdTpcHit *hit = new ((*hitArray)[nHit++]) MpdTpcHit(padID, p3glob, tv3GlobErr, nClus++); // Add new hit
             hit->SetLayer(nRow);
             hit->SetLocalPosition(p3loc); // point position
             hit->SetEnergyLoss(pCluster->getAdcSum());
 
-            Int_t    ireg = (nRow < _pSecGeo->NofRowsReg(0)) ? 0 : 1;
-            Double_t step = _pSecGeo->PadHeight(ireg);
+            int    ireg = (nRow < _pSecGeo->NofRowsReg(0)) ? 0 : 1;
+            double step = _pSecGeo->PadHeight(ireg);
             hit->SetStep(step);
             hit->SetModular(1); // modular geometry flag
 
@@ -229,8 +242,7 @@ void TpcClusterHitFinderFast::calcSector(const EventClusters *pEventClusters)
             hit->SetBin(int(fTime));
             hit->SetNdigits(rlstPadClusters.size());
 
-            for (std::vector<std::pair<int, float>>::const_iterator i5 = vnTrackId.begin(); i5 != vnTrackId.end();
-                 i5++) {
+            for (vector<pair<int, float>>::const_iterator i5 = vnTrackId.begin(); i5 != vnTrackId.end(); i5++) {
                hit->AddTrackID((*i5).first, (*i5).second); // TrackID
             }
          }

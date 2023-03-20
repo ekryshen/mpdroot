@@ -39,6 +39,7 @@ set(SRCS
 Set(HEADERS
   fast/TpcClusterHitFinderFast.h
   fast/TpcClustering.h
+  fast/Tpc2dClusterFast.h
   hitProducer/MpdTpcHitProducer.h
   mlem/TpcClusterHitFinderMlem.h
   mlem/MpdTpc2dCluster.h

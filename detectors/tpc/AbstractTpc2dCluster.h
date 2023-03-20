@@ -19,7 +19,6 @@
 #include <TObject.h>
 
 #include <vector>
-#include <memory>
 
 #include "AbstractTpcDigit.h"
 
@@ -29,14 +28,14 @@ public:
    AbstractTpc2dCluster() {}
    virtual ~AbstractTpc2dCluster() {}
 
-   virtual int                                            GetClusterID() const     = 0;
-   virtual int                                            GetSector() const        = 0;
-   virtual int                                            GetRow() const           = 0;
-   virtual int                                            GetPadMin() const        = 0;
-   virtual int                                            GetPadMax() const        = 0;
-   virtual int                                            GetTimeBinMin() const    = 0;
-   virtual int                                            GetTimeBinMax() const    = 0;
-   virtual std::vector<std::shared_ptr<AbstractTpcDigit>> GetClusterDigits() const = 0;
+   virtual int                             GetClusterID() const     = 0;
+   virtual int                             GetSector() const        = 0;
+   virtual int                             GetRow() const           = 0;
+   virtual int                             GetPadMin() const        = 0;
+   virtual int                             GetPadMax() const        = 0;
+   virtual int                             GetTimeBinMin() const    = 0;
+   virtual int                             GetTimeBinMax() const    = 0;
+   virtual std::vector<AbstractTpcDigit *> GetClusterDigits() const = 0;
 
 protected:
 private:

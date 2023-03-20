@@ -14,6 +14,9 @@
 #include "QA_TpcClusterHitFinder.h"
 #include "FairLogger.h"
 
+#include "AbstractTpc2dCluster.h"
+#include "AbstractTpcHit.h"
+
 // ROOT Headers --------
 #include "TClonesArray.h"
 

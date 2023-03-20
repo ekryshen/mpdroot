@@ -55,11 +55,11 @@ Bool_t MpdTpc2dCluster::Insert(Int_t row, Int_t col, Int_t bkt, Float_t adc)
 
 //......................................................................
 
-std::vector<std::shared_ptr<AbstractTpcDigit>> MpdTpc2dCluster::GetClusterDigits() const
+std::vector<AbstractTpcDigit *> MpdTpc2dCluster::GetClusterDigits() const
 {
-   std::vector<std::shared_ptr<AbstractTpcDigit>> clusterDigits;
-   int                                            currentRow = GetRow();
-   int                                            digitCount = fAdcList.size();
+   std::vector<AbstractTpcDigit *> clusterDigits;
+   int                             currentRow = GetRow();
+   int                             digitCount = fAdcList.size();
    for (int i = 0; i < digitCount; ++i)
       clusterDigits.emplace_back(new MpdTpcDigit(fId, fColList[i], currentRow, fBktList[i], fSector, fAdcList[i]));
 

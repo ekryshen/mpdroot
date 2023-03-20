@@ -39,14 +39,14 @@ public:
 
    /* interface implementation */
    // clusterID not stored in this class instead is taken from index of fClusArray
-   int                                            GetClusterID() const { return -1; }
-   int                                            GetSector() const { return fSector; }
-   int                                            GetRow() const { return fRowList[0]; }
-   int                                            GetPadMin() const { return fMinCol; }
-   int                                            GetPadMax() const { return fMaxCol; }
-   int                                            GetTimeBinMin() const { return fMinBkt; }
-   int                                            GetTimeBinMax() const { return fMaxBkt; }
-   std::vector<std::shared_ptr<AbstractTpcDigit>> GetClusterDigits() const;
+   int                             GetClusterID() const { return -1; }
+   int                             GetSector() const { return fSector; }
+   int                             GetRow() const { return fRowList[0]; }
+   int                             GetPadMin() const { return fMinCol; }
+   int                             GetPadMax() const { return fMaxCol; }
+   int                             GetTimeBinMin() const { return fMinBkt; }
+   int                             GetTimeBinMax() const { return fMaxBkt; }
+   std::vector<AbstractTpcDigit *> GetClusterDigits() const;
 
 public:
    UInt_t Flag() const { return fFlag; }
