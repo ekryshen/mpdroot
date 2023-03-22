@@ -49,6 +49,6 @@ set(HEADERS)
 
 Set(LINKDEF LHETrackLinkDef.h)
 Set(LIBRARY_NAME LHETrack)
-Set(DEPENDENCIES Kalman MpdBase tpcFairTpc)
+Set(DEPENDENCIES tpcGeometry Kalman MpdBase tpcFairTpc)
 
 GENERATE_LIBRARY()

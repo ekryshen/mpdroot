@@ -33,6 +33,6 @@ TpcSectorGeoAZ.h
 
 Set(LINKDEF tpcGeometryLinkDef.h)
 Set(LIBRARY_NAME tpcGeometry)
-Set(DEPENDENCIES MpdField MpdBase tpcFairTpc)
+Set(DEPENDENCIES tpc MpdField MpdBase tpcFairTpc)
 
 GENERATE_LIBRARY()

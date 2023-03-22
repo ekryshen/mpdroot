@@ -6,7 +6,10 @@
 #include <FairRunAna.h>
 ClassImp(MpdAnalysisManager);
 
+MpdAnalysisManager::MpdAnalysisManager() {}
+
 MpdAnalysisManager::MpdAnalysisManager(const char *name) {}
+
 void MpdAnalysisManager::AddTask(MpdAnalysisTask *task)
 {
    // Add task to the list of tasks to be executed
