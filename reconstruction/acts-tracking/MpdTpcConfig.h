@@ -179,7 +179,7 @@ struct Config final {
   // System parameters
   //===--------------------------------------------------------------------===//
 
-  static constexpr auto DumpData            = true;
+  static constexpr auto DumpData            = false;
 
   //===--------------------------------------------------------------------===//
   // Constructor

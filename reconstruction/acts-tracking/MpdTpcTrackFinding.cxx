@@ -220,17 +220,18 @@ void TrackFinding::constructTrackCandidates(
 
   if (m_config.dump) {
     fout.open(fname);
-    spacePoints = context.eventStore.get<SpacePointContainer>(m_config.spacePointsID);
+    spacePoints = context.eventStore.get<SpacePointContainer>(
+        m_config.spacePointsID);
     std::sort(spacePoints.begin(), spacePoints.end(),
         [](ActsExamples::SimSpacePoint a,
            ActsExamples::SimSpacePoint b) {
-          return a.measurementIndex() < b.measurementIndex();
+          return a.measurementIndex() <
+                 b.measurementIndex();
         }
     );
   }
 
   // Iterate over the seeds.
-
   for (size_t itrack = 0; itrack < results.size(); itrack++) {
     if (!results.at(itrack).ok()) {
       // No trajectory found for the given seed.
@@ -251,7 +252,7 @@ void TrackFinding::constructTrackCandidates(
       ProtoTrack trackCandidate;
       trackCandidate.reserve(fittedStates.size());
 
-      bool first = true;
+      auto firstPass = true;
       fittedStates.visitBackwards(lastIndex, [&](const auto &state) {
         // Do nothing unless the state is a real measurement.
         if (!state.typeFlags().test(Acts::TrackStateFlag::MeasurementFlag)) {
@@ -261,21 +262,21 @@ void TrackFinding::constructTrackCandidates(
         auto &sourceLink = static_cast<const SourceLink&>(state.uncalibrated());
         auto hitIndex = sourceLink.index();
         if (m_config.dump) {
-          if (!first) {
+          if (!firstPass) {
             fout << ", ";
           }
-          first = false;
-
-          fout << hitIndex;
-          auto spacePoint = spacePoints[hitIndex];
+          firstPass = false;
+          fout << itrack << ", " <<
+                  hitIndex;
+          auto spacePoint = spacePoints.at(hitIndex);
           if (hitIndex != spacePoint.measurementIndex()) {
-            ACTS_WARNING("Error while dumping prototracks:"
+            ACTS_ERROR("Error while dumping prototracks:"
                 " can't find space point corresponding to hit " << hitIndex);
             fout << ", 0, 0, 0";
           } else {
-            fout << ", " << spacePoint.x() << ", " <<
-                            spacePoint.y() << ", " <<
-                            spacePoint.z();
+            fout << ", " << spacePoint.x() <<
+                    ", " << spacePoint.y() <<
+                    ", " << spacePoint.z();
           }
           auto params = state.parameters();
 
