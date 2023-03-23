@@ -1,9 +1,13 @@
-void RunAnalyses(){
+void RunAnalyses(int nEvents = -1){
 
-  gROOT->LoadMacro("mpdloadlibs.C");
-  gROOT->ProcessLine("mpdloadlibs()");
+  //gROOT->LoadMacro("mpdloadlibs.C");
+  //gROOT->ProcessLine("mpdloadlibs()");
 
-   MpdAnalysisManager man("ManagerAnal") ;
+   gSystem->Load("libEmc.so") ;
+   gSystem->Load("libMpdPhysics.so") ;
+   gSystem->Load("libMpdPhotons.so") ;
+
+   MpdAnalysisManager man("ManagerAnal", nEvents) ;
    man.InputFileList("list.txt") ;
    man.ReadBranches("*") ; 
    man.SetOutput("histos.root") ;

@@ -10,8 +10,8 @@
 class MpdAnalysisManager {
 
 public:
-   MpdAnalysisManager();
-   MpdAnalysisManager(const char *name);
+   MpdAnalysisManager() {}
+   MpdAnalysisManager(const char *name, int nEvents);
    ~MpdAnalysisManager() {} // Destructor
 
    // Add task to perform analyses
@@ -32,7 +32,9 @@ public:
    void SetOutput(const char *outputFileName = "histos.root") { fOutFile = outputFileName; }
 
 protected:
-   bool CreateChain();
+   bool    CreateChain();
+   TString fManagerName;
+   Int_t   fEvents;
 
 private:
    TString                        fInputFiles;
