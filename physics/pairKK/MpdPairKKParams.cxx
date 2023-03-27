@@ -36,7 +36,7 @@ void MpdPairKKParams::ReadFromFile(std::string fname)
    while (ifs.good()) {
       ifs >> a;
       // if comment, skip to the enf of line
-      if (a.find_first_of('#') == 0) {
+      if (a.find_first_of('#') == 0 || a.find_first_of("//") == 0) {
          ifs.ignore(999, '\n');
          continue;
       } else {
@@ -46,7 +46,7 @@ void MpdPairKKParams::ReadFromFile(std::string fname)
    }
    ifs.close();
 
-   // Parse prepared map
+   // Parse prepared map 
    read("mZvtxCut", mZvtxCut);
    // V0 cuts
    read("mPIDsigTPC", mPIDsigTPC);
@@ -54,6 +54,8 @@ void MpdPairKKParams::ReadFromFile(std::string fname)
    read("mNofHitsCut", mNofHitsCut);
    read("mEtaCut", mEtaCut);
    read("mPtminCut", mPtminCut);
+   read("mDCACut", mDCACut);
+   read("mYCut", mYCut);
 }
 
 void MpdPairKKParams::Print() const
@@ -66,10 +68,16 @@ void MpdPairKKParams::Print() const
    cout << "mPIDsigTPC:   " << mPIDsigTPC << "  // dEdx PID parameters" << endl;
    cout << "mPIDsigTOF:   " << mPIDsigTOF << "  // Beta PID parameters" << endl;
 
-   cout << "mNofHitsCut:  " << mNofHitsCut << "  // minimal number of hits to accept track" << endl;
-   cout << "mEtaCut:      " << mEtaCut << "  // maximal pseudorapidity accepted" << endl;
-   cout << "mPtminCut:    " << mPtminCut << "  // minimal pt used in analysis" << endl;
-   cout << "------------------------------------------" << endl << endl;
+   cout << "# Track cuts:   " << endl;
+   cout << "mNofHitsCut:  " << mNofHitsCut << "  // minimal number for a track" << endl;
+   cout << "mEtaCut:      " << mEtaCut << "  // maximal pseudorapidity for a track" << endl;
+   cout << "mPtminCut:    " << mPtminCut << "  // minimal pt for a track" << endl;
+   cout << "mDCACut:      " << mDCACut << "  // maximum DCA for a track" << endl;
+
+   cout << "# Pair cuts:  " << endl;
+   cout << "mYCut:        " << mYCut << "  // pair cut" << endl;
+
+   cout << "------------------------------------------" << endl;
 }
 
 void MpdPairKKParams::read(std::string name, bool &b)

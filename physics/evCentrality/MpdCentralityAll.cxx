@@ -23,6 +23,7 @@ MpdCentralityAll::MpdCentralityAll(const char *name, const char *outputName) : M
 
 void MpdCentralityAll::UserInit()
 {
+   cout << "[MpdCentralityAll]: Initialization ... " << endl;
 
    mParams.ReadFromFile(mParamConfig);
    mParams.Print();
@@ -65,7 +66,7 @@ void MpdCentralityAll::UserInit()
    mhCentConvert->Reset();
 
    if (mParams.mProdGenerator != "ANY" && mParams.mInFileConvert != "ANY") {
-      cout << "evCentrality: Reading out nTrack-to-Centrality conversion table from file " << mParams.mInFileConvert
+      cout << "[MpdCentralityAll]: Reading out nTrack-to-Centrality conversion table from file " << mParams.mInFileConvert
            << endl;
       TFile *inr = new TFile((mParams.mInFileConvert).c_str());
       mhCentConvert->Add(((TH1F *)inr->Get("hCentr")));
@@ -77,7 +78,7 @@ void MpdCentralityAll::UserInit()
    mhTrEff->Reset();
 
    if (mParams.mInFileTrEff != "ANY") {
-      cout << "evCentrality: Reading out track reconstruction values from file " << mParams.mInFileTrEff << endl
+      cout << "[MpdCentralityAll]: Reading out track reconstruction values from file " << mParams.mInFileTrEff
            << endl;
       TFile *inr = new TFile((mParams.mInFileTrEff).c_str());
       mhTrEff->Add(((TH2F *)inr->Get("RecEffHad_DCMSMM92")));
@@ -91,6 +92,8 @@ void MpdCentralityAll::UserInit()
    // MC
    if (isMC) {
    }
+
+  cout << "[MpdCentralityAll]: Initialization done " << endl << endl;
 }
 //--------------------------------------
 void MpdCentralityAll::ProcessEvent(MpdAnalysisEvent &event)

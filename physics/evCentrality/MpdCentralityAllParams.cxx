@@ -17,7 +17,7 @@ void MpdCentralityAllParams::ReadFromFile(std::string fname)
    std::string fInputFileTtx = fname;
    fInputFileTtx             = fInputFileTtx + ".txt";
 
-   cout << endl << "Read input text file: " << fInputFileTtx << endl;
+   cout << "Read input text file: " << fInputFileTtx << endl;
 
    std::ifstream ifs(fInputFileTtx);
    if (!ifs) {
@@ -30,7 +30,7 @@ void MpdCentralityAllParams::ReadFromFile(std::string fname)
    while (ifs.good()) {
       ifs >> a;
       // if comment, skip to the enf of line
-      if (a.find_first_of('#') == 0) {
+      if (a.find_first_of('#') == 0 || a.find_first_of("//") == 0) {
          ifs.ignore(999, '\n');
          continue;
       } else {
@@ -71,7 +71,7 @@ void MpdCentralityAllParams::Print() const
    cout << "# Track efficiecny corrections: " << endl;
    cout << "mInFileTrEff   " << mInFileTrEff << "  // Input file with track efficiecny corrections" << endl;
 
-   cout << "------------------------------------------" << endl << endl;
+   cout << "------------------------------------------" << endl;
 }
 
 void MpdCentralityAllParams::read(std::string name, bool &b)

@@ -64,16 +64,20 @@ void MpdAnalysisManager::Process()
    // Scan data
    int n = fChain->GetEntries();
    if (fEvents != -1 && fEvents < n) n = fEvents;
+   std::cout << "MpdAnalysisManager: number of events to process " << n << std::endl;
+
 
    for (int iEvent = 0; iEvent < n; iEvent++) {
       if (iEvent % 100 == 0) {
          std::cout << "MpdAnalysisManager: processing event " << iEvent << " of " << n << std::endl;
       }
       fEvent.Clear();
-      fChain->GetEvent(iEvent);
-      for (MpdAnalysisTask *task : fTasks) {
-         task->ProcessEvent(fEvent);
-      }
+      if (fChain->GetEvent(iEvent)) {
+	fChain->GetEvent(iEvent);
+	for (MpdAnalysisTask *task : fTasks) {
+	  task->ProcessEvent(fEvent);
+	}
+      }//not broken
    }
 
    for (MpdAnalysisTask *task : fTasks) {

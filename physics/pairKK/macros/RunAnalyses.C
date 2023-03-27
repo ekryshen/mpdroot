@@ -1,4 +1,17 @@
-void RunAnalyses(int nEvents = -1){
+bool CheckFileExist(TString fileName){
+    gSystem->ExpandPathName(fileName);
+    if (gSystem->AccessPathName(fileName.Data()) == true)
+    {
+        cout<<endl<<"no specified file: "<<fileName<<endl;
+        return false;
+    }                
+
+    return true;
+}
+
+
+
+void RunAnalyses(int nEvents = -1, TString inFileList = "list.txt"){
 
   //gROOT->LoadMacro("mpdloadlibs.C");
   //gROOT->ProcessLine("mpdloadlibs()");
@@ -8,7 +21,8 @@ void RunAnalyses(int nEvents = -1){
    gSystem->Load("libMpdPhotons.so") ;
 
    MpdAnalysisManager man("ManagerAnal", nEvents) ;
-   man.InputFileList("list.txt") ;
+   if (!CheckFileExist(inFileList)) return;
+   man.InputFileList(inFileList) ;
    man.ReadBranches("*") ; 
    man.SetOutput("histos.root") ;
    
@@ -24,3 +38,4 @@ void RunAnalyses(int nEvents = -1){
    man.Process() ;
 
 }
+
