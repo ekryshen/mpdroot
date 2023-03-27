@@ -8,6 +8,7 @@
 #include <TGraph.h>
 #include <TH1.h>
 #include <TMultiGraph.h>
+#include <TText.h>
 
 #include <limits>
 
@@ -401,12 +402,12 @@ struct PointP {
   PointP(Double_t x, Double_t y, Double_t z):
       x(x), y(y), z(z) {}
 
-  Int_t transform(const CoordSystem &coordSystem) {
+  Int_t makeProjection(const Projection &projection) {
     Int_t res = 0;
     Double_t xTmp = 0;
     Double_t yTmp = 0;
     Double_t zTmp = 0;
-    switch (coordSystem) {
+    switch (projection) {
       case XY:
         xTmp = x;
         yTmp = y;
@@ -420,7 +421,7 @@ struct PointP {
         yTmp = std::hypot(x, y);
         break;
       default:
-        std::cout << "PointP::transform() ERROR: " <<
+        std::cout << "PointP::makeProjection() ERROR: " <<
             "unknown coordinate system type!" << std::endl;
         xTmp = 0;
         yTmp = 0;
@@ -434,6 +435,185 @@ struct PointP {
   }
 };
 
+void plotRealTracks(
+    Int_t canvasX,
+    Int_t canvasY,
+    const std::shared_ptr<const Acts::TrackingGeometry> &geometry,
+    const Mpd::Tpc::InputHitContainer &hits,
+    Int_t eventCounter,
+    std::string outPath,
+    Bool_t multicoloured,
+    Int_t lineWidth,
+    Projection projection,
+    std::string namePostfix,
+    Int_t txtSize,
+    Int_t txtStep) {
+
+  TCanvas canvas("inputTrajectories", "Input trajectories", canvasX, canvasY);
+  TMultiGraph multiGraph;
+
+  // Detector's sensitive surfaces graph
+  std::vector<TGraph*> surfGraphs;
+  Acts::GeometryContext actsContext;
+  if (projection == Projection::XY) {
+    geometry->visitSurfaces([&actsContext, &surfGraphs, &multiGraph](
+        const Acts::Surface *surface) {
+      std::vector<Double_t> boundsValues = surface->bounds().values();
+
+      Double_t xLeftDown = boundsValues.at(0);
+      Double_t yLeftDown = boundsValues.at(1);
+      Double_t xRightUp  = boundsValues.at(2);
+      Double_t yRightUp  = boundsValues.at(3);
+
+      if (yLeftDown + yRightUp != 0) {
+        std::cout << "boundsValues.at(1) + boundsValues.at(3) != 0" <<
+            std::endl;
+      }
+      if (xLeftDown + xRightUp != 0) {
+        std::cout << "boundsValues.at(0) + boundsValues.at(2) != 0" <<
+            std::endl;
+      }
+      Acts::Vector2 locBound0(xLeftDown, yLeftDown);
+      Acts::Vector2 locBound1(xRightUp,  yRightUp);
+      Acts::Vector3 unused;
+
+      Acts::Vector3 globalBound0 = surface->localToGlobal(
+          actsContext, locBound0, unused);
+      Acts::Vector3 globalBound1 = surface->localToGlobal(
+          actsContext, locBound1, unused);
+
+      TGraph *surfGraph = new TGraph;
+      surfGraphs.push_back(surfGraph);
+
+      surfGraph->SetPoint(0, globalBound0.x(), globalBound0.y());
+      surfGraph->SetPoint(1, globalBound1.x(), globalBound1.y());
+
+      surfGraph->SetMarkerStyle(kFullDotMedium);
+      surfGraph->SetLineColor(kYellow);
+      surfGraph->SetMarkerColor(kYellow);
+      multiGraph.Add(surfGraph, "PL");
+    });
+  }
+
+  std::map<Int_t, std::vector<Int_t>> hitsOnTracks;
+  size_t nHits = hits.size();
+  size_t nTracks = 0;
+  for (size_t iHit = 0; iHit < nHits; iHit++) {
+    auto &hit = hits.at(iHit);
+    auto trackId = hit.trackId;
+    auto &hitsVector = hitsOnTracks[trackId];
+    hitsVector.push_back(iHit);
+    nTracks++;
+  }
+
+  for (auto &[trackId, hitsVector] : hitsOnTracks) {
+    std::sort(hitsVector.begin(), hitsVector.end());
+  }
+
+  // Text labels
+  std::vector<TText*> labels;
+  auto txtOffset  = 1. * canvasX / 3000. * 2;
+  auto txtColor   = kBlack;
+  auto txtFont    = 43;
+
+  size_t pIndex = 0;
+
+  // Real tracks graph and text labels
+  std::vector<TGraph*> inputTrajectoriesGraph(nTracks);
+
+  std::vector<Int_t> colors = {kRed, kCyan, kGreen - 3, kBlue - 4,
+      kMagenta, kOrange + 7, kOrange - 7};
+
+  for (const auto &[trackId, hitsVector] : hitsOnTracks) {
+    auto *trajectoryGraph = new TGraph;
+    inputTrajectoriesGraph.push_back(trajectoryGraph);
+
+    trajectoryGraph->SetMarkerStyle(kFullDotMedium);
+    trajectoryGraph->SetLineWidth(lineWidth);
+    Int_t color = kRed;
+    if (multicoloured) {
+      Int_t iColor = trackId % colors.size();
+      color = colors[iColor];
+    }
+    trajectoryGraph->SetLineColor(color);
+
+    pIndex = 0;
+    for (size_t hitIdx : hitsVector) {
+      auto &hit = hits.at(hitIdx);
+      PointP point(
+          hit.position[0],
+          hit.position[1],
+          hit.position[2]);
+      point.makeProjection(projection);
+      Double_t x = point.x;
+      Double_t y = point.y;
+      trajectoryGraph->SetPoint(
+          pIndex++, x, y);
+
+      // Text labels
+      auto plotTxt = false;
+      if (pIndex % txtStep == 0) plotTxt = true;
+      Int_t m = hitsVector.size() / 2;
+      if ((hitsVector.size() < txtStep) && (
+          (pIndex == 1) || (pIndex == hitsVector.size()) ||
+          (pIndex == m + 1))) {
+        plotTxt = true;
+      }
+
+      if (plotTxt) {
+        auto txt = new TText(x, y, std::to_string(trackId).c_str());
+        txt->SetTextAlign(12);
+        txt->SetTextColor(txtColor);
+        txt->SetTextFont(txtFont);
+        txt->SetTextSizePixels(txtSize);
+        labels.push_back(txt);
+      }
+    }
+    if (pIndex) {
+      multiGraph.Add(trajectoryGraph, "PL");
+    }
+  }
+
+  // Input hits graph
+  TGraph hitsGraph;
+  hitsGraph.SetMarkerStyle(kFullDotMedium);
+
+  pIndex = 0;
+  for (auto hit : hits) {
+    PointP point(
+        hit.position[0],
+        hit.position[1],
+        hit.position[2]);
+    point.makeProjection(projection);
+    hitsGraph.SetPoint(
+        pIndex++,
+        point.x,
+        point.y);
+  }
+  if (pIndex) {
+    multiGraph.Add(&hitsGraph, "P");
+  }
+
+  multiGraph.Draw("A");
+
+  for (const auto txt : labels) {
+    txt->Draw();
+  }
+
+  auto fname = outPath + "/event_" + std::to_string(eventCounter) +
+      namePostfix + ".png";
+  canvas.Print(fname.c_str());
+  for (auto item : inputTrajectoriesGraph) {
+    delete item;
+  }
+  for (auto item : surfGraphs) {
+    delete item;
+  }
+  for (auto item : labels) {
+    delete item;
+  }
+}
+
 void plotOutputTracks(
     Int_t canvasX,
     Int_t canvasY,
@@ -445,7 +625,7 @@ void plotOutputTracks(
     std::string outPath,
     bool multicoloured,
     Int_t lineWidth,
-    CoordSystem coordSystem) {
+    Projection projection) {
 
   TCanvas canvas("outputTrajectories", "Output trajectories", canvasX, canvasY);
   TMultiGraph multiGraph;
@@ -453,7 +633,7 @@ void plotOutputTracks(
   // Detector's sensitive surfaces graph
   std::vector<TGraph*> surfGraphs;
   Acts::GeometryContext actsContext;
-  if (coordSystem == CoordSystem::XY) {
+  if (projection == Projection::XY) {
     geometry->visitSurfaces([&actsContext, &surfGraphs, &multiGraph](
         const Acts::Surface *surface) {
       std::vector<Double_t> boundsValues = surface->bounds().values();
@@ -501,7 +681,7 @@ void plotOutputTracks(
   size_t pIndex = 0;
   for (auto spacePoint : spacePoints) {
     PointP point(spacePoint.x(), spacePoint.y(), spacePoint.z());
-    point.transform(coordSystem);
+    point.makeProjection(projection);
     Double_t x = point.x;
     Double_t y = point.y;
 
@@ -516,7 +696,7 @@ void plotOutputTracks(
   pIndex = 0;
   for (auto hit : hits) {
     PointP point(hit.position[0], hit.position[1], hit.position[2]);
-    point.transform(coordSystem);
+    point.makeProjection(projection);
     Double_t x = point.x;
     Double_t y = point.y;
 
@@ -548,7 +728,7 @@ void plotOutputTracks(
       PointP point(hits.at(hitIndex).position[0],
                    hits.at(hitIndex).position[1],
                    hits.at(hitIndex).position[2]);
-      point.transform(coordSystem);
+      point.makeProjection(projection);
       Double_t x = point.x;
       Double_t y = point.y;
 

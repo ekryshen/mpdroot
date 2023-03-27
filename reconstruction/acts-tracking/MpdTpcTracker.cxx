@@ -444,11 +444,16 @@ void MpdTpcTracker::Exec(Option_t *option) {
     std::shared_ptr<const Acts::TrackingGeometry> geometry =
         config.detector->getGeometry();
 
-    const Int_t lineWidth = 3;
-    const Bool_t multicoloured = false;
+    auto lineWidth = 3;
+    auto color     = true;
+
+    plotRealTracks(6000, 6000, geometry, hits, eventCounter,
+        fOutPath, color, lineWidth, Projection::XY,
+        "_input_XY");
+
     plotOutputTracks(6000, 6000, geometry, spacePoints, hits,
-                     trajectories, eventCounter, fOutPath,
-                     multicoloured, lineWidth, CoordSystem::XY);
+        trajectories, eventCounter, fOutPath,
+        color, lineWidth, Projection::XY);
   }
 
   if (MpdCodeTimer::Active()) {
