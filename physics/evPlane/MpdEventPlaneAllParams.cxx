@@ -60,7 +60,8 @@ void MpdEventPlaneAllParams::Print() const
 
    cout << "# Track cuts:  " << endl;
    cout << "mNofHitsCut    " << mNofHitsCut << "  // minimal number of hits to accept track" << endl;
-   cout << "mEtaGapCut     " << mEtaGapCut << "  // pseudorapidity gap between 2 TPC sub events (deltaEtaGap). Default 0.1 -> from -0.05 to 0.05." << endl;
+   cout << "mEtaGapCut     " << mEtaGapCut
+        << "  // pseudorapidity gap between 2 TPC sub events (deltaEtaGap). Default 0.1 -> from -0.05 to 0.05." << endl;
    cout << "mEtaCut        " << mEtaCut << "  // maximal pseudorapidity accepted" << endl;
    cout << "mPtminCut      " << mPtminCut << "  // minimal pt used in analysis" << endl;
    cout << "mPtmaxCut      " << mPtmaxCut << "  // maximal pt used in analysis" << endl;
@@ -102,8 +103,7 @@ void MpdEventPlaneAllParams::read(std::string name, std::string &b)
    auto search = mMap.find(name);
    if (search != mMap.end()) {
       b = search->second;
-   }
-   else {
-      cerr << "[WARNING] MpdEventPlaneAllParams: could not find parameter " << name <<". Skipping." << endl;
+   } else {
+      cerr << "[WARNING] MpdEventPlaneAllParams: could not find parameter " << name << ". Skipping." << endl;
    }
 }
