@@ -66,8 +66,8 @@ void MpdCentralityAll::UserInit()
    mhCentConvert->Reset();
 
    if (mParams.mProdGenerator != "ANY" && mParams.mInFileConvert != "ANY") {
-      cout << "[MpdCentralityAll]: Reading out nTrack-to-Centrality conversion table from file " << mParams.mInFileConvert
-           << endl;
+      cout << "[MpdCentralityAll]: Reading out nTrack-to-Centrality conversion table from file "
+           << mParams.mInFileConvert << endl;
       TFile *inr = new TFile((mParams.mInFileConvert).c_str());
       mhCentConvert->Add(((TH1F *)inr->Get("hCentr")));
       inr->Close();
@@ -78,8 +78,7 @@ void MpdCentralityAll::UserInit()
    mhTrEff->Reset();
 
    if (mParams.mInFileTrEff != "ANY") {
-      cout << "[MpdCentralityAll]: Reading out track reconstruction values from file " << mParams.mInFileTrEff
-           << endl;
+      cout << "[MpdCentralityAll]: Reading out track reconstruction values from file " << mParams.mInFileTrEff << endl;
       TFile *inr = new TFile((mParams.mInFileTrEff).c_str());
       mhTrEff->Add(((TH2F *)inr->Get("RecEffHad_DCMSMM92")));
       inr->Close();
@@ -93,7 +92,7 @@ void MpdCentralityAll::UserInit()
    if (isMC) {
    }
 
-  cout << "[MpdCentralityAll]: Initialization done " << endl << endl;
+   cout << "[MpdCentralityAll]: Initialization done " << endl << endl;
 }
 //--------------------------------------
 void MpdCentralityAll::ProcessEvent(MpdAnalysisEvent &event)
@@ -174,6 +173,25 @@ bool MpdCentralityAll::selectEvent(MpdAnalysisEvent &event)
    }
 
    if (mParams.mProdGenerator == "Req30-PHSD" && nTrMc <= 2 * 209) { // Just nucleons of Bi+Bi --> Request30-PHSD
+      return false;
+   }
+
+   // Reject empty events (PHQMD)
+   nTrMc = 0;
+   float pToT, rap;
+   for (int i = 0; i < mMCTracks->GetEntriesFast(); i++) {
+      MpdMCTrack *pr = (static_cast<MpdMCTrack *>(mMCTracks->At(i)));
+      if (pr->GetMotherId() == -1) {
+         pToT = sqrt(pow(pr->GetPx(), 2) + pow(pr->GetPy(), 2));
+         rap  = 0.5 * log((pToT + pr->GetPz()) / (pToT - pr->GetPz()));
+         if (fabs(rap) < 1.0) {
+            nTrMc++;
+         }
+      }
+   } // i
+
+   if (mParams.mProdGenerator == "Req27-Req29-PHQMD" &&
+       nTrMc < 1) { // surrogate of inelastic event --> Request27||29-PHQMD
       return false;
    }
 
