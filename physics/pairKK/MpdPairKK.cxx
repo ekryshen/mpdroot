@@ -809,11 +809,11 @@ float MpdPairKK::Beta_sigma_El(float beta, float mom) const
    mean_exp =
       mean[0] / mom / mom *
          (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
-      mean[6] - 0.001;
+      mean[6];
    width_exp =
       width[0] / mom / mom *
          (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
-      width[6] - 0.001;
+      width[6];
 
    return (beta - mean_exp) / width_exp;
 }
@@ -833,11 +833,11 @@ float MpdPairKK::Beta_sigma_Pi(float beta, float mom) const
    mean_exp =
       mean[0] / mom / mom *
          (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
-      mean[6] - 0.001;
+      mean[6];
    width_exp =
       width[0] / mom / mom *
          (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
-      width[6] - 0.001;
+      width[6];
 
    return (beta - mean_exp) / width_exp;
 }
@@ -857,11 +857,11 @@ float MpdPairKK::Beta_sigma_K(float beta, float mom) const
    mean_exp =
       mean[0] / mom / mom *
          (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
-      mean[6] - 0.001;
+      mean[6];
    width_exp =
       width[0] / mom / mom *
          (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
-      width[6] - 0.001;
+      width[6];
 
    return (beta - mean_exp) / width_exp;
 }
@@ -881,11 +881,11 @@ float MpdPairKK::Beta_sigma_P(float beta, float mom) const
    mean_exp =
       mean[0] / mom / mom *
          (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
-      mean[6] - 0.001;
+      mean[6];
    width_exp =
       width[0] / mom / mom *
          (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
-      width[6] - 0.001;
+      width[6];
 
    return (beta - mean_exp) / width_exp;
 }
