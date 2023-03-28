@@ -47,8 +47,8 @@ protected:
 
    int GetCentBin(float cent);
 
-   std::map<int,float> SetZeroCorr();
-   std::map<int,float> ReadEpCorrProfile(TProfile *const& prof);
+   std::map<int, float> SetZeroCorr();
+   std::map<int, float> ReadEpCorrProfile(TProfile *const &prof);
 
 private:
    // Event properties
@@ -57,8 +57,8 @@ private:
 
    static constexpr short mFHCalModuleNum = 90;
    static constexpr short mFHCalMod1Side  = 45;
-   static constexpr short nCentBins = 8; //from 0-10% up to 70-80%
-   int mCorrStep; // 0 - raw, 1 - rec, 2 - shift
+   static constexpr short nCentBins       = 8; // from 0-10% up to 70-80%
+   int                    mCorrStep;           // 0 - raw, 1 - rec, 2 - shift
 
    std::string            mParamConfig;
    MpdEventPlaneAllParams mParams;
@@ -73,91 +73,91 @@ private:
    vector<MpdParticle *> mPartK;
    MpdKalmanHit          mKHit;
 
-   //Maps to store info for the EP corrections
-   // This is more optimal way to store information
-   // in terms of RAM usage
+   // Maps to store info for the EP corrections
+   //  This is more optimal way to store information
+   //  in terms of RAM usage
 
    // For the recentering EP correction: <Qx>, <Qy> as a function of centrality bin
-   std::map<int,float> mCorrQxFHCalFAll;
-   std::map<int,float> mCorrQyFHCalFAll;
-   std::map<int,float> mCorrQxFHCalNAll;
-   std::map<int,float> mCorrQyFHCalNAll;
-   std::map<int,float> mCorrQxFHCalSAll;
-   std::map<int,float> mCorrQyFHCalSAll;
-   std::map<int,float> mCorrQxTPCNAll;
-   std::map<int,float> mCorrQyTPCNAll;
-   std::map<int,float> mCorrQxTPCSAll;
-   std::map<int,float> mCorrQyTPCSAll;
+   std::map<int, float> mCorrQxFHCalFAll;
+   std::map<int, float> mCorrQyFHCalFAll;
+   std::map<int, float> mCorrQxFHCalNAll;
+   std::map<int, float> mCorrQyFHCalNAll;
+   std::map<int, float> mCorrQxFHCalSAll;
+   std::map<int, float> mCorrQyFHCalSAll;
+   std::map<int, float> mCorrQxTPCNAll;
+   std::map<int, float> mCorrQyTPCNAll;
+   std::map<int, float> mCorrQxTPCSAll;
+   std::map<int, float> mCorrQyTPCSAll;
 
    // For the shift EP correction: <cosNphiEP>, <sinNphiEP> as a function of centrality bin
-   std::map<int,float> mCorrCos1FHCalFAll;
-   std::map<int,float> mCorrCos2FHCalFAll;
-   std::map<int,float> mCorrCos3FHCalFAll;
-   std::map<int,float> mCorrCos4FHCalFAll;
-   std::map<int,float> mCorrCos5FHCalFAll;
-   std::map<int,float> mCorrCos6FHCalFAll;
-   std::map<int,float> mCorrCos7FHCalFAll;
-   std::map<int,float> mCorrCos8FHCalFAll;
-   std::map<int,float> mCorrSin1FHCalFAll;
-   std::map<int,float> mCorrSin2FHCalFAll;
-   std::map<int,float> mCorrSin3FHCalFAll;
-   std::map<int,float> mCorrSin4FHCalFAll;
-   std::map<int,float> mCorrSin5FHCalFAll;
-   std::map<int,float> mCorrSin6FHCalFAll;
-   std::map<int,float> mCorrSin7FHCalFAll;
-   std::map<int,float> mCorrSin8FHCalFAll;
+   std::map<int, float> mCorrCos1FHCalFAll;
+   std::map<int, float> mCorrCos2FHCalFAll;
+   std::map<int, float> mCorrCos3FHCalFAll;
+   std::map<int, float> mCorrCos4FHCalFAll;
+   std::map<int, float> mCorrCos5FHCalFAll;
+   std::map<int, float> mCorrCos6FHCalFAll;
+   std::map<int, float> mCorrCos7FHCalFAll;
+   std::map<int, float> mCorrCos8FHCalFAll;
+   std::map<int, float> mCorrSin1FHCalFAll;
+   std::map<int, float> mCorrSin2FHCalFAll;
+   std::map<int, float> mCorrSin3FHCalFAll;
+   std::map<int, float> mCorrSin4FHCalFAll;
+   std::map<int, float> mCorrSin5FHCalFAll;
+   std::map<int, float> mCorrSin6FHCalFAll;
+   std::map<int, float> mCorrSin7FHCalFAll;
+   std::map<int, float> mCorrSin8FHCalFAll;
 
-   std::map<int,float> mCorrCos1FHCalNAll;
-   std::map<int,float> mCorrCos2FHCalNAll;
-   std::map<int,float> mCorrCos3FHCalNAll;
-   std::map<int,float> mCorrCos4FHCalNAll;
-   std::map<int,float> mCorrCos5FHCalNAll;
-   std::map<int,float> mCorrCos6FHCalNAll;
-   std::map<int,float> mCorrCos7FHCalNAll;
-   std::map<int,float> mCorrCos8FHCalNAll;
-   std::map<int,float> mCorrSin1FHCalNAll;
-   std::map<int,float> mCorrSin2FHCalNAll;
-   std::map<int,float> mCorrSin3FHCalNAll;
-   std::map<int,float> mCorrSin4FHCalNAll;
-   std::map<int,float> mCorrSin5FHCalNAll;
-   std::map<int,float> mCorrSin6FHCalNAll;
-   std::map<int,float> mCorrSin7FHCalNAll;
-   std::map<int,float> mCorrSin8FHCalNAll;
+   std::map<int, float> mCorrCos1FHCalNAll;
+   std::map<int, float> mCorrCos2FHCalNAll;
+   std::map<int, float> mCorrCos3FHCalNAll;
+   std::map<int, float> mCorrCos4FHCalNAll;
+   std::map<int, float> mCorrCos5FHCalNAll;
+   std::map<int, float> mCorrCos6FHCalNAll;
+   std::map<int, float> mCorrCos7FHCalNAll;
+   std::map<int, float> mCorrCos8FHCalNAll;
+   std::map<int, float> mCorrSin1FHCalNAll;
+   std::map<int, float> mCorrSin2FHCalNAll;
+   std::map<int, float> mCorrSin3FHCalNAll;
+   std::map<int, float> mCorrSin4FHCalNAll;
+   std::map<int, float> mCorrSin5FHCalNAll;
+   std::map<int, float> mCorrSin6FHCalNAll;
+   std::map<int, float> mCorrSin7FHCalNAll;
+   std::map<int, float> mCorrSin8FHCalNAll;
 
-   std::map<int,float> mCorrCos1FHCalSAll;
-   std::map<int,float> mCorrCos2FHCalSAll;
-   std::map<int,float> mCorrCos3FHCalSAll;
-   std::map<int,float> mCorrCos4FHCalSAll;
-   std::map<int,float> mCorrCos5FHCalSAll;
-   std::map<int,float> mCorrCos6FHCalSAll;
-   std::map<int,float> mCorrCos7FHCalSAll;
-   std::map<int,float> mCorrCos8FHCalSAll;
-   std::map<int,float> mCorrSin1FHCalSAll;
-   std::map<int,float> mCorrSin2FHCalSAll;
-   std::map<int,float> mCorrSin3FHCalSAll;
-   std::map<int,float> mCorrSin4FHCalSAll;
-   std::map<int,float> mCorrSin5FHCalSAll;
-   std::map<int,float> mCorrSin6FHCalSAll;
-   std::map<int,float> mCorrSin7FHCalSAll;
-   std::map<int,float> mCorrSin8FHCalSAll;
+   std::map<int, float> mCorrCos1FHCalSAll;
+   std::map<int, float> mCorrCos2FHCalSAll;
+   std::map<int, float> mCorrCos3FHCalSAll;
+   std::map<int, float> mCorrCos4FHCalSAll;
+   std::map<int, float> mCorrCos5FHCalSAll;
+   std::map<int, float> mCorrCos6FHCalSAll;
+   std::map<int, float> mCorrCos7FHCalSAll;
+   std::map<int, float> mCorrCos8FHCalSAll;
+   std::map<int, float> mCorrSin1FHCalSAll;
+   std::map<int, float> mCorrSin2FHCalSAll;
+   std::map<int, float> mCorrSin3FHCalSAll;
+   std::map<int, float> mCorrSin4FHCalSAll;
+   std::map<int, float> mCorrSin5FHCalSAll;
+   std::map<int, float> mCorrSin6FHCalSAll;
+   std::map<int, float> mCorrSin7FHCalSAll;
+   std::map<int, float> mCorrSin8FHCalSAll;
 
-   std::map<int,float> mCorrCos1TPCNAll;
-   std::map<int,float> mCorrCos2TPCNAll;
-   std::map<int,float> mCorrCos3TPCNAll;
-   std::map<int,float> mCorrCos4TPCNAll;
-   std::map<int,float> mCorrSin1TPCNAll;
-   std::map<int,float> mCorrSin2TPCNAll;
-   std::map<int,float> mCorrSin3TPCNAll;
-   std::map<int,float> mCorrSin4TPCNAll;
+   std::map<int, float> mCorrCos1TPCNAll;
+   std::map<int, float> mCorrCos2TPCNAll;
+   std::map<int, float> mCorrCos3TPCNAll;
+   std::map<int, float> mCorrCos4TPCNAll;
+   std::map<int, float> mCorrSin1TPCNAll;
+   std::map<int, float> mCorrSin2TPCNAll;
+   std::map<int, float> mCorrSin3TPCNAll;
+   std::map<int, float> mCorrSin4TPCNAll;
 
-   std::map<int,float> mCorrCos1TPCSAll;
-   std::map<int,float> mCorrCos2TPCSAll;
-   std::map<int,float> mCorrCos3TPCSAll;
-   std::map<int,float> mCorrCos4TPCSAll;
-   std::map<int,float> mCorrSin1TPCSAll;
-   std::map<int,float> mCorrSin2TPCSAll;
-   std::map<int,float> mCorrSin3TPCSAll;
-   std::map<int,float> mCorrSin4TPCSAll;
+   std::map<int, float> mCorrCos1TPCSAll;
+   std::map<int, float> mCorrCos2TPCSAll;
+   std::map<int, float> mCorrCos3TPCSAll;
+   std::map<int, float> mCorrCos4TPCSAll;
+   std::map<int, float> mCorrSin1TPCSAll;
+   std::map<int, float> mCorrSin2TPCSAll;
+   std::map<int, float> mCorrSin3TPCSAll;
+   std::map<int, float> mCorrSin4TPCSAll;
 
    // Histograms
    TList mHistoList;
@@ -206,20 +206,20 @@ private:
    TH1F *mhPhiEPShfTPCSAll   = nullptr;
    TH1F *mhCorrStep          = nullptr;
 
-   TProfile *mhCosFHCalNFHCalSAll = nullptr; 
+   TProfile *mhCosFHCalNFHCalSAll = nullptr;
    TProfile *mhCosTPCNTPCSAll     = nullptr;
 
    // For the recentering EP correction: <Qx>, <Qy>
-   TProfile *mhCorrQxFHCalFAll   = nullptr;
-   TProfile *mhCorrQyFHCalFAll   = nullptr;
-   TProfile *mhCorrQxFHCalNAll   = nullptr;
-   TProfile *mhCorrQyFHCalNAll   = nullptr;
-   TProfile *mhCorrQxFHCalSAll   = nullptr;
-   TProfile *mhCorrQyFHCalSAll   = nullptr;
-   TProfile *mhCorrQxTPCNAll     = nullptr;
-   TProfile *mhCorrQyTPCNAll     = nullptr;
-   TProfile *mhCorrQxTPCSAll     = nullptr;
-   TProfile *mhCorrQyTPCSAll     = nullptr;
+   TProfile *mhCorrQxFHCalFAll = nullptr;
+   TProfile *mhCorrQyFHCalFAll = nullptr;
+   TProfile *mhCorrQxFHCalNAll = nullptr;
+   TProfile *mhCorrQyFHCalNAll = nullptr;
+   TProfile *mhCorrQxFHCalSAll = nullptr;
+   TProfile *mhCorrQyFHCalSAll = nullptr;
+   TProfile *mhCorrQxTPCNAll   = nullptr;
+   TProfile *mhCorrQyTPCNAll   = nullptr;
+   TProfile *mhCorrQxTPCSAll   = nullptr;
+   TProfile *mhCorrQyTPCSAll   = nullptr;
 
    // For the shift EP correction: <cosNphiEP>, <sinNphiEP>
    TProfile *mhCorrCos1FHCalFAll = nullptr;
@@ -273,23 +273,23 @@ private:
    TProfile *mhCorrSin7FHCalSAll = nullptr;
    TProfile *mhCorrSin8FHCalSAll = nullptr;
 
-   TProfile *mhCorrCos1TPCNAll   = nullptr;
-   TProfile *mhCorrCos2TPCNAll   = nullptr;
-   TProfile *mhCorrCos3TPCNAll   = nullptr;
-   TProfile *mhCorrCos4TPCNAll   = nullptr;
-   TProfile *mhCorrSin1TPCNAll   = nullptr;
-   TProfile *mhCorrSin2TPCNAll   = nullptr;
-   TProfile *mhCorrSin3TPCNAll   = nullptr;
-   TProfile *mhCorrSin4TPCNAll   = nullptr;
+   TProfile *mhCorrCos1TPCNAll = nullptr;
+   TProfile *mhCorrCos2TPCNAll = nullptr;
+   TProfile *mhCorrCos3TPCNAll = nullptr;
+   TProfile *mhCorrCos4TPCNAll = nullptr;
+   TProfile *mhCorrSin1TPCNAll = nullptr;
+   TProfile *mhCorrSin2TPCNAll = nullptr;
+   TProfile *mhCorrSin3TPCNAll = nullptr;
+   TProfile *mhCorrSin4TPCNAll = nullptr;
 
-   TProfile *mhCorrCos1TPCSAll   = nullptr;
-   TProfile *mhCorrCos2TPCSAll   = nullptr;
-   TProfile *mhCorrCos3TPCSAll   = nullptr;
-   TProfile *mhCorrCos4TPCSAll   = nullptr;
-   TProfile *mhCorrSin1TPCSAll   = nullptr;
-   TProfile *mhCorrSin2TPCSAll   = nullptr;
-   TProfile *mhCorrSin3TPCSAll   = nullptr;
-   TProfile *mhCorrSin4TPCSAll   = nullptr;
+   TProfile *mhCorrCos1TPCSAll = nullptr;
+   TProfile *mhCorrCos2TPCSAll = nullptr;
+   TProfile *mhCorrCos3TPCSAll = nullptr;
+   TProfile *mhCorrCos4TPCSAll = nullptr;
+   TProfile *mhCorrSin1TPCSAll = nullptr;
+   TProfile *mhCorrSin2TPCSAll = nullptr;
+   TProfile *mhCorrSin3TPCSAll = nullptr;
+   TProfile *mhCorrSin4TPCSAll = nullptr;
 
    ClassDef(MpdEventPlaneAll, 1);
 };
