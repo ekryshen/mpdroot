@@ -1,8 +1,7 @@
 void RunAnalyses(int nEvents = -1){
 
-   gSystem->Load("libEmc.so") ;
+   gSystem->Load("libZdc.so") ;
    gSystem->Load("libMpdPhysics.so") ;
-   gSystem->Load("libMpdPhotons.so") ;
 
    MpdAnalysisManager man("ManagerAnal", nEvents) ;
    man.InputFileList("list.txt") ;
