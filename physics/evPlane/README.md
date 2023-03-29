@@ -36,9 +36,12 @@ But if there are some issues with azimuthal acceptance (inefficiencies, etc.), t
 The EP corrections are the following:
 * Recentering;
 * Shift (or flattening).
+
 One can found more information in [this article](https://arxiv.org/pdf/nucl-ex/9805001.pdf).
 
-In order to do this corrections, main analysis macro (`evPlane/macros/RunAnalyses.C`) should run 3 times since the corrections are applied iteratively: first run collects information for the recentering, second run applies recentering and collects information for the shift correction, the third run applies both recentering and shift corrections. For the first run one should put `ANY` for the `mInFileEpCorr` parameter. On the second and the third run `mInFileEpCorr` should take output (`pEP.root` by default) from the previous run. Event plane resolution as a function of centrality can be calculated then using `evPlane/macros/getResolution.C` which has 2 arguments: input file (`pEP.root` by default) and output file (`pEP_resolutions.root` by default).
+In order to do this corrections, main analysis macro (`evPlane/macros/RunAnalyses.C`) should run 3 times since the corrections are applied iteratively: first run collects information for the recentering, second run applies recentering and collects information for the shift correction, the third run applies both recentering and shift corrections. For the first run one should put `ANY` for the `mInFileEpCorr` parameter. On the second and the third run `mInFileEpCorr` should take output (`pEP.root` by default) from the previous run. 
+After each iteration, `MpdAnalysisEvent *event` stores information about event plane angles: raw angles (without any corrections) after just the first run, recentered angles (with recentering but without shift) after the second run, and shifted angles (wiht both recentering and shift) after the third run.
+Event plane resolution as a function of centrality can be calculated then using `evPlane/macros/getResolution.C` which has 2 arguments: input file (`pEP.root` by default) and output file (`pEP_resolutions.root` by default). 
 
 If one wants to use event plane angle in their analysis wagon, it is stored in the `MpdAnalysisEvent *event`:
 ```
