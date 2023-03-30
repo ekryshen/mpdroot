@@ -47,11 +47,15 @@ public:
    virtual ~MpdTpcHit() {}
 
    /* Interface implementation */
-   int    GetClusterID() const { return GetRefIndex(); }
+   int    GetClusterID() const { return clusterID; }
    double GetPadCoordinate() const { return fLocalX; }
    double GetTimeBinCoordinate() const { return fLocalZ; }
    double GetDriftTime() const { return fDriftTime; }
    float  GetTotalSignal() const { return (float)fQ; }
+
+   void SetPadCoordinate(double padCoordinate) { fLocalX = padCoordinate; }
+   void SetTimeBinCoordinate(double timeBinCoordinate) { fLocalZ = timeBinCoordinate; }
+   void SetClusterID(int clusID) { clusterID = clusID; }
 
    /** Accessors **/
    Int_t    GetModular() const { return GetUniqueID(); }
@@ -138,6 +142,7 @@ private:
    double                             fDriftTime; // physical drift time of electron to pad area
    std::vector<Int_t>                 fIDs;       // track IDs with the highest charge contribution
    std::vector<std::pair<int, float>> vpTrackIDs; // track IDs with its' charge contribution
+   int                                clusterID;  // index of clusArray to which the hit belongs
 
    Double32_t fQ;
    Double32_t fStep;

@@ -192,6 +192,7 @@ void TpcClusterHitFinderFast::calcSector(const EventClusters *pEventClusters)
             int   nRow  = (*i1)->getRow();
             int   nSect = (*i0)->getSector();
             float fPad  = pCluster->getPad();
+            LOG(info) << "Hit pad is: " << fPad;
             float fTime = pCluster->getTime();
 
             // --------------------------------TpcSectorGeoAZ--------------------------------------------------
@@ -240,6 +241,8 @@ void TpcClusterHitFinderFast::calcSector(const EventClusters *pEventClusters)
 
             hit->SetPad(int(fPad));
             hit->SetBin(int(fTime));
+            hit->SetPadCoordinate(fPad);
+            hit->SetTimeBinCoordinate(fTime);
             hit->SetNdigits(rlstPadClusters.size());
 
             for (vector<pair<int, float>>::const_iterator i5 = vnTrackId.begin(); i5 != vnTrackId.end(); i5++) {

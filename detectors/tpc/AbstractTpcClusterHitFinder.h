@@ -23,8 +23,8 @@
 #include "BaseTpcSectorGeo.h"
 
 // ROOT Class Headers & Declarations ---------------
-#include <TString.h>
-class TClonesArray;
+#include "TString.h"
+#include "TClonesArray.h"
 
 class AbstractTpcClusterHitFinder : public FairTask {
 public:
@@ -49,15 +49,10 @@ protected:
    FairRootManager  *ioman;
    BaseTpcSectorGeo *secGeo;
 
-   // there is no complex class hierarchy when deriving from AbstractClusterHitFinder class
-   // no getters/setters are implemented, to avoid boilerplate code
-   // it is up to developer to behave responsibly when accessing data
+   // no getters/setters implemented, to avoid boilerplate code
    TClonesArray *digiArray;
    TClonesArray *clusArray;
    TClonesArray *hitArray;
-
-   // Geometry parameters
-   // do not modify them in your implementation (const correctness not implemented)
 
    Bool_t persistence;
 
@@ -65,7 +60,6 @@ private:
    // disable default constructor
    AbstractTpcClusterHitFinder();
 
-   InitStatus ReadGeometryParameters();  // read geometry parameters
    InitStatus ReadInputRegisterOutput(); // read input digiArray, register outputs clusArray & hitArray
    void       ClearClustersHits();       // clears clusArray, hitArray
 

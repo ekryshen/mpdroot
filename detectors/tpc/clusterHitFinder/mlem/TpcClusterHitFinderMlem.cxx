@@ -394,6 +394,7 @@ void TpcClusterHitFinderMlem::findHits()
 
       ihit           = hitArray->GetEntriesFast();
       MpdTpcHit *hit = new ((*hitArray)[ihit]) MpdTpcHit(padID, p3glob, p3errCor, iclus);
+      hit->SetClusterID(iclus);
       hit->SetLayer(clus->Row());
       hit->SetLocalPosition(p3loc); // point position
       hit->SetEnergyLoss(adcTot);
@@ -1329,6 +1330,7 @@ void TpcClusterHitFinderMlem::CreateHits(const vector<pixel> &pixels, multimap<D
       }
 
       MpdTpcHit *hit = new ((*hitArray)[ihit++]) MpdTpcHit(padID, p3glob, p3errCor, iclus);
+      hit->SetClusterID(iclus);
       hit->SetLayer(clus->Row());
       hit->SetLocalPosition(p3loc); // point position
       hit->SetEnergyLoss(adcTot);
