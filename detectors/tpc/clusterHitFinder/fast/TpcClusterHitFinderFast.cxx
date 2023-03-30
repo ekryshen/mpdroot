@@ -222,7 +222,7 @@ void TpcClusterHitFinderFast::calcSector(const EventClusters *pEventClusters)
                for (vector<AdcHit>::const_iterator i4 = rvAdcHits.begin(); i4 != rvAdcHits.end(); i4++) { // Digits
                   vnTrackId = i4->getTrackID();
                   AbstractTpcDigit *pDigit =
-                     new MpdTpcDigit(vnTrackId[0].first, (int)fPad, nRow, (int)fTime, nSect, (float)i4->getAdc());
+                     new MpdTpcDigit(vnTrackId[0].first, (*i3)->getPad(), nRow, i4->getTimeBin(), nSect, i4->getAdc());
                   clus->AddDigit(pDigit);
                }
             }
