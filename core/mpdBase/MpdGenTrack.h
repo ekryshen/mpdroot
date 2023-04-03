@@ -38,6 +38,8 @@ public:
       return mom;
    }
 
+   Int_t GetPdg() { return fPdg; }
+
    void SetE(Double_t ene) { fEne = ene; }
 
    void SetImpact(Double_t imp) { fImp = imp; }
