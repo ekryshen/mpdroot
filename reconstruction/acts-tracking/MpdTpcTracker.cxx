@@ -122,7 +122,6 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
                                            tpcPoint->GetPz() * momScalor
                                        };
   }
-
   const auto nTpcHits = tpcHits->GetEntriesFast();
 
   Mpd::Tpc::InputHitContainer hits;
@@ -131,9 +130,9 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
   for (Int_t i = 0; i < nTpcHits; i++) {
     auto *tpcHit = static_cast<MpdTpcHit*>(tpcHits->UncheckedAt(i));
 
-    std::vector <std::pair<int, float>> trackIDs = tpcHit->GetTrackIDs();
+    std::vector<std::pair<int, float>> trackIDs = tpcHit->GetTrackIDs();
 
-    // Get the first element of MC tracks, correspoinding to hit.
+    // Get the first MC track, correspoinding to hit.
     Int_t trackId = trackIDs[0].first;
 
     const auto mFind = momentum.find(trackId);
@@ -156,7 +155,6 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
         mom
     });
   }
-
   return hits;
 }
 
@@ -205,7 +203,7 @@ mcTrackToBarcodeInts createBarcodesMap(TClonesArray *mcTracks) {
   size_t secondary   = 0;
   size_t curParticle = 0;
 
-  // loop over primary particles.
+  // Loop over primary particles.
   for (Int_t iMC = 0; iMC < nMC; iMC++) {
     auto track = static_cast<MpdMCTrack*>(mcTracks->UncheckedAt(iMC));
 
@@ -219,7 +217,7 @@ mcTrackToBarcodeInts createBarcodesMap(TClonesArray *mcTracks) {
     mcTrackToBarcode[iMC] = {primary, secondary, particle, generation, subpart};
   }
 
-  // loop over secondary particles.
+  // Loop over secondary particles.
   std::map<std::tuple<size_t, size_t>, size_t> partGenToSubpart;
   Int_t iMC;
   std::string msgPrefix = "[MpdTpcTracker]: createBarcodesMap(): ERROR: ";
@@ -447,9 +445,12 @@ void MpdTpcTracker::Exec(Option_t *option) {
     auto lineWidth = 3;
     auto color     = true;
 
+    auto MChits = convertTpcPoints(fPoints);
+    plotRealTracks(6000, 6000, geometry, MChits, eventCounter,
+        fOutPath, color, lineWidth, Projection::XY, "_MC_input_XY");
+
     plotRealTracks(6000, 6000, geometry, hits, eventCounter,
-        fOutPath, color, lineWidth, Projection::XY,
-        "_input_XY");
+        fOutPath, color, lineWidth, Projection::XY, "_hits_input_XY");
 
     plotOutputTracks(6000, 6000, geometry, spacePoints, hits,
         trajectories, eventCounter, fOutPath,

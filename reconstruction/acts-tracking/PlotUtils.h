@@ -49,5 +49,9 @@ void plotOutputTracks(
     std::string outPath,
     Bool_t multicoloured,
     Int_t lineWidth,
-    Projection projection);
+    Projection projection,
+    std::string namePostfix = "",
+    Bool_t plotLabels = true,
+    Int_t txtSize = 15,
+    Int_t txtStep = 10);
 

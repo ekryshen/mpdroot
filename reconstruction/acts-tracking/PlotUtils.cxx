@@ -623,9 +623,13 @@ void plotOutputTracks(
     const Mpd::Tpc::ProtoTrackContainer &trajectories,
     Int_t eventCounter,
     std::string outPath,
-    bool multicoloured,
+    Bool_t multicoloured,
     Int_t lineWidth,
-    Projection projection) {
+    Projection projection,
+    std::string namePostfix,
+    Bool_t plotLabels,
+    Int_t txtSize,
+    Int_t txtStep) {
 
   TCanvas canvas("outputTrajectories", "Output trajectories", canvasX, canvasY);
   TMultiGraph multiGraph;
@@ -704,7 +708,14 @@ void plotOutputTracks(
   }
   multiGraph.Add(&inputHitsGraph, "P");
 
-  // Reconstructed tracks graph
+  // Reconstructed tracks graph with text labels
+
+  // Text labels
+  std::vector<TText*> labels;
+  auto txtOffset  = 1. * canvasX / 3000. * 2;
+  auto txtColor   = kBlack;
+  auto txtFont    = 43;
+
   TGraph outTrajectoryGraphs[trajectories.size()];
   Int_t trackIndex = -1;
   std::vector<Int_t> colors = {kRed, kCyan, kGreen - 3, kBlue - 4,
@@ -725,23 +736,57 @@ void plotOutputTracks(
 
     pIndex = 0;
     for (uint32_t hitIndex : reconstructedTrack) {
-      PointP point(hits.at(hitIndex).position[0],
-                   hits.at(hitIndex).position[1],
-                   hits.at(hitIndex).position[2]);
+      auto hit = hits.at(hitIndex);
+      PointP point(hit.position[0],
+                   hit.position[1],
+                   hit.position[2]);
       point.makeProjection(projection);
       Double_t x = point.x;
       Double_t y = point.y;
 
       outTrajectoryGraph.SetPoint(pIndex++, x, y);
+
+      // Text labels
+      if (!plotLabels) {
+        continue;
+      }
+      auto plotTxt = false;
+      if (pIndex % txtStep == 0) plotTxt = true;
+      Int_t m = reconstructedTrack.size() / 2;
+      if ((2*m < txtStep) && (
+          (pIndex == 1)     ||
+          (pIndex == m + 1) ||
+          (pIndex == 2*m)
+         )) {
+        plotTxt = true;
+      }
+      auto trackId = hit.trackId;
+      if (plotTxt) {
+        auto txt = new TText(x, y, std::to_string(trackId).c_str());
+        txt->SetTextAlign(12);
+        txt->SetTextColor(txtColor);
+        txt->SetTextFont(txtFont);
+        txt->SetTextSizePixels(txtSize);
+        labels.push_back(txt);
+      }
     }
     multiGraph.Add(&outTrajectoryGraph, "PL");
   }
   multiGraph.Draw("A");
 
-  auto fname = outPath + "/event_" + std::to_string(eventCounter) + ".png";
+  for (const auto txt : labels) {
+    txt->Draw();
+  }
+
+  auto fname = outPath + "/event_" + std::to_string(eventCounter) +
+      namePostfix + ".png";
+
   canvas.Print(fname.c_str());
 
   for (auto surfGraph : surfGraphs) {
     delete surfGraph;
+  }
+  for (auto item : labels) {
+    delete item;
   }
 }
