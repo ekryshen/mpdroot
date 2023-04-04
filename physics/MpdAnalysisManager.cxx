@@ -6,7 +6,7 @@
 #include <FairRunAna.h>
 ClassImp(MpdAnalysisManager);
 
-MpdAnalysisManager::MpdAnalysisManager(const char *name) {}
+MpdAnalysisManager::MpdAnalysisManager(const char *name, int nEvents) : fManagerName(name), fEvents(nEvents) {}
 void MpdAnalysisManager::AddTask(MpdAnalysisTask *task)
 {
    // Add task to the list of tasks to be executed
@@ -26,9 +26,11 @@ void MpdAnalysisManager::Process()
    //  scan data
    //  call Finish method for each task
    //  write outputs
+   int nTasks = 0;
 
    for (MpdAnalysisTask *task : fTasks) {
       task->UserInit();
+      nTasks++;
    }
 
    if (!CreateChain()) {
@@ -44,33 +46,55 @@ void MpdAnalysisManager::Process()
    fKF = MpdKalmanFilter::Instance();
    fKF->Init();
 
+   // Open output files (for trees if needed)
+   std::cout << "Counted " << nTasks << " tasks to process" << std::endl;
+   TFile *output[nTasks];
+
+   nTasks = 0;
+   for (MpdAnalysisTask *task : fTasks) {
+
+      fOutFileRoot = task->GetOutputName();
+      fOutFileRoot = fOutFileRoot + ".root";
+      std::cout << "Opening output file for writing " << fOutFileRoot << std::endl;
+
+      output[nTasks] = new TFile(fOutFileRoot, "recreate");
+      nTasks++;
+   }
+
    // Scan data
    int n = fChain->GetEntries();
+   if (fEvents != -1 && fEvents < n) n = fEvents;
+   std::cout << "MpdAnalysisManager: number of events to process " << n << std::endl;
+
+
    for (int iEvent = 0; iEvent < n; iEvent++) {
       if (iEvent % 100 == 0) {
          std::cout << "MpdAnalysisManager: processing event " << iEvent << " of " << n << std::endl;
       }
       fEvent.Clear();
-      fChain->GetEvent(iEvent);
-      for (MpdAnalysisTask *task : fTasks) {
-         task->ProcessEvent(fEvent);
-      }
+      if (fChain->GetEvent(iEvent)) {
+	fChain->GetEvent(iEvent);
+	for (MpdAnalysisTask *task : fTasks) {
+	  task->ProcessEvent(fEvent);
+	}
+      }//not broken
    }
 
    for (MpdAnalysisTask *task : fTasks) {
       task->Finish();
    }
 
+   nTasks = 0;
    for (MpdAnalysisTask *task : fTasks) {
 
       fOutFileRoot = task->GetOutputName();
       fOutFileRoot = fOutFileRoot + ".root";
       std::cout << "Writing output to file " << fOutFileRoot << std::endl;
 
-      TFile output(fOutFileRoot, "recreate");
-      // V      task->GetOutput()->Write(task->GetOutputName());
+      output[nTasks]->cd();
       task->GetOutput()->Write();
-      output.Close();
+      output[nTasks]->Close();
+      nTasks++;
    }
 }
 //=======================================

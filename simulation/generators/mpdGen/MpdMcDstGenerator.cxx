@@ -90,7 +90,7 @@ Bool_t MpdMcDstGenerator::ReadEvent(FairPrimaryGenerator *primGen)
 
       // Push a new track to the array of gen. tracks ...
       MpdGenTrack *track = new ((*fGenTracks)[fGenTracks->GetEntriesFast()]) MpdGenTrack();
-      track->SetXYZT(px, py, particle->z(), particle->t());
+      track->SetXYZT(particle->x(), particle->y(), particle->z(), particle->t());
       track->SetPxyz(px, py, particle->pz());
       track->SetPdg(particle->pdg());
       track->SetE(particle->e());

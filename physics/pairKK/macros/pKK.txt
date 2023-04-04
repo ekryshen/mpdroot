@@ -1,10 +1,12 @@
 #-------Parameters used for analysis------
 # Event selection: 
-mZvtxCut 100 //  cut on vertex z coordinate
-mNhitsCut 10 //  number of hits in TPC tracks used for centrality
+mZvtxCut     130 //  cut on vertex z coordinate
 # PID cuts: 
 mPIDsigTPC   2  // dEdx PID parameters
 mPIDsigTOF   2  // dEdx PID parameters
-mNofHitsCut  10  // minimal number of hits to accept track
-mEtaCut      1  // maximal pseudorapidity accepted
-mPtminCut   0.05  // minimal pt used in analysis
+mNofHitsCut  10  // minimal number of hits for a track
+mEtaCut      1.0  // maximal pseudorapidity for a track
+mPtminCut    0.1  // minimal pt for a track
+mDCACut      2.0  // maximum DCA for a track
+# Pair cuts: 
+mYCut        0.5  // pair rapidity cut

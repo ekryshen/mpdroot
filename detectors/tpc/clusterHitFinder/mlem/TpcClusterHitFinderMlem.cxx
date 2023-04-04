@@ -22,7 +22,6 @@
 #include "MpdTpc2dCluster.h"
 #include "MpdTpcDigit.h"
 #include "MpdTpcHit.h"
-#include "TpcPoint.h"
 
 #include "FairRootManager.h"
 
@@ -51,8 +50,8 @@ using namespace std;
 
 //__________________________________________________________________________
 
-TpcClusterHitFinderMlem::TpcClusterHitFinderMlem(BaseTpcSectorGeo &tpcGeo)
-   : AbstractTpcClusterHitFinder(tpcGeo, "TPC Cluster finder Mlem", kFALSE)
+TpcClusterHitFinderMlem::TpcClusterHitFinderMlem(BaseTpcSectorGeo &secGeo)
+   : AbstractTpcClusterHitFinder(secGeo, "TPC Cluster finder Mlem", kFALSE)
 {
    /*
    std::string tpcGasFile = gSystem->Getenv("VMCWORKDIR");
@@ -60,7 +59,7 @@ TpcClusterHitFinderMlem::TpcClusterHitFinderMlem(BaseTpcSectorGeo &tpcGeo)
    fGas= new TpcGas(tpcGasFile, 130);
    std::cout<<*fGas<<std::endl;
    */
-   fSecGeo = dynamic_cast<TpcSectorGeoAZ *>(secGeo);
+   fSecGeo = dynamic_cast<TpcSectorGeoAZ *>(&secGeo);
    if (!fSecGeo) Fatal("TpcClusterHitFinderMlem::TpcClusterHitFinderMlem", " !!! Wrong geometry type !!! ");
 
    for (Int_t i = 0; i < fgkNsec2; ++i) fDigiSet[i] = new set<Int_t>[fgkNrows];
@@ -407,6 +406,7 @@ void TpcClusterHitFinderMlem::findHits()
       hit->SetRMS(rmsX, 0);
       hit->SetRMS(rmsZ, 1);
       hit->SetNdigits(nDigis);
+      hit->SetDriftTime(timeMean * fSecGeo->TimeBin());
       hit->SetFlags(clus);
 
       // !!! Warning: FairLinks are not persistent !!!
@@ -1341,6 +1341,7 @@ void TpcClusterHitFinderMlem::CreateHits(const vector<pixel> &pixels, multimap<D
       hit->SetRMS(rmsX, 0);
       hit->SetRMS(rmsZ, 1);
       hit->SetNdigits(-selPix.size()); // negative value
+      hit->SetDriftTime((timeMean - 0.5 + hMlem->GetXaxis()->GetXmin()) * fSecGeo->TimeBin());
       hit->SetFlags(clus);
       ++nHitsAdd;
 

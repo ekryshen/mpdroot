@@ -5,6 +5,7 @@
 #include "FairMCEventHeader.h"
 #include "MpdEvent.h"
 #include "TClonesArray.h"
+#include "MpdAnalysisEventPlane.h"
 
 class MpdAnalysisEvent {
 
@@ -30,6 +31,8 @@ public:
    TClonesArray *fZDCEloss2Value = nullptr; ///< ElossZDC2Value
    TClonesArray *fZDCEloss1Histo = nullptr; ///< ElossZDC1Histo
    TClonesArray *fZDCEloss2Histo = nullptr; ///< ElossZDC2Histo
+
+   MpdAnalysisEventPlane fMpdEP; ///< Event plane info
 
    void  setCentrTPC(float cent) { centralityTPC = cent; }
    float getCentrTPC() { return centralityTPC; }

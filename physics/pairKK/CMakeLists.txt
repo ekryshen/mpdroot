@@ -8,6 +8,11 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/lheTrack
   ${CMAKE_SOURCE_DIR}/simulation/mcStack
+  ${CMAKE_SOURCE_DIR}/detectors/tpc
+  ${CMAKE_SOURCE_DIR}/detectors/tpc/geometry
+  ${CMAKE_SOURCE_DIR}/detectors/tpc/fairTpc
+  ${CMAKE_SOURCE_DIR}/detectors/tpc/clusterHitFinder/mlem
+  ${CMAKE_SOURCE_DIR}/detectors/tof
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
@@ -33,6 +38,6 @@ set(SRCS
 Set(HEADERS)
 Set(LINKDEF PairKKLinkDef.h)
 Set(LIBRARY_NAME MpdPairKKTracks)
-Set(DEPENDENCIES)
+Set(DEPENDENCIES Tof tpcGeometry)
 
 GENERATE_LIBRARY()

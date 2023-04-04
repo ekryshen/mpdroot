@@ -8,6 +8,8 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_SOURCE_DIR}/detectors/sts
   ${CMAKE_SOURCE_DIR}/detectors/tpc
   ${CMAKE_SOURCE_DIR}/detectors/tpc/clusterHitFinder
+  ${CMAKE_SOURCE_DIR}/detectors/tpc/clusterHitFinder/mlem
+  ${CMAKE_SOURCE_DIR}/detectors/tpc/fairTpc
   ${CMAKE_SOURCE_DIR}/detectors/tpc/geometry
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
   ${CMAKE_SOURCE_DIR}/simulation/mcStack
@@ -47,6 +49,6 @@ set(HEADERS)
 
 Set(LINKDEF LHETrackLinkDef.h)
 Set(LIBRARY_NAME LHETrack)
-Set(DEPENDENCIES Kalman MpdBase)
+Set(DEPENDENCIES tpcGeometry Kalman MpdBase tpcFairTpc)
 
 GENERATE_LIBRARY()

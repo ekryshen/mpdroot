@@ -4,6 +4,7 @@ set(INCLUDE_DIRECTORIES
  ${BASE_INCLUDE_DIRECTORIES}
  ${CMAKE_CURRENT_LIST_DIR}
  ${CMAKE_SOURCE_DIR}/detectors/tpc
+ ${CMAKE_SOURCE_DIR}/detectors/tpc/fairTpc
 )
 
 set(SYSTEM_INCLUDE_DIRECTORIES
@@ -21,19 +22,17 @@ link_directories(${LINK_DIRECTORIES})
 
 # List of source files
 set(SRCS
-  BaseTpcSectorGeo.cxx
   TpcSectorGeoAlignmentVAK.cxx
   TpcSectorGeoAZ.cxx
 )
 
 Set(HEADERS
-BaseTpcSectorGeo.h
 TpcSectorGeoAlignmentVAK.h
 TpcSectorGeoAZ.h
 )
 
 Set(LINKDEF tpcGeometryLinkDef.h)
 Set(LIBRARY_NAME tpcGeometry)
-Set(DEPENDENCIES MpdField MpdBase)
+Set(DEPENDENCIES tpc MpdField MpdBase tpcFairTpc)
 
 GENERATE_LIBRARY()

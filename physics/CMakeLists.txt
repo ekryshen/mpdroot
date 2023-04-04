@@ -4,6 +4,7 @@ add_subdirectory(femto/MpdFemtoMakerUser)
 add_subdirectory(photons)
 add_subdirectory(pairKK)
 add_subdirectory(evCentrality)
+add_subdirectory(evPlane)
 
 # Create a library called "MpdPhysics" which includes the source files given in the array.
 # The extension is already found. Any number of sources could be listed here.
@@ -30,6 +31,7 @@ link_directories(${LINK_DIRECTORIES})
 # List of source files
 set(SRCS
  MpdAnalysisEvent.cxx
+ MpdAnalysisEventPlane.cxx
  MpdAnalysisTask.cxx
  MpdAnalysisManager.cxx
 )

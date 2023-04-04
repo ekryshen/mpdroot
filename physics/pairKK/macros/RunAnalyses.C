@@ -1,18 +1,36 @@
-void RunAnalyses(){
+bool CheckFileExist(TString fileName){
+    gSystem->ExpandPathName(fileName);
+    if (gSystem->AccessPathName(fileName.Data()) == true)
+    {
+        cout<<endl<<"no specified file: "<<fileName<<endl;
+        return false;
+    }                
 
-  gROOT->LoadMacro("mpdloadlibs.C");
-  gROOT->ProcessLine("mpdloadlibs()");
+    return true;
+}
 
-   MpdAnalysisManager man("ManagerAnal") ;
-   man.InputFileList("list.txt") ;
+
+
+void RunAnalyses(int nEvents = -1, TString inFileList = "list.txt"){
+
+  //gROOT->LoadMacro("mpdloadlibs.C");
+  //gROOT->ProcessLine("mpdloadlibs()");
+
+   gSystem->Load("libEmc.so") ;
+   gSystem->Load("libMpdPhysics.so") ;
+   gSystem->Load("libMpdPhotons.so") ;
+
+   MpdAnalysisManager man("ManagerAnal", nEvents) ;
+   if (!CheckFileExist(inFileList)) return;
+   man.InputFileList(inFileList) ;
    man.ReadBranches("*") ; 
    man.SetOutput("histos.root") ;
    
    MpdCentralityAll pCentr("pCentr","pCentr") ;
    man.AddTask(&pCentr) ;
    
-   MpdConvPi0 pDef("pi0Def","ConvDef") ; //name, parametes file
-   man.AddTask(&pDef) ;
+//   MpdConvPi0 pDef("pi0Def","ConvDef") ; //name, parametes file
+//   man.AddTask(&pDef) ;
 
    MpdPairKK pKK("pKK","pKK") ;
    man.AddTask(&pKK) ;
@@ -20,3 +38,4 @@ void RunAnalyses(){
    man.Process() ;
 
 }
+
