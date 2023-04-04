@@ -3,7 +3,8 @@
 // Copyright (C) 2022 JINR
 
 #include "MpdTpcDetector.h"
-#include "geometry/BaseTpcSectorGeo.h"
+
+#include "BaseTpcSectorGeo.h"
 
 #include <Acts/Surfaces/Surface.hpp>
 #include <Acts/Utilities/Logger.hpp>

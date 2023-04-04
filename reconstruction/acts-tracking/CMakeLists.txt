@@ -19,13 +19,13 @@ set(INCLUDE_DIRECTORIES
   ${BASE_INCLUDE_DIRECTORIES}
   ${CMAKE_CURRENT_LIST_DIR}
   ${CMAKE_SOURCE_DIR}/core/mpdBase
-  ${CMAKE_SOURCE_DIR}/core/mpdField
+# ${CMAKE_SOURCE_DIR}/core/mpdField
   ${CMAKE_SOURCE_DIR}/detectors/tpc
-  ${CMAKE_SOURCE_DIR}/detectors/tpc/clusterHitFinder
-  ${CMAKE_SOURCE_DIR}/detectors/tpc/geometry
+  ${CMAKE_SOURCE_DIR}/detectors/tpc/clusterHitFinder/mlem
+  ${CMAKE_SOURCE_DIR}/detectors/tpc/fairTpc
   ${CMAKE_SOURCE_DIR}/reconstruction/acts-tracking
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
-  ${CMAKE_SOURCE_DIR}/reconstruction/tracking/lheTrack
+# ${CMAKE_SOURCE_DIR}/reconstruction/tracking/lheTrack
   ${CMAKE_SOURCE_DIR}/simulation/mcStack
 )
 
@@ -37,7 +37,6 @@ include_directories(${INCLUDE_DIRECTORIES})
 
 set(LINK_DIRECTORIES
   ${ACTS_PATH}/lib64
-  ${Boost_INCLUDE_DIRS}/../lib
 )
 
 link_directories(${LINK_DIRECTORIES})
@@ -116,6 +115,7 @@ Set(HEADERS
 
 Set(LINKDEF MpdTpcTrackerLinkDef.h)
 Set(LIBRARY_NAME MpdTpcActsTracker)
-Set(DEPENDENCIES Kalman MpdField ActsCore ActsFatras ActsPluginTGeo ActsExamplesCommon boost_program_options)
+#                Kalman MpdField                                                       boost_program_options
+Set(DEPENDENCIES                 ActsCore ActsFatras ActsPluginTGeo ActsExamplesCommon)
 
 GENERATE_LIBRARY()

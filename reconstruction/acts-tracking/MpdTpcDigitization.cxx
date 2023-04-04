@@ -5,7 +5,8 @@
 #include "MpdTpcDetector.h"
 #include "MpdTpcDigitization.h"
 #include "MpdTpcInputHit.h"
-#include "geometry/BaseTpcSectorGeo.h"
+
+#include "BaseTpcSectorGeo.h"
 
 #include "ActsExamples/Framework/WhiteBoard.hpp"
 

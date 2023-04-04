@@ -16,7 +16,6 @@
 // MPD includes
 #include "MpdTpcHitProducer.h"
 #include "MpdTpcDigitizerAZlt.h"
-#include "MpdTpcClusterFinderMlem.h"
 #include "MpdKalmanFilter.h"
 #include "MpdVertexZfinder.h"
 #include "MpdTpcTracker.h"
@@ -33,6 +32,8 @@
 #include "MpdPid.h"
 #include "TpcSectorGeoAZ.h"
 #include "TpcClusterHitFinderFast.h"
+#include "TpcClusterHitFinderMlem.h"
+#include "AbstractQA.h"
 
 #include <iostream>
 #include <filesystem>
@@ -40,7 +41,7 @@
 // Choose: UseMlem (MLEM clusterhitfinder)
 //         UseHitProducer (simple hit producer without digitizer)
 //         comment out the line for Fast clusterhitfinder
-//#define UseMlem 
+//#define UseMlem
 
 #include "commonFunctions.C"
 
@@ -64,11 +65,12 @@ std::string getPath(TString fileName) {
 
 // Macro for running reconstruction:
 // inFile - input file with MC data, default: evetest.root
+// outFile - output file with reconstructed data, default: mpddst.root
 // nStartEvent - number (start with zero) of first event to process, default: 0
 // nEvents - number of events to process, 0 - all events of given file will be proccessed, default: 1
-// outFile - output file with reconstructed data, default: mpddst.root
+// qaSetting - stored in static qaEngineMode enum variable to generate desired QA plots
 void trackingActs(TString inFile = "evetest.root", TString outFile = "mpddst.root", Int_t nStartEvent = 0,
-                  Int_t nEvents = 10)
+                  Int_t nEvents = 10, EQAMode qaSetting = EQAMode::OFF)
 {
 
    if (!CheckFileExist(inFile)) return;
@@ -80,7 +82,10 @@ void trackingActs(TString inFile = "evetest.root", TString outFile = "mpddst.roo
    TStopwatch timer;
    timer.Start();
 
-   // -----   Digitization run   -------------------------------------------
+   // -----   set QA Engine Mode   -------------------------------------------
+   AbstractQA::qaEngineMode = qaSetting;
+
+   // -----   Digitization run   ---------------------------------------------
    FairRunAna *fRun;
    fRun = new FairRunAna();
 
@@ -116,16 +121,15 @@ void trackingActs(TString inFile = "evetest.root", TString outFile = "mpddst.roo
    hitPr->SetModular(0);
    fRun->AddTask(hitPr);
 #else
-   // MpdTpcDigitizerAZ* tpcDigitizer = new MpdTpcDigitizerAZ(*secGeo);
    MpdTpcDigitizerAZlt *tpcDigitizer = new MpdTpcDigitizerAZlt(*secGeo);
    tpcDigitizer->SetPersistence(kTRUE);
    fRun->AddTask(tpcDigitizer);
  #ifdef UseMlem
-   MpdTpcClusterFinderMlem *tpcClus = new MpdTpcClusterFinderMlem(*secGeo);
+   TpcClusterHitFinderMlem *tpcClus = new TpcClusterHitFinderMlem(*secGeo);
  #else
    TpcClusterHitFinderFast *tpcClus = new TpcClusterHitFinderFast(*secGeo);
    tpcClus->SetPersistence(kTRUE);
- #endif 
+ #endif
    fRun->AddTask(tpcClus);
 #endif
 
@@ -184,7 +188,7 @@ void trackingActs(TString inFile = "evetest.root", TString outFile = "mpddst.roo
    MpdFillDstTask *fillDST = new MpdFillDstTask("MpdDst task");
    //fRun->AddTask(fillDST);
 
-   MpdMiniDstFillTask *miniDst = new MpdMiniDstFillTask(outFile);
+   //MpdMiniDstFillTask *miniDst = new MpdMiniDstFillTask(outFile);
    //fRun->AddTask(miniDst);
 
    // -----   Intialise   ----------------------------------------------------
