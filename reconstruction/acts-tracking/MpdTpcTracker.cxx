@@ -303,15 +303,48 @@ ActsExamples::SimParticleContainer getInputParticles(
   return particles;
 }
 
-/// Get multimap hits -> particles
-ActsExamples::IndexMultimap<ActsFatras::Barcode> getHitToParticlesMultiMap(
+/// Create multimap TpcPoint *hits idx -> particles
+ActsExamples::IndexMultimap<ActsFatras::Barcode> createTpcPointsToParticlesMap(
+    TClonesArray *tpcPoints,
+    const mcTrackToBarcodeInts &mcTrackToBarcode) {
+
+  ActsExamples::IndexMultimap<ActsFatras::Barcode> mapHitsToParticles;
+  Int_t n = tpcPoints->GetEntriesFast();
+
+  for (Int_t i = 0; i < n; i++) {
+
+    auto *tpcPoint = static_cast<TpcPoint*>(tpcPoints->UncheckedAt(i));
+    auto trackId = tpcPoint->GetTrackID();
+
+    if (auto search = mcTrackToBarcode.find(trackId);
+             search == mcTrackToBarcode.end()) {
+      std::cout << "[MpdTpcTracker.cxx]: createTpcPointsToParticlesMap():" <<
+          " ERROR: can't find Barcode for MC track with index " <<
+          trackId << std::endl;
+      continue;
+    }
+
+    const auto [pri, sec, part, gen, sub] =  mcTrackToBarcode.at(trackId);
+    const auto barcode = ActsFatras::Barcode().
+        setVertexPrimary(pri).
+        setVertexSecondary(sec).
+        setParticle(part).
+        setGeneration(gen).
+        setSubParticle(sub);
+    mapHitsToParticles.emplace(i, barcode);
+  }
+  return mapHitsToParticles;
+}
+
+/// Create multimap MpdTpcHit *hits idx -> particles
+ActsExamples::IndexMultimap<ActsFatras::Barcode> createTpcHitsToParticlesMap(
     TClonesArray *tpcHits,
     const mcTrackToBarcodeInts &mcTrackToBarcode) {
 
   ActsExamples::IndexMultimap<ActsFatras::Barcode> mapHitsToParticles;
-  Int_t nHits = tpcHits->GetEntriesFast();
+  Int_t n = tpcHits->GetEntriesFast();
 
-  for (Int_t i = 0; i < nHits; i++) {
+  for (Int_t i = 0; i < n; i++) {
 
     auto *tpcHit = static_cast<MpdTpcHit*>(tpcHits->UncheckedAt(i));
     std::vector <std::pair<int, float>> trackIDs = tpcHit->GetTrackIDs();
@@ -321,7 +354,7 @@ ActsExamples::IndexMultimap<ActsFatras::Barcode> getHitToParticlesMultiMap(
 
       if (auto search = mcTrackToBarcode.find(trackId);
                search == mcTrackToBarcode.end()) {
-        std::cout << "[MpdTpcTracker.cxx]: getHitToParticlesMultiMap():" <<
+        std::cout << "[MpdTpcTracker.cxx]: createTpcHitsToParticlesMap():" <<
             " ERROR: can't find Barcode for MC track with index " <<
             trackId << std::endl;
         continue;
@@ -401,7 +434,9 @@ void MpdTpcTracker::Exec(Option_t *option) {
   auto mcTracks = getArray("MCTrack");
   auto mcTrackToBarcode = createBarcodesMap(mcTracks);
   auto inputParticles = getInputParticles(mcTracks, mcTrackToBarcode);
-  auto mapHitsToParticles = getHitToParticlesMultiMap(fHits, mcTrackToBarcode);
+  auto mapHitsToParticles = UseMcHits
+     ? createTpcPointsToParticlesMap(fPoints, mcTrackToBarcode)
+     : createTpcHitsToParticlesMap  (fHits,   mcTrackToBarcode);
 
   // Run the track finding algorithm.
   const auto &config = fRunner->config();
