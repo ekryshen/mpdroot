@@ -39,6 +39,8 @@ void MpdPairKK::UserInit()
    fOutputList->Add(mhVertex);
    mhCentrality = new TH1F("hCentrality", "Centrality distribution", 100, 0., 100.);
    fOutputList->Add(mhCentrality);
+   mhEvPlane = new TH1F("hEvPlane", "EvPlane distribution", 100, -4, 4);
+   fOutputList->Add(mhEvPlane);
 
    // Minv
    mInvNoPID = new TH2F("mInvNoPID", "mInvNoPID", 100, 0., 10., 200, 0.9, 2.0);
@@ -253,10 +255,16 @@ bool MpdPairKK::selectEvent(MpdAnalysisEvent &event)
    if (mCenBin < 0) mCenBin = 0;
    if (mCenBin >= nMixEventCent) mCenBin = nMixEventCent - 1;
 
-   mixBin = mZvtxBin * nMixEventCent + mCenBin;
+   mRPBin = 0.5 * (event.fMpdEP.GetPhiEP_FHCal_F_all() / 3.14159 + 1) * nMixEventRP;
+   if (mRPBin < 0) mRPBin = 0;
+   if (mRPBin >= nMixEventRP) mRPBin = nMixEventRP - 1;
+
+   mixBin = mZvtxBin * nMixEventCent * nMixEventRP + mCenBin * nMixEventRP + mRPBin;
 
    mhVertex->Fill(mPrimaryVertex.Z());
    mhCentrality->Fill(cen);
+
+   mhEvPlane->Fill(event.fMpdEP.GetPhiEP_FHCal_F_all());
 
    anaBin = -1;
    if (cen >= 0 && cen < 10) anaBin = 0;

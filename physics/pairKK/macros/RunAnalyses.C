@@ -10,15 +10,15 @@ bool CheckFileExist(TString fileName){
 }
 
 
-
 void RunAnalyses(int nEvents = -1, TString inFileList = "list.txt"){
 
   //gROOT->LoadMacro("mpdloadlibs.C");
   //gROOT->ProcessLine("mpdloadlibs()");
 
+   gSystem->Load("libZdc.so") ;
    gSystem->Load("libEmc.so") ;
-   gSystem->Load("libMpdPhysics.so") ;
    gSystem->Load("libMpdPhotons.so") ;
+   gSystem->Load("libMpdPhysics.so") ;
 
    MpdAnalysisManager man("ManagerAnal", nEvents) ;
    if (!CheckFileExist(inFileList)) return;
@@ -28,6 +28,9 @@ void RunAnalyses(int nEvents = -1, TString inFileList = "list.txt"){
    
    MpdCentralityAll pCentr("pCentr","pCentr") ;
    man.AddTask(&pCentr) ;
+
+   MpdEventPlaneAll pEP("pEP","pEP") ;
+   man.AddTask(&pEP) ;
    
 //   MpdConvPi0 pDef("pi0Def","ConvDef") ; //name, parametes file
 //   man.AddTask(&pDef) ;

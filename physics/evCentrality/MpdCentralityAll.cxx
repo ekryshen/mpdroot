@@ -172,6 +172,10 @@ bool MpdCentralityAll::selectEvent(MpdAnalysisEvent &event)
       return false;
    }
 
+   if (mParams.mProdGenerator == "Req28-UrQMD" && nTrMc <= 2 * 209) { // Just nucleons of Bi+Bi --> Request28-UrQMD
+      return false;
+   }
+
    if (mParams.mProdGenerator == "Req30-PHSD" && nTrMc <= 2 * 209) { // Just nucleons of Bi+Bi --> Request30-PHSD
       return false;
    }

@@ -65,13 +65,14 @@ protected:
    float Beta_sigma_P(float beta, float mom) const;
 
 private:
-   float    cen;
+   float cen;
 
    // Event properties
    bool     isInitialized = false;
    bool     isMC          = true;
    int      mCenBin       = 0;
    int      mZvtxBin      = 0;
+   int      mRPBin        = 0;
    TVector3 mPrimaryVertex;
 
    std::string     mParamConfig;
@@ -87,7 +88,7 @@ private:
    TObjArray            *mEMCClusters     = nullptr;
    TClonesArray         *mKalmanTracks    = nullptr;
    TClonesArray         *mMpdGlobalTracks = nullptr;
-   TClonesArray         *mpdTofMatching  = nullptr;
+   TClonesArray         *mpdTofMatching   = nullptr;
    vector<MpdParticle *> mPartK;
    MpdKalmanHit          mKHit;
    TClonesArray         *eventM = nullptr; // (V)
@@ -95,34 +96,37 @@ private:
    std::vector<MpdPairKKTrack> mP2; // (V) Negative tracks
    std::vector<MpdPairKKTrack> mP1; // (V) Positive tracks
 
-   static constexpr short nCenBinsAna   =  7; // (V) number of bins in centrality for analysis
+   static constexpr short nCenBinsAna = 7; // (V) number of bins in centrality for analysis
+
    static constexpr short nMixEventZ    = 10; // (V) number of bins in z direction for mixing
    static constexpr short nMixEventCent = 10; // (V) number of bins in centrality for mixing
-   static constexpr short nMixTot       = nMixEventZ * nMixEventCent; // (V)
+   static constexpr short nMixEventRP   = 5;  // (V) number of bins in event plane for mixing
+   static constexpr short nMixTot       = nMixEventZ * nMixEventCent * nMixEventRP; // (V)
 
-   int       nMixed = 10; // (V) Depth of mixing
-   int       mixBin;
-   int       anaBin;
+   int nMixed = 10; // (V) Depth of mixing
+   int mixBin;
+   int anaBin;
 
    TList *mixedEvents[nMixTot];
 
    // DCAs
-   float eta_max = 1.5;
-   float eta_min = -1.5;
-   float cent_max = 100.;
-   float cent_min = 0.0;
-   static constexpr short neta_bins = 30; 
-   static constexpr short ncent_bins = 10; 
-   TF1 *f_dca_xy[neta_bins][ncent_bins];
-   TF1 *f_dca_z[neta_bins][ncent_bins];
+   float                  eta_max    = 1.5;
+   float                  eta_min    = -1.5;
+   float                  cent_max   = 100.;
+   float                  cent_min   = 0.0;
+   static constexpr short neta_bins  = 30;
+   static constexpr short ncent_bins = 10;
+   TF1                   *f_dca_xy[neta_bins][ncent_bins];
+   TF1                   *f_dca_z[neta_bins][ncent_bins];
 
    // Histograms
-   TList                  mHistoList;
+   TList mHistoList;
 
    // General QA
    TH1F *mhEvents     = nullptr;
    TH1F *mhVertex     = nullptr;
    TH1F *mhCentrality = nullptr;
+   TH1F *mhEvPlane    = nullptr;
 
    TH1F *mInvGen;
 
@@ -165,11 +169,11 @@ private:
    TH2F *mAccEffRecOnePID;
    TH2F *mAccEffRecTwoPID;
 
-   TFile *inFileSim;
-   TFile *dcaFile;
-   TTree *inTreeSim;
+   TFile        *inFileSim;
+   TFile        *dcaFile;
+   TTree        *inTreeSim;
    TClonesArray *tpcPoints;
 
-   ClassDef(MpdPairKK, 1); 
+   ClassDef(MpdPairKK, 1);
 };
 #endif

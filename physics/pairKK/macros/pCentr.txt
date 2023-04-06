@@ -1,18 +1,36 @@
-#-------Parameters used for analysis------
-# Event selection: defined in the header, please do not change the cuts
-# Track selection: defined in the header, please do not change the cuts 
-
-# Production selection: 
-#mProdGenerator Req25-UrQMD  // Production-Generator
-#mInFileConvert nTr_Centr_Req25-UrQMD.root  // input file with track-to-centrality converter 
-#mProdGenerator Req26-DCM-QGSM-SMM  // Production-Generator
-#mInFileConvert nTr_Centr_Req26-DCM-QGSM-SMM.root  // input file with track-to-centrality converter 
-#mProdGenerator Req30-PHSD  // Production-Generator
-#mInFileConvert nTr_Centr_Req30-PHSD.root  // input file with track-to-centrality converter 
-mProdGenerator Req27-Req29-PHQMD  // Production-Generator (works for Req27 and Req29)
-mInFileConvert nTr_Centr_Req27-Req29-PHQMD.root  // input file with track-to-centrality converter 
-
-# Track efficiecny corrections:
-mInFileTrEff TrackRecEff.root  // input file with track reconstruction efficiecnies
-
-
+#-------Parameters used for analysis------
+
+# Event selection: defined in the header, please do not change the cuts
+
+# Track selection: defined in the header, please do not change the cuts 
+
+
+
+# Production selection: 
+
+#mProdGenerator Req25-UrQMD  // Production-Generator
+#mInFileConvert nTr_Centr_Req25-UrQMD.root  // input file with track-to-centrality converter 
+
+#mProdGenerator Req26-DCM-QGSM-SMM  // Production-Generator
+#mInFileConvert nTr_Centr_Req26-DCM-QGSM-SMM.root  // input file with track-to-centrality converter 
+
+#mProdGenerator Req27-Req29-PHQMD  // Production-Generator (works for Req27 and Req29)
+#mInFileConvert nTr_Centr_Req27-Req29-PHQMD.root  // input file with track-to-centrality converter 
+
+mProdGenerator Req28-UrQMD  // Production-Generator
+mInFileConvert nTr_Centr_Req28-UrQMD.root  // input file with track-to-centrality converter 
+
+#mProdGenerator Req30-PHSD  // Production-Generator
+#mInFileConvert nTr_Centr_Req30-PHSD.root  // input file with track-to-centrality converter 
+
+
+
+
+# Track efficiecny corrections:
+
+mInFileTrEff TrackRecEff.root  // input file with track reconstruction efficiecnies
+
+
+
+
+
