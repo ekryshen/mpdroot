@@ -10,4 +10,4 @@ mPtminCut    0.1  # minimal pt used in analysis
 mPtmaxCut    2.0  # maximal pt used in analysis
 mDcaCut      2.0  # maximal DCA accepted
 # Event plane corrections:
-mInFileEpCorr   pEpQa.root  # input file with QA histograms and EP corrections profiles
+mInFileEpCorr   ANY  # input file with QA histograms and EP corrections profiles

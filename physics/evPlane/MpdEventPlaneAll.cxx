@@ -22,208 +22,6 @@ MpdEventPlaneAll::MpdEventPlaneAll(const char *name, const char *outputName) : M
 
 MpdEventPlaneAll::~MpdEventPlaneAll()
 {
-   // mCorrQxFHCalFAll.clear();
-   // mCorrQyFHCalFAll.clear();
-   // mCorrQxFHCalNAll.clear();
-   // mCorrQyFHCalNAll.clear();
-   // mCorrQxFHCalSAll.clear();
-   // mCorrQyFHCalSAll.clear();
-   // mCorrQxTPCNAll.clear();
-   // mCorrQyTPCNAll.clear();
-   // mCorrQxTPCSAll.clear();
-   // mCorrQyTPCSAll.clear();
-
-   // mCorrCos1FHCalFAll.clear();
-   // mCorrCos2FHCalFAll.clear();
-   // mCorrCos3FHCalFAll.clear();
-   // mCorrCos4FHCalFAll.clear();
-   // mCorrCos5FHCalFAll.clear();
-   // mCorrCos6FHCalFAll.clear();
-   // mCorrCos7FHCalFAll.clear();
-   // mCorrCos8FHCalFAll.clear();
-   // mCorrSin1FHCalFAll.clear();
-   // mCorrSin2FHCalFAll.clear();
-   // mCorrSin3FHCalFAll.clear();
-   // mCorrSin4FHCalFAll.clear();
-   // mCorrSin5FHCalFAll.clear();
-   // mCorrSin6FHCalFAll.clear();
-   // mCorrSin7FHCalFAll.clear();
-   // mCorrSin8FHCalFAll.clear();
-
-   // mCorrCos1FHCalNAll.clear();
-   // mCorrCos2FHCalNAll.clear();
-   // mCorrCos3FHCalNAll.clear();
-   // mCorrCos4FHCalNAll.clear();
-   // mCorrCos5FHCalNAll.clear();
-   // mCorrCos6FHCalNAll.clear();
-   // mCorrCos7FHCalNAll.clear();
-   // mCorrCos8FHCalNAll.clear();
-   // mCorrSin1FHCalNAll.clear();
-   // mCorrSin2FHCalNAll.clear();
-   // mCorrSin3FHCalNAll.clear();
-   // mCorrSin4FHCalNAll.clear();
-   // mCorrSin5FHCalNAll.clear();
-   // mCorrSin6FHCalNAll.clear();
-   // mCorrSin7FHCalNAll.clear();
-   // mCorrSin8FHCalNAll.clear();
-
-   // mCorrCos1FHCalSAll.clear();
-   // mCorrCos2FHCalSAll.clear();
-   // mCorrCos3FHCalSAll.clear();
-   // mCorrCos4FHCalSAll.clear();
-   // mCorrCos5FHCalSAll.clear();
-   // mCorrCos6FHCalSAll.clear();
-   // mCorrCos7FHCalSAll.clear();
-   // mCorrCos8FHCalSAll.clear();
-   // mCorrSin1FHCalSAll.clear();
-   // mCorrSin2FHCalSAll.clear();
-   // mCorrSin3FHCalSAll.clear();
-   // mCorrSin4FHCalSAll.clear();
-   // mCorrSin5FHCalSAll.clear();
-   // mCorrSin6FHCalSAll.clear();
-   // mCorrSin7FHCalSAll.clear();
-   // mCorrSin8FHCalSAll.clear();
-
-   // mCorrCos1TPCNAll.clear();
-   // mCorrCos2TPCNAll.clear();
-   // mCorrCos3TPCNAll.clear();
-   // mCorrCos4TPCNAll.clear();
-   // mCorrSin1TPCNAll.clear();
-   // mCorrSin2TPCNAll.clear();
-   // mCorrSin3TPCNAll.clear();
-   // mCorrSin4TPCNAll.clear();
-
-   // mCorrCos1TPCSAll.clear();
-   // mCorrCos2TPCSAll.clear();
-   // mCorrCos3TPCSAll.clear();
-   // mCorrCos4TPCSAll.clear();
-   // mCorrSin1TPCSAll.clear();
-   // mCorrSin2TPCSAll.clear();
-   // mCorrSin3TPCSAll.clear();
-   // mCorrSin4TPCSAll.clear();
-
-   // delete mhEvents;
-   // delete mhVertex;
-   // delete mhHits;
-   // delete mhEta;
-   // delete mhDca;
-   // delete mhPt;
-   // delete mhCorrStep;
-   // delete mhQxRawFHCalFAll;
-   // delete mhQyRawFHCalFAll;
-   // delete mhPhiEPRawFHCalFAll;
-   // delete mhQxRawFHCalNAll;
-   // delete mhQyRawFHCalNAll;
-   // delete mhPhiEPRawFHCalNAll;
-   // delete mhQxRawFHCalSAll;
-   // delete mhQyRawFHCalSAll;
-   // delete mhPhiEPRawFHCalSAll;
-   // delete mhQxRawTPCNAll;
-   // delete mhQyRawTPCNAll;
-   // delete mhPhiEPRawTPCNAll;
-   // delete mhQxRawTPCSAll;
-   // delete mhQyRawTPCSAll;
-   // delete mhPhiEPRawTPCSAll;
-   // delete mhQxRecFHCalFAll;
-   // delete mhQyRecFHCalFAll;
-   // delete mhPhiEPRecFHCalFAll;
-   // delete mhQxRecFHCalNAll;
-   // delete mhQyRecFHCalNAll;
-   // delete mhPhiEPRecFHCalNAll;
-   // delete mhQxRecFHCalSAll;
-   // delete mhQyRecFHCalSAll;
-   // delete mhPhiEPRecFHCalSAll;
-   // delete mhQxRecTPCNAll;
-   // delete mhQyRecTPCNAll;
-   // delete mhPhiEPRecTPCNAll;
-   // delete mhQxRecTPCSAll;
-   // delete mhQyRecTPCSAll;
-   // delete mhPhiEPRecTPCSAll;
-   // delete mhPhiEPShfFHCalFAll;
-   // delete mhPhiEPShfFHCalNAll;
-   // delete mhPhiEPShfFHCalSAll;
-   // delete mhPhiEPShfTPCNAll;
-   // delete mhPhiEPShfTPCSAll;
-
-   // delete mhCorrQxFHCalFAll;
-   // delete mhCorrQyFHCalFAll;
-   // delete mhCorrQxFHCalNAll;
-   // delete mhCorrQyFHCalNAll;
-   // delete mhCorrQxFHCalSAll;
-   // delete mhCorrQyFHCalSAll;
-   // delete mhCorrQxTPCNAll;
-   // delete mhCorrQyTPCNAll;
-   // delete mhCorrQxTPCSAll;
-   // delete mhCorrQyTPCSAll;
-
-   // delete mhCorrCos1FHCalFAll;
-   // delete mhCorrCos2FHCalFAll;
-   // delete mhCorrCos3FHCalFAll;
-   // delete mhCorrCos4FHCalFAll;
-   // delete mhCorrCos5FHCalFAll;
-   // delete mhCorrCos6FHCalFAll;
-   // delete mhCorrCos7FHCalFAll;
-   // delete mhCorrCos8FHCalFAll;
-   // delete mhCorrSin1FHCalFAll;
-   // delete mhCorrSin2FHCalFAll;
-   // delete mhCorrSin3FHCalFAll;
-   // delete mhCorrSin4FHCalFAll;
-   // delete mhCorrSin5FHCalFAll;
-   // delete mhCorrSin6FHCalFAll;
-   // delete mhCorrSin7FHCalFAll;
-   // delete mhCorrSin8FHCalFAll;
-
-   // delete mhCorrCos1FHCalNAll;
-   // delete mhCorrCos2FHCalNAll;
-   // delete mhCorrCos3FHCalNAll;
-   // delete mhCorrCos4FHCalNAll;
-   // delete mhCorrCos5FHCalNAll;
-   // delete mhCorrCos6FHCalNAll;
-   // delete mhCorrCos7FHCalNAll;
-   // delete mhCorrCos8FHCalNAll;
-   // delete mhCorrSin1FHCalNAll;
-   // delete mhCorrSin2FHCalNAll;
-   // delete mhCorrSin3FHCalNAll;
-   // delete mhCorrSin4FHCalNAll;
-   // delete mhCorrSin5FHCalNAll;
-   // delete mhCorrSin6FHCalNAll;
-   // delete mhCorrSin7FHCalNAll;
-   // delete mhCorrSin8FHCalNAll;
-
-   // delete mhCorrCos1FHCalSAll;
-   // delete mhCorrCos2FHCalSAll;
-   // delete mhCorrCos3FHCalSAll;
-   // delete mhCorrCos4FHCalSAll;
-   // delete mhCorrCos5FHCalSAll;
-   // delete mhCorrCos6FHCalSAll;
-   // delete mhCorrCos7FHCalSAll;
-   // delete mhCorrCos8FHCalSAll;
-   // delete mhCorrSin1FHCalSAll;
-   // delete mhCorrSin2FHCalSAll;
-   // delete mhCorrSin3FHCalSAll;
-   // delete mhCorrSin4FHCalSAll;
-   // delete mhCorrSin5FHCalSAll;
-   // delete mhCorrSin6FHCalSAll;
-   // delete mhCorrSin7FHCalSAll;
-   // delete mhCorrSin8FHCalSAll;
-
-   // delete mhCorrCos1TPCNAll;
-   // delete mhCorrCos2TPCNAll;
-   // delete mhCorrCos3TPCNAll;
-   // delete mhCorrCos4TPCNAll;
-   // delete mhCorrSin1TPCNAll;
-   // delete mhCorrSin2TPCNAll;
-   // delete mhCorrSin3TPCNAll;
-   // delete mhCorrSin4TPCNAll;
-
-   // delete mhCorrCos1TPCSAll;
-   // delete mhCorrCos2TPCSAll;
-   // delete mhCorrCos3TPCSAll;
-   // delete mhCorrCos4TPCSAll;
-   // delete mhCorrSin1TPCSAll;
-   // delete mhCorrSin2TPCSAll;
-   // delete mhCorrSin3TPCSAll;
-   // delete mhCorrSin4TPCSAll;
 }
 
 void MpdEventPlaneAll::UserInit()
@@ -570,6 +368,7 @@ void MpdEventPlaneAll::UserInit()
 
       inr->Close();
    } else {
+      mCorrStep = 0;
    }
 
    // Prepare histograms etc.
@@ -882,26 +681,51 @@ void MpdEventPlaneAll::ProcessEvent(MpdAnalysisEvent &event)
    float Qx_raw_fhcal_F_all = 0., Qy_raw_fhcal_F_all = 0.;
    float Qx_raw_fhcal_N_all = 0., Qy_raw_fhcal_N_all = 0.;
    float Qx_raw_fhcal_S_all = 0., Qy_raw_fhcal_S_all = 0.;
+   float En_Total_F_all = 0., En_Total_N_all=0., En_Total_S_all=0.;
    for (int i = 0; i < mFHCalModuleNum; i++) {
       // Exclude modules 22 and 67 (their position are at beampipe)
       if (i == 22) continue;
       if (i == 67) continue;
       // Full
-      float weight = (i < (int)mFHCalMod1Side) ? -1. : 1.;
+      float weight = (i < (int)mFHCalMod1Side) ? 1. : -1.;
       Qx_raw_fhcal_F_all += weight * fhcalEnergy.at(i) * cos(1. * GetFHCalPhi(i));
       Qy_raw_fhcal_F_all += weight * fhcalEnergy.at(i) * sin(1. * GetFHCalPhi(i));
-
+      En_Total_F_all += fhcalEnergy.at(i);
       // North (eta<0)
       if (i < (int)mFHCalMod1Side) {
-         Qx_raw_fhcal_N_all += fhcalEnergy.at(i) * cos(1. * GetFHCalPhi(i));
-         Qy_raw_fhcal_N_all += fhcalEnergy.at(i) * sin(1. * GetFHCalPhi(i));
+         Qx_raw_fhcal_N_all += weight * fhcalEnergy.at(i) * cos(1. * GetFHCalPhi(i));
+         Qy_raw_fhcal_N_all += weight * fhcalEnergy.at(i) * sin(1. * GetFHCalPhi(i));
+         En_Total_N_all += fhcalEnergy.at(i);
       }
       // South (eta>0)
       else {
-         Qx_raw_fhcal_S_all += fhcalEnergy.at(i) * cos(1. * GetFHCalPhi(i));
-         Qy_raw_fhcal_S_all += fhcalEnergy.at(i) * sin(1. * GetFHCalPhi(i));
+         Qx_raw_fhcal_S_all += weight * fhcalEnergy.at(i) * cos(1. * GetFHCalPhi(i));
+         Qy_raw_fhcal_S_all += weight * fhcalEnergy.at(i) * sin(1. * GetFHCalPhi(i));
+         En_Total_S_all += fhcalEnergy.at(i);
       }
    }
+   if (En_Total_F_all == 0.) {
+      Qx_raw_fhcal_F_all = 0.;
+      Qy_raw_fhcal_F_all = 0.;
+   } else {
+      Qx_raw_fhcal_F_all /= En_Total_F_all;
+      Qy_raw_fhcal_F_all /= En_Total_F_all;
+   }
+   if (En_Total_N_all == 0.) {
+      Qx_raw_fhcal_N_all = 0.;
+      Qy_raw_fhcal_N_all = 0.;
+   } else {
+      Qx_raw_fhcal_N_all /= En_Total_N_all;
+      Qy_raw_fhcal_N_all /= En_Total_N_all;
+   }
+   if (En_Total_S_all == 0.) {
+      Qx_raw_fhcal_S_all = 0.;
+      Qy_raw_fhcal_S_all = 0.;
+   } else {
+      Qx_raw_fhcal_S_all /= En_Total_S_all;
+      Qy_raw_fhcal_S_all /= En_Total_S_all;
+   }
+
    float phiEP_raw_fhcal_F_all, phiEP_raw_fhcal_N_all, phiEP_raw_fhcal_S_all;
 
    phiEP_raw_fhcal_F_all =
