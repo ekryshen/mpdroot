@@ -20,9 +20,7 @@ MpdEventPlaneAll::MpdEventPlaneAll(const char *name, const char *outputName) : M
    mParamConfig = outputName;
 }
 
-MpdEventPlaneAll::~MpdEventPlaneAll()
-{
-}
+MpdEventPlaneAll::~MpdEventPlaneAll() {}
 
 void MpdEventPlaneAll::UserInit()
 {
@@ -400,23 +398,23 @@ void MpdEventPlaneAll::UserInit()
    fOutputList->Add(mhPt);
    mhCorrStep = new TH1F("mhCorrStep", "Correction step: 0 - raw, 1 - rec, 2 - shift", 3, 0., 3.);
    fOutputList->Add(mhCorrStep);
-   mhQxRawFHCalFAll = new TH1F("mhQxRawFHCalFAll", "Q_{x}^{Raw} from FHCal F", 200, -10., 10.);
+   mhQxRawFHCalFAll = new TH1F("mhQxRawFHCalFAll", "Q_{x}^{Raw} from FHCal F", 200, -1., 1.);
    fOutputList->Add(mhQxRawFHCalFAll);
-   mhQyRawFHCalFAll = new TH1F("mhQyRawFHCalFAll", "Q_{y}^{Raw} from FHCal F", 200, -10., 10.);
+   mhQyRawFHCalFAll = new TH1F("mhQyRawFHCalFAll", "Q_{y}^{Raw} from FHCal F", 200, -1., 1.);
    fOutputList->Add(mhQyRawFHCalFAll);
    mhPhiEPRawFHCalFAll =
       new TH1F("mhPhiEPRawFHCalFAll", "#Psi_{EP}^{Raw} from FHCal F", 360, -1. * TMath::Pi(), TMath::Pi());
    fOutputList->Add(mhPhiEPRawFHCalFAll);
-   mhQxRawFHCalNAll = new TH1F("mhQxRawFHCalNAll", "Q_{x}^{Raw} from FHCal N", 200, -10., 10.);
+   mhQxRawFHCalNAll = new TH1F("mhQxRawFHCalNAll", "Q_{x}^{Raw} from FHCal N", 200, -1., 1.);
    fOutputList->Add(mhQxRawFHCalNAll);
-   mhQyRawFHCalNAll = new TH1F("mhQyRawFHCalNAll", "Q_{y}^{Raw} from FHCal F", 200, -10., 10.);
+   mhQyRawFHCalNAll = new TH1F("mhQyRawFHCalNAll", "Q_{y}^{Raw} from FHCal F", 200, -1., 1.);
    fOutputList->Add(mhQyRawFHCalNAll);
    mhPhiEPRawFHCalNAll =
       new TH1F("mhPhiEPRawFHCalNAll", "#Psi_{EP}^{Raw} from FHCal N", 360, -1. * TMath::Pi(), TMath::Pi());
    fOutputList->Add(mhPhiEPRawFHCalNAll);
-   mhQxRawFHCalSAll = new TH1F("mhQxRawFHCalSAll", "Q_{x}^{Raw} from FHCal S", 200, -10., 10.);
+   mhQxRawFHCalSAll = new TH1F("mhQxRawFHCalSAll", "Q_{x}^{Raw} from FHCal S", 200, -1., 1.);
    fOutputList->Add(mhQxRawFHCalSAll);
-   mhQyRawFHCalSAll = new TH1F("mhQyRawFHCalSAll", "Q_{y}^{Raw} from FHCal S", 200, -10., 10.);
+   mhQyRawFHCalSAll = new TH1F("mhQyRawFHCalSAll", "Q_{y}^{Raw} from FHCal S", 200, -1., 1.);
    fOutputList->Add(mhQyRawFHCalSAll);
    mhPhiEPRawFHCalSAll =
       new TH1F("mhPhiEPRawFHCalSAll", "#Psi_{EP}^{Raw} from FHCal S", 360, -1. * TMath::Pi(), TMath::Pi());
@@ -681,7 +679,7 @@ void MpdEventPlaneAll::ProcessEvent(MpdAnalysisEvent &event)
    float Qx_raw_fhcal_F_all = 0., Qy_raw_fhcal_F_all = 0.;
    float Qx_raw_fhcal_N_all = 0., Qy_raw_fhcal_N_all = 0.;
    float Qx_raw_fhcal_S_all = 0., Qy_raw_fhcal_S_all = 0.;
-   float En_Total_F_all = 0., En_Total_N_all=0., En_Total_S_all=0.;
+   float En_Total_F_all = 0., En_Total_N_all = 0., En_Total_S_all = 0.;
    for (int i = 0; i < mFHCalModuleNum; i++) {
       // Exclude modules 22 and 67 (their position are at beampipe)
       if (i == 22) continue;
