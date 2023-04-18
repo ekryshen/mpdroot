@@ -17,6 +17,11 @@ namespace TpcAlignment {
 	{
 	}
 
+	void Debug::SetDebugMode(bool mode)
+	{
+		vDebugMode = mode;
+	}
+
 	void Debug::Print(char const *const _Format, ...) const {
 		if (!vDebugMode) { return; }
 		va_list args;

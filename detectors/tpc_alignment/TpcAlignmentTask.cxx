@@ -1,42 +1,40 @@
 #include "TpcAlignmentTask.h"
-#include "Run.h"
-#include "Debug.h"
-#include "Alignment.h"
-#include <iostream>
+#include "Runner.h"
+#include "FileHelper.h"
+#include "Enums.h"
 #include <Rtypes.h>
+#include <string>
 
 using namespace std;
 using namespace TpcAlignment;
 
 ClassImp(TpcAlignmentTask);
 
-TpcAlignmentTask::TpcAlignmentTask() : FairTask("TpcAlignmentTask", 1) {}
+TpcAlignmentTask::TpcAlignmentTask() : 
+FairTask("TpcAlignmentTask", 1) 
+{}
 
-TpcAlignmentTask::TpcAlignmentTask(bool debugMode)
-    : FairTask("TpcAlignmentTask", 1), vDebugMode(debugMode) {}
+TpcAlignmentTask::~TpcAlignmentTask() 
+{}
 
-TpcAlignmentTask::~TpcAlignmentTask() {}
-
-InitStatus TpcAlignmentTask::Init() { return kSUCCESS; }
-
-void TpcAlignmentTask::SetNumberOfCalibration(int val) {
-  vNumberOfCalibration = val;
+InitStatus TpcAlignmentTask::Init()
+{
+   return kSUCCESS;
 }
 
-void TpcAlignmentTask::Exec(Option_t *opt) {
-  Alignment vAlignment(Debug(false));
-	Run R(vAlignment, Debug(false));
+void TpcAlignmentTask::Exec(Option_t *opt)
+{
+	int precision{ 100 };
+	const int vNumberOfCalibrationIterations{ 6 };
+	Runner R;
 
-	cout << "Load A\n";
-	vAlignment.LoadA();
-
-	for (int i = 0; i < vNumberOfCalibration; ++i)
-	{
-		cout << "Calibration\n";
-		R.Calibration("testA.inp");
-	}
-	cout << "Measurement\n";
-	R.Measurement("testA.inp", "testA.out");
+	string vRaysFile = FileHelper::BuildFilePath(Solution::release, Direction::input, "LaserRays.txt");
+	string matrixA = FileHelper::BuildFilePath(Solution::release, Direction::output, "A.out");
+	string coeffMR = FileHelper::BuildFilePath(Solution::release, Direction::output, "MR.out");
+	R.LoadModelData(vRaysFile);
+	R.LoadCorrectionMatrix({}, false);
+	R.Calibrate(vNumberOfCalibrationIterations);
+	R.SaveAMR2Files(matrixA, coeffMR, precision);
 }
 
 void TpcAlignmentTask::Finish() {}

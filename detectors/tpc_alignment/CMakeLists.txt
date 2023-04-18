@@ -20,12 +20,19 @@ set(LINK_DIRECTORIES
 link_directories(${LINK_DIRECTORIES})
 
 set(SRCS
-  Debug.cxx
-  FileHelper.cxx
-  Linalg.cxx
-  Alignment.cxx 
-  Run.cxx 
-  TpcAlignmentTask.cxx
+	CorrectionMatrix.cxx
+	Debug.cxx
+	EigenCalculator.cxx
+	EigenCoefficients.cxx
+	FileHelper.cxx
+	Linalg.cxx
+	Point.cxx
+	Rays.cxx
+	Runner.cxx
+	SystemOfLinearEquations.cxx
+	TpcAlignmentTask.cxx
+	TpcCorrectionTask.cxx
+	Track.cxx
 )
 
 Set(HEADERS)
@@ -35,3 +42,5 @@ Set(LIBRARY_NAME TpcAlignment)
 Set(DEPENDENCIES Core Base )
 
 GENERATE_LIBRARY()
+
+
