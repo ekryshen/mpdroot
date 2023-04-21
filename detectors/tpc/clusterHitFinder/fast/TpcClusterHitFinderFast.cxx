@@ -25,7 +25,7 @@ using namespace chrono;
 TpcClusterHitFinderFast::TpcClusterHitFinderFast(BaseTpcSectorGeo &secGeo)
    : AbstractTpcClusterHitFinder(secGeo, "TPC Cluster finder Fast", kFALSE)
 {
-   _pSecGeo = dynamic_cast<TpcSectorGeoAZ *>(&secGeo);
+   _pSecGeo = dynamic_cast<BaseTpcSectorGeo *>(&secGeo);
    if (!_pSecGeo) Fatal("TpcClusterHitFinderFast::TpcClusterHitFinderFast", " !!! Wrong geometry type !!! ");
 }
 
@@ -194,14 +194,17 @@ void TpcClusterHitFinderFast::calcSector(const EventClusters *pEventClusters)
             float fPad  = pCluster->getPad();
             float fTime = pCluster->getTime();
 
-            // --------------------------------TpcSectorGeoAZ--------------------------------------------------
-            double   xloc  = _pSecGeo->Pad2Xloc(fPad, nRow);
-            int      padID = _pSecGeo->PadID(nSect % _pSecGeo->NofSectors(), nRow);
-            double   yloc  = _pSecGeo->LocalPadPosition(padID).Y();
-            double   zloc  = _pSecGeo->TimeBin2Z(fTime);
-            TVector3 p3loc(xloc, yloc, zloc);
-            if (nSect >= _pSecGeo->NofSectors()) p3loc[2] = -p3loc[2];
-            _pSecGeo->Local2Global(nSect, p3loc, p3glob);
+			// --------------------------------BaseTpcSectorGeo--------------------------------------------------
+            Int_t nSectAZlt = (_pSecGeo->SECTOR_COUNT_HALF - nSect + 3) % _pSecGeo->SECTOR_COUNT_HALF;   // +3 -> difference between SectorGeoAZ and BaseSectorGeo
+            if (nSect >= _pSecGeo->SECTOR_COUNT_HALF) {
+                  nSectAZlt = nSectAZlt < 0 ? nSectAZlt + _pSecGeo->SECTOR_COUNT : nSectAZlt + _pSecGeo->SECTOR_COUNT_HALF;
+                  fPad = _pSecGeo->PAD_COUNT[nRow] * 2 - 1 - fPad;         // reverse Pads from last to first
+            }
+            nSect = nSectAZlt;   
+            TVector2 tv2XYlocal = _pSecGeo->PadRow2Local(fPad, nRow);
+            Double_t zloc  = _pSecGeo->TimeBin2Z(fTime, 0.0055);
+            TVector3 p3loc(tv2XYlocal.X(), tv2XYlocal.Y(), zloc);														  
+            p3glob = _pSecGeo->Local2Global(p3loc, nSect);
 
             /* write cluster(s) */
             nHit                   = hitArray->GetEntriesFast();
@@ -228,20 +231,16 @@ void TpcClusterHitFinderFast::calcSector(const EventClusters *pEventClusters)
             }
 
             /* write hit(s) */
-            MpdTpcHit *hit = new ((*hitArray)[nHit++]) MpdTpcHit(padID, p3glob, tv3GlobErr, nClus++); // Add new hit
+            MpdTpcHit *hit = new ((*hitArray)[nHit++]) MpdTpcHit(0, p3glob, tv3GlobErr, nClus++); // Add new hit
             hit->SetLayer(nRow);
             hit->SetLocalPosition(p3loc); // point position
             hit->SetEnergyLoss(pCluster->getAdcSum());
-
-            int    ireg = (nRow < _pSecGeo->NofRowsReg(0)) ? 0 : 1;
-            double step = _pSecGeo->PadHeight(ireg);
+			int    step = (nRow <= _pSecGeo->ROW_COUNT[0]) ? _pSecGeo->PAD_HEIGHT[0] : _pSecGeo->PAD_HEIGHT[1];
             hit->SetStep(step);
             hit->SetModular(1); // modular geometry flag
-
             hit->SetPad(int(fPad));
             hit->SetBin(int(fTime));
             hit->SetNdigits(rlstPadClusters.size());
-
             for (vector<pair<int, float>>::const_iterator i5 = vnTrackId.begin(); i5 != vnTrackId.end(); i5++) {
                hit->AddTrackID((*i5).first, (*i5).second); // TrackID
             }

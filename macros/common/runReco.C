@@ -40,7 +40,7 @@
 // Choose: UseMlem (MLEM clusterhitfinder)
 //         UseHitProducer (simple hit producer without digitizer)
 //         comment out the line for Fast clusterhitfinder
-#define UseMlem 
+//#define UseMlem 
 
 #include "commonFunctions.C"
 

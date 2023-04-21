@@ -16,10 +16,10 @@
 #include <vector>
 
 #include "TpcClustering.h"
-#include "TpcSectorGeoAZ.h"
+#include "BaseTpcSectorGeo.h"
 
 // Collaborating Class Declarations --
-class TpcSectorGeoAZ;
+class BaseTpcSectorGeo;
 class TClonesArray;
 
 class TpcClusterHitFinderFast : public AbstractTpcClusterHitFinder {
@@ -60,7 +60,7 @@ private:
    const char *_strOutputBranchName;
 
    Bool_t          fPersistence;
-   TpcSectorGeoAZ *_pSecGeo;
+   BaseTpcSectorGeo *_pSecGeo;
 
    void calcSector(const tpcClustering::EventClusters *pEventClusters);
 
