@@ -46,11 +46,11 @@ set(SRCS
   ActsExamples/Io/Performance/CKFPerformanceWriter.cxx
   ActsExamples/TGeoDetector/TGeoDetector.cxx
   ActsExamples/TGeoDetector/TGeoITkModuleSplitter.cxx
-  ActsExamples/TruthTracking/TruthSeedSelector.cxx
   MpdTpcConfig.cxx
   MpdTpcDetector.cxx
   MpdTpcDigitization.cxx
   MpdTpcMagneticField.cxx
+  MpdTpcParticleSelector.cxx
   MpdTpcRunner.cxx
   MpdTpcSpacePointMaking.cxx
   MpdTpcTrack.cxx
@@ -103,6 +103,7 @@ Set(HEADERS
   MpdTpcEventData.h
   MpdTpcInputHit.h
   MpdTpcMagneticField.h
+  MpdTpcParticleSelector.h
   MpdTpcRunner.h
   MpdTpcSpacePointMaking.h
   MpdTpcTrack.h

@@ -447,7 +447,7 @@ void MpdTpcTracker::Exec(Option_t *option) {
                    fPerfWriter, context, fOutPath);
 
   // Dump hits to file.
-  context.eventStore.add(config.DumpDataID, config.DumpData);
+  context.eventStore.add(config.WhetherDumpDataID, config.DumpData);
   if (config.DumpData) {
     dumpData(fHits, eventCounter, fOutPath);
   }
@@ -464,6 +464,9 @@ void MpdTpcTracker::Exec(Option_t *option) {
     const auto &spacePoints =
         context.eventStore.get<Mpd::Tpc::SpacePointContainer>(
             config.spacePointMaking.outputSpacePoints);
+    const auto &selectedHits =
+        context.eventStore.get<Mpd::Tpc::InputHitContainer>(
+            config.particleSelector.outputSimHits);
 
     // Get the track recognition statistics.
     auto statistics = fRunner->getStatistics(context);
@@ -471,7 +474,7 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
     // Build histograms.
     buildHistograms(statistics, nTracks, eventCounter, fOutPath);
-    plotQualityOnP(hits, trajectories, eventCounter, fOutPath);
+    plotQualityOnP(selectedHits, trajectories, eventCounter, fOutPath);
 
     // Plot the output tracks.
     std::shared_ptr<const Acts::TrackingGeometry> geometry =
@@ -484,10 +487,10 @@ void MpdTpcTracker::Exec(Option_t *option) {
     plotRealTracks(6000, 6000, geometry, MChits, eventCounter,
         fOutPath, color, lineWidth, Projection::XY, "_MC_input_XY");
 
-    plotRealTracks(6000, 6000, geometry, hits, eventCounter,
+    plotRealTracks(6000, 6000, geometry, selectedHits, eventCounter,
         fOutPath, color, lineWidth, Projection::XY, "_hits_input_XY");
 
-    plotOutputTracks(6000, 6000, geometry, spacePoints, hits,
+    plotOutputTracks(6000, 6000, geometry, spacePoints, selectedHits,
         trajectories, eventCounter, fOutPath,
         color, lineWidth, Projection::XY);
   }

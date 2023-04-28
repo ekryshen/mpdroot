@@ -70,8 +70,11 @@ private:
   void logInput(const ActsExamples::AlgorithmContext &context) const;
   void logOutput(const ActsExamples::AlgorithmContext &context) const;
 
-  void logHit(size_t hitId, const InputHit &hit) const;
-  void logHits(const InputHitContainer &hits) const;
+  void logHit(const std::string &prefix,
+              size_t hitId,
+              const InputHit &hit) const;
+  void logHits(const std::string &prefix,
+               const InputHitContainer &hits) const;
 
   void logTrack(const std::string &prefix,
                 size_t trackId,

@@ -7,6 +7,7 @@
 #include "MpdTpcDetector.h"
 #include "MpdTpcDigitization.h"
 #include "MpdTpcMagneticField.h"
+#include "MpdTpcParticleSelector.h"
 #include "MpdTpcSpacePointMaking.h"
 #include "MpdTpcTrackEstimation.h"
 #include "MpdTpcTrackFinding.h"
@@ -33,6 +34,7 @@ struct Config final {
   //===--------------------------------------------------------------------===//
 
   static constexpr auto SimHitsID           = "simhits";
+  static constexpr auto SelectedSimHitsID   = "selectedsimhits";
   static constexpr auto SourceLinksID       = "sourcelinks";
   static constexpr auto MeasurementsID      = "measurements";
   static constexpr auto SpacePointsID       = "spacepoints";
@@ -43,9 +45,28 @@ struct Config final {
   static constexpr auto TrajectoriesID      = "trajectories";
   static constexpr auto TrackCandidatesID   = "trackcandidates";
   static constexpr auto ParticlesID         = "inputparticles";
-  static constexpr auto SelectedID          = "selectedparticles";
-  static constexpr auto MeasParticlesMapID  = "measurementparticles";
-  static constexpr auto DumpDataID          = "dumpdata";
+  static constexpr auto SelectedParticlesID = "selectedparticles";
+  static constexpr auto HitParticlesMapID   = "hitparticlesmap";
+  static constexpr auto SelectedHitParticlesMapID = "selectedhitparticlesmap";
+  static constexpr auto WhetherDumpDataID   = "whetherdumpdata";
+
+  //===--------------------------------------------------------------------===//
+  // Particle selector
+  //===--------------------------------------------------------------------===//
+
+  static constexpr auto PrimaryParticlesOnly = true;
+  // Truth particle kinematic cuts.
+  static constexpr auto PhiMin              =  std::numeric_limits<double>::lowest();
+  static constexpr auto PhiMax              =  std::numeric_limits<double>::max();
+  static constexpr auto EtaMin              = -1.2;
+  static constexpr auto EtaMax              =  1.2;
+  static constexpr auto AbsEtaMin           =  std::numeric_limits<double>::lowest();
+  static constexpr auto AbsEtaMax           =  std::numeric_limits<double>::max();
+  static constexpr auto PtMax               =  std::numeric_limits<double>::max();
+  static constexpr auto KeepNeutral         =  false;
+  /// Requirement on number of recorded hits.
+  static constexpr auto NHitsMin            =  9;
+  static constexpr auto NHitsMax            =  std::numeric_limits<size_t>::max();
 
   //===--------------------------------------------------------------------===//
   // Track seeding
@@ -66,7 +87,7 @@ struct Config final {
   static constexpr auto SigmaScattering     =  5;                   // FIXME
   static constexpr auto MaxPtScattering     =  5._GeV;              // Max Pt for scattering
   static constexpr auto RadLengthPerSeed    =  0.05;                // OK
-  static constexpr auto MinPt               =  0.02_GeV;            // 0.02 < Pt < 10 GeV
+  static constexpr auto PtMin               =  0.02_GeV;            // 0.02 < Pt < 10 GeV
   static constexpr auto Bz                  =  MagneticField::Bz;   // 0.5 T
   static constexpr auto BeamX               =  0._mm;               // Center
   static constexpr auto BeamY               =  0._mm;               // Center
@@ -112,32 +133,6 @@ struct Config final {
   static constexpr auto NewHitsInRow        = 3u;
   static constexpr auto NewHitsRatio        = 0.25;
 
-  //===--------------------------------------------------------------------===//
-  // Particle selector
-  //===--------------------------------------------------------------------===//
-
-  /// Minimum distance from the origin in the transverse plane.
-  static constexpr auto RhoMin              = 0.;
-  /// Maximum distance from the origin in the transverse plane.
-  static constexpr auto RhoMax              = std::numeric_limits<double>::max();
-  /// Minimum absolute distance from the origin along z.
-  static constexpr auto ZminSelector        = Zmin;
-  /// Maximum absolute distance from the origin along z.
-  static constexpr auto ZmaxSelector        = Zmax;
-  // Truth particle kinematic cuts.
-  static constexpr auto PhiMin              = std::numeric_limits<double>::lowest();
-  static constexpr auto PhiMax              = std::numeric_limits<double>::max();
-  static constexpr auto EtaMin              = -1.2;
-  static constexpr auto EtaMax              =  1.2;
-  static constexpr auto AbsEtaMin           = std::numeric_limits<double>::lowest();
-  static constexpr auto AbsEtaMax           = std::numeric_limits<double>::max();
-  static constexpr auto PtMinSelector       = 0.0;
-  static constexpr auto PtMaxSelector       = std::numeric_limits<double>::max();
-  /// Keep neutral particles.
-  static constexpr auto KeepNeutral         = false;
-  /// Requirement on number of recorded hits.
-  static constexpr auto NHitsMin            = 9;
-  static constexpr auto NHitsMax            = std::numeric_limits<size_t>::max();
 
   //===--------------------------------------------------------------------===//
   // Performance writer
@@ -149,7 +144,7 @@ struct Config final {
   /// Min number of measurements.
   static constexpr auto MeasurementsMin     = 9u;
   /// Min transverse momentum.
-  static constexpr auto PtMinPerf           = MinPt;
+  static constexpr auto PtMinPerf           = PtMin;
 
   // Parameters for EffPlotTool, FakeRatePlotTool,
   // DuplicationPlotTool, TrackSummaryPlotTool.
@@ -179,6 +174,7 @@ struct Config final {
   // System parameters
   //===--------------------------------------------------------------------===//
 
+  /// Whether to dump data for tracks post-processing.
   static constexpr auto DumpData            = false;
 
   //===--------------------------------------------------------------------===//
@@ -200,8 +196,8 @@ struct Config final {
 
   std::shared_ptr<Detector> detector;
 
+  ParticleSelector::Config particleSelector;
   Digitization::Config digitization;
-  ActsExamples::TruthSeedSelector::Config truthSeedSelector;
   SpacePointMaking::Config spacePointMaking;
   TrackSeeding::Config trackSeeding;
   TrackEstimation::Config trackEstimation;

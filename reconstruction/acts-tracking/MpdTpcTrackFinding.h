@@ -84,7 +84,7 @@ public:
 
     // Dump options.
     /// Whether to dump prototracks to file.
-    bool dump;
+    bool dumpData;
     /// Storage ID for SpacePoints.
     std::string spacePointsID;
     std::string outPath;

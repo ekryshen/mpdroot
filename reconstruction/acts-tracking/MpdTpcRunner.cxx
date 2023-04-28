@@ -27,40 +27,40 @@ void Runner::execute(
     ActsExamples::AlgorithmContext &context,
     std::string outPath) {
 
-  // Store the input hits.
-  context.eventStore.add(
-      m_config.digitization.inputSimHits, InputHitContainer{hits});
-
   // Store the input particles.
   context.eventStore.add(
-      m_config.ParticlesID,
+      m_config.particleSelector.truthSeedSelectorConfig.inputParticles,
       ActsExamples::SimParticleContainer{inputParticles});
 
   // Store the multimap hits to particles.
   context.eventStore.add(
-      m_config.MeasParticlesMapID,
+      m_config.
+          particleSelector.truthSeedSelectorConfig.inputMeasurementParticlesMap,
       ActsExamples::IndexMultimap<ActsFatras::Barcode>{hitsToParticles});
+
+  // Store the input hits.
+  context.eventStore.add(
+      m_config.particleSelector.inputSimHits,
+      InputHitContainer{hits});
 
   // Log the input hits.
   logInput(context);
 
   // Run the track finding pipeline.
+  ParticleSelector particleSelector(m_config.particleSelector, m_level);
   Digitization digitization(m_config.digitization, m_level);
   SpacePointMaking spacePointMaking(m_config.spacePointMaking, m_level);
   TrackSeeding trackSeeding(m_config.trackSeeding, m_level);
   TrackEstimation trackEstimation(m_config.trackEstimation, m_level);
-  m_config.trackFinding.dump    = m_config.DumpData;
   m_config.trackFinding.outPath = outPath;
   TrackFinding trackFinding(m_config.trackFinding, m_level);
-  ActsExamples::TruthSeedSelector particleSelector(m_config.truthSeedSelector,
-      m_level);
 
+  particleSelector.execute(++context);
   digitization.execute(++context);
   spacePointMaking.execute(++context);
   trackSeeding.execute(++context);
   trackEstimation.execute(++context);
   trackFinding.execute(++context);
-  particleSelector.execute(++context);
   perfWriter->write(++context);
   perfWriter->endRun();
 
@@ -105,14 +105,14 @@ size_t Runner::getTracksNumber(
 void Runner::logInput(
     const ActsExamples::AlgorithmContext &context) const {
   const auto &hits = context.eventStore.get<InputHitContainer>(
-      m_config.digitization.inputSimHits);
+      m_config.particleSelector.inputSimHits);
+  logHits("Input hit", hits);
 
   std::unordered_map<int, ProtoTrack> tracks;
   tracks.reserve(hits.size());
 
   size_t ihit = 0;
   for (const auto &hit : hits) {
-    logHit(ihit, hit);
     tracks[hit.trackId].push_back(ihit++);
   }
 
@@ -125,6 +125,8 @@ void Runner::logInput(
 
 void Runner::logOutput(
     const ActsExamples::AlgorithmContext &context) const {
+  const auto &selectedHits = context.eventStore.get<InputHitContainer>(
+      m_config.particleSelector.outputSimHits);
   const auto &protos = context.eventStore.get<ProtoTrackContainer>(
       m_config.trackSeeding.outputProtoTracks);
   const auto &params = context.eventStore.get<TrackParametersContainer>(
@@ -132,19 +134,23 @@ void Runner::logOutput(
   const auto &tracks = context.eventStore.get<ProtoTrackContainer>(
       m_config.trackFinding.outputTrackCandidates);
 
+  logHits("Selected hit", selectedHits);
   logTracks("Proto track", protos);
   logParams("Track param", params);
   logTracks("Found track", tracks);
 }
 
-void Runner::logHit(size_t hitId, const InputHit &hit) const {
-  ACTS_DEBUG("Hit " << hitId << ": " << hit);
+void Runner::logHit(const std::string &prefix,
+                    size_t hitId,
+                    const InputHit &hit) const {
+  ACTS_DEBUG(prefix << " " << hitId << ": " << hit);
 }
 
-void Runner::logHits(const InputHitContainer &hits) const {
+void Runner::logHits(const std::string &prefix,
+                     const InputHitContainer &hits) const {
   size_t ihit = 0;
   for (const auto &hit : hits) {
-    logHit(ihit++, hit);
+    logHit(prefix, ihit++, hit);
   }
 }
 

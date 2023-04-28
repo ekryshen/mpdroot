@@ -218,7 +218,7 @@ void TrackFinding::constructTrackCandidates(
   std::ofstream fout;
   SpacePointContainer spacePoints;
 
-  if (m_config.dump) {
+  if (m_config.dumpData) {
     fout.open(fname);
     spacePoints = context.eventStore.get<SpacePointContainer>(
         m_config.spacePointsID);
@@ -261,7 +261,7 @@ void TrackFinding::constructTrackCandidates(
 
         auto &sourceLink = static_cast<const SourceLink&>(state.uncalibrated());
         auto hitIndex = sourceLink.index();
-        if (m_config.dump) {
+        if (m_config.dumpData) {
           if (!firstPass) {
             fout << ", ";
           }
@@ -289,7 +289,7 @@ void TrackFinding::constructTrackCandidates(
         trackCandidate.push_back(hitIndex);
       });
 
-      if (m_config.dump) {
+      if (m_config.dumpData) {
         fout << std::endl;
       }
 

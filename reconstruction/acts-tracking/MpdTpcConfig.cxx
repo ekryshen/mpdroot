@@ -25,8 +25,34 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
       Acts::Vector3{0., 0., 0.});
   assert(referenceSurface && "Missing reference surface");
 
+  // Selecting particles.
+  particleSelector.truthSeedSelectorConfig.inputParticles = ParticlesID;
+  particleSelector.truthSeedSelectorConfig.inputMeasurementParticlesMap =
+      HitParticlesMapID;
+  particleSelector.truthSeedSelectorConfig.outputParticles =
+      SelectedParticlesID;
+  particleSelector.outputHitsParticlesMap = SelectedHitParticlesMapID;
+  particleSelector.inputSimHits = SimHitsID;
+  particleSelector.outputSimHits = SelectedSimHitsID;
+  particleSelector.primaryParticlesOnly = PrimaryParticlesOnly;
+  particleSelector.truthSeedSelectorConfig.rhoMin = Rmin;
+  particleSelector.truthSeedSelectorConfig.rhoMax = Rmax;
+  particleSelector.truthSeedSelectorConfig.zMin = Zmin;
+  particleSelector.truthSeedSelectorConfig.zMax = Zmax;
+  particleSelector.truthSeedSelectorConfig.phiMin = PhiMin;
+  particleSelector.truthSeedSelectorConfig.phiMax = PhiMax;
+  particleSelector.truthSeedSelectorConfig.etaMin = EtaMin;
+  particleSelector.truthSeedSelectorConfig.etaMax = EtaMax;
+  particleSelector.truthSeedSelectorConfig.absEtaMin = AbsEtaMin;
+  particleSelector.truthSeedSelectorConfig.absEtaMax = AbsEtaMax;
+  particleSelector.truthSeedSelectorConfig.ptMin = PtMin;
+  particleSelector.truthSeedSelectorConfig.ptMax = PtMax;
+  particleSelector.truthSeedSelectorConfig.keepNeutral = KeepNeutral;
+  particleSelector.truthSeedSelectorConfig.nHitsMin = NHitsMin;
+  particleSelector.truthSeedSelectorConfig.nHitsMax = NHitsMax;
+
   // Digitization.
-  digitization.inputSimHits = SimHitsID;
+  digitization.inputSimHits = SelectedSimHitsID;
   digitization.outputSourceLinks = SourceLinksID;
   digitization.outputMeasurements = MeasurementsID;
   digitization.sigmaLoc0 = SigmaLoc0;
@@ -65,7 +91,7 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
   trackSeeding.seedFinderConfig.maxPtScattering = MaxPtScattering;
   trackSeeding.seedFinderConfig.sigmaScattering = SigmaScattering;
   trackSeeding.seedFinderConfig.radLengthPerSeed = RadLengthPerSeed;
-  trackSeeding.seedFinderConfig.minPt = MinPt;
+  trackSeeding.seedFinderConfig.minPt = PtMin;
   trackSeeding.seedFinderConfig.bFieldInZ = Bz;
   trackSeeding.seedFinderConfig.beamPos = {BeamX, BeamY};
   trackSeeding.seedFinderConfig.impactMax = ImpactMax;
@@ -74,7 +100,7 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
   trackSeeding.gridConfig.zMin = Zmin;
   trackSeeding.gridConfig.zMax = Zmax;
   trackSeeding.gridConfig.cotThetaMax = CotThetaMax;
-  trackSeeding.gridConfig.minPt = MinPt;
+  trackSeeding.gridConfig.minPt = PtMin;
   trackSeeding.gridConfig.bFieldInZ = Bz;
 
   // Track parameter estimation.
@@ -133,34 +159,15 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
   trackFinding.newHitsInRow = NewHitsInRow;
   trackFinding.newHitsRatio = NewHitsRatio;
   trackFinding.spacePointsID = SpacePointsID;
-
-  // Particle selector.
-  truthSeedSelector.inputParticles = ParticlesID;
-  truthSeedSelector.inputMeasurementParticlesMap = MeasParticlesMapID;
-  truthSeedSelector.outputParticles = SelectedID;
-  truthSeedSelector.rhoMin = RhoMin;
-  truthSeedSelector.rhoMax = RhoMax;
-  truthSeedSelector.zMin = ZminSelector;
-  truthSeedSelector.zMax = ZmaxSelector;
-  truthSeedSelector.phiMin = PhiMin;
-  truthSeedSelector.phiMax = PhiMax;
-  truthSeedSelector.etaMin = EtaMin;
-  truthSeedSelector.etaMax = EtaMax;
-  truthSeedSelector.absEtaMin = AbsEtaMin;
-  truthSeedSelector.absEtaMax = AbsEtaMax;
-  truthSeedSelector.ptMin = PtMinSelector;
-  truthSeedSelector.ptMax = PtMaxSelector;
-  truthSeedSelector.keepNeutral = KeepNeutral;
-  truthSeedSelector.nHitsMin = NHitsMin;
-  truthSeedSelector.nHitsMax = NHitsMax;
+  trackFinding.dumpData = DumpData;
 }
 
 ActsExamples::CKFPerformanceWriter::Config Config::perfWriterCfg(
     std::string outPath) const {
   ActsExamples::CKFPerformanceWriter::Config result;
   result.inputTrajectories = TrajectoriesID;
-  result.inputParticles = SelectedID;
-  result.inputMeasurementParticlesMap = MeasParticlesMapID;
+  result.inputParticles = SelectedParticlesID;
+  result.inputMeasurementParticlesMap = SelectedHitParticlesMapID;
   result.truthMatchProbMin = TruthMatchProbMin;
   result.nMeasurementsMin = MeasurementsMin;
   result.ptMin = PtMinPerf;
