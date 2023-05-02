@@ -53,17 +53,6 @@ protected:
 
    long int IsSameParent(long int prim1, long int prim2) const;
 
-   float dEdx_sigma_El(float dEdx, float mom) const;
-   float dEdx_sigma_Pi(float dEdx, float mom) const;
-   float dEdx_sigma_K(float dEdx, float mom) const;
-   float dEdx_sigma_P(float dEdx, float mom) const;
-
-   int   TestTofMatch(int charge, float pt, float dphi, float dz) const;
-   float Beta_sigma_El(float beta, float mom) const;
-   float Beta_sigma_Pi(float beta, float mom) const;
-   float Beta_sigma_K(float beta, float mom) const;
-   float Beta_sigma_P(float beta, float mom) const;
-
 private:
    float cen;
 
@@ -108,16 +97,6 @@ private:
    int anaBin;
 
    TList *mixedEvents[nMixTot];
-
-   // DCAs
-   float                  eta_max    = 1.5;
-   float                  eta_min    = -1.5;
-   float                  cent_max   = 100.;
-   float                  cent_min   = 0.0;
-   static constexpr short neta_bins  = 30;
-   static constexpr short ncent_bins = 10;
-   TF1                   *f_dca_xy[neta_bins][ncent_bins];
-   TF1                   *f_dca_z[neta_bins][ncent_bins];
 
    // Histograms
    TList mHistoList;
@@ -170,7 +149,6 @@ private:
    TH2F *mAccEffRecTwoPID;
 
    TFile        *inFileSim;
-   TFile        *dcaFile;
    TTree        *inTreeSim;
    TClonesArray *tpcPoints;
 

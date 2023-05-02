@@ -133,7 +133,7 @@ void MpdPairKK::UserInit()
       mixedEvents[i] = new TList();
    }
 
-   cout << "[MpdPairKK]: Reading Geo for track refit ... " << endl;
+   cout << "[MpdPairKK]: Reading Geo from sim_1.root for track refit ... " << endl;
 
    // Read-out TPC Geo for track Refit
    inFileSim = new TFile("sim_Geo.root", "READ");
@@ -152,18 +152,6 @@ void MpdPairKK::UserInit()
    recoTpc->SetSectorGeo(*secGeo);
    recoTpc->FillGeoScheme();
 
-   cout << "[MpdPairKK]: Reading DCA parameterizations ... " << endl;
-
-   // Read-out DCA parameterization
-   dcaFile = new TFile("DCAs.root", "READ");
-
-   for (Int_t etab = 0; etab < neta_bins; etab++) {
-      for (Int_t centb = 0; centb < ncent_bins; centb++) {
-         f_dca_xy[etab][centb] = (TF1 *)dcaFile->Get(Form("dcaxy_fitf_eta_%d_cent_%d", etab, centb));
-         f_dca_z[etab][centb]  = (TF1 *)dcaFile->Get(Form("dcaz_fitf_eta_%d_cent_%d", etab, centb));
-      }
-   }
-
    cout << "[MpdPairKK]: Initialization done " << endl << endl;
 }
 //--------------------------------------
@@ -176,7 +164,7 @@ void MpdPairKK::ProcessEvent(MpdAnalysisEvent &event)
       isInitialized = true;
    }
 
-   if (!selectEvent(event)) { //(V)
+   if (!selectEvent(event)) {
       return;
    }
 
@@ -293,11 +281,7 @@ void MpdPairKK::selectPosTrack(MpdAnalysisEvent &event)
          continue;
       }
 
-      int charge;
-      if (mpdtrack->GetPt() < 0)
-         charge = 1;
-      else
-         charge = -1;
+      int charge = mpdtrack->GetCharge();
       if (charge < 0) continue;
 
       long int trId = -1;
@@ -311,25 +295,10 @@ void MpdPairKK::selectPosTrack(MpdAnalysisEvent &event)
       int   isK_TOF = -1;
       float pmom    = sqrt(mpdtrack->GetPt() * mpdtrack->GetPt() + mpdtrack->GetPz() * mpdtrack->GetPz());
 
-      if (mpdtrack->GetTofFlag() == 2 || mpdtrack->GetTofFlag() == 6) {
-         int matchingIndex = -1;
+      if (fabs(mpdtrack->GetTofDphiSigma()) < 3.0 && fabs(mpdtrack->GetTofDzSigma()) < 3.0) isTOF = 1;
 
-         for (Int_t l = 0; l < mpdTofMatching->GetEntries(); l++) {
-            MpdTofMatchingData *Matching = (MpdTofMatchingData *)mpdTofMatching->At(l);
-            if (Matching->GetKFTrackIndex() == i) {
-               matchingIndex = l;
-               break;
-            }
-         }
-
-         if (matchingIndex > 0) {
-            MpdTofMatchingData *Matching = (MpdTofMatchingData *)mpdTofMatching->At(matchingIndex);
-            if (TestTofMatch(charge, fabs(mpdtrack->GetPt()), Matching->GetdPhi(), Matching->GetdZed()) == 1) isTOF = 1;
-         }
-      }
-
-      if (fabs(dEdx_sigma_K(tr->GetDedx(), pmom)) < mParams.mPIDsigTPC) isK_TPC = 1;
-      if (isTOF == 1 && fabs(Beta_sigma_K(mpdtrack->GetTofBeta(), pmom)) < mParams.mPIDsigTOF) isK_TOF = 1;
+      if (fabs(mpdtrack->GetTPCNSigma(kK)) < mParams.mPIDsigTPC) isK_TPC = 1;
+      if (isTOF == 1 && fabs(mpdtrack->GetTOFNSigma(kK)) < mParams.mPIDsigTOF) isK_TOF = 1;
 
       if (isK_TPC == 1) pid = 1;
       if (isK_TOF == 1) pid = 2;
@@ -382,11 +351,7 @@ void MpdPairKK::selectNegTrack(MpdAnalysisEvent &event)
          continue;
       }
 
-      int charge;
-      if (mpdtrack->GetPt() < 0)
-         charge = 1;
-      else
-         charge = -1;
+      int charge = mpdtrack->GetCharge();
       if (charge > 0) continue;
 
       long int trId = -1;
@@ -400,25 +365,10 @@ void MpdPairKK::selectNegTrack(MpdAnalysisEvent &event)
       int   isK_TOF = -1;
       float pmom    = sqrt(mpdtrack->GetPt() * mpdtrack->GetPt() + mpdtrack->GetPz() * mpdtrack->GetPz());
 
-      if (mpdtrack->GetTofFlag() == 2 || mpdtrack->GetTofFlag() == 6) {
-         int matchingIndex = -1;
+      if (fabs(mpdtrack->GetTofDphiSigma()) < 3.0 && fabs(mpdtrack->GetTofDzSigma()) < 3.0) isTOF = 1;
 
-         for (Int_t l = 0; l < mpdTofMatching->GetEntries(); l++) {
-            MpdTofMatchingData *Matching = (MpdTofMatchingData *)mpdTofMatching->At(l);
-            if (Matching->GetKFTrackIndex() == i) {
-               matchingIndex = l;
-               break;
-            }
-         }
-
-         if (matchingIndex > 0) {
-            MpdTofMatchingData *Matching = (MpdTofMatchingData *)mpdTofMatching->At(matchingIndex);
-            if (TestTofMatch(charge, fabs(mpdtrack->GetPt()), Matching->GetdPhi(), Matching->GetdZed()) == 1) isTOF = 1;
-         }
-      }
-
-      if (fabs(dEdx_sigma_K(tr->GetDedx(), pmom)) < mParams.mPIDsigTPC) isK_TPC = 1;
-      if (isTOF == 1 && fabs(Beta_sigma_K(mpdtrack->GetTofBeta(), pmom)) < mParams.mPIDsigTOF) isK_TOF = 1;
+      if (fabs(mpdtrack->GetTPCNSigma(kK)) < mParams.mPIDsigTPC) isK_TPC = 1;
+      if (isTOF == 1 && fabs(mpdtrack->GetTOFNSigma(kK)) < mParams.mPIDsigTOF) isK_TOF = 1;
 
       if (isK_TPC == 1) pid = 1;
       if (isK_TOF == 1) pid = 2;
@@ -573,47 +523,9 @@ bool MpdPairKK::selectTrack(MpdTrack *mpdtrack)
    // if (fabs(mpdtrack->GetDCAY()) > mParams.mDCACut) return false; // |DCAy| < 2.
    // if (fabs(mpdtrack->GetDCAZ()) > mParams.mDCACut) return false; // |DCAz| < 2.
 
-   int cent_bin = -1;
-   cent_bin     = int(cen / (cent_max - cent_min) * float(ncent_bins));
-   if (cent_bin == 9) cent_bin = 8; // 90-91% -> use parameterization for 80-90%
-   if (cent_bin < 0 || cent_bin > ncent_bins - 1) return false;
-
-   int eta_bin = -1;
-   eta_bin     = int((mpdtrack->GetEta() + 1.5) / (eta_max - eta_min) * float(neta_bins));
-   if (eta_bin < 0 || eta_bin > neta_bins - 1) return false;
-
-   TF1 sigma_fit_XY = *f_dca_xy[eta_bin][cent_bin];
-   TF1 sigma_fit_Z  = *f_dca_z[eta_bin][cent_bin];
-
-   // use lower/upper limits outside of parameterization ranges
-   float pt_dca = pt;
-   if (pt_dca < 0.05) pt_dca = 0.05;
-   double xfirst, xlast;
-   sigma_fit_Z.GetRange(xfirst, xlast);
-   if (pt_dca > xlast) pt_dca = xlast + 0.05;
-
-   float sigma_exp_xy = sigma_fit_XY(pt_dca);
-   float sigma_exp_z  = sigma_fit_Z(pt_dca);
-
-   float dcax_sig, dcay_sig, dcaz_sig;
-
-   if (sigma_exp_xy != 0) {
-      dcax_sig = mpdtrack->GetDCAX() / sigma_exp_xy;
-      dcay_sig = mpdtrack->GetDCAY() / sigma_exp_xy;
-   } else {
-      dcax_sig = -999;
-      dcay_sig = -999;
-   }
-
-   if (sigma_exp_z != 0) {
-      dcaz_sig = mpdtrack->GetDCAZ() / sigma_exp_z;
-   } else {
-      dcaz_sig = -999;
-   }
-
-   if (fabs(dcax_sig) > mParams.mDCACut) return false; // |DCAx| < 2*sigmaxy(pT, eta, centrality).
-   if (fabs(dcay_sig) > mParams.mDCACut) return false; // |DCAy| < 2*sigmaxy(pT, eta, centrality).
-   if (fabs(dcaz_sig) > mParams.mDCACut) return false; // |DCAz| < 2*sigmaz(pT, eta, centrality).
+   if (fabs(mpdtrack->GetNSigmaDCAx()) > mParams.mDCACut) return false; // |DCAx| < 2*sigmaxy(pT, eta, centrality).
+   if (fabs(mpdtrack->GetNSigmaDCAy()) > mParams.mDCACut) return false; // |DCAy| < 2*sigmaxy(pT, eta, centrality).
+   if (fabs(mpdtrack->GetNSigmaDCAz()) > mParams.mDCACut) return false; // |DCAz| < 2*sigmaz(pT, eta, centrality).
 
    return true;
 }
@@ -636,264 +548,4 @@ long int MpdPairKK::IsSameParent(long int prim1, long int prim2) const
       prim1 = (static_cast<MpdMCTrack *>(mMCTracks->At(prim1)))->GetMotherId();
    }
    return -1;
-}
-
-// dE/dx parameterizations for el/Pi/K/p
-float MpdPairKK::dEdx_sigma_El(float dEdx, float mom) const
-{
-   if (mom < 0.04) return -999;
-   if (dEdx <= 0) return -999;
-
-   dEdx = log(dEdx);
-
-   if (mom < 0.06) mom = 0.06;
-   if (mom > 2.0) mom = 2.0;
-
-   float mean[7]  = {6.869878e-003, -1.573146e-001, 1.847371e+000, -9.253678e-001,
-                    1.073907e+000, -3.394239e+000, 6.451762e-001};
-   float width[7] = {-4.359368e+006, -8.508504e-012, -3.958364e-009, 1.526816e-009,
-                     1.353776e-011,  3.426352e-009,  6.591542e-002};
-
-   float mean_exp, width_exp;
-
-   mean_exp =
-      mean[0] / mom / mom *
-         (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
-      mean[6];
-   width_exp =
-      width[0] / mom / mom *
-         (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
-      width[6];
-
-   return (dEdx - mean_exp) / width_exp;
-}
-
-float MpdPairKK::dEdx_sigma_Pi(float dEdx, float mom) const
-{
-   if (mom < 0.06) return -999;
-   if (dEdx <= 0) return -999;
-
-   dEdx = log(dEdx);
-
-   if (mom < 0.07) mom = 0.07;
-   if (mom > 3.5) mom = 3.5;
-
-   float mean[7]  = {-3.554770e-002, -2.666590e-001, 5.701508e+000, -5.220967e+000,
-                    1.987420e+000,  1.087186e+000,  1.037435e-001};
-   float width[7] = {-3.495341e+007, 2.472950e-011,  -1.422238e-010, 3.234257e-010,
-                     -1.242149e-010, -5.320861e-011, 7.771059e-002};
-
-   float mean_exp, width_exp;
-
-   mean_exp =
-      mean[0] / mom / mom *
-         (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
-      mean[6];
-   width_exp =
-      width[0] / mom / mom *
-         (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
-      width[6];
-
-   return (dEdx - mean_exp) / width_exp;
-}
-
-float MpdPairKK::dEdx_sigma_K(float dEdx, float mom) const
-{
-   if (mom < 0.08) return -999;
-   if (dEdx <= 0) return -999;
-
-   dEdx = log(dEdx);
-
-   if (mom < 0.09) mom = 0.09;
-   if (mom > 3.5) mom = 3.5;
-
-   float mean[7]  = {-4.571263e-004, -1.255796e+001, -7.145174e+002, 1.023127e+003,
-                    3.497842e+001,  2.890434e+002,  -3.740436e-003};
-   float width[7] = {-9.820512e+006, -1.117400e-010, 1.188118e-009, -1.754282e-009,
-                     7.875521e-010,  -4.171753e-010, 8.100840e-002};
-
-   float mean_exp, width_exp;
-
-   mean_exp =
-      mean[0] / mom / mom *
-         (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
-      mean[6];
-   width_exp =
-      width[0] / mom / mom *
-         (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
-      width[6];
-
-   return (dEdx - mean_exp) / width_exp;
-}
-
-float MpdPairKK::dEdx_sigma_P(float dEdx, float mom) const
-{
-   if (mom < 0.08) return -999;
-   if (dEdx <= 0) return -999;
-
-   dEdx = log(dEdx);
-
-   if (mom < 0.09) mom = 0.09;
-   if (mom > 3.5) mom = 3.5;
-
-   float mean[7]  = {1.183672e-001, -3.394823e-001, 2.418100e+001, -1.377881e+001,
-                    2.534160e+000, -1.563054e+000, 2.010767e+000};
-   float width[7] = {-1.488536e+007, -2.075514e-010, 2.418077e-009, -2.996053e-009,
-                     1.397806e-009,  -4.161277e-010, 7.174217e-002};
-
-   float mean_exp, width_exp;
-
-   mean_exp =
-      mean[0] / mom / mom *
-         (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
-      mean[6];
-   width_exp =
-      width[0] / mom / mom *
-         (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
-      width[6];
-
-   return (dEdx - mean_exp) / width_exp;
-}
-
-// Beta parameterizations for el/Pi/K/p
-int MpdPairKK::TestTofMatch(int charge, float pt, float dphi, float dz) const
-{
-   if (pt < 0.1) return 0;
-
-   float meanphiCoeff[7]  = {2.745900e-001, -1.437619e+000, 2.824655e+000, -2.644983e+000,
-                            1.269623e+000, -3.012448e-001, 2.816063e-002};
-   float widthphiCoeff[7] = {3.211516e+000, -2.325625e+001, 8.024492e+001, -1.407389e+002,
-                             1.320427e+002, -6.304419e+001, 1.202106e+001};
-   float widthzCoeff[7]   = {1.646438e+000, -9.744003e+000, 3.054315e+001, -4.799731e+001,
-                           3.994061e+001, -1.680153e+001, 2.810887e+000};
-
-   float meanphi, widthphi, meanz, widthz;
-
-   if (pt < 3.0) {
-      meanphi = meanphiCoeff[0] + meanphiCoeff[1] * pt + meanphiCoeff[2] * pt * pt + meanphiCoeff[3] * pt * pt * pt +
-                meanphiCoeff[4] * pt * pt * pt * pt + meanphiCoeff[5] * pt * pt * pt * pt * pt +
-                meanphiCoeff[6] * pt * pt * pt * pt * pt * pt;
-   } else {
-      meanphi = 0.135;
-   }
-
-   if (charge < 0) meanphi = -meanphi;
-
-   if (pt < 1.325) {
-      widthphi = widthphiCoeff[0] + widthphiCoeff[1] * pt + widthphiCoeff[2] * pt * pt +
-                 widthphiCoeff[3] * pt * pt * pt + widthphiCoeff[4] * pt * pt * pt * pt +
-                 widthphiCoeff[5] * pt * pt * pt * pt * pt + widthphiCoeff[6] * pt * pt * pt * pt * pt * pt;
-   } else {
-      widthphi = 0.454 + 0.00815163 * pt;
-   }
-
-   meanz = 0.0;
-
-   if (pt < 1.5) {
-      widthz = widthzCoeff[0] + widthzCoeff[1] * pt + widthzCoeff[2] * pt * pt + widthzCoeff[3] * pt * pt * pt +
-               widthzCoeff[4] * pt * pt * pt * pt + widthzCoeff[5] * pt * pt * pt * pt * pt +
-               widthzCoeff[6] * pt * pt * pt * pt * pt * pt;
-   } else {
-      widthz = 0.39844 - 0.00660409 * pt;
-   }
-
-   if (fabs(dphi - meanphi) / widthphi < 3.0 && fabs(dz - meanz) / widthz < 3.0) return 1;
-
-   return 0;
-}
-
-float MpdPairKK::Beta_sigma_El(float beta, float mom) const
-{
-   if (mom < 0.1) return -999;
-   if (mom > 1.5) mom = 1.5;
-
-   float mean[7]  = {3.150000e+003, -5.949618e-009, 5.973763e-002, -4.258060e-007,
-                    7.841692e-008, -6.563439e-007, 1.891766e+002};
-   float width[7] = {-2.501047e+006, -1.253288e-011, 7.294240e-011, -1.362490e-010,
-                     7.314968e-011,  -5.672957e-010, 1.322390e-002};
-
-   float mean_exp, width_exp;
-
-   mean_exp =
-      mean[0] / mom / mom *
-         (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
-      mean[6];
-   width_exp =
-      width[0] / mom / mom *
-         (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
-      width[6];
-
-   return (beta - mean_exp) / width_exp;
-}
-
-float MpdPairKK::Beta_sigma_Pi(float beta, float mom) const
-{
-   if (mom < 0.12) return -999;
-   if (mom > 4.0) mom = 4.0;
-
-   float mean[7]  = {3.150000e+003, -1.248103e-006, 1.108943e+000, -7.829288e-006,
-                    7.832307e-006, -4.780232e-007, 3.494167e+003};
-   float width[7] = {-3.587374e+007, 1.391129e-012,  3.658606e-011, -2.025494e-011,
-                     -7.243473e-013, -3.150429e-011, 1.273604e-002};
-
-   float mean_exp, width_exp;
-
-   mean_exp =
-      mean[0] / mom / mom *
-         (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
-      mean[6];
-   width_exp =
-      width[0] / mom / mom *
-         (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
-      width[6];
-
-   return (beta - mean_exp) / width_exp;
-}
-
-float MpdPairKK::Beta_sigma_K(float beta, float mom) const
-{
-   if (mom < 0.2) return -999;
-   if (mom > 3.25) mom = 3.25;
-
-   float mean[7]  = {3.150000e+003, -3.229103e-006, 1.500830e+000, 5.001743e-005,
-                    9.494654e-006, 5.751109e-006,  4.728718e+003};
-   float width[7] = {-7.187794e+006, -9.693571e-011, 6.368089e-010, -1.548974e-009,
-                     6.073912e-010,  -3.236421e-010, 1.551237e-002};
-
-   float mean_exp, width_exp;
-
-   mean_exp =
-      mean[0] / mom / mom *
-         (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
-      mean[6];
-   width_exp =
-      width[0] / mom / mom *
-         (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
-      width[6];
-
-   return (beta - mean_exp) / width_exp;
-}
-
-float MpdPairKK::Beta_sigma_P(float beta, float mom) const
-{
-   if (mom < 0.3) return -999;
-   if (mom > 4.5) mom = 4.5;
-
-   float mean[7]  = {3.150000e+003,  1.983733e-006, 1.499777e+000, 1.733988e-004,
-                    -3.201559e-005, 7.804674e-006, 4.725502e+003};
-   float width[7] = {-2.663514e+007, 1.388684e-011,  4.657636e-011, -2.603998e-011,
-                     -2.325289e-011, -1.370724e-011, 1.105921e-002};
-
-   float mean_exp, width_exp;
-
-   mean_exp =
-      mean[0] / mom / mom *
-         (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
-      mean[6];
-   width_exp =
-      width[0] / mom / mom *
-         (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
-      width[6];
-
-   return (beta - mean_exp) / width_exp;
 }

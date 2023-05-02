@@ -31,6 +31,9 @@ void RunAnalyses(int nEvents = -1, TString inFileList = "list.txt"){
 
    MpdEventPlaneAll pEP("pEP","pEP") ;
    man.AddTask(&pEP) ;
+
+   MpdTrackPidMaker pPID("pPID","pPID") ;
+   man.AddTask(&pPID) ;
    
 //   MpdConvPi0 pDef("pi0Def","ConvDef") ; //name, parametes file
 //   man.AddTask(&pDef) ;
