@@ -284,7 +284,8 @@ void TrackFinding::constructTrackCandidates(
           for (auto i = 2; i < params.size(); i++) {
             fout << ", " << params[i];
           }
-          fout << ", " << state.chi2();
+          fout << ", " << state.chi2() <<
+                  ", " << itrack;
         }
         trackCandidate.push_back(hitIndex);
       });
