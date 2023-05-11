@@ -81,27 +81,18 @@ inline Mpd::Tpc::InputHitContainer convertTpcPoints(TClonesArray *tpcPoints) {
 }
 
 /// Dump hits to file in Acts units.
-void dumpData(TClonesArray *tpcHits,
+void dumpData(const Mpd::Tpc::InputHitContainer &hits,
               Int_t eventNumber,
               std::string outPath) {
   auto fname = outPath + "/event_" + std::to_string(eventNumber) + "_hits.txt";
   std::ofstream fout(fname);
 
-  const auto nTpcHits = tpcHits->GetEntriesFast();
-
-  for (size_t i = 0; i < nTpcHits; i++) {
-    auto *tpcHit = static_cast<MpdTpcHit*>(tpcHits->UncheckedAt(i));
-    fout << tpcHit->GetX() * lenScalor << ", " <<
-            tpcHit->GetY() * lenScalor << ", " <<
-            tpcHit->GetZ() * lenScalor << ", ";
-
-    std::vector <std::pair<int, float>> pairs = tpcHit->GetTrackIDs();
-    for (auto trackIdandQ : pairs) {
-      auto trackID = trackIdandQ.first;
-      auto q       = trackIdandQ.second;
-      fout << trackID << ", " <<
-              q << std::endl;
-    }
+  for (const auto &hit : hits) {
+    fout << hit.position[0] << ", " <<
+            hit.position[1] << ", " <<
+            hit.position[2] << ", " <<
+            hit.trackId <<
+            std::endl;
   }
 }
 
@@ -344,6 +335,7 @@ ActsExamples::IndexMultimap<ActsFatras::Barcode> createTpcHitsToParticlesMap(
   ActsExamples::IndexMultimap<ActsFatras::Barcode> mapHitsToParticles;
   Int_t n = tpcHits->GetEntriesFast();
 
+  size_t iHit = 0; // Needed for debug, when processing only certain tracks
   for (Int_t i = 0; i < n; i++) {
 
     auto *tpcHit = static_cast<MpdTpcHit*>(tpcHits->UncheckedAt(i));
@@ -367,7 +359,7 @@ ActsExamples::IndexMultimap<ActsFatras::Barcode> createTpcHitsToParticlesMap(
           setParticle(part).
           setGeneration(gen).
           setSubParticle(sub);
-      mapHitsToParticles.emplace(i, barcode);
+      mapHitsToParticles.emplace(iHit++, barcode);
     }
   }
   return mapHitsToParticles;
@@ -447,9 +439,12 @@ void MpdTpcTracker::Exec(Option_t *option) {
                    fPerfWriter, context, fOutPath);
 
   // Dump hits to file.
-  context.eventStore.add(config.WhetherDumpDataID, config.DumpData);
   if (config.DumpData) {
-    dumpData(fHits, eventCounter, fOutPath);
+    const auto &selectedHits =
+        context.eventStore.get<Mpd::Tpc::InputHitContainer>(
+            config.particleSelector.outputSimHits);
+
+    dumpData(selectedHits, eventCounter, fOutPath);
   }
 
   // Convert the found track to to the MpdRoot representation.

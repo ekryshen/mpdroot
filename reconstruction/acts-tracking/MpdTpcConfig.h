@@ -48,7 +48,6 @@ struct Config final {
   static constexpr auto SelectedParticlesID = "selectedparticles";
   static constexpr auto HitParticlesMapID   = "hitparticlesmap";
   static constexpr auto SelectedHitParticlesMapID = "selectedhitparticlesmap";
-  static constexpr auto WhetherDumpDataID   = "whetherdumpdata";
 
   //===--------------------------------------------------------------------===//
   // Particle selector
