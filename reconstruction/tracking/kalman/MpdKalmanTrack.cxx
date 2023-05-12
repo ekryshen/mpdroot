@@ -124,7 +124,8 @@ MpdKalmanTrack &MpdKalmanTrack::operator=(const MpdKalmanTrack &track)
    fWeight      = CloneMatrix(track.fWeight, 5);
    fWeightAtHit = CloneMatrix(track.fWeightAtHit, 5);
    fVertex      = track.fVertex;
-   fHits        = CreateHitsArray(track.fHits->GetEntriesFast());
+// fHits        = CreateHitsArray(track.fHits->GetEntriesFast());
+   fHits        = CreateHitsArray(70);
    fStepMap     = track.fStepMap;
    fFlag        = track.fFlag;
 

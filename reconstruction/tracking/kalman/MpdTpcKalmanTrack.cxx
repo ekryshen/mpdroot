@@ -68,7 +68,8 @@ MpdTpcKalmanTrack::MpdTpcKalmanTrack(MpdKalmanHit *hitOut, MpdKalmanHit *hitIn, 
 
 //__________________________________________________________________________
 MpdTpcKalmanTrack::MpdTpcKalmanTrack(const MpdTpcKalmanTrack &track)
-   : MpdKalmanTrack(track), fTrHits(CreateTrHitsArray(track.fTrHits->GetEntriesFast()))
+// : MpdKalmanTrack(track), fTrHits(CreateTrHitsArray(track.fTrHits->GetEntriesFast()))
+   : MpdKalmanTrack(track), fTrHits(CreateTrHitsArray(70))
 {
    /// copy constructor
 
@@ -101,7 +102,8 @@ MpdTpcKalmanTrack &MpdTpcKalmanTrack::operator=(const MpdTpcKalmanTrack &track)
    }
 
    Int_t nHits = track.fTrHits->GetEntriesFast();
-   fTrHits = CreateTrHitsArray(nHits);
+// fTrHits = CreateTrHitsArray(nHits);
+   fTrHits = CreateTrHitsArray(70);
 
    for (Int_t i = 0; i < nHits; ++i) {
       MpdKalmanHit *hit = (MpdKalmanHit *)(track.fTrHits->UncheckedAt(i));
