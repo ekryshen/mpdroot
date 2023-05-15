@@ -16,8 +16,9 @@
 #include <Acts/TrackFinding/MeasurementSelector.hpp>
 #include <Acts/TrackFitting/GainMatrixSmoother.hpp>
 #include <Acts/TrackFitting/GainMatrixUpdater.hpp>
-
 #include <Acts/Utilities/Logger.hpp>
+
+#include <Rtypes.h>
 
 #include <memory>
 #include <string>
@@ -69,22 +70,22 @@ public:
     Acts::PropagatorPlainOptions propagatorOptions;
 
     // Kalman filter options.
-    bool multipleScattering;
-    bool energyLoss;
-    bool smoothing;
+    Bool_t multipleScattering;
+    Bool_t energyLoss;
+    Bool_t smoothing;
 
-    bool computeSharedHits;
+    Bool_t computeSharedHits;
 
     /// Minimal track length (tracks w/ shorter length are ignored).
     size_t trackMinLength;
     /// Segment length bound (minimal number of new hits in a row).
     size_t newHitsInRow;
     /// Coverage ratio (new hits in a track / track size).
-    double newHitsRatio;
+    Double_t newHitsRatio;
 
     // Dump options.
     /// Whether to dump prototracks to file.
-    bool dumpData;
+    Bool_t dumpData;
     /// Storage ID for SpacePoints.
     std::string spacePointsID;
     std::string outPath;

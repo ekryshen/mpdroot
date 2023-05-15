@@ -261,7 +261,7 @@ std::tuple <Int_t, Int_t, Int_t> getSectorRowPad (
   }
 
   // Shift to be >= 0
-  Double_t iPadShifted = iPad + maxPad + Detector::extraPads;
+  Double_t iPadShifted = iPad + maxPad;
 
   return std::make_tuple(iSector,
                          static_cast<Int_t>(iRow),
@@ -273,9 +273,9 @@ void checkAndFixSecRowPad(const BaseTpcSectorGeo &secGeo,
                           const Acts::Vector3 &position,
                           Int_t sector,
                           Int_t &row, Int_t &pad) {
-  double x = position[0];
-  double y = position[1];
-  double z = position[2];
+  Double_t x = position[0];
+  Double_t y = position[1];
+  Double_t z = position[2];
 
   std::string msgPrefix =
       "MpdTpcDetector.cxx::checkAndFixSecRowPad() ERROR: point " +
@@ -296,7 +296,7 @@ void checkAndFixSecRowPad(const BaseTpcSectorGeo &secGeo,
     std::cout << msgPrefix << " is far from last row. " <<
         msgMiddle << "Setting row = " << row << std::endl;
   }
-  Int_t maxPads = 2*(secGeo.PAD_COUNT[row] + Detector::extraPads);
+  Int_t maxPads = 2*(secGeo.PAD_COUNT[row]);
   if (pad < 0) {
     pad = 0;
     std::cout << msgPrefix << " goes beyond pads. " <<
@@ -334,6 +334,7 @@ inline uint64_t toBitsForSector(const BaseTpcSectorGeo &secGeo,
 
   const auto deltaZ = Detector::getZFromSectorGeo
       ? secGeo.Z_MAX : Detector::DeltaZ;
+
   const auto zMin = Detector::getZFromSectorGeo
       ? -secGeo.Z_MAX : Detector::Zmin;
 
@@ -360,7 +361,7 @@ void addSensorsPad(const BaseTpcSectorGeo &secGeo,
   const Int_t nPadsInRow = secGeo.PAD_COUNT[iRow];
 
   for (Int_t iPadLeftRight = -1; iPadLeftRight < 2; iPadLeftRight +=2) {
-    for (size_t iPad = 0; iPad < nPadsInRow + Detector::extraPads; iPad++) {
+    for (size_t iPad = 0; iPad < nPadsInRow; iPad++) {
 
       Double_t y0 = iPadLeftRight * w * (iPad + 0.5);
       Double_t z0 = 0;
@@ -418,6 +419,7 @@ void addSectorSensors(const BaseTpcSectorGeo &secGeo,
                       TGeoVolume *gasVolume) {
   const Double_t dZ = Detector::getZFromSectorGeo
       ? secGeo.Z_MAX : toRootLength(Detector::DeltaZ);
+
   Int_t iVolume = 0;
   TGeoMedium *medium = gasVolume->GetMedium();
 
@@ -452,7 +454,7 @@ void addSectorSensors(const BaseTpcSectorGeo &secGeo,
 
 inline uint64_t toBits(const BaseTpcSectorGeo &secGeo,
                        const Acts::Vector3 &position) {
-  auto bits = Detector::useBaseTpcSectorGeo ?
+  auto bits = (Detector::geometryType == Detector::sectorBased) ?
       toBitsForSector(secGeo, position, halfPhiSector(secGeo)) :
       toBitsForCylinder(position, 0.5 * Detector::DeltaPhi);
   return bits;
@@ -526,7 +528,7 @@ Detector::Detector(const BaseTpcSectorGeo &secGeo,
   m_config.readJson(jsonFile);
 }
 
-bool Detector::editGeometry(TGeoManager *geoManager) {
+Bool_t Detector::editGeometry(TGeoManager *geoManager) {
   TGeoVolume *gasVolume = geoManager->GetVolume(Detector::GasVolume);
   if (!gasVolume) {
     ACTS_ERROR("Volume '" << Detector::GasVolume << "' not found");
@@ -536,7 +538,7 @@ bool Detector::editGeometry(TGeoManager *geoManager) {
   ACTS_DEBUG("TPC gas volume: ");
   gasVolume->Print();
 
-  if (Detector::useBaseTpcSectorGeo) {
+  if (Detector::geometryType == Detector::sectorBased) {
     addSectorSensors(m_secGeo, geoManager, gasVolume);
   } else {
     addCylinderSensors(geoManager, gasVolume);

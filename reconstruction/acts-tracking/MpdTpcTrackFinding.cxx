@@ -247,8 +247,6 @@ void TrackFinding::constructTrackCandidates(
 
     // Iterate over the valid trajectories.
     for (auto lastIndex : lastIndices) {
-      size_t trackHashCode = 0;
-
       ProtoTrack trackCandidate;
       trackCandidate.reserve(fittedStates.size());
 
@@ -334,7 +332,7 @@ void TrackFinding::constructTrackCandidates(
       nSegments++;
     }
 
-    auto ratio = static_cast<double>(nNewHits) / track.size();
+    auto ratio = static_cast<Double_t>(nNewHits) / track.size();
     if (ratio >= m_config.newHitsRatio && nSegments > 0) {
       protoTracks.push_back(track);
       std::for_each(track.begin(), track.end(), [&](auto hitIndex) {

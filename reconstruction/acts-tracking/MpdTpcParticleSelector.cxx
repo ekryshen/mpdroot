@@ -91,7 +91,7 @@ namespace Mpd::Tpc {
     ActsExamples::SimParticleContainer selectedParticles;
     selectedParticles.reserve(inputParticles.size());
 
-    auto within = [](double x, double min, double max) {
+    auto within = [](Double_t x, Double_t min, Double_t max) {
       return (min <= x) and (x < max);
     };
     auto isValidparticle = [&](const auto& p) {

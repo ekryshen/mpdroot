@@ -21,9 +21,9 @@ namespace Mpd::Tpc {
 /// Debug information on a single simulation track.
 struct Quality {
   /// Maximum relative length among all found tracks.
-  double quality;
+  Double_t quality;
   /// Percent of points belonging to the original track.
-  double accuracy;
+  Double_t accuracy;
   /// Length of the best found track.
   size_t length;
   /// Length of the original track.

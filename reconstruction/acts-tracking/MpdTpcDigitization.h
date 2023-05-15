@@ -25,8 +25,8 @@ public:
     std::string inputSimHits;
     std::string outputSourceLinks;
     std::string outputMeasurements;
-    double sigmaLoc0;
-    double sigmaLoc1;
+    Double_t sigmaLoc0;
+    Double_t sigmaLoc1;
 
     std::shared_ptr<Detector> detector;
   };

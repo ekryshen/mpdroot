@@ -13,6 +13,8 @@
 #include <Acts/Seeding/SpacePointGrid.hpp>
 #include <Acts/Utilities/Logger.hpp>
 
+#include <Rtypes.h>
+
 #include <string>
 #include <vector>
 
@@ -31,11 +33,11 @@ public:
     Acts::SpacePointGridConfig gridConfig;
 
     /// Vectors containing the map of Z bins in the top and bottom layers.
-    std::vector<std::pair<int, int>> zBinNeighborsTop;
-    std::vector<std::pair<int, int>> zBinNeighborsBottom;
+    std::vector<std::pair<Int_t, Int_t>> zBinNeighborsTop;
+    std::vector<std::pair<Int_t, Int_t>> zBinNeighborsBottom;
 
     /// Number of phiBin neighbors at each side of the current bin.
-    int nPhiNeighbors;
+    Int_t nPhiNeighbors;
   };
 
   TrackSeeding(Config config, Acts::Logging::Level level);

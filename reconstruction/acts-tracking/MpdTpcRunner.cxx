@@ -92,7 +92,7 @@ size_t Runner::getTracksNumber(
   const auto &hits = context.eventStore.get<InputHitContainer>(
       m_config.digitization.inputSimHits);
 
-  std::unordered_set<int> tracks;
+  std::unordered_set<Int_t> tracks;
   tracks.reserve(hits.size());
 
   for (const auto &hit : hits) {
@@ -108,7 +108,7 @@ void Runner::logInput(
       m_config.particleSelector.inputSimHits);
   logHits("Input hit", hits);
 
-  std::unordered_map<int, ProtoTrack> tracks;
+  std::unordered_map<Int_t, ProtoTrack> tracks;
   tracks.reserve(hits.size());
 
   size_t ihit = 0;
@@ -196,7 +196,7 @@ void Runner::checkTrack(const InputHitContainer &hits,
                         size_t trackId,
                         const ProtoTrack &track,
                         Statistics &statistics) const {
-  std::unordered_map<int, size_t> counts;
+  std::unordered_map<Int_t, size_t> counts;
   counts.reserve(track.size());
 
   for (auto ihit : track) {

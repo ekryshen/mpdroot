@@ -11,6 +11,8 @@
 #include <Acts/Definitions/Units.hpp>
 #include <Acts/Seeding/Seed.hpp>
 
+#include <Rtypes.h>
+
 #include <memory>
 #include <string>
 
@@ -42,21 +44,21 @@ public:
     /// Maximum deltaR between space points in a seed.
     float deltaRMax;
     /// The minimum magnetic field to trigger the track parameters estimation.
-    double bFieldMin;
+    Double_t bFieldMin;
     /// Constant term of the loc0 resolution.
-    double sigmaLoc0;
+    Double_t sigmaLoc0;
     /// Constant term of the loc1 resolution.
-    double sigmaLoc1;
+    Double_t sigmaLoc1;
     /// Phi angular resolution.
-    double sigmaPhi;
+    Double_t sigmaPhi;
     /// Theta angular resolution.
-    double sigmaTheta;
+    Double_t sigmaTheta;
     /// q/p resolution.
-    double sigmaQOverP;
+    Double_t sigmaQOverP;
     /// Time resolution.
-    double sigmaT0;
+    Double_t sigmaT0;
     /// Inflate tracks.
-    std::array<double, 6> initialVarInflation;
+    std::array<Double_t, 6> initialVarInflation;
   };
 
   TrackEstimation(Config config, Acts::Logging::Level level);

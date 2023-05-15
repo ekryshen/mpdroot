@@ -55,13 +55,13 @@ struct Config final {
 
   static constexpr auto PrimaryParticlesOnly = true;
   // Truth particle kinematic cuts.
-  static constexpr auto PhiMin              =  std::numeric_limits<double>::lowest();
-  static constexpr auto PhiMax              =  std::numeric_limits<double>::max();
+  static constexpr auto PhiMin              =  std::numeric_limits<Double_t>::lowest();
+  static constexpr auto PhiMax              =  std::numeric_limits<Double_t>::max();
   static constexpr auto EtaMin              = -1.2;
   static constexpr auto EtaMax              =  1.2;
-  static constexpr auto AbsEtaMin           =  std::numeric_limits<double>::lowest();
-  static constexpr auto AbsEtaMax           =  std::numeric_limits<double>::max();
-  static constexpr auto PtMax               =  std::numeric_limits<double>::max();
+  static constexpr auto AbsEtaMin           =  0;
+  static constexpr auto AbsEtaMax           =  std::numeric_limits<Double_t>::max();
+  static constexpr auto PtMax               =  std::numeric_limits<Double_t>::max();
   static constexpr auto KeepNeutral         =  false;
   /// Requirement on number of recorded hits.
   static constexpr auto NHitsMin            =  9;

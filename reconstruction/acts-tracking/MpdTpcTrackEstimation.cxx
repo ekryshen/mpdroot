@@ -130,7 +130,7 @@ ActsExamples::ProcessCode TrackEstimation::execute(
       continue;
     } else {
       const auto &params = optParams.value();
-      double charge = std::copysign(1, params[Acts::eBoundQOverP]);
+      Double_t charge = std::copysign(1, params[Acts::eBoundQOverP]);
       trackParameters.emplace_back(surface->getSharedPtr(), params, charge, m_covariance);
 
       // Create a proto track for this seed.
@@ -203,15 +203,15 @@ SeedContainer TrackEstimation::createSeeds(
     // Loop over the found space points to find the seed with maximum deltaR
     // between the the bottom and top space points.
     // TODO: add the check of deltaZ
-    bool seedFound = false;
+    Bool_t seedFound = false;
     std::array<size_t, 3> bestSPIndices;
-    double maxDeltaR = std::numeric_limits<double>::min();
+    Double_t maxDeltaR = std::numeric_limits<Double_t>::min();
 
     for (size_t ib = 0; ib < spacePointsOnTrack.size() - 2; ++ib) {
       for (size_t im = ib + 1; im < spacePointsOnTrack.size() - 1; ++im) {
         for (size_t it = im + 1; it < spacePointsOnTrack.size(); ++it) {
-          double bmDeltaR = std::abs(spacePointsOnTrack[im]->r() - spacePointsOnTrack[ib]->r());
-          double mtDeltaR = std::abs(spacePointsOnTrack[it]->r() - spacePointsOnTrack[im]->r());
+          Double_t bmDeltaR = std::abs(spacePointsOnTrack[im]->r() - spacePointsOnTrack[ib]->r());
+          Double_t mtDeltaR = std::abs(spacePointsOnTrack[it]->r() - spacePointsOnTrack[im]->r());
 
           if ((bmDeltaR >= m_config.deltaRMin) && (bmDeltaR <= m_config.deltaRMax) &&
               (mtDeltaR >= m_config.deltaRMin) && (mtDeltaR <= m_config.deltaRMax)) {

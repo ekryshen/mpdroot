@@ -62,15 +62,17 @@ ActsExamples::ProcessCode Digitization::execute(
     auto moduleGeoId = surface->geometryId();
     ACTS_VERBOSE("Module identifier is " << moduleGeoId);
 
-    double deltaR;
-    if (Detector::useBaseTpcSectorGeo) {
+    Double_t deltaR;
+    if (Detector::geometryType == Detector::sectorBased) {
       BaseTpcSectorGeo sectorGeo = BaseTpcSectorGeo();
-      double maxPadHeight = std::max(sectorGeo.PAD_HEIGHT[0], sectorGeo.PAD_HEIGHT[1]);
+      Double_t maxPadHeight = std::max(sectorGeo.PAD_HEIGHT[0],
+                                       sectorGeo.PAD_HEIGHT[1]);
       deltaR = maxPadHeight * 1_cm;
     } else {
       deltaR = Detector::DeltaR;
     }
-    auto result = surface->globalToLocal(context.geoContext, pos, mom, 3. * deltaR);
+    auto result = surface->globalToLocal(
+        context.geoContext, pos, mom, 3. * deltaR);
     if (!result.ok()) {
       ACTS_DEBUG("Point " << pos << " is far from surface "
                           << surface->center(context.geoContext));

@@ -58,7 +58,7 @@ inline Mpd::Tpc::InputHitContainer convertTpcPoints(TClonesArray *tpcPoints) {
   Mpd::Tpc::InputHitContainer hits;
   hits.reserve(nTpcPoints);
 
-  for (Int_t i = 0; i < nTpcPoints; i++) {
+  for (size_t i = 0; i < nTpcPoints; i++) {
     const auto *tpcPoint = static_cast<TpcPoint*>(tpcPoints->UncheckedAt(i));
 
     hits.emplace_back(Mpd::Tpc::InputHit{
@@ -80,32 +80,16 @@ inline Mpd::Tpc::InputHitContainer convertTpcPoints(TClonesArray *tpcPoints) {
   return hits;
 }
 
-/// Dump hits to file in Acts units.
-void dumpData(const Mpd::Tpc::InputHitContainer &hits,
-              Int_t eventNumber,
-              std::string outPath) {
-  auto fname = outPath + "/event_" + std::to_string(eventNumber) + "_hits.txt";
-  std::ofstream fout(fname);
-
-  for (const auto &hit : hits) {
-    fout << hit.position[0] << ", " <<
-            hit.position[1] << ", " <<
-            hit.position[2] << ", " <<
-            hit.trackId <<
-            std::endl;
-  }
-}
-
 /// Converts TPC hits to the internal representation.
 inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
                                                   TClonesArray *tpcPoints) {
   assert(tpcHits && tpcPoints);
 
   // Connect information on momentum (for estimating the algorithm efficiency).
-  std::unordered_map<int, Acts::Vector3> momentum;
+  std::unordered_map<size_t, Acts::Vector3> momentum;
   const auto nTpcPoints = tpcPoints->GetEntriesFast();
 
-  for (Int_t i = 0; i < nTpcPoints; i++) {
+  for (size_t i = 0; i < nTpcPoints; i++) {
     const auto *tpcPoint = static_cast<TpcPoint*>(tpcPoints->UncheckedAt(i));
     momentum[tpcPoint->GetTrackID()] = Acts::Vector3{
                                            tpcPoint->GetPx() * momScalor,
@@ -118,10 +102,10 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
   Mpd::Tpc::InputHitContainer hits;
   hits.reserve(nTpcHits);
 
-  for (Int_t i = 0; i < nTpcHits; i++) {
+  for (size_t i = 0; i < nTpcHits; i++) {
     auto *tpcHit = static_cast<MpdTpcHit*>(tpcHits->UncheckedAt(i));
 
-    std::vector<std::pair<int, float>> trackIDs = tpcHit->GetTrackIDs();
+    std::vector<std::pair<Int_t, Float_t>> trackIDs = tpcHit->GetTrackIDs();
 
     // Get the first MC track, correspoinding to hit.
     Int_t trackId = trackIDs[0].first;
@@ -150,7 +134,7 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
 }
 
 /// Converts a hit into the MpdRoot representation.
-inline MpdTpcHit *convertHit(TClonesArray *hits, int ihit) {
+inline MpdTpcHit *convertHit(TClonesArray *hits, Int_t ihit) {
   return static_cast<MpdTpcHit*>(hits->UncheckedAt(ihit));
 }
 
@@ -181,13 +165,10 @@ inline void convertTracks(TClonesArray *hits,
 // Collect informations for Acts statistics
 //===----------------------------------------------------------------------===//
 
-/// Create map MC track -> ints for creating Act's Barcode
-using mcTrackToBarcodeInts =
-    std::map<Int_t, std::tuple<size_t, size_t, size_t, size_t, size_t>>;
+using TrackIdToBarcodeMap = std::map<size_t, ActsFatras::Barcode>;
 
-mcTrackToBarcodeInts createBarcodesMap(TClonesArray *mcTracks) {
-
-  mcTrackToBarcodeInts mcTrackToBarcode;
+TrackIdToBarcodeMap createTrackIdToBarcodeMap(TClonesArray *mcTracks) {
+  TrackIdToBarcodeMap trackIdToBarcodeMap;
 
   Int_t nMC = mcTracks->GetEntriesFast();
   size_t primary     = 1;
@@ -195,7 +176,7 @@ mcTrackToBarcodeInts createBarcodesMap(TClonesArray *mcTracks) {
   size_t curParticle = 0;
 
   // Loop over primary particles.
-  for (Int_t iMC = 0; iMC < nMC; iMC++) {
+  for (size_t iMC = 0; iMC < nMC; iMC++) {
     auto track = static_cast<MpdMCTrack*>(mcTracks->UncheckedAt(iMC));
 
     Int_t motherId = track->GetMotherId();
@@ -205,14 +186,20 @@ mcTrackToBarcodeInts createBarcodesMap(TClonesArray *mcTracks) {
     size_t particle   = ++curParticle;
     size_t generation = 0;
     size_t subpart    = 0;
-    mcTrackToBarcode[iMC] = {primary, secondary, particle, generation, subpart};
+
+    trackIdToBarcodeMap[iMC] = ActsFatras::Barcode().
+        setVertexPrimary(primary).
+        setVertexSecondary(secondary).
+        setParticle(particle).
+        setGeneration(generation).
+        setSubParticle(subpart);
   }
 
   // Loop over secondary particles.
   std::map<std::tuple<size_t, size_t>, size_t> partGenToSubpart;
-  Int_t iMC;
-  std::string msgPrefix = "[MpdTpcTracker]: createBarcodesMap(): ERROR: ";
-  for (iMC = 0; iMC < nMC; iMC++) {
+  std::string msgPrefix = "[MpdTpcTracker]: "
+      "createTrackIdToBarcodeMap(): ERROR: ";
+  for (size_t iMC = 0; iMC < nMC; iMC++) {
     auto track = static_cast<MpdMCTrack*>(mcTracks->UncheckedAt(iMC));
     Int_t motherId = track->GetMotherId();
     Int_t motherIdBak = motherId;
@@ -232,48 +219,47 @@ mcTrackToBarcodeInts createBarcodesMap(TClonesArray *mcTracks) {
           "can't find top track for MC track with index " << iMC << std::endl;
       continue;
     }
-    auto findBarcode = mcTrackToBarcode.find(motherIdBak);
-    if (findBarcode == mcTrackToBarcode.end()) {
+    auto findBarcode = trackIdToBarcodeMap.find(motherIdBak);
+    if (findBarcode == trackIdToBarcodeMap.end()) {
        std::cout << msgPrefix <<
           "can't process MC track with index " << iMC << std::endl;
        continue;
     }
-    auto fiveNums = findBarcode->second;
-    auto particle = std::get<2>(fiveNums);
+    auto barcode = findBarcode->second;
+    auto particle = barcode.particle();
 
     size_t subpart = partGenToSubpart[{particle, generation}];
-    mcTrackToBarcode[iMC] = {primary, secondary, particle, generation, subpart};
+
+    trackIdToBarcodeMap[iMC] = ActsFatras::Barcode().
+        setVertexPrimary(primary).
+        setVertexSecondary(secondary).
+        setParticle(particle).
+        setGeneration(generation).
+        setSubParticle(subpart);
+
     partGenToSubpart[{particle, generation}] += 1;
   }
-  return mcTrackToBarcode;
+  return trackIdToBarcodeMap;
 }
 
 /// Get input particles
-ActsExamples::SimParticleContainer getInputParticles(
+ActsExamples::SimParticleContainer createInputParticles(
     TClonesArray *mcTracks,
-    const mcTrackToBarcodeInts &mcTrackToBarcode) {
+    const TrackIdToBarcodeMap &trackIdToBarcodeMap) {
 
   ActsExamples::SimParticleContainer particles;
 
   Int_t nMC = mcTracks->GetEntriesFast();
-  for (Int_t i = 0; i < nMC; i++) {
+  for (size_t i = 0; i < nMC; i++) {
     auto track = static_cast<MpdMCTrack*>(mcTracks->UncheckedAt(i));
 
-    if (auto search = mcTrackToBarcode.find(i);
-             search == mcTrackToBarcode.end()) {
-      std::cout << "[MpdTpcTracker.cxx]: getInputParticles(): ERROR: " <<
+    if (trackIdToBarcodeMap.count(i) == 0) {
+      std::cout << "[MpdTpcTracker.cxx]: createInputParticles(): ERROR: " <<
           "can't find Barcode for MC track with index " << i << std::endl;
       continue;
     }
 
-    const auto [pri, sec, part, gen, sub] =  mcTrackToBarcode.at(i);
-    const auto barcode = ActsFatras::Barcode().
-        setVertexPrimary(pri).
-        setVertexSecondary(sec).
-        setParticle(part).
-        setGeneration(gen).
-        setSubParticle(sub);
-
+    auto barcode = trackIdToBarcodeMap.at(i);
     auto pdgCode = track->GetPdgCode();
     auto x0      = track->GetStartX() * lenScalor;
     auto y0      = track->GetStartY() * lenScalor;
@@ -294,75 +280,46 @@ ActsExamples::SimParticleContainer getInputParticles(
   return particles;
 }
 
-/// Create multimap TpcPoint *hits idx -> particles
-ActsExamples::IndexMultimap<ActsFatras::Barcode> createTpcPointsToParticlesMap(
-    TClonesArray *tpcPoints,
-    const mcTrackToBarcodeInts &mcTrackToBarcode) {
+ActsExamples::IndexMultimap<ActsFatras::Barcode> createHitToParticlesMap(
+    const Mpd::Tpc::InputHitContainer &hits,
+    const TrackIdToBarcodeMap &trackIdToBarcodeMap) {
 
-  ActsExamples::IndexMultimap<ActsFatras::Barcode> mapHitsToParticles;
-  Int_t n = tpcPoints->GetEntriesFast();
+  ActsExamples::IndexMultimap<ActsFatras::Barcode> hitToParticlesMap;
 
-  for (Int_t i = 0; i < n; i++) {
+  Int_t nHits = hits.size();
+  for (Int_t i = 0; i < nHits; i++) {
+    auto hit = hits.at(i);
+    auto trackId = hit.trackId;
 
-    auto *tpcPoint = static_cast<TpcPoint*>(tpcPoints->UncheckedAt(i));
-    auto trackId = tpcPoint->GetTrackID();
-
-    if (auto search = mcTrackToBarcode.find(trackId);
-             search == mcTrackToBarcode.end()) {
-      std::cout << "[MpdTpcTracker.cxx]: createTpcPointsToParticlesMap():" <<
+    if (trackIdToBarcodeMap.count(trackId) == 0) {
+      std::cout << "[MpdTpcTracker.cxx]: createHitToParticlesMap():" <<
           " ERROR: can't find Barcode for MC track with index " <<
           trackId << std::endl;
       continue;
     }
-
-    const auto [pri, sec, part, gen, sub] =  mcTrackToBarcode.at(trackId);
-    const auto barcode = ActsFatras::Barcode().
-        setVertexPrimary(pri).
-        setVertexSecondary(sec).
-        setParticle(part).
-        setGeneration(gen).
-        setSubParticle(sub);
-    mapHitsToParticles.emplace(i, barcode);
+    auto barcode = trackIdToBarcodeMap.at(trackId);
+    hitToParticlesMap.emplace(i, barcode);
   }
-  return mapHitsToParticles;
+  return hitToParticlesMap;
 }
 
-/// Create multimap MpdTpcHit *hits idx -> particles
-ActsExamples::IndexMultimap<ActsFatras::Barcode> createTpcHitsToParticlesMap(
-    TClonesArray *tpcHits,
-    const mcTrackToBarcodeInts &mcTrackToBarcode) {
+//===----------------------------------------------------------------------===//
+// Dump hits to file in Acts units.
+//===----------------------------------------------------------------------===//
 
-  ActsExamples::IndexMultimap<ActsFatras::Barcode> mapHitsToParticles;
-  Int_t n = tpcHits->GetEntriesFast();
+void dumpData(const Mpd::Tpc::InputHitContainer &hits,
+              Int_t eventNumber,
+              std::string outPath) {
+  auto fname = outPath + "/event_" + std::to_string(eventNumber) + "_hits.txt";
+  std::ofstream fout(fname);
 
-  size_t iHit = 0; // Needed for debug, when processing only certain tracks
-  for (Int_t i = 0; i < n; i++) {
-
-    auto *tpcHit = static_cast<MpdTpcHit*>(tpcHits->UncheckedAt(i));
-    std::vector <std::pair<int, float>> trackIDs = tpcHit->GetTrackIDs();
-
-    for (auto particle : trackIDs) {
-      auto trackId = particle.first;
-
-      if (auto search = mcTrackToBarcode.find(trackId);
-               search == mcTrackToBarcode.end()) {
-        std::cout << "[MpdTpcTracker.cxx]: createTpcHitsToParticlesMap():" <<
-            " ERROR: can't find Barcode for MC track with index " <<
-            trackId << std::endl;
-        continue;
-      }
-
-      const auto [pri, sec, part, gen, sub] =  mcTrackToBarcode.at(trackId);
-      const auto barcode = ActsFatras::Barcode().
-          setVertexPrimary(pri).
-          setVertexSecondary(sec).
-          setParticle(part).
-          setGeneration(gen).
-          setSubParticle(sub);
-      mapHitsToParticles.emplace(iHit++, barcode);
-    }
+  for (const auto &hit : hits) {
+    fout << hit.position[0] << ", " <<
+            hit.position[1] << ", " <<
+            hit.position[2] << ", " <<
+            hit.trackId <<
+            std::endl;
   }
-  return mapHitsToParticles;
 }
 
 //===----------------------------------------------------------------------===//
@@ -424,18 +381,16 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
   // Get the information necessary to collect Acts statistics.
   auto mcTracks = getArray("MCTrack");
-  auto mcTrackToBarcode = createBarcodesMap(mcTracks);
-  auto inputParticles = getInputParticles(mcTracks, mcTrackToBarcode);
-  auto mapHitsToParticles = UseMcHits
-     ? createTpcPointsToParticlesMap(fPoints, mcTrackToBarcode)
-     : createTpcHitsToParticlesMap  (fHits,   mcTrackToBarcode);
+  auto trackIdToBarcodeMap = createTrackIdToBarcodeMap(mcTracks);
+  auto inputParticles = createInputParticles(mcTracks, trackIdToBarcodeMap);
+  auto hitToParticlesMap = createHitToParticlesMap(hits, trackIdToBarcodeMap);
 
   // Run the track finding algorithm.
   const auto &config = fRunner->config();
 
   ActsExamples::WhiteBoard whiteBoard;
   ActsExamples::AlgorithmContext context(0, eventCounter, whiteBoard);
-  fRunner->execute(hits, inputParticles, mapHitsToParticles,
+  fRunner->execute(hits, inputParticles, hitToParticlesMap,
                    fPerfWriter, context, fOutPath);
 
   // Dump hits to file.

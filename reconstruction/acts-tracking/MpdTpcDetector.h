@@ -31,19 +31,15 @@ public:
   /// TPC sensitive volume.
   static constexpr auto GasVolume = "tpc01sv";
 
-  /// If true use BaseTpcSectorGeo class for geometry construction
-  /// else use numerical values from MpdTpcDetector.h
-  static constexpr auto useBaseTpcSectorGeo = false;
+  // Sector-based geometry: virtual surfaces based real geometry
+  enum GeometryType {cylinderBased, sectorBased};
+  static constexpr GeometryType geometryType = cylinderBased;
 
   /// If true use Z dimensions from BaseTpcSectorGeo
   /// else use numerical values from MpdTpcDetector.h
   /// it is used as points are outside the detector
   /// when Z dimensions is taken from BaseTpcSectorGeo
-  static constexpr auto  getZFromSectorGeo = false;
-
-  // Add additional pads in row
-  // as LMEM algorithm may generate points outside pads in row
-  static constexpr auto extraPads = 0;
+  static constexpr auto getZFromSectorGeo = false;
 
   /// TPC is represented as two symmetric nodes.
   static constexpr auto HasTwoNodes = true;
@@ -79,7 +75,7 @@ public:
 
 private:
   /// Adds virtual sensors to the TPC sensitive volume.
-  bool editGeometry(TGeoManager *geoManager);
+  Bool_t editGeometry(TGeoManager *geoManager);
 
 private:
   const Acts::Logger &logger() const { return *m_logger; }

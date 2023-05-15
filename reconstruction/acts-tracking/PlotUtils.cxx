@@ -85,7 +85,7 @@ struct TrackParam {
   Int_t eventNumber;
 };
 
-using RealTracksMap = std::map<Int_t, std::pair<TrackParam, bool>>;
+using RealTracksMap = std::map<Int_t, std::pair<TrackParam, Bool_t>>;
 
 void drawGraph(
     Int_t nIntervals,
@@ -106,7 +106,7 @@ void drawGraph(
   Double_t pMin = std::numeric_limits<Double_t>::max();
   Double_t pMax = 0;
 
-  for (Int_t trackI = startRecoIndex;
+  for (size_t trackI = startRecoIndex;
       trackI < recoTrackParams.size(); trackI++) {
 
     Double_t p = recoTrackParams.at(trackI).p;
@@ -178,7 +178,7 @@ void drawGraph(
 
       Int_t maxRecoLen =  0;
       Int_t trackIndex = -1;
-      for (Int_t trackI = startRecoIndex; trackI < recoTrackParams.size();
+      for (size_t trackI = startRecoIndex; trackI < recoTrackParams.size();
            trackI++) {
 
         if ((recoTrackParams.at(trackI).realTrackId != realTrackId) ||
@@ -223,14 +223,14 @@ void drawGraph(
     }
   }
   // Normalization of the number of tracks
-  for (Int_t iInterval = 0; iInterval < nIntervals; iInterval++) {
+  for (size_t iInterval = 0; iInterval < nIntervals; iInterval++) {
     appearanceAll [iInterval] = 100 * appearanceAll [iInterval] / nRealTracks;
     appearanceReco[iInterval] = 100 * appearanceReco[iInterval] / nRealTracks;
   }
 
   Double_t pI[nIntervals + 1];
 
-  for (Int_t i = 0; i < nIntervals; i++) {
+  for (size_t i = 0; i < nIntervals; i++) {
     pI[i] = pMin + i*intervalLen;
   }
   pI[nIntervals] = rightBound;
@@ -241,7 +241,7 @@ void drawGraph(
   qualitiesAmongReco[nIntervals] = 0;
   qualities[nIntervals] = 0;
 
-  for (Int_t i = 0; i < nIntervals; i++) {
+  for (size_t i = 0; i < nIntervals; i++) {
     if (sumRealAmongReconstructed[i] != 0) {
       qualitiesAmongReco[i] = 100.*sumsReconstructed[i] /
                                    sumRealAmongReconstructed[i];
@@ -301,7 +301,7 @@ void plotQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
   }
   // Map for all real tracks:
   // trackId -> std::pair(trackParam         : TrackParam
-  //                      is track was reconstructed: bool)
+  //                      is track was reconstructed: Bool_t)
   static RealTracksMap realTracksMap;
 
   // Collecting info about real tracks
@@ -318,8 +318,9 @@ void plotQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
       trackParam.realLen = 0;
       trackParam.eventNumber = eventCounter;
 
-      bool isReconstructed = false;
-      realTracksMap[trackIdExtended] = std::make_pair(trackParam, isReconstructed);
+      Bool_t isReconstructed = false;
+      realTracksMap[trackIdExtended] = std::make_pair(trackParam,
+                                                      isReconstructed);
     }
     realTracksMap[trackIdExtended].first.realLen++;
   }
@@ -342,8 +343,9 @@ void plotQualityOnP(const Mpd::Tpc::InputHitContainer &hits,
     Int_t realTrackId;
     getRecoTrackParams(hits, recoTrack, recoLen, realLen, realTrackId);
 
-    bool isReconstructed = true;
-    realTracksMap[eventCounter * kTrackId + realTrackId].second = isReconstructed;
+    Bool_t isReconstructed = true;
+    realTracksMap[eventCounter * kTrackId + realTrackId].second =
+        isReconstructed;
 
     trackParam.recoLen = recoLen;
     trackParam.realLen = realLen;
@@ -735,7 +737,7 @@ void plotOutputTracks(
     outTrajectoryGraph.SetLineColor(color);
 
     pIndex = 0;
-    for (uint32_t hitIndex : reconstructedTrack) {
+    for (auto hitIndex : reconstructedTrack) {
       auto hit = hits.at(hitIndex);
       PointP point(hit.position[0],
                    hit.position[1],
