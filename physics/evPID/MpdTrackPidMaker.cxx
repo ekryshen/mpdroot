@@ -53,6 +53,14 @@ void MpdTrackPidMaker::UserInit()
    fOutputList->Add(mhTPCK);
    mhTPCP = new TH2F("TPCP", "n-sigma TPC p-ID", 100, 0., 3., 100, -10., 10.);
    fOutputList->Add(mhTPCP);
+   mhTPCDe = new TH2F("TPCDe", "n-sigma TPC d-ID", 100, 0., 3., 100, -10., 10.);
+   fOutputList->Add(mhTPCDe);
+   mhTPCTr = new TH2F("TPCTr", "n-sigma TPC t-ID", 100, 0., 3., 100, -10., 10.);
+   fOutputList->Add(mhTPCTr);
+   mhTPCHe3 = new TH2F("TPCHe3", "n-sigma TPC he3-ID", 100, 0., 3., 100, -10., 10.);
+   fOutputList->Add(mhTPCHe3);
+   mhTPCHe4 = new TH2F("TPCHe4", "n-sigma TPC he4-ID", 100, 0., 3., 100, -10., 10.);
+   fOutputList->Add(mhTPCHe4);
    mhTOFsdPhi = new TH2F("TOFsdPhi", "n-sigma dPhi matching to TOF", 100, 0., 3., 100, -10., 10.);
    fOutputList->Add(mhTOFsdPhi);
    mhTOFsdZed = new TH2F("TOFsdZed", "n-sigma dZed matching to TOF", 100, 0., 3., 100, -10., 10.);
@@ -65,6 +73,14 @@ void MpdTrackPidMaker::UserInit()
    fOutputList->Add(mhTOFK);
    mhTOFP = new TH2F("TOFP", "n-sigma TOF p-ID", 100, 0., 3., 100, -10., 10.);
    fOutputList->Add(mhTOFP);
+   mhTOFDe = new TH2F("TOFDe", "n-sigma TOF d-ID", 100, 0., 3., 100, -10., 10.);
+   fOutputList->Add(mhTOFDe);
+   mhTOFTr = new TH2F("TOFTr", "n-sigma TOF t-ID", 100, 0., 3., 100, -10., 10.);
+   fOutputList->Add(mhTOFTr);
+   mhTOFHe3 = new TH2F("TOFHe3", "n-sigma TOF he3-ID", 100, 0., 3., 100, -10., 10.);
+   fOutputList->Add(mhTOFHe3);
+   mhTOFHe4 = new TH2F("TOFHe4", "n-sigma TOF he4-ID", 100, 0., 3., 100, -10., 10.);
+   fOutputList->Add(mhTOFHe4);
    mhECALsdPhi = new TH2F("ECALsdPhi", "n-sigma dPhi matching to ECAL", 100, 0., 3., 100, -10., 10.);
    fOutputList->Add(mhECALsdPhi);
    mhECALsdZed = new TH2F("ECALsdZed", "n-sigma dZed matching to ECAL", 100, 0., 3., 100, -10., 10.);
@@ -178,10 +194,14 @@ void MpdTrackPidMaker::ProcessEvent(MpdAnalysisEvent &event)
 
       float pmom = sqrt(mpdtrack->GetPt() * mpdtrack->GetPt() + mpdtrack->GetPz() * mpdtrack->GetPz());
 
-      dEdxsigmas[kEl] = dEdx_sigma_El(tr->GetDedx(), pmom);
-      dEdxsigmas[kPi] = dEdx_sigma_Pi(tr->GetDedx(), pmom);
-      dEdxsigmas[kK]  = dEdx_sigma_K(tr->GetDedx(), pmom);
-      dEdxsigmas[kP]  = dEdx_sigma_P(tr->GetDedx(), pmom);
+      dEdxsigmas[kEl] 		= dEdx_sigma_El(tr->GetDedx(), pmom);
+      dEdxsigmas[kPi] 		= dEdx_sigma_Pi(tr->GetDedx(), pmom);
+      dEdxsigmas[kK]		= dEdx_sigma_K(tr->GetDedx(), pmom);
+      dEdxsigmas[kP]  		= dEdx_sigma_P(tr->GetDedx(), pmom);
+      dEdxsigmas[kDeutron]  = dEdx_sigma_De(tr->GetDedx(), pmom);
+      dEdxsigmas[kTriton]   = dEdx_sigma_Tr(tr->GetDedx(), pmom);
+      dEdxsigmas[kHe3]   	= dEdx_sigma_He3(tr->GetDedx(), pmom);
+      dEdxsigmas[kHe4]   	= dEdx_sigma_He4(tr->GetDedx(), pmom);
 
       mpdtrack->SetTPCNSigma(dEdxsigmas);
 
@@ -189,6 +209,10 @@ void MpdTrackPidMaker::ProcessEvent(MpdAnalysisEvent &event)
       mhTPCPi->Fill(pmom, mpdtrack->GetTPCNSigma(kPi));
       mhTPCK->Fill(pmom, mpdtrack->GetTPCNSigma(kK));
       mhTPCP->Fill(pmom, mpdtrack->GetTPCNSigma(kP));
+      mhTPCDe->Fill(pmom, mpdtrack->GetTPCNSigma(kDeutron));
+      mhTPCTr->Fill(pmom, mpdtrack->GetTPCNSigma(kTriton));
+      mhTPCHe3->Fill(pmom, mpdtrack->GetTPCNSigma(kHe3));
+      mhTPCHe4->Fill(pmom, mpdtrack->GetTPCNSigma(kHe4));
 
       // n-sigma matching to TOF
       float tofsdPhi = -999;
@@ -224,10 +248,14 @@ void MpdTrackPidMaker::ProcessEvent(MpdAnalysisEvent &event)
       }
 
       if (mpdtrack->GetTofFlag() == 2 || mpdtrack->GetTofFlag() == 6) {
-         tofsigmas[kEl] = Beta_sigma_El(mpdtrack->GetTofBeta(), pmom);
-         tofsigmas[kPi] = Beta_sigma_Pi(mpdtrack->GetTofBeta(), pmom);
-         tofsigmas[kK]  = Beta_sigma_K(mpdtrack->GetTofBeta(), pmom);
-         tofsigmas[kP]  = Beta_sigma_P(mpdtrack->GetTofBeta(), pmom);
+         tofsigmas[kEl] 	  = Beta_sigma_El(mpdtrack->GetTofBeta(), pmom);
+         tofsigmas[kPi] 	  = Beta_sigma_Pi(mpdtrack->GetTofBeta(), pmom);
+         tofsigmas[kK]  	  = Beta_sigma_K(mpdtrack->GetTofBeta(), pmom);
+         tofsigmas[kP]  	  = Beta_sigma_P(mpdtrack->GetTofBeta(), pmom);
+         tofsigmas[kDeutron]  = Beta_sigma_De(mpdtrack->GetTofBeta(), pmom);
+         tofsigmas[kTriton]   = Beta_sigma_Tr(mpdtrack->GetTofBeta(), pmom);
+         tofsigmas[kHe3]	  = Beta_sigma_He3(mpdtrack->GetTofBeta(), pmom);
+         tofsigmas[kHe4]	  = Beta_sigma_He4(mpdtrack->GetTofBeta(), pmom);
       } // flag 2||6
 
       mpdtrack->SetTOFNSigma(tofsigmas);
@@ -236,6 +264,10 @@ void MpdTrackPidMaker::ProcessEvent(MpdAnalysisEvent &event)
       mhTOFPi->Fill(pmom, mpdtrack->GetTOFNSigma(kPi));
       mhTOFK->Fill(pmom, mpdtrack->GetTOFNSigma(kK));
       mhTOFP->Fill(pmom, mpdtrack->GetTOFNSigma(kP));
+      mhTOFDe->Fill(pmom, mpdtrack->GetTOFNSigma(kDeutron));
+      mhTOFTr->Fill(pmom, mpdtrack->GetTOFNSigma(kTriton));
+      mhTOFHe3->Fill(pmom, mpdtrack->GetTOFNSigma(kHe3));
+      mhTOFHe4->Fill(pmom, mpdtrack->GetTOFNSigma(kHe4));
 
       // n-sigma matching ECAL
       float     emcsdPhi = -999;
@@ -540,6 +572,110 @@ float MpdTrackPidMaker::dEdx_sigma_P(float dEdx, float mom) const
    return (dEdx - mean_exp) / width_exp;
 }
 
+float MpdTrackPidMaker::dEdx_sigma_De(float dEdx, float mom) const
+{
+	if (mom < 0.2) return -999;
+	if (dEdx <= 0) return -999;
+	
+	dEdx = log(dEdx);
+	
+	if (mom > 4.0) mom = 4.0;
+	
+	float mean[7]  = {-0.0340025, 6.41875, -21.4082, 111.873, -37.0155, 4.23783, -0.440181};
+	float width[7] = {-335699, 6.23884e-10, -1.87764e-09, -1.6182e-08, 2.67827e-08, 7.41763e-10, 0.0786594};
+	
+	float mean_exp, width_exp;
+	
+	mean_exp =
+      mean[0] / mom / mom *
+         (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
+      mean[6];
+   width_exp =
+      width[0] / mom / mom *
+         (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
+      width[6];
+
+   return (dEdx - mean_exp) / width_exp;
+}
+
+float MpdTrackPidMaker::dEdx_sigma_Tr(float dEdx, float mom) const
+{
+	if (mom < 0.3) return -999;
+	if (dEdx <= 0) return -999;
+	
+	dEdx = log(dEdx);
+	
+	if (mom > 4.0) mom = 4.0;
+	
+	float mean[7]  = {0.838063, -0.643363, 3.05958, -7.22562, 3.15175, -0.145565, 1.23459};
+	float width[7] = {-326234, -1.02086e-08, -1.406e-09, -6.0515e-08, 8.91502e-08, 4.89349e-09, 0.076904};
+	
+	float mean_exp, width_exp;
+	
+	mean_exp =
+      mean[0] / mom / mom *
+         (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
+      mean[6];
+   width_exp =
+      width[0] / mom / mom *
+         (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
+      width[6];
+
+   return (dEdx - mean_exp) / width_exp;
+}
+
+float MpdTrackPidMaker::dEdx_sigma_He3(float dEdx, float mom) const
+{
+	if (mom < 0.25) return -999;
+	if (dEdx <= 0) return -999;
+	
+	dEdx = log(dEdx);
+	
+	if (mom > 2.1) mom = 2.1;
+	
+	float mean[7]  = {-0.0373502, 8.38058, -6.13034, 111.445, -43.379, 8.93968, -0.0259862};
+	float width[7] = {-5.93096e+06, -5.40291e-09, 1.49108e-08, -3.22125e-08, 2.42814e-08, -2.55909e-09, 0.046137};
+	
+	float mean_exp, width_exp;
+	
+	mean_exp =
+      mean[0] / mom / mom *
+         (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
+      mean[6];
+   width_exp =
+      width[0] / mom / mom *
+         (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
+      width[6];
+
+   return (dEdx - mean_exp) / width_exp;
+}
+
+float MpdTrackPidMaker::dEdx_sigma_He4(float dEdx, float mom) const
+{
+	if (mom < 0.3) return -999;
+	if (dEdx <= 0) return -999;
+	
+	dEdx = log(dEdx);
+	
+	if (mom > 2.1) mom = 2.1;
+	
+	float mean[7]  = {-0.0416506, 10.4111, 0.941303, 114.377, -49.9685, 4.30127, 0.0790037};
+	float width[7] = {-2.75797e+07, -9.52594e-10, 1.67278e-09, -3.52169e-09, 4.13115e-09, -3.87331e-11, 0.0256814};
+	
+	float mean_exp, width_exp;
+	
+	mean_exp =
+      mean[0] / mom / mom *
+         (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
+      mean[6];
+   width_exp =
+      width[0] / mom / mom *
+         (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
+      width[6];
+
+   return (dEdx - mean_exp) / width_exp;
+}
+
 float MpdTrackPidMaker::TofdPhiMatch(int charge, float pt, float dphi) const
 {
    if (pt < 0.1) return -999;
@@ -688,6 +824,94 @@ float MpdTrackPidMaker::Beta_sigma_P(float beta, float mom) const
       width[6];
 
    return (beta - mean_exp) / width_exp;
+}
+
+float MpdTrackPidMaker::Beta_sigma_De(float beta, float mom) const
+{
+	if (mom < 0.55) return -999;
+	if (mom > 4.0) mom = 4.0;
+	
+	float mean[7]  = {-0.0814416, -2.97155, 15.9372, -24.4927, 12.6621, -0.548257, 0.18059};
+	float width[7] = {-7.85878e+07, -4.99183e-10, -8.62107e-10, -2.34707e-09, 1.64532e-09, -9.71102e-11, 0.141627};
+	
+	float mean_exp, width_exp;
+	
+	mean_exp =
+      mean[0] / mom / mom *
+         (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
+      mean[6];
+    width_exp =
+      width[0] / mom / mom *
+         (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
+      width[6];
+      
+    return (beta - mean_exp) / width_exp;
+}
+
+float MpdTrackPidMaker::Beta_sigma_Tr(float beta, float mom) const
+{
+	if (mom < 0.8) return -999;
+	if (mom > 4.0) mom = 4.0;
+	
+	float mean[7]  = {-0.803143, -0.759969, 4.5608, -4.07809, 2.58958, -0.0536075, -2.08872};
+	float width[7] = {-3.25388e+07, -4.40603e-09, 1.87833e-09, -1.68253e-08, 1.2563e-08, -5.26547e-10, 0.106599};
+	
+	float mean_exp, width_exp;
+	
+	mean_exp =
+      mean[0] / mom / mom *
+         (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
+      mean[6];
+    width_exp =
+      width[0] / mom / mom *
+         (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
+      width[6];
+      
+    return (beta - mean_exp) / width_exp;
+}
+
+float MpdTrackPidMaker::Beta_sigma_He3(float beta, float mom) const
+{
+	if (mom < 0.55) return -999;
+	if (mom > 2.0) mom = 2.0;
+	
+	float mean[7]  = {-0.00334197, 45.9224, 15.8817, 59.6323, -121.473, 27.1104, 0.645006};
+	float width[7] = {-1.08795e+07, -2.8508e-09, 4.76702e-09, -1.55885e-08, 1.00741e-08, -1.35602e-09, 0.0342388};
+	
+	float mean_exp, width_exp;
+	
+	mean_exp =
+      mean[0] / mom / mom *
+         (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
+      mean[6];
+    width_exp =
+      width[0] / mom / mom *
+         (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
+      width[6];
+      
+    return (beta - mean_exp) / width_exp;
+}
+
+float MpdTrackPidMaker::Beta_sigma_He4(float beta, float mom) const
+{
+	if (mom < 0.7) return -999;
+	if (mom > 2.0) mom = 2.0;
+	
+	float mean[7]  = {-0.00638577, 36.5203, -0.246851, 81.0533, -95.6575, 22.6125, 0.422695};
+	float width[7] = {-3.06952e+07, -7.82437e-10, 5.4467e-10, -4.52768e-09, 2.782e-09, -5.21249e-10, 0.0644277};
+	
+	float mean_exp, width_exp;
+	
+	mean_exp =
+      mean[0] / mom / mom *
+         (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
+      mean[6];
+    width_exp =
+      width[0] / mom / mom *
+         (width[1] * log(mom * mom) - width[2] * mom * mom - width[3] * mom - width[4] - width[5] * mom * mom * mom) +
+      width[6];
+      
+    return (beta - mean_exp) / width_exp;
 }
 
 float MpdTrackPidMaker::EmcdPhiMatch(int charge, float pt, float dphi) const
