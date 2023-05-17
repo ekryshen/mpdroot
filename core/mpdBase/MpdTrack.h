@@ -103,10 +103,6 @@ public:
    float GetNSigmaPion() const { return fTPCNSigma[kPi]; }
    float GetNSigmaKaon() const { return fTPCNSigma[kK]; }
    float GetNSigmaProton() const { return fTPCNSigma[kP]; }
-   float GetNSigmaDeutron() const { return fTPCNSigma[kDeutron]; }
-   float GetNSigmaTriton() const { return fTPCNSigma[kTriton]; }
-   float GetNSigmaHe3() const { return fTPCNSigma[kHe3]; }
-   float GetNSigmaHe4() const { return fTPCNSigma[kHe4]; }
 
    void SetdEdXTPC(float n) { fdEdXTPC = n; }
    void SetTPCNSigma(float *cuts)
@@ -117,10 +113,6 @@ public:
    void SetNSigmaPion(float n) { fTPCNSigma[kPi] = n; }
    void SetNSigmaKaon(float n) { fTPCNSigma[kK] = n; }
    void SetNSigmaProton(float n) { fTPCNSigma[kP] = n; }
-   void SetNSigmaDeutron(float n) { fTPCNSigma[kDeutron] = n; }
-   void SetNSigmaTriton(float n) { fTPCNSigma[kTriton] = n; }
-   void SetNSigmaHe3(float n) { fTPCNSigma[kHe3] = n; }
-   void SetNSigmaHe4(float n) { fTPCNSigma[kHe4] = n; }
 
    // Bayesian TPC PID
    float GetTPCPidProbElectron() const { return fPidTPCProb[kEl]; }
