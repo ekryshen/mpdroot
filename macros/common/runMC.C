@@ -229,6 +229,7 @@ void runMC(EGenerators generator = EGenerators::BOX, EVMCType vmc = EVMCType::GE
       MpdVHLLEGenerator *vhlleGen =
           new MpdVHLLEGenerator(inFile, kTRUE); // kTRUE corresponds to hydro + cascade, kFALSE -- hydro only
       vhlleGen->SkipEvents(0);
+      vhlleGen->SetEventPlane(0., 2.*TMath::Pi());
       primGen->AddGenerator(vhlleGen);
       break;
    }
