@@ -78,7 +78,7 @@ check_permissions:
     - cvmfs
   only:
     - merge_requests
-  allow_failure: true
+  allow_failure: false
   <<: *only-default
 
 build:c7:
