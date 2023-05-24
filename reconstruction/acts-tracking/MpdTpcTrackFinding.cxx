@@ -213,8 +213,8 @@ void TrackFinding::constructTrackCandidates(
   std::multimap<size_t, ProtoTrack> trackCandidates;
 
   size_t eventNumber = context.eventNumber;
-  auto fname = m_config.outPath +  "/event_" + std::to_string(eventNumber) +
-      "_prototracks.txt";
+  auto fname = m_config.outPath + "/" +
+      "event_" + std::to_string(eventNumber) + "_prototracks.txt";
   std::ofstream fout;
   SpacePointContainer spacePoints;
 
@@ -232,6 +232,7 @@ void TrackFinding::constructTrackCandidates(
   }
 
   // Iterate over the seeds.
+  size_t multitrajIdx = 0;
   for (size_t itrack = 0; itrack < results.size(); itrack++) {
     if (!results.at(itrack).ok()) {
       // No trajectory found for the given seed.
@@ -260,30 +261,43 @@ void TrackFinding::constructTrackCandidates(
         auto &sourceLink = static_cast<const SourceLink&>(state.uncalibrated());
         auto hitIndex = sourceLink.index();
         if (m_config.dumpData) {
+          auto spacePoint = spacePoints.at(hitIndex);
+          Double_t x = 0.;
+          Double_t y = 0.;
+          Double_t z = 0.;
+          if (hitIndex != spacePoint.measurementIndex()) {
+            ACTS_ERROR("Dump prototracks: "
+                "can't find space point corresponding to hit " << hitIndex);
+          } else {
+            x = spacePoint.x();
+            y = spacePoint.y();
+            z = spacePoint.z();
+          }
+          auto params = state.parameters();
+
+          size_t hitIdx   = hitIndex;
+          Double_t phi    = params[2];
+          Double_t theta  = params[3];
+          Double_t qOverP = params[4];
+          Double_t t      = params[5];
+          Double_t chi2   = state.chi2();
+          size_t seedIdx  = itrack;
+
           if (!firstPass) {
             fout << ", ";
           }
           firstPass = false;
-          fout << itrack << ", " <<
-                  hitIndex;
-          auto spacePoint = spacePoints.at(hitIndex);
-          if (hitIndex != spacePoint.measurementIndex()) {
-            ACTS_ERROR("Error while dumping prototracks:"
-                " can't find space point corresponding to hit " << hitIndex);
-            fout << ", 0, 0, 0";
-          } else {
-            fout << ", " << spacePoint.x() <<
-                    ", " << spacePoint.y() <<
-                    ", " << spacePoint.z();
-          }
-          auto params = state.parameters();
-
-          // Skip 2 first parameters which are local coordinates
-          for (auto i = 2; i < params.size(); i++) {
-            fout << ", " << params[i];
-          }
-          fout << ", " << state.chi2() <<
-                  ", " << itrack;
+          fout << multitrajIdx++ << ", " <<
+                  hitIdx         << ", " <<
+                  x              << ", " <<
+                  y              << ", " <<
+                  z              << ", " <<
+                  phi            << ", " <<
+                  theta          << ", " <<
+                  qOverP         << ", " <<
+                  t              << ", " <<
+                  chi2           << ", " <<
+                  seedIdx;
         }
         trackCandidate.push_back(hitIndex);
       });
