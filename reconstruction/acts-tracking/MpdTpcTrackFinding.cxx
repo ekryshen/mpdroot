@@ -229,10 +229,12 @@ void TrackFinding::constructTrackCandidates(
                  b.measurementIndex();
         }
     );
+    fout <<
+        "# (hit-index, x, y, z, phi, theta, q/p, t, chi2, seed-index)+ " <<
+        std::endl;
   }
 
   // Iterate over the seeds.
-  size_t multitrajIdx = 0;
   for (size_t itrack = 0; itrack < results.size(); itrack++) {
     if (!results.at(itrack).ok()) {
       // No trajectory found for the given seed.
@@ -287,16 +289,15 @@ void TrackFinding::constructTrackCandidates(
             fout << ", ";
           }
           firstPass = false;
-          fout << multitrajIdx++ << ", " <<
-                  hitIdx         << ", " <<
-                  x              << ", " <<
-                  y              << ", " <<
-                  z              << ", " <<
-                  phi            << ", " <<
-                  theta          << ", " <<
-                  qOverP         << ", " <<
-                  t              << ", " <<
-                  chi2           << ", " <<
+          fout << hitIdx   << ", " <<
+                  x        << ", " <<
+                  y        << ", " <<
+                  z        << ", " <<
+                  phi      << ", " <<
+                  theta    << ", " <<
+                  qOverP   << ", " <<
+                  t        << ", " <<
+                  chi2     << ", " <<
                   seedIdx;
         }
         trackCandidate.push_back(hitIndex);
