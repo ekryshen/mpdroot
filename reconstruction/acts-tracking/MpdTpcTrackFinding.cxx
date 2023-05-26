@@ -230,8 +230,9 @@ void TrackFinding::constructTrackCandidates(
         }
     );
     fout <<
-        "# (hit-index, x, y, z, phi, theta, q/p, t, chi2, seed-index)+ " <<
+        "# format: (hit-index, x, y, z, phi, theta, q/p, t, chi2, seed-index)+" <<
         std::endl;
+    std::cout << fname << " has been created" << std::endl;
   }
 
   // Iterate over the seeds.

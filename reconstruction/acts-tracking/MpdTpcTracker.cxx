@@ -114,8 +114,8 @@ inline Mpd::Tpc::InputHitContainer convertTpcHits(TClonesArray *tpcHits,
     Acts::Vector3 mom;
     if (mFind == momentum.end()) {
       mom = Acts::Vector3{0., 0., 0.};
-      std::cout << "[MpdTpcTracker]: WARNING: can't find MC track " <<
-          "for MpdTpcHit with index " << i << std::endl;
+      std::cout << "[MpdTpcTracker]: WARNING: " <<
+          "can't find MC track for MpdTpcHit with index " << i << std::endl;
     } else {
       mom = mFind->second;
     }
@@ -312,6 +312,8 @@ void dumpData(const Mpd::Tpc::InputHitContainer &hits,
               std::string outPath) {
   auto fname = outPath + "/event_" + std::to_string(eventNumber) + "_hits.txt";
   std::ofstream fout(fname);
+  fout << "# format: x, y, z, (trackId)+" << std::endl;
+  std::cout << fname << " has been created" << std::endl;
 
   for (const auto &hit : hits) {
     fout << hit.position[0] << ", " <<
