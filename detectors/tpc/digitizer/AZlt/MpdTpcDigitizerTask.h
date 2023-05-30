@@ -19,10 +19,9 @@
 #include "FairField.h"
 #include "TpcPoint.h"
 #include "MpdTpcDigitizerQAHistograms.h"
+#include "TClonesArray.h"
 
 class TpcGas;
-
-using namespace std;
 
 struct DigOrigArray {
    Float_t             signal;

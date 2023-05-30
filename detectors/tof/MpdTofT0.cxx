@@ -19,6 +19,7 @@
 
 #include "MpdMCTrack.h"
 #include "FairLogger.h"
+#include "FairRootManager.h"
 
 #include "MpdTofUtils.h"
 #include "MpdTofPoint.h"
@@ -27,12 +28,10 @@
 #include "FairMCEventHeader.h"
 
 #include "MpdTpcKalmanTrack.h"
-//#include "MpdTofHit.h"
+// #include "MpdTofHit.h"
 #include "MpdTofMatchingData.h"
 
 #include "MpdTofT0.h"
-
-using namespace std;
 
 ClassImp(MpdTofT0);
 ClassImp(MpdTofT0Data);
@@ -41,7 +40,7 @@ LState::LState(size_t &size)
 {
    if (size > 15) {
       size = 15; // pow(3, 15) = 14,348,907 combination (~100 Mbyte)
-      cout << "\n -W: LState ctor: reduce size.";
+      std::cout << "\n -W: LState ctor: reduce size.";
    }
 
    fSize = size;
@@ -70,7 +69,7 @@ void LState::_checkAndShift(size_t index)
    }
 }
 //------------------------------------------------------------------------------------------------------------------------
-void LState::Print(const char *comment, ostream &os) const
+void LState::Print(const char *comment, std::ostream &os) const
 {
    if (comment != nullptr) os << comment;
    os << " [";
@@ -170,10 +169,10 @@ void MpdTofT0::Exec(Option_t *option)
       auto track = (MpdMCTrack *)aMcTracks->UncheckedAt(pKfTrack->GetTrackID());
       if (track->GetMotherId() != -1) continue; // pass primary tracks ONLY <<<---------CUT!!!
 
-      mmMatchData.insert(make_pair(pKfTrack->Momentum3().Pt(), make_pair(match, pKfTrack)));
+      mmMatchData.insert(std::make_pair(pKfTrack->Momentum3().Pt(), std::make_pair(match, pKfTrack)));
    }
 
-   map<size_t, pair<size_t, TmatchMini[fRangeSize]>> mMatchMini; // < divisionID, <size, array> >
+   std::map<size_t, std::pair<size_t, TmatchMini[fRangeSize]>> mMatchMini; // < divisionID, <size, array> >
 
    // fill divisions by matchings(fRangeSize=15 matchings per divizion)
    size_t nMatchings = 0, divisionID = 0;

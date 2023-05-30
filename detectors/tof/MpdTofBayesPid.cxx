@@ -19,6 +19,7 @@
 #include <TClonesArray.h>
 
 #include "FairLogger.h"
+#include "FairRootManager.h"
 #include "MpdTofMatchingData.h"
 #include "MpdTpcKalmanTrack.h"
 #include "MpdTofHit.h"
@@ -26,9 +27,10 @@
 
 #include "MpdTofBayesPid.h"
 
-//#define _PDFbyBeta 1
-
-using namespace std;
+using std::cerr;
+using std::cout;
+using std::endl;
+// #define _PDFbyBeta 1
 
 ClassImp(MpdBayesPriors);
 const char *MpdBayesPriors::fSpeciesNames[fNpdf] = {"Proton", "Pion", "Kaon", "Electron"};
@@ -481,7 +483,7 @@ void MpdTofBayesPid::Exec(Option_t *option)
          CalcProb_H_S(P);
 
          // fill fProb_H_S to MpdTofMatchingData
-         std::copy(begin(fProb_H_S), end(fProb_H_S), begin(match->fBayesPid));
+         std::copy(std::begin(fProb_H_S), std::end(fProb_H_S), std::begin(match->fBayesPid));
 
          // update yields
          for (size_t pid = 0; pid < fNpdf; pid++) {

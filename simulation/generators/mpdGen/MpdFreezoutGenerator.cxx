@@ -6,8 +6,9 @@
  *		E-mail: daniel.wielanek@gmail.com
  *		Warsaw University of Technology, Faculty of Physics
  */
-#include "MpdFreezoutGenerator.h"
 #include "FairRunSim.h"
+#include "FairRootManager.h"
+#include "MpdFreezoutGenerator.h"
 MpdFreezoutGenerator *MpdFreezoutGenerator::fgInstance = NULL;
 MpdFreezoutGenerator::MpdFreezoutGenerator()
 {

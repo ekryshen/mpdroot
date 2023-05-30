@@ -75,9 +75,9 @@ public:
    K              center;
 
    //------------------------------------------------------------------------------------------------------------------------
-   IntervalTree<T, K>(void) : left(nullptr), right(nullptr), center(0.) {}
+   IntervalTree(void) : left(nullptr), right(nullptr), center(0.) {}
    //------------------------------------------------------------------------------------------------------------------------
-   IntervalTree<T, K>(const intervalTree &other) : left(nullptr), right(nullptr)
+   IntervalTree(const intervalTree &other) : left(nullptr), right(nullptr)
    {
       center    = other.center;
       intervals = other.intervals;
@@ -113,8 +113,8 @@ public:
       return *this;
    }
    //------------------------------------------------------------------------------------------------------------------------
-   IntervalTree<T, K>(intervalVector &ivals, std::size_t depth = 16, std::size_t minbucket = 64, K leftextent = 0,
-                      K rightextent = 0, std::size_t maxbucket = 512)
+   IntervalTree(intervalVector &ivals, std::size_t depth = 16, std::size_t minbucket = 64, K leftextent = 0,
+                K rightextent = 0, std::size_t maxbucket = 512)
       : left(nullptr), right(nullptr)
    {
       --depth;
