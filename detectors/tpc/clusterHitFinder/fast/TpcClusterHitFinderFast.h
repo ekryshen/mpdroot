@@ -1,10 +1,9 @@
-//
-// Joint Institute for Nuclear Research (JINR), Dubna, Russia, Dec-2021
+// Joint Institute for Nuclear Research (JINR), Dubna, Russia, Dec-2021/June 2023
 // MPD TPC Hit Finder for NICA project
-// author: A.V.Krylov JINR/LNP
+// Adapter of TpcClustering.h library to the abstract interface
+// authors: A.V.Krylov JINR/LNP, S.Hnatic JINR/MLIT
 // email: avkrylov@jinr.ru
 //
-// Interface port: Slavomir Hnatic MLIT JINR - March 2023
 #ifndef TpcClusterHitFinderFast_HH
 #define TpcClusterHitFinderFast_HH
 
@@ -49,15 +48,7 @@ private:
    int _nEvent;
    int _nSector;
    int _nRow;
-
    int _nTime;
-
-   // TH1 *ExecTime;
-   // float fTime[1000];
-
-   const char *_strFilePath;
-   const char *_strInputBranchName;
-   const char *_strOutputBranchName;
 
    Bool_t          fPersistence;
    TpcSectorGeoAZ *_pSecGeo;
