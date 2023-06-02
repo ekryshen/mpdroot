@@ -1,5 +1,5 @@
 //
-// Joint Institute for Nuclear Research (JINR), Dubna, Russia, Nov-2021
+// Joint Institute for Nuclear Research (JINR), Dubna, Russia, Nov-2021/May-2023
 // MPD TPC Clustering objects for NICA project
 // author: Viktor A.Krylov JINR/LNP
 // email: kryman@jinr.ru
@@ -14,21 +14,33 @@
 #include <ostream>
 #include <cassert>
 #include <math.h>
-
 #include <string>
+#include <cstring>
 #include <vector>
 #include <array>
 #include <list>
 #include <algorithm>
 #include <iterator>
 #include <climits>
+#include <float.h>
 
+#define HIT_FINDER "v0.1.5rc"
 #define AUXHIT_DEBUG
 #define HIT_ADJUSTMENT
+#define nTPC_ROWS 53
+#define nTPC_SECTORS 24
+#undef DEBUG_OUTPUT
 
-#define _RED_(_MSG_) "\e[1;31m" _MSG_ "\e[0m"
-#define _GREEN_(_MSG_) "\e[1;32m" _MSG_ " \e[0m"
-#define _YELLOW_(_MSG_) "\e[1;33m" _MSG_ "\e[0m"
+const float fADC_DOORSTEP = 2.5; // adc sensitivity
+
+// BASH COLOR CODES: {black:30,red:31,green:32,yellow:33,blue:34,magenta:35,cyan:36,white:37}; background:+10;
+// bright:+60 BASH TEXT DECORATION: {regular:0,bold:1,italic:3,underscore:4} BASH CODE STRUCTURE: <PREFIX>;<COLOR>;<TEXT
+// DECORATION>
+#define _RED_ "0;31"
+#define _GREEN_ "0;32"
+#define _YELLOW_ "0;33"
+#define _BASH_CODE_(_CODE) "\e[" _CODE "m"
+#define _RED_MSG_(_MSG) _BASH_CODE_(_RED_) _MSG _BASH_CODE_()
 //
 // A Fast, Accurate, and Separable Method for Fitting a Gaussian Function
 // Ibrahim Al-Nahhal, Octavia A. Dobre, Ertugrul Basar, Cecilia Moloney, Salama Ikki
@@ -152,6 +164,7 @@ double calcRsquared(const std::vector<XY<X, Y>> &rvXY, double x, double y, doubl
    } else
       return 0;
 }
+
 namespace tpcClustering {
 struct Gauss {
    std::array<double, 4>
@@ -201,27 +214,21 @@ public:
    }
 };
 class AdcHit {
-   uint                               _nTimeBin; // timebin number [0..310)
-   float                              _fAdc;
-   std::vector<std::pair<int, float>> _vTrackId; //_vTrackId- all unique tracks ID (TpcPoint->getTrackID())
+   uint  _nTimeBin; // timebin number [0..310)
+   float _fAdc;
+
 public:
    AdcHit() : _fAdc(0), _nTimeBin(0) {}
    AdcHit(int n, float f) : _nTimeBin(n), _fAdc(f) {}
-   AdcHit(int n, float f, int nId) : _nTimeBin(n), _fAdc(f) { _vTrackId.push_back(std::make_pair(nId, f)); } //_nTrackId
-   AdcHit(const AdcHit &r) : _nTimeBin(r._nTimeBin), _fAdc(r._fAdc) { _vTrackId = r._vTrackId; }
-   ~AdcHit() { _vTrackId.clear(); }
+   AdcHit(const AdcHit &r) : _nTimeBin(r._nTimeBin), _fAdc(r._fAdc) {}
+   ~AdcHit() {}
    const AdcHit &operator=(const AdcHit &r)
    {
       if (this != &r) {
          _nTimeBin = r._nTimeBin;
          _fAdc     = r._fAdc;
-         _vTrackId = r._vTrackId; //_vTrackId
       }
       return *this;
-   }
-   inline std::vector<std::pair<int, float>> getTrackID() const
-   {
-      return _vTrackId; //_vTrackId - all unique tracks ID (TpcPoint->getTrackID())
    }
    inline float getAdc() const { return _fAdc; }
    inline void  setAdc(float f) { _fAdc = f; }
@@ -281,18 +288,18 @@ public:
    inline float        getAdcHitSum() const { return _fAdcHitSum; }
    inline void         AddAdc(float f) { _fAdcHitSum += f; }
    inline void         ReduceAdcSum(float f) { _fAdcHitSum -= f; }
-   std::ostringstream &Print(std::ostringstream &oss) const
+   std::ostringstream &PrintPad(std::ostringstream &oss) const
    {
       oss << "pad: " << _nPad << ", AdcSum: " << _fAdcHitSum << std::endl;
       return oss;
    }
-   std::ostringstream &Print2(std::ostringstream &oss) const
+   std::ostringstream &PrintTime(std::ostringstream &oss) const
    {
-      oss << "time: " << _nPad << ", AdcSum: " << _fAdcHitSum << std::endl;
+      oss << "timebin: " << _nPad << ", AdcSum: " << _fAdcHitSum << std::endl;
       return oss;
    }
 };
-inline const char *SZ_ALPHABET = "ABCDEFJHIJKLMNOPQRSTUVWXYZ";
+static const char *SZ_ALPHABET = "ABCDEFJHIJKLMNOPQRSTUVWXYZ";
 class Cluster;
 class PadCluster : public PadHit {
    Cluster          *_pCluster;          // link to a Cluster where the PadCluster belongs
@@ -363,8 +370,6 @@ public:
    inline uint  getClusterId(const Cluster *pCluster) const;
    inline float getClusterTime(const Cluster *pCluster) const;
    inline float getClusterPad(const Cluster *pCluster) const;
-
-   inline const std::vector<AdcHit> &getAdcHits() const { return _vAdcHits; } //!!!!!_nTrackId
 
    inline size_t   getSize() const { return _vAdcHits.size(); }
    inline Cluster *getCluster() const { return _pCluster; }
@@ -457,7 +462,10 @@ public:
       PadHit::ReduceAdcSum(adcHit.getAdc());
       return adcHit;
    }
-   inline bool isCombined(const AdcHit &r) const { return _iAdcMax < _iAdcMin && r.getAdc() > getAdcHitMin().getAdc(); }
+   inline bool isCombined(const AdcHit &r) const
+   {
+      return _iAdcMax < _iAdcMin && r.getAdc() > getAdcHitMin().getAdc() + fADC_DOORSTEP;
+   }
    inline void Add(const AdcHit &r)
    {
       int nTimeBin = r.getTimeBin();
@@ -500,7 +508,7 @@ public:
       for (uint i = nTimeBinMin, j = 0; i <= nTimeBinMax; i++)
          if (j < nSize && i == _vAdcHits[j].getTimeBin()) {
             if (i == nTimeBin && nPad == PadHit::getPad())
-               oss << _RED_("*"); // red cluster hit star '*'
+               oss << _RED_MSG_("*"); // red cluster hit star '*'
             else if (i == nMax && nSize > 1)
                oss << '^';
             else
@@ -519,7 +527,7 @@ public:
       for (uint i = nPadMin, j = 0; i <= nPadMax; i++)
          if (j < nSize && i == _vAdcHits[j].getTimeBin()) {
             if (i == nPad && nTimeBin == PadHit::getPad())
-               oss << _RED_("*"); // red cluster hit star '*'
+               oss << _RED_MSG_("*"); // red cluster hit star '*'
             else if (i == nMax && nSize > 1)
                oss << '^';
             else
@@ -538,7 +546,7 @@ public:
       for (uint i = 0; i < nSize; i++) {
          uint n = _vAdcHits[i].getTimeBin();
          if (n == nTimeBin && nPad == PadHit::getPad())
-            oss << _RED_("*"); // red cluster hit star '*'
+            oss << _RED_MSG_("*"); // red cluster hit star '*'
          else if (n == nMax && nSize > 1)
             oss << '^';
          else
@@ -546,15 +554,15 @@ public:
       }
       return oss;
    }
-   std::ostringstream &Print(std::ostringstream &oss) const
+   std::ostringstream &PrintPad(std::ostringstream &oss) const
    {
-      PadHit::Print(oss);
+      PadHit::PrintPad(oss);
       uint       nClusterId  = getClusterId(_pCluster);
-      char       chClusterId = _pCluster == NULL ? '.' : SZ_ALPHABET[nClusterId % strlen(SZ_ALPHABET)];
+      char       chClusterId = _pCluster == NULL ? '-' : SZ_ALPHABET[nClusterId % std::strlen(SZ_ALPHABET)];
       const uint nTab        = 4;
-      oss << std::string(nTab, ' ') << "PadCluster:: time: [" << _nTimeBinMin << "," << _nTimeBinMax << "]"
+      oss << std::string(nTab, ' ') << "PadCluster:: timebins: [" << _nTimeBinMin << "," << _nTimeBinMax << "]"
           << ", adcSpikes: { min[" << _iAdcMin << "], max[" << _iAdcMax << "] }"
-          << ", combined: {" << (_pPadClusterBefore != NULL ? '+' : '.') << (_pPadClusterAfter != NULL ? '+' : '.')
+          << ", combined: {" << (_pPadClusterBefore != NULL ? '+' : '-') << (_pPadClusterAfter != NULL ? '+' : '-')
           << "}"
           << ", overlapping: [" << _nTimeBinLapMin << "," << _nTimeBinLapMax << "]"
           << ", cluster: " << nClusterId << " '" << chClusterId << "'" << std::endl;
@@ -563,11 +571,11 @@ public:
       oss << '}' << std::endl;
       return oss;
    }
-   std::ostringstream &Print2(std::ostringstream &oss) const
+   std::ostringstream &PrintTime(std::ostringstream &oss) const
    {
-      PadHit::Print2(oss);
+      PadHit::PrintTime(oss);
       uint       nClusterId  = getClusterId(_pCluster);
-      char       chClusterId = _pCluster == NULL ? '.' : SZ_ALPHABET[nClusterId % strlen(SZ_ALPHABET)];
+      char       chClusterId = _pCluster == NULL ? '-' : SZ_ALPHABET[nClusterId % strlen(SZ_ALPHABET)];
       const uint nTab        = 4;
       oss << std::string(nTab, ' ') << "TimeCluster:: pads: [" << _nTimeBinMin << "," << _nTimeBinMax << "]"
           << ", adcSpikes: { min[" << _iAdcMin << "], max[" << _iAdcMax << "] }"
@@ -654,7 +662,7 @@ public:
       int nTable = (nADC_DISCRECITY + 3) * 2 + nTimeBinMax - nTimeBinMin + 7;
       oss << std::string(nTable, '=') << std::endl;
       oss << " pads" << std::string(nTimeBinMax - nTimeBinMin + 1, ' ')
-          << "| adcMax:" << std::string(nADC_DISCRECITY - 6, ' ') << "| " << _RED_("adcSum:")
+          << "| adcMax:" << std::string(nADC_DISCRECITY - 6, ' ') << "| " << _RED_MSG_("adcSum:")
           << std::string(nADC_DISCRECITY - 6, ' ') << '|' << std::endl;
       oss << std::string(nTable, '=') << std::endl;
 
@@ -677,7 +685,7 @@ public:
             nAdc = nADC_DISCRECITY / 2;
          assert(nAdc <= nADC_DISCRECITY);
 
-         if (nAdc) oss << std::string(nAdc, '.');
+         if (nAdc) oss << std::string(nAdc, '-');
          oss << (fAdc == stat._fAdcMax ? '>' : '+');
          uint nSpace = nADC_DISCRECITY - nAdc + 1;
          if (nSpace) oss << std::string(nSpace, ' ');
@@ -692,7 +700,7 @@ public:
             nAdcSum = nADC_DISCRECITY / 2;
          assert(nAdcSum <= nADC_DISCRECITY);
 
-         if (nAdcSum) oss << std::string(nAdcSum, '.');
+         if (nAdcSum) oss << std::string(nAdcSum, '-');
          oss << (fAdcSum == stat._fSumMax ? '>' : '+');
 
          nSpace = nADC_DISCRECITY - nAdcSum + 1;
@@ -709,7 +717,7 @@ public:
       int nTable = (nADC_DISCRECITY + 3) * 2 + nPadMax - nPadMin + 7;
       oss << std::string(nTable, '=') << std::endl;
       oss << " time" << std::string(nPadMax - nPadMin + 1, ' ') << "| adcMax:" << std::string(nADC_DISCRECITY - 6, ' ')
-          << "| " << _RED_("adcSum:") << std::string(nADC_DISCRECITY - 6, ' ') << '|' << std::endl;
+          << "| " << _RED_MSG_("adcSum:") << std::string(nADC_DISCRECITY - 6, ' ') << '|' << std::endl;
       oss << std::string(nTable, '=') << std::endl;
       ClusterStat stat;
       stat.Calc(rlstTimeClusters);
@@ -730,7 +738,7 @@ public:
             nAdc = nADC_DISCRECITY / 2;
          assert(nAdc <= nADC_DISCRECITY);
 
-         if (nAdc) oss << std::string(nAdc, '.');
+         if (nAdc) oss << std::string(nAdc, '-');
          oss << (fAdc == stat._fAdcMax ? '>' : '+');
          uint nSpace = nADC_DISCRECITY - nAdc + 1;
          if (nSpace) oss << std::string(nSpace, ' ');
@@ -745,7 +753,7 @@ public:
             nAdcSum = nADC_DISCRECITY / 2;
          assert(nAdcSum <= nADC_DISCRECITY);
 
-         if (nAdcSum) oss << std::string(nAdcSum, '.');
+         if (nAdcSum) oss << std::string(nAdcSum, '-');
          oss << (fAdcSum == stat._fSumMax ? '>' : '+');
          nSpace = nADC_DISCRECITY - nAdcSum + 1;
          if (nSpace) oss << std::string(nSpace, ' ');
@@ -806,15 +814,17 @@ class Cluster : public ClusterHit {
          }
 #endif
 #ifdef HIT_ADJUSTMENT
-         double d    = r.getAdjustment() + nMin; // adjust unreasonable fit results to max AdcSum value!!!
-         double dMin = nMin - 0.5;               // left shift in half of the min pad
-         double dMax = nMax + 0.4999;            // right shift in half of the max pad
-         if (r.getMean() < dMin)
-            r.setMean(d - 0.5);
-         else if (r.getMean() > dMax)
-            r.setMean(d + 0.4999);
-         else if (r.getDeviation() == 0)
-            r.setMean(d);
+         double dMean = r.getMean();
+         if (dMean < nMin || dMean > nMax || r.getDeviation() == 0) r.setMean(r.getAdjustment() + nMin);
+            // double d = r.getAdjustment() + nMin;    // adjust unreasonable fit results to max AdcSum value!!!
+            // double dMin = nMin - 0.5;       // left shift in half of the min pad
+            // double dMax = nMax + 0.4999;    // right shift in half of the max pad
+            // if( r.getMean() < dMin )
+            //     r.setMean( d - 0.5 );   // - 0.5
+            // else if( r.getMean() > dMax )
+            //     r.setMean( d + 0.4999 );
+            // else if( r.getDeviation() == 0 )
+            //     r.setMean( d );
 #endif
       } else if (nSize == 2) {
          XY<uint, float> xy0   = rv[0];
@@ -867,11 +877,10 @@ public:
          _lstTimeClusters.pop_front();
       }
    }
-   inline const std::list<const PadCluster *> &getPadClusters() const { return _lstPadClusters; } //!!!!!_nTrackId
-   bool                                        isSplitted() const { return _bSplitted; }
-   void                                        setSplitted() { _bSplitted = true; }
-   void                                        resetSplitted() { _bSplitted = false; }
-
+   bool isSplitted() const { return _bSplitted; }
+   void setSplitted() { _bSplitted = true; }
+   void resetSplitted() { _bSplitted = false; }
+   bool isOut(uint nPad) const { return _nPadMin && nPad < _nPadMin - 1 || nPad > _nPadMax + 1; }
    void resetStat() { _nTimeBinMin = _nTimeBinMax = _nPadMin = _nPadMax = UINT_MAX; }
    void calcStat(const PadCluster *pPadCluster)
    {
@@ -975,7 +984,7 @@ public:
          if (iPad != vXpadYadc.end())
             (*iPad).y += fAdcSum;
          else
-            vXpadYadc.push_back({.x = nPad, .y = fAdcSum});
+            vXpadYadc.push_back({x : nPad, y : fAdcSum});
          size_t nSize = pPadCluster->getSize();
          for (uint j = 0; j < nSize; j++) {
             AdcHit adcHit = pPadCluster->           operator[](j);
@@ -1007,7 +1016,7 @@ public:
          if (iTime != vXtimeYadc.end())
             (*iTime).y += fAdcSum;
          else
-            vXtimeYadc.push_back({.x = nTime, .y = fAdcSum});
+            vXtimeYadc.push_back({x : nTime, y : fAdcSum});
       }
       calcGaussRes(vXtimeYadc, ClusterHit::_TimePlane, _nTimeBinMin, _nTimeBinMax, fClusterAdcSum);
    }
@@ -1024,9 +1033,9 @@ public:
          for (std::list<const PadCluster *>::const_iterator i = r.begin(); i != r.end(); i++) {
             if (i != r.begin()) oss << std::string(nTAB, ' ') << "-------- ";
             if (&r == &_lstPadClusters)
-               (*i)->Print(oss);
+               (*i)->PrintPad(oss);
             else
-               (*i)->Print2(oss);
+               (*i)->PrintTime(oss);
          }
       }
       return oss;
@@ -1056,7 +1065,7 @@ float PadCluster::getClusterPad(const Cluster *pCluster) const
    return pCluster == NULL ? 0 : ((const ClusterHit *)pCluster)->getPad();
 }
 
-inline const char *szDECADE            = "0123456789";
+static const char *szDECADE            = "0123456789";
 const uint         nTIMEBIN_SCALE_SIZE = 30;
 inline void        DrawTimeBinTopScale(std::ostringstream &oss, uint nSize)
 {
@@ -1075,76 +1084,65 @@ inline void DrawTimeBinBottomScale(std::ostringstream &oss, uint nSize)
    for (uint i = 0; i < nSize; i++) oss << std::left << std::setw(10) << i * 10;
    oss << std::internal << std::endl;
 }
-inline std::ostringstream &DrawPadClusters(std::ostringstream                             &oss,
-                                           std::vector<std::list<PadCluster *>::iterator> &rviPadClusters)
-{
-   oss << "RowClusters::" << std::endl;
-   // DrawTimeBinTopScale(oss, nTIMEBIN_SCALE_SIZE);
-   assert(rviPadClusters.size() > 1);
-   size_t nPadSize = rviPadClusters.size() - 1;
-   for (uint i = 0; i < nPadSize; i++) {
-      std::list<PadCluster *>::iterator iPadCluster     = rviPadClusters[i];
-      std::list<PadCluster *>::iterator iPadClusterLast = rviPadClusters[i + 1];
-      oss << std::setw(3) << (*iPadCluster)->getPad() << ":";
-      uint nPos = 0;
-      for (; iPadCluster != iPadClusterLast; iPadCluster++) {
-         PadCluster *pPadCluster = *iPadCluster;
-         uint        nMin        = pPadCluster->getTimeBinMin();
-         if (nMin < nPos) { // shift back to the 'n' positions (for combined PadClusters!!!)
-            long int nShift = nPos - nMin;
-            oss.seekp(oss.tellp() - nShift);
-            nPos -= nShift;
-         }
-         uint nGap = nMin - nPos;
-         if (nGap) {
-            oss << std::string(nGap, '.');
-            nPos += nGap;
-         }
-         char ch =
-            pPadCluster->getCluster() ? SZ_ALPHABET[pPadCluster->getCluster()->getId() % strlen(SZ_ALPHABET)] : '+';
-         pPadCluster->Draw(oss, ch);
-         nPos += pPadCluster->getSize();
-      }
-      oss << std::endl;
+struct RowStat {
+   uint  _nPadMin; // input row statistic
+   uint  _nPadMax;
+   uint  _nTimeBinMin;
+   uint  _nTimeBinMax;
+   float _fAdcMin;
+   float _fAdcMax;
+   void  Init()
+   {
+      _nPadMin = _nTimeBinMin = UINT_MAX;
+      _nPadMax = _nTimeBinMax = 0;
+      _fAdcMin                = FLT_MAX;
+      _fAdcMax                = 0;
    }
-   // DrawTimeBinBottomScale(oss, nTIMEBIN_SCALE_SIZE);
-   return oss;
-}
-inline std::ostringstream &PrintPadClusters(std::ostringstream                             &oss,
-                                            std::vector<std::list<PadCluster *>::iterator> &rviPadClusters)
-{
-   oss << "RowClusters::" << std::endl;
-   assert(rviPadClusters.size() > 1);
-   size_t nSize1 = rviPadClusters.size() - 1;
-   for (uint i = 0; i < nSize1; i++) {
-      oss << "    ---------------- id: " << i << std::endl;
-      std::list<PadCluster *>::iterator iPadCluster     = rviPadClusters[i];
-      std::list<PadCluster *>::iterator iPadClusterLast = rviPadClusters[i + 1];
-      for (; iPadCluster != iPadClusterLast; iPadCluster++) {
-         oss << "\t";
-         (*iPadCluster)->Print(oss);
-      }
+   RowStat() { Init(); }
+   RowStat(uint nPad, uint nTimeBin, float fAdc)
+   {
+      _nPadMin = _nPadMax = nPad;
+      _nTimeBinMin = _nTimeBinMax = nTimeBin;
+      _fAdcMin = _fAdcMax = fAdc;
    }
-   oss << "    ----------------" << std::endl;
-   return oss;
-}
+   void PickOut(uint nPad, uint nTimeBin, float fAdc)
+   {
+      if (nPad > _nPadMax) _nPadMax = nPad;
+      if (nPad < _nPadMin) _nPadMin = nPad;
+      if (nTimeBin > _nTimeBinMax) _nTimeBinMax = nTimeBin;
+      if (nTimeBin < _nTimeBinMin) _nTimeBinMin = nTimeBin;
+      if (fAdc > _fAdcMax) _fAdcMax = fAdc;
+      if (fAdc < _fAdcMin) _fAdcMin = fAdc;
+   }
+   void Print(std::ostringstream &oss) const
+   {
+      oss << "RowStat::{ pads:{min:" << _nPadMin << ",max:" << _nPadMax << '}' << ", timebins:{min:" << _nTimeBinMin
+          << ",max:" << _nTimeBinMax << '}' << ", adc:{min:" << _fAdcMin << ",max:" << _fAdcMax << "} }";
+   }
+};
 class RowClusters {
-   uint                 _nRow;       // sector row number
-   uint                 _nClusterId; // current cluster id for internal usage
+   uint    _nRow;       // sector row number
+   uint    _nClusterId; // current cluster id for internal usage
+   RowStat _RowStat;    // row statistic
+
    std::list<Cluster *> _lstClusters;
    void Joint(std::vector<std::list<PadCluster *>::iterator> &rviPadClusters, uint nPadCluster, PadCluster *pPadCluster)
    {
-      Cluster                          *pCluster        = NULL;
-      uint                              nTimeBinMin     = 0;
-      uint                              nTimeBinMax     = 0;
-      uint                              nPadMin         = 0;
-      uint                              nPadMax         = 0;
-      std::list<PadCluster *>::iterator iPadCluster1st  = rviPadClusters[nPadCluster - 1];
-      std::list<PadCluster *>::iterator iPadClusterLast = rviPadClusters[nPadCluster];
-      for (std::list<PadCluster *>::iterator iPadCluster = iPadCluster1st; iPadCluster != iPadClusterLast;
+      Cluster                          *pCluster       = NULL;
+      uint                              nTimeBinMin    = 0;
+      uint                              nTimeBinMax    = 0;
+      uint                              nPadMin        = 0;
+      uint                              nPadMax        = 0;
+      uint                              nPad           = pPadCluster->getPad();
+      std::list<PadCluster *>::iterator iPadCluster1st = rviPadClusters[nPadCluster - 1];
+      std::list<PadCluster *>::iterator iPadCluster2nd = rviPadClusters[nPadCluster];
+      for (std::list<PadCluster *>::iterator iPadCluster = iPadCluster1st; iPadCluster != iPadCluster2nd;
            iPadCluster++) {
          PadCluster *pPadCluster0 = (*iPadCluster);
-         if (pPadCluster->isBefore(pPadCluster0))
+         Cluster    *pCluster0    = pPadCluster0->getCluster();
+         assert(pCluster0);
+
+         if (pCluster0->isOut(nPad) || pPadCluster->isBefore(pPadCluster0))
             break;
          else if (pPadCluster->isAfter(pPadCluster0))
             continue;
@@ -1162,17 +1160,13 @@ class RowClusters {
 
                pPadCluster->setCluster(pCluster);
                pCluster->Add(pPadCluster);
-            } else {
-               Cluster *pCluster0 = pPadCluster0->getCluster();
-               assert(pCluster0);
-               if (pCluster0->getTimeBinMax() >= nTimeBinMin && pCluster0->getTimeBinMin() <= nTimeBinMax &&
-                   pCluster0->getPadMax() ==
-                      pCluster0->getPadMin()) { // if it is truth then we should add whole PadClusters list to the
-                                                // Cluster and remove Cluster0
-                  pCluster->Add(pCluster0);
-                  pCluster0->Clear();
-                  _lstClusters.remove_if([pCluster0](Cluster *p) { return p == pCluster0; });
-               }
+            } else if (pCluster0->getTimeBinMax() >= nTimeBinMin && pCluster0->getTimeBinMin() <= nTimeBinMax &&
+                       pCluster0->getPadMax() ==
+                          pCluster0->getPadMin()) { // if it is truth then we should add whole PadClusters list to the
+                                                    // Cluster and remove Cluster0
+               pCluster->Add(pCluster0);
+               pCluster0->Clear();
+               _lstClusters.remove_if([pCluster0](Cluster *p) { return p == pCluster0; });
             }
          }
       }
@@ -1184,10 +1178,21 @@ class RowClusters {
    }
 
 public:
-   RowClusters() : _nRow(0), _nClusterId(0) {}
-   RowClusters(uint nRow) : _nRow(nRow), _nClusterId(0) {}
+   std::list<PadCluster *>                        _lstPadClusters; // list of fired ADC hits
+   std::vector<std::list<PadCluster *>::iterator> _viPadClusters;
+   RowClusters() : _nRow(0), _nClusterId(0), _RowStat() {}
+   RowClusters(uint nRow) : _nRow(nRow), _nClusterId(0), _RowStat() {}
+   RowClusters(uint nRow, uint nPad, uint nTimeBin, float fAdc)
+      : _nRow(nRow), _nClusterId(0), _RowStat(nPad, nTimeBin, fAdc)
+   {
+      AdcHit adcHit(nTimeBin, fAdc); // new ADC hit
+      _lstPadClusters.push_back(new PadCluster(nPad, adcHit));
+      _viPadClusters.push_back(_lstPadClusters.begin());
+   }
    virtual ~RowClusters()
    {
+      _lstPadClusters.clear();
+      _viPadClusters.clear();
       while (!_lstClusters.empty()) {
          delete _lstClusters.front();
          _lstClusters.pop_front();
@@ -1196,23 +1201,64 @@ public:
    inline uint                        getRow() const { return _nRow; }
    inline const std::list<Cluster *> &getClusters() const { return _lstClusters; }
    inline bool                        isEmpty() const { return _lstClusters.empty(); }
-   void                               Joint(std::vector<std::list<PadCluster *>::iterator> &rviPadClusters)
+   inline void                        Load(uint nPad, uint nTimeBin, float fAdc)
+   {
+      _RowStat.PickOut(nPad, nTimeBin, fAdc);
+      AdcHit adcHit(nTimeBin, fAdc); // new ADC hit
+
+      assert(!_lstPadClusters.empty());
+
+      PadCluster *pPadCluster = _lstPadClusters.back();
+      if (nPad != pPadCluster->getPad()) { // new PadCluster
+         _lstPadClusters.push_back(new PadCluster(nPad, adcHit));
+         _viPadClusters.push_back(std::prev(_lstPadClusters.end()));
+      } else if (pPadCluster->isOut(adcHit)) // new cluster in the pad
+         _lstPadClusters.push_back(new PadCluster(nPad, adcHit));
+      else if (pPadCluster->isCombined(adcHit)) { // combined PadCluster
+         PadCluster *pCombinedPadCluster = new PadCluster(nPad, pPadCluster->splitAdcHit(adcHit));
+         pCombinedPadCluster->setPadClusterBefore(pPadCluster);
+         pPadCluster->setPadClusterAfter(pCombinedPadCluster);
+         pCombinedPadCluster->Add(adcHit);
+         _lstPadClusters.push_back(pCombinedPadCluster);
+      } else // simple PadCluster
+         pPadCluster->Add(adcHit);
+   }
+   void Joint(std::vector<std::list<PadCluster *>::iterator> &rviPadClusters)
    {
       assert(rviPadClusters.size() > 1);
       size_t nPadSize = rviPadClusters.size() - 1;
       for (uint i = 0; i < nPadSize; i++) {
-         std::list<PadCluster *>::iterator iPadCluster1st  = rviPadClusters[i];
-         std::list<PadCluster *>::iterator iPadClusterLast = rviPadClusters[i + 1];
-         for (std::list<PadCluster *>::iterator iPadCluster = iPadCluster1st; iPadCluster != iPadClusterLast;
+         std::list<PadCluster *>::iterator iPadCluster1st = rviPadClusters[i];
+         std::list<PadCluster *>::iterator iPadCluster2nd = rviPadClusters[i + 1];
+         for (std::list<PadCluster *>::iterator iPadCluster = iPadCluster1st; iPadCluster != iPadCluster2nd;
               iPadCluster++) {
             PadCluster *pPadCluster = (*iPadCluster);
-            if (i)
-               Joint(rviPadClusters, i, pPadCluster);
-            else { // init zero pad clusters
+            if (i == 0) { // init pad clusters seed
                Cluster *pCluster = new Cluster(_nClusterId++, pPadCluster);
                pPadCluster->setCluster(pCluster);
                _lstClusters.push_back(pCluster);
-            }
+            } else
+               Joint(rviPadClusters, i, pPadCluster);
+         }
+      }
+   }
+   void Joint()
+   {
+      assert(_viPadClusters.size());
+      _viPadClusters.push_back(_lstPadClusters.end()); // add the end of the PadClusters before processing
+      size_t nPadSize = _viPadClusters.size() - 1;
+      for (uint i = 0; i < nPadSize; i++) {
+         std::list<PadCluster *>::iterator iPadCluster1st = _viPadClusters[i];
+         std::list<PadCluster *>::iterator iPadCluster2nd = _viPadClusters[i + 1];
+         for (std::list<PadCluster *>::iterator iPadCluster = iPadCluster1st; iPadCluster != iPadCluster2nd;
+              iPadCluster++) {
+            PadCluster *pPadCluster = (*iPadCluster);
+            if (i == 0) { // init pad clusters seed
+               Cluster *pCluster = new Cluster(_nClusterId++, pPadCluster);
+               pPadCluster->setCluster(pCluster);
+               _lstClusters.push_back(pCluster);
+            } else
+               Joint(_viPadClusters, i, pPadCluster);
          }
       }
    }
@@ -1229,48 +1275,111 @@ public:
          pCluster->calcGaussRes();
       }
    }
-   std::ostringstream &Draw(std::ostringstream &oss) const
+   void Draw(std::ostringstream &oss) const
    {
-      oss << "RowClusters:: row: " << _nRow << std::endl;
+      oss << "Draw:RowClusters:: row: " << _nRow << ' ';
+      _RowStat.Print(oss);
+      oss << std::endl;
       for (std::list<Cluster *>::const_iterator i = _lstClusters.begin(); i != _lstClusters.end(); ++i) {
          (*i)->Draw(oss);
          oss << std::endl;
       }
-      return oss;
    }
-   std::ostringstream &Print(std::ostringstream &oss, std::vector<std::list<PadCluster *>::iterator> &rviPadClusters)
+   void DrawPadClusters(std::ostringstream &oss) const
    {
-      oss << "RowClusters:: row: " << getRow() << std::endl;
+      oss << "DrawPadClusters:RowClusters:: row: " << _nRow << ' ';
+      _RowStat.Print(oss);
+      oss << std::endl;
+      uint nTimeBinSize = _RowStat._nTimeBinMax / 10 + 1;
+      DrawTimeBinTopScale(oss, nTimeBinSize);
+
+      assert(_viPadClusters.size() > 1);
+      size_t nPadSize = _viPadClusters.size() - 1;
+      for (uint i = 0; i < nPadSize; i++) {
+         std::list<PadCluster *>::iterator iPadCluster = _viPadClusters[i];
+         oss << std::setw(3) << (*iPadCluster)->getPad() << ":";
+         uint nPos = 0;
+         for (iPadCluster; iPadCluster != _viPadClusters[i + 1]; iPadCluster++) {
+            PadCluster *pPadCluster = *iPadCluster;
+            uint        nMin        = pPadCluster->getTimeBinMin();
+            if (nMin < nPos) { // shift back to the 'n' positions (for combined PadClusters!!!)
+               long int nShift = nPos - nMin;
+               oss.seekp(oss.tellp() - nShift);
+               nPos -= nShift;
+            }
+            uint nGap = nMin - nPos;
+            if (nGap) {
+               oss << std::string(nGap, '-');
+               nPos += nGap;
+            }
+            char ch =
+               pPadCluster->getCluster() ? SZ_ALPHABET[pPadCluster->getCluster()->getId() % strlen(SZ_ALPHABET)] : '+';
+            pPadCluster->Draw(oss, ch);
+            nPos += pPadCluster->getSize();
+         }
+         oss << std::endl;
+      }
+      DrawTimeBinBottomScale(oss, nTimeBinSize);
+   }
+   void Print(std::ostringstream &oss, std::vector<std::list<PadCluster *>::iterator> &rviPadClusters)
+   {
+      oss << "RowClusters:: row: " << _nRow << ' ';
+      _RowStat.Print(oss);
+      oss << std::endl;
       if (rviPadClusters.size() > 1) {
          size_t nSize1 = rviPadClusters.size() - 1;
          for (uint i = 0; i < nSize1; i++) {
             std::list<PadCluster *>::iterator iPadCluster     = rviPadClusters[i];
             std::list<PadCluster *>::iterator iPadClusterLast = rviPadClusters[i + 1];
             oss << "    ---------------- id: " << i << std::endl;
-            for (; iPadCluster != iPadClusterLast; iPadCluster++) {
+            for (iPadCluster; iPadCluster != iPadClusterLast; iPadCluster++) {
                oss << "\t";
-               (*iPadCluster)->Print(oss);
+               (*iPadCluster)->PrintPad(oss);
             }
          }
       }
       oss << "    ----------------" << std::endl;
-      return oss;
    }
-   std::ostringstream &Print(std::ostringstream &oss) const
+   void PrintPadClusters(std::ostringstream &oss)
    {
-      oss << "RowClusters:: row: " << getRow() << std::endl;
+      oss << "PrintPadClusters:RowClusters:: row: " << _nRow << ' ';
+      _RowStat.Print(oss);
+      oss << std::endl;
+      if (_viPadClusters.size() > 1) {
+         size_t nSize1 = _viPadClusters.size() - 1;
+         for (uint i = 0; i < nSize1; i++) {
+            std::list<PadCluster *>::iterator iPadCluster     = _viPadClusters[i];
+            std::list<PadCluster *>::iterator iPadClusterLast = _viPadClusters[i + 1];
+            oss << "    ---------------- id: " << i << std::endl;
+            for (iPadCluster; iPadCluster != iPadClusterLast; iPadCluster++) {
+               oss << "\t";
+               (*iPadCluster)->PrintPad(oss);
+            }
+         }
+      }
+      oss << "    ----------------" << std::endl;
+   }
+   void Print(std::ostringstream &oss) const
+   {
+      oss << "Print:RowClusters:: row: " << getRow() << ' ';
+      _RowStat.Print(oss);
+      oss << std::endl;
       for (std::list<Cluster *>::const_iterator i = _lstClusters.begin(); i != _lstClusters.end(); ++i)
          (*i)->Print(oss);
-      return oss;
    }
 };
+
 class SectorClusters {
-   int                      _nSector;
-   std::list<RowClusters *> _lstRowClusters;
+   int _nSector;
 
 public:
+   std::list<RowClusters *> _lstRowClusters;
    SectorClusters() : _nSector(0) {}
    SectorClusters(int nSector) : _nSector(nSector) {}
+   SectorClusters(int nSector, uint nRow, uint nPad, uint nTimeBin, float fAdc) : _nSector(nSector)
+   {
+      _lstRowClusters.push_back(new RowClusters(nRow, nPad, nTimeBin, fAdc));
+   }
    virtual ~SectorClusters()
    {
       while (!_lstRowClusters.empty()) {
@@ -1278,43 +1387,177 @@ public:
          _lstRowClusters.pop_front();
       }
    }
-   inline int                             getSector() const { return _nSector; }
-   inline const std::list<RowClusters *> &getRowClusters() const { return _lstRowClusters; }
-   inline void                            Add(RowClusters *pRowClusters) { _lstRowClusters.push_back(pRowClusters); }
-   std::ostringstream                    &Print(std::ostringstream &oss) const
+   inline int         getSector() const { return _nSector; }
+   inline void        setSector(int nSector) { _nSector = nSector; }
+   inline bool        isEmpty() const { return _lstRowClusters.empty(); }
+   inline std::size_t getSize() const { return _lstRowClusters.size(); }
+   void               DefineClusters(std::ostringstream &oss)
+   {
+      for (std::list<RowClusters *>::const_iterator iRowCLusters = _lstRowClusters.begin();
+           iRowCLusters != _lstRowClusters.end(); iRowCLusters++) {
+#ifdef DEBUG_OUTPUT
+         oss << "Before joint" << std::endl;
+         DrawPadClusters(oss);
+         PrintPadClusters(oss);
+#endif
+         (*iRowCLusters)->Joint();
+#ifdef DEBUG_OUTPUT
+         oss << "After joint" << std::endl;
+         DrawPadClusters(oss);
+         Draw(oss);
+         Print(oss);
+#endif
+         (*iRowCLusters)->Split();
+      }
+   }
+   inline void Add(RowClusters *pRowClusters) { _lstRowClusters.push_back(pRowClusters); }
+   inline void Load(uint nRow, uint nPad, uint nTimeBin, float fAdc)
+   {
+      if (_lstRowClusters.empty())
+         _lstRowClusters.push_back(new RowClusters(nRow, nPad, nTimeBin, fAdc));
+      else {
+         RowClusters *pRowClusters = _lstRowClusters.back();
+         if (pRowClusters->getRow() != nRow)
+            _lstRowClusters.push_back(new RowClusters(nRow, nPad, nTimeBin, fAdc));
+         else
+            pRowClusters->Load(nPad, nTimeBin, fAdc);
+      }
+   }
+   void Type(std::ostringstream &oss) const
+   {
+      std::string strRows = std::string(nTPC_ROWS, '-');
+      for (std::list<RowClusters *>::const_iterator iRowClusters = _lstRowClusters.begin();
+           iRowClusters != _lstRowClusters.end(); iRowClusters++) {
+         uint nRow     = (*iRowClusters)->getRow();
+         strRows[nRow] = szDECADE[nRow % 10];
+      }
+      oss << "    Rows: " << strRows << std::endl;
+   }
+   void Print(std::ostringstream &oss) const
    {
       oss << "SectorClusters:: sector: " << getSector() << std::endl;
       for (std::list<RowClusters *>::const_iterator i = _lstRowClusters.begin(); i != _lstRowClusters.end(); i++)
          (*i)->Print(oss);
-      return oss;
+   }
+   void PrintPadClusters(std::ostringstream &oss) const
+   {
+      oss << "SectorClusters:: sector: " << getSector() << std::endl;
+      for (std::list<RowClusters *>::const_iterator i = _lstRowClusters.begin(); i != _lstRowClusters.end(); i++)
+         (*i)->PrintPadClusters(oss);
+   }
+   void Draw(std::ostringstream &oss) const
+   {
+      oss << "SectorClusters:: sector: " << getSector() << std::endl;
+      for (std::list<RowClusters *>::const_iterator iRowClusters = _lstRowClusters.begin();
+           iRowClusters != _lstRowClusters.end(); iRowClusters++)
+         (*iRowClusters)->Draw(oss);
+   }
+   void DrawPadClusters(std::ostringstream &oss) const
+   {
+      oss << "SectorClusters:: sector: " << getSector() << std::endl;
+      for (std::list<RowClusters *>::const_iterator iRowClusters = _lstRowClusters.begin();
+           iRowClusters != _lstRowClusters.end(); iRowClusters++)
+         (*iRowClusters)->DrawPadClusters(oss);
    }
 };
+
+#undef PTHREAD_FUNC
+
+#ifdef PTHREAD_FUNC
+#include <pthread.h>
+void *ThreadFunc(void *pArgs)
+{
+   ((SectorClusters *)pArgs)->DefineClusters();
+   pthread_exit(NULL);
+}
+#endif
+
 class EventClusters {
-   int                         _nEvent;
-   std::list<SectorClusters *> _lstSectorClusters;
+   int _nEvent;
 
 public:
+   std::list<SectorClusters *> _lstSectorClusters;
    EventClusters() : _nEvent(0) {}
    EventClusters(int nEvent) : _nEvent(nEvent) {}
-   virtual ~EventClusters()
+   virtual ~EventClusters() { Clear(); }
+   inline void Clear()
    {
       while (!_lstSectorClusters.empty()) {
          delete _lstSectorClusters.front();
          _lstSectorClusters.pop_front();
       }
    }
-   inline int                                getEvent() const { return _nEvent; }
-   inline const std::list<SectorClusters *> &getSectorClusters() const { return _lstSectorClusters; }
+   void DefineClusters(std::ostringstream &oss)
+   {
+#ifdef PTHREAD_FUNC
+      std::size_t nSize    = _lstSectorClusters.size();
+      pthread_t  *pThreads = new pthread_t[nSize];
+      uint        i        = 0;
+      for (std::list<SectorClusters *>::const_iterator iSectorCLusters = _lstSectorClusters.begin();
+           iSectorCLusters != _lstSectorClusters.end(); iSectorCLusters++, i++)
+         int res = pthread_create(&pThreads[i], NULL, ThreadFunc, (void *)*iSectorCLusters);
+      for (i = 0; i < nSize; i++) pthread_join(pThreads[i], NULL);
+#else
+      for (std::list<SectorClusters *>::const_iterator iSectorCLusters = _lstSectorClusters.begin();
+           iSectorCLusters != _lstSectorClusters.end(); iSectorCLusters++)
+         (*iSectorCLusters)->DefineClusters(oss);
+#endif
+   }
+   inline int             getEvent() const { return _nEvent; }
+   inline void            setEvent(int nEvent) { _nEvent = nEvent; }
+   inline bool            isEmpty() const { return _lstSectorClusters.empty(); }
+   inline std::size_t     getSize() const { return _lstSectorClusters.size(); }
    inline SectorClusters *getFront() { return _lstSectorClusters.empty() ? NULL : _lstSectorClusters.front(); }
    inline SectorClusters *getBack() { return _lstSectorClusters.empty() ? NULL : _lstSectorClusters.back(); }
    inline void            Add(SectorClusters *pSectorClusters) { _lstSectorClusters.push_back(pSectorClusters); }
-   std::ostringstream    &Print(std::ostringstream &oss) const
+   inline void            Load(uint nSector, uint nRow, uint nPad, uint nTimeBin, float fAdc)
    {
-      oss << "EventClusters:: event: " << getEvent() << std::endl;
-      for (std::list<SectorClusters *>::const_iterator i = _lstSectorClusters.begin(); i != _lstSectorClusters.end();
-           i++)
-         (*i)->Print(oss);
-      return oss;
+      if (_lstSectorClusters.empty())
+         _lstSectorClusters.push_back(new SectorClusters(nSector, nRow, nPad, nTimeBin, fAdc));
+      else {
+         SectorClusters *pSectorClusters = _lstSectorClusters.back();
+         if (pSectorClusters->getSector() != nSector)
+            _lstSectorClusters.push_back(new SectorClusters(nSector, nRow, nPad, nTimeBin, fAdc));
+         else
+            pSectorClusters->Load(nRow, nPad, nTimeBin, fAdc);
+      }
+   }
+   void Type(std::ostringstream &oss) const
+   {
+      oss << "Event: " << getEvent() << std::endl;
+      for (std::list<SectorClusters *>::const_iterator iSectorClusters = _lstSectorClusters.begin();
+           iSectorClusters != _lstSectorClusters.end(); iSectorClusters++) {
+         oss << "  Sector: " << (*iSectorClusters)->getSector() << std::endl;
+         (*iSectorClusters)->Type(oss);
+      }
+   }
+   void Print(std::ostringstream &oss) const
+   {
+      oss << "Print:EventClusters:: event: " << getEvent() << std::endl;
+      for (std::list<SectorClusters *>::const_iterator iSectorClusters = _lstSectorClusters.begin();
+           iSectorClusters != _lstSectorClusters.end(); iSectorClusters++)
+         (*iSectorClusters)->Print(oss);
+   }
+   void PrintPadCluster(std::ostringstream &oss) const
+   {
+      oss << "PrintPadClusters:EventClusters:: event: " << getEvent() << std::endl;
+      for (std::list<SectorClusters *>::const_iterator iSectorClusters = _lstSectorClusters.begin();
+           iSectorClusters != _lstSectorClusters.end(); iSectorClusters++)
+         (*iSectorClusters)->PrintPadClusters(oss);
+   }
+   void Draw(std::ostringstream &oss) const
+   {
+      oss << "Draw:EventClusters:: event: " << getEvent() << std::endl;
+      for (std::list<SectorClusters *>::const_iterator iSectorClusters = _lstSectorClusters.begin();
+           iSectorClusters != _lstSectorClusters.end(); iSectorClusters++)
+         (*iSectorClusters)->Draw(oss);
+   }
+   void DrawPadClusters(std::ostringstream &oss) const
+   {
+      oss << "DrawPadClusters:EventClusters:: event: " << getEvent() << std::endl;
+      for (std::list<SectorClusters *>::const_iterator iSectorClusters = _lstSectorClusters.begin();
+           iSectorClusters != _lstSectorClusters.end(); iSectorClusters++)
+         (*iSectorClusters)->DrawPadClusters(oss);
    }
 };
 } // namespace tpcClustering
