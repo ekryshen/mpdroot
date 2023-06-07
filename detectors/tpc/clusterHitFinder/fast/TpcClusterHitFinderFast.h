@@ -49,15 +49,7 @@ private:
    int _nEvent;
    int _nSector;
    int _nRow;
-
    int _nTime;
-
-   // TH1 *ExecTime;
-   // float fTime[1000];
-
-   const char *_strFilePath;
-   const char *_strInputBranchName;
-   const char *_strOutputBranchName;
 
    Bool_t          fPersistence;
    TpcSectorGeoAZ *_pSecGeo;
