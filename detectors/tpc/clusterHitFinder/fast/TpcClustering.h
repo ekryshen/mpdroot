@@ -371,6 +371,8 @@ public:
    inline float getClusterTime(const Cluster *pCluster) const;
    inline float getClusterPad(const Cluster *pCluster) const;
 
+   inline const std::vector<AdcHit> &getAdcHits() const { return _vAdcHits; }
+
    inline size_t   getSize() const { return _vAdcHits.size(); }
    inline Cluster *getCluster() const { return _pCluster; }
    inline void     setCluster(Cluster *pCluster) { _pCluster = pCluster; }
@@ -877,6 +879,8 @@ public:
          _lstTimeClusters.pop_front();
       }
    }
+   inline const std::list<const PadCluster *> &getPadClusters() const { return _lstPadClusters; }
+
    bool isSplitted() const { return _bSplitted; }
    void setSplitted() { _bSplitted = true; }
    void resetSplitted() { _bSplitted = false; }
@@ -1410,8 +1414,9 @@ public:
          (*iRowCLusters)->Split();
       }
    }
-   inline void Add(RowClusters *pRowClusters) { _lstRowClusters.push_back(pRowClusters); }
-   inline void Load(uint nRow, uint nPad, uint nTimeBin, float fAdc)
+   inline const std::list<RowClusters *> &getRowClusters() const { return _lstRowClusters; }
+   inline void                            Add(RowClusters *pRowClusters) { _lstRowClusters.push_back(pRowClusters); }
+   inline void                            Load(uint nRow, uint nPad, uint nTimeBin, float fAdc)
    {
       if (_lstRowClusters.empty())
          _lstRowClusters.push_back(new RowClusters(nRow, nPad, nTimeBin, fAdc));
@@ -1503,10 +1508,11 @@ public:
          (*iSectorCLusters)->DefineClusters(oss);
 #endif
    }
-   inline int             getEvent() const { return _nEvent; }
-   inline void            setEvent(int nEvent) { _nEvent = nEvent; }
-   inline bool            isEmpty() const { return _lstSectorClusters.empty(); }
-   inline std::size_t     getSize() const { return _lstSectorClusters.size(); }
+   inline int                                getEvent() const { return _nEvent; }
+   inline void                               setEvent(int nEvent) { _nEvent = nEvent; }
+   inline bool                               isEmpty() const { return _lstSectorClusters.empty(); }
+   inline std::size_t                        getSize() const { return _lstSectorClusters.size(); }
+   inline const std::list<SectorClusters *> &getSectorClusters() const { return _lstSectorClusters; }
    inline SectorClusters *getFront() { return _lstSectorClusters.empty() ? NULL : _lstSectorClusters.front(); }
    inline SectorClusters *getBack() { return _lstSectorClusters.empty() ? NULL : _lstSectorClusters.back(); }
    inline void            Add(SectorClusters *pSectorClusters) { _lstSectorClusters.push_back(pSectorClusters); }

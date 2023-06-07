@@ -65,8 +65,9 @@ void TpcClusterHitFinderFast::FindHits()
       uint         nPad     = pdigit->GetPad();
       uint         nTimeBin = pdigit->GetTimeBin();
       float        fAdc     = pdigit->GetAdc();
-      int          nTrackId = pdigit->GetOrigin();
-      AdcHit       adcHit(nTimeBin, fAdc, nTrackId);
+      // int          nTrackId = pdigit->GetOrigin();
+      // AdcHit       adcHit(nTimeBin, fAdc, nTrackId);
+      AdcHit adcHit(nTimeBin, fAdc);
 
       if (nSector_ < 0) { // 1st occur only!
          nSector_ = nSector;
@@ -86,11 +87,11 @@ void TpcClusterHitFinderFast::FindHits()
             pRowClusters->Split();              // split the RowClusters to HitClusters
 
             // Drawing clusters in oss (change to true if necessary)
-            if (false) {
-               DrawPadClusters(oss, viPadClusters);
-               pRowClusters->Draw(oss);
-               pRowClusters->Print(oss);
-            }
+            // if (false) {
+            //   DrawPadClusters(oss, viPadClusters);
+            //   pRowClusters->Draw(oss);
+            //   pRowClusters->Print(oss);
+            //}
 
             assert(pEventClusters->getBack() != NULL);
             pEventClusters->getBack()->Add(pRowClusters);
@@ -145,11 +146,11 @@ void TpcClusterHitFinderFast::FindHits()
       pRowClusters->Split();
       if (nR < 0) strRows[nRow_] = szDECADE[nRow_ % 10];
       // Drawing clusters in oss (change to true if necessary)
-      if (false) {
-         DrawPadClusters(oss, viPadClusters);
-         pRowClusters->Draw(oss);
-         pRowClusters->Print(oss);
-      }
+      // if (false) {
+      //   DrawPadClusters(oss, viPadClusters);
+      //   pRowClusters->Draw(oss);
+      //   pRowClusters->Print(oss);
+      //}
       assert(pEventClusters->getBack() != NULL);
       pEventClusters->getBack()->Add(pRowClusters);
       TpcClusterHitFinderFast::calcSector(pEventClusters);
@@ -214,15 +215,16 @@ void TpcClusterHitFinderFast::calcSector(const EventClusters *pEventClusters)
             clus->SetPadMin(pCluster->getPadMin());
             clus->SetPadMax(pCluster->getPadMax());
             // write digits into cluster
-            vector<pair<int, float>>        vnTrackId;
+            // vector<pair<int, float>>        vnTrackId;
             const list<const PadCluster *> &rlstPadClusters = (*i2)->getPadClusters();
             for (list<const PadCluster *>::const_iterator i3 = rlstPadClusters.begin(); i3 != rlstPadClusters.end();
                  i3++) {
                const vector<AdcHit> &rvAdcHits = (*i3)->getAdcHits();
                for (vector<AdcHit>::const_iterator i4 = rvAdcHits.begin(); i4 != rvAdcHits.end(); i4++) { // Digits
-                  vnTrackId = i4->getTrackID();
+                  // vnTrackId = i4->getTrackID();
                   AbstractTpcDigit *pDigit =
-                     new MpdTpcDigit(vnTrackId[0].first, (*i3)->getPad(), nRow, i4->getTimeBin(), nSect, i4->getAdc());
+                     new MpdTpcDigit(0, (*i3)->getPad(), nRow, i4->getTimeBin(), nSect, i4->getAdc());
+                  // new MpdTpcDigit(vnTrackId[0].first, (*i3)->getPad(), nRow, i4->getTimeBin(), nSect, i4->getAdc());
                   clus->AddDigit(pDigit);
                }
             }
@@ -242,9 +244,9 @@ void TpcClusterHitFinderFast::calcSector(const EventClusters *pEventClusters)
             hit->SetBin(int(fTime));
             hit->SetNdigits(rlstPadClusters.size());
 
-            for (vector<pair<int, float>>::const_iterator i5 = vnTrackId.begin(); i5 != vnTrackId.end(); i5++) {
-               hit->AddTrackID((*i5).first, (*i5).second); // TrackID
-            }
+            // for (vector<pair<int, float>>::const_iterator i5 = vnTrackId.begin(); i5 != vnTrackId.end(); i5++) {
+            //    hit->AddTrackID((*i5).first, (*i5).second); // TrackID
+            // }
          }
       }
    }
