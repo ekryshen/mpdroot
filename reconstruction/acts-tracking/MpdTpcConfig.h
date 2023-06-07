@@ -53,15 +53,20 @@ struct Config final {
   // Particle selector
   //===--------------------------------------------------------------------===//
 
-  static constexpr auto PrimaryParticlesOnly = true;
+  static constexpr auto PrimaryParticlesOnly = false;
   // Truth particle kinematic cuts.
-  static constexpr auto PhiMin              =  std::numeric_limits<Double_t>::lowest();
-  static constexpr auto PhiMax              =  std::numeric_limits<Double_t>::max();
-  static constexpr auto EtaMin              = -1.2;
-  static constexpr auto EtaMax              =  1.2;
+  static constexpr auto SelectorRmin        =  Detector::Rmin;      // ~ 0.4 m
+  static constexpr auto SelectorRmax        =  Detector::Rmax;      // ~ 1.4 m
+  static constexpr auto SelectorZmin        =  Detector::Zmin;      // ~-1.7 m
+  static constexpr auto SelectorZmax        =  Detector::Zmax;      // ~ 1.7 m
+  static constexpr auto SelectorPhiMin      = -3.15;
+  static constexpr auto SelectorPhiMax      =  3.15;
+  static constexpr auto SelectorEtaMin      = -1.2;
+  static constexpr auto SelectorEtaMax      =  1.2;
   static constexpr auto AbsEtaMin           =  0;
   static constexpr auto AbsEtaMax           =  std::numeric_limits<Double_t>::max();
-  static constexpr auto PtMax               =  std::numeric_limits<Double_t>::max();
+  static constexpr auto SelectorPtMin       =  0.02_GeV;            // 0.02 < Pt < 10 GeV
+  static constexpr auto SelectorPtMax       =  10._GeV;
   static constexpr auto KeepNeutral         =  false;
   /// Requirement on number of recorded hits.
   static constexpr auto NHitsMin            =  9;
@@ -71,10 +76,10 @@ struct Config final {
   // Track seeding
   //===--------------------------------------------------------------------===//
 
-  static constexpr auto Rmin                =  Detector::Rmin;      // ~ 0.4 m
-  static constexpr auto Rmax                =  Detector::Rmax;      // ~ 1.4 m
-  static constexpr auto Zmin                =  Detector::Zmin;      // ~-1.7 m
-  static constexpr auto Zmax                =  Detector::Zmax;      // ~ 1.7 m
+  static constexpr auto SeedRmin            =  SelectorRmin;
+  static constexpr auto SeedRmax            =  SelectorRmax;
+  static constexpr auto SeedZmin            =  SelectorZmin;
+  static constexpr auto SeedZmax            =  SelectorZmax;
   static constexpr auto CollisionZmin       = -30._cm;              // Close to 0
   static constexpr auto CollisionZmax       =  30._cm;              // Close to 0
   static constexpr auto CotThetaMax         =  2.;                  // max(dZ/dR)=1.7 ~ 1.3 eta (eta < 1.2)
@@ -86,7 +91,7 @@ struct Config final {
   static constexpr auto SigmaScattering     =  5;                   // FIXME
   static constexpr auto MaxPtScattering     =  5._GeV;              // Max Pt for scattering
   static constexpr auto RadLengthPerSeed    =  0.05;                // OK
-  static constexpr auto PtMin               =  0.02_GeV;            // 0.02 < Pt < 10 GeV
+  static constexpr auto SeedPtMin           =  SelectorPtMin;
   static constexpr auto Bz                  =  MagneticField::Bz;   // 0.5 T
   static constexpr auto BeamX               =  0._mm;               // Center
   static constexpr auto BeamY               =  0._mm;               // Center
@@ -140,34 +145,31 @@ struct Config final {
   static constexpr auto PerfFilePath        = "performance_ckf.root";
   /// Min reco-truth matching probability.
   static constexpr auto TruthMatchProbMin   = 0.5;
-  /// Min number of measurements.
   static constexpr auto MeasurementsMin     = 9u;
-  /// Min transverse momentum.
-  static constexpr auto PtMinPerf           = PtMin;
+  static constexpr auto PerfPtMin           = SelectorPtMin;
 
   // Parameters for EffPlotTool, FakeRatePlotTool,
   // DuplicationPlotTool, TrackSummaryPlotTool.
 
-  // Pseudorapidity.
-  static constexpr auto PlotToolEtaName     = "#eta";
-  static constexpr auto PlotToolEtaNBins    = 40;
-  static constexpr auto PlotToolEtaMin      = EtaMin;
-  static constexpr auto PlotToolEtaMax      = EtaMax;
+  static constexpr auto PerfPlotToolEtaName = "#eta";
+  static constexpr auto PerfPlotToolEtaNBins=  40;
+  static constexpr auto PerfPlotToolEtaMin  =  SelectorEtaMin;
+  static constexpr auto PerfPlotToolEtaMax  =  SelectorEtaMax;
 
-  static constexpr auto PlotToolPhiName     = "#phi";
-  static constexpr auto PlotToolPhiNBins    = 100;
-  static constexpr auto PlotToolPhiMin      = -3.15;
-  static constexpr auto PlotToolPhiMax      = 3.15;
+  static constexpr auto PerfPlotToolPhiName = "#phi";
+  static constexpr auto PerfPlotToolPhiNBins=  100;
+  static constexpr auto PerfPlotToolPhiMin  =  SelectorPhiMin;
+  static constexpr auto PerfPlotToolPhiMax  =  SelectorPhiMax;
 
-  static constexpr auto PlotToolPtName      = "pT [GeV/c]";
-  static constexpr auto PlotToolPtNBins     = 40;
-  static constexpr auto PlotToolPtMin       = 0._GeV;
-  static constexpr auto PlotToolPtMax       = 2.5_GeV;
+  static constexpr auto PerfPlotToolPtName  = "pT [GeV/c]";
+  static constexpr auto PerfPlotToolPtNBins =  40;
+  static constexpr auto PerfPlotToolPtMin   =  0._GeV;
+  static constexpr auto PerfPlotToolPtMax   =  2.5_GeV;
 
-  static constexpr auto PlotToolNumName     = "N";
-  static constexpr auto PlotToolNumNBins    = 30;
-  static constexpr auto PlotToolNumMin      = -0.5;
-  static constexpr auto PlotToolNumMax      = 29.5;
+  static constexpr auto PerfPlotToolNumName = "N";
+  static constexpr auto PerfPlotToolNumNBins=  30;
+  static constexpr auto PerfPlotToolNumMin  = -0.5;
+  static constexpr auto PerfPlotToolNumMax  =  29.5;
 
   //===--------------------------------------------------------------------===//
   // System parameters

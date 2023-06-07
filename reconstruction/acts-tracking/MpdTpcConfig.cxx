@@ -35,18 +35,18 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
   particleSelector.inputSimHits = SimHitsID;
   particleSelector.outputSimHits = SelectedSimHitsID;
   particleSelector.primaryParticlesOnly = PrimaryParticlesOnly;
-  particleSelector.truthSeedSelectorConfig.rhoMin = Rmin;
-  particleSelector.truthSeedSelectorConfig.rhoMax = Rmax;
-  particleSelector.truthSeedSelectorConfig.zMin = Zmin;
-  particleSelector.truthSeedSelectorConfig.zMax = Zmax;
-  particleSelector.truthSeedSelectorConfig.phiMin = PhiMin;
-  particleSelector.truthSeedSelectorConfig.phiMax = PhiMax;
-  particleSelector.truthSeedSelectorConfig.etaMin = EtaMin;
-  particleSelector.truthSeedSelectorConfig.etaMax = EtaMax;
+  particleSelector.truthSeedSelectorConfig.rhoMin = SelectorRmin;
+  particleSelector.truthSeedSelectorConfig.rhoMax = SelectorRmax;
+  particleSelector.truthSeedSelectorConfig.zMin = SelectorZmin;
+  particleSelector.truthSeedSelectorConfig.zMax = SelectorZmax;
+  particleSelector.truthSeedSelectorConfig.phiMin = SelectorPhiMin;
+  particleSelector.truthSeedSelectorConfig.phiMax = SelectorPhiMax;
+  particleSelector.truthSeedSelectorConfig.etaMin = SelectorEtaMin;
+  particleSelector.truthSeedSelectorConfig.etaMax = SelectorEtaMax;
   particleSelector.truthSeedSelectorConfig.absEtaMin = AbsEtaMin;
   particleSelector.truthSeedSelectorConfig.absEtaMax = AbsEtaMax;
-  particleSelector.truthSeedSelectorConfig.ptMin = PtMin;
-  particleSelector.truthSeedSelectorConfig.ptMax = PtMax;
+  particleSelector.truthSeedSelectorConfig.ptMin = SelectorPtMin;
+  particleSelector.truthSeedSelectorConfig.ptMax = SelectorPtMax;
   particleSelector.truthSeedSelectorConfig.keepNeutral = KeepNeutral;
   particleSelector.truthSeedSelectorConfig.nHitsMin = NHitsMin;
   particleSelector.truthSeedSelectorConfig.nHitsMax = NHitsMax;
@@ -72,8 +72,8 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
   trackSeeding.outputProtoTracks = ProtoTracksID;
   trackSeeding.seedFilterConfig.deltaRMin = SeedDeltaRmin;
   trackSeeding.seedFilterConfig.maxSeedsPerSpM = MaxSeedsPerSpM;
-  trackSeeding.seedFinderConfig.rMin = Rmin;
-  trackSeeding.seedFinderConfig.rMax = Rmax;
+  trackSeeding.seedFinderConfig.rMin = SeedRmin;
+  trackSeeding.seedFinderConfig.rMax = SeedRmax;
   trackSeeding.seedFinderConfig.binSizeR = SeedBinSizeR;
   trackSeeding.seedFinderConfig.deltaRMin = SeedDeltaRmin;
   trackSeeding.seedFinderConfig.deltaRMinTopSP = SeedDeltaRmin;
@@ -83,24 +83,24 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
   trackSeeding.seedFinderConfig.deltaRMaxBottomSP = SeedDeltaRmax;
   trackSeeding.seedFinderConfig.collisionRegionMin = CollisionZmin;
   trackSeeding.seedFinderConfig.collisionRegionMax = CollisionZmax;
-  trackSeeding.seedFinderConfig.zMin = Zmin;
-  trackSeeding.seedFinderConfig.zMax = Zmax;
+  trackSeeding.seedFinderConfig.zMin = SeedZmin;
+  trackSeeding.seedFinderConfig.zMax = SeedZmax;
   trackSeeding.seedFinderConfig.deltaZMax = SeedDeltaZmax;
   trackSeeding.seedFinderConfig.maxSeedsPerSpM = MaxSeedsPerSpM;
   trackSeeding.seedFinderConfig.cotThetaMax = CotThetaMax;
   trackSeeding.seedFinderConfig.maxPtScattering = MaxPtScattering;
   trackSeeding.seedFinderConfig.sigmaScattering = SigmaScattering;
   trackSeeding.seedFinderConfig.radLengthPerSeed = RadLengthPerSeed;
-  trackSeeding.seedFinderConfig.minPt = PtMin;
+  trackSeeding.seedFinderConfig.minPt = SeedPtMin;
   trackSeeding.seedFinderConfig.bFieldInZ = Bz;
   trackSeeding.seedFinderConfig.beamPos = {BeamX, BeamY};
   trackSeeding.seedFinderConfig.impactMax = ImpactMax;
-  trackSeeding.gridConfig.rMax = Rmax;
+  trackSeeding.gridConfig.rMax = SeedRmax;
   trackSeeding.gridConfig.deltaRMax = SeedDeltaRmax;
-  trackSeeding.gridConfig.zMin = Zmin;
-  trackSeeding.gridConfig.zMax = Zmax;
+  trackSeeding.gridConfig.zMin = SeedZmin;
+  trackSeeding.gridConfig.zMax = SeedZmax;
   trackSeeding.gridConfig.cotThetaMax = CotThetaMax;
-  trackSeeding.gridConfig.minPt = PtMin;
+  trackSeeding.gridConfig.minPt = SeedPtMin;
   trackSeeding.gridConfig.bFieldInZ = Bz;
 
   // Track parameter estimation.
@@ -170,93 +170,93 @@ ActsExamples::CKFPerformanceWriter::Config Config::perfWriterCfg(
   result.inputMeasurementParticlesMap = SelectedHitParticlesMapID;
   result.truthMatchProbMin = TruthMatchProbMin;
   result.nMeasurementsMin = MeasurementsMin;
-  result.ptMin = PtMinPerf;
+  result.ptMin = PerfPtMin;
 
   ActsExamples::EffPlotTool::Config effConfig;
   effConfig.varBinning["Eta"] = ActsExamples::PlotHelpers::Binning(
-      PlotToolEtaName,
-      PlotToolEtaNBins,
-      PlotToolEtaMin,
-      PlotToolEtaMax);
+      PerfPlotToolEtaName,
+      PerfPlotToolEtaNBins,
+      PerfPlotToolEtaMin,
+      PerfPlotToolEtaMax);
   effConfig.varBinning["Phi"] = ActsExamples::PlotHelpers::Binning(
-      PlotToolPhiName,
-      PlotToolPhiNBins,
-      PlotToolPhiMin,
-      PlotToolPhiMax);
+      PerfPlotToolPhiName,
+      PerfPlotToolPhiNBins,
+      PerfPlotToolPhiMin,
+      PerfPlotToolPhiMax);
   effConfig.varBinning["Pt"]  = ActsExamples::PlotHelpers::Binning(
-      PlotToolPtName,
-      PlotToolPtNBins,
-      PlotToolPtMin,
-      PlotToolPtMax);
+      PerfPlotToolPtName,
+      PerfPlotToolPtNBins,
+      PerfPlotToolPtMin,
+      PerfPlotToolPtMax);
   result.effPlotToolConfig = effConfig;
 
   ActsExamples::FakeRatePlotTool::Config fakeConfig;
   fakeConfig.varBinning["Eta"] = ActsExamples::PlotHelpers::Binning(
-      PlotToolEtaName,
-      PlotToolEtaNBins,
-      PlotToolEtaMin,
-      PlotToolEtaMax);
+      PerfPlotToolEtaName,
+      PerfPlotToolEtaNBins,
+      PerfPlotToolEtaMin,
+      PerfPlotToolEtaMax);
   fakeConfig.varBinning["Phi"] = ActsExamples::PlotHelpers::Binning(
-      PlotToolPhiName,
-      PlotToolPhiNBins,
-      PlotToolPhiMin,
-      PlotToolPhiMax);
+      PerfPlotToolPhiName,
+      PerfPlotToolPhiNBins,
+      PerfPlotToolPhiMin,
+      PerfPlotToolPhiMax);
   fakeConfig.varBinning["Pt"]  = ActsExamples::PlotHelpers::Binning(
-      PlotToolPtName,
-      PlotToolPtNBins,
-      PlotToolPtMin,
-      PlotToolPtMax);
+      PerfPlotToolPtName,
+      PerfPlotToolPtNBins,
+      PerfPlotToolPtMin,
+      PerfPlotToolPtMax);
   fakeConfig.varBinning["Num"] = ActsExamples::PlotHelpers::Binning(
-      PlotToolNumName,
-      PlotToolNumNBins,
-      PlotToolNumMin,
-      PlotToolNumMax);
+      PerfPlotToolNumName,
+      PerfPlotToolNumNBins,
+      PerfPlotToolNumMin,
+      PerfPlotToolNumMax);
   result.fakeRatePlotToolConfig = fakeConfig;
 
   ActsExamples::DuplicationPlotTool::Config duplicationConfig;
   duplicationConfig.varBinning["Eta"] = ActsExamples::PlotHelpers::Binning(
-      PlotToolEtaName,
-      PlotToolEtaNBins,
-      PlotToolEtaMin,
-      PlotToolEtaMax);
+      PerfPlotToolEtaName,
+      PerfPlotToolEtaNBins,
+      PerfPlotToolEtaMin,
+      PerfPlotToolEtaMax);
   duplicationConfig.varBinning["Phi"] = ActsExamples::PlotHelpers::Binning(
-      PlotToolPhiName,
-      PlotToolPhiNBins,
-      PlotToolPhiMin,
-      PlotToolPhiMax);
+      PerfPlotToolPhiName,
+      PerfPlotToolPhiNBins,
+      PerfPlotToolPhiMin,
+      PerfPlotToolPhiMax);
   duplicationConfig.varBinning["Pt"] = ActsExamples::PlotHelpers::Binning(
-      PlotToolPtName,
-      PlotToolPtNBins,
-      PlotToolPtMin,
-      PlotToolPtMax);
+      PerfPlotToolPtName,
+      PerfPlotToolPtNBins,
+      PerfPlotToolPtMin,
+      PerfPlotToolPtMax);
   duplicationConfig.varBinning["Num"] = ActsExamples::PlotHelpers::Binning(
-      PlotToolNumName,
-      PlotToolNumNBins,
-      PlotToolNumMin,
-      PlotToolNumMax);
+      PerfPlotToolNumName,
+      PerfPlotToolNumNBins,
+      PerfPlotToolNumMin,
+      PerfPlotToolNumMax);
   result.duplicationPlotToolConfig = duplicationConfig;
 
   ActsExamples::TrackSummaryPlotTool::Config trackSummaryConfig;
   trackSummaryConfig.varBinning["Eta"] = ActsExamples::PlotHelpers::Binning(
-      PlotToolEtaName,
-      PlotToolEtaNBins,
-      PlotToolEtaMin,
-      PlotToolEtaMax);
+      PerfPlotToolEtaName,
+      PerfPlotToolEtaNBins,
+      PerfPlotToolEtaMin,
+      PerfPlotToolEtaMax);
   trackSummaryConfig.varBinning["Phi"] = ActsExamples::PlotHelpers::Binning(
-      PlotToolPhiName,
-      PlotToolPhiNBins,
-      PlotToolPhiMin,
-      PlotToolPhiMax);
+      PerfPlotToolPhiName,
+      PerfPlotToolPhiNBins,
+      PerfPlotToolPhiMin,
+      PerfPlotToolPhiMax);
   trackSummaryConfig.varBinning["Pt"] = ActsExamples::PlotHelpers::Binning(
-      PlotToolPtName,
-      PlotToolPtNBins,
-      PlotToolPtMin,
-      PlotToolPtMax);
+      PerfPlotToolPtName,
+      PerfPlotToolPtNBins,
+      PerfPlotToolPtMin,
+      PerfPlotToolPtMax);
   trackSummaryConfig.varBinning["Num"] = ActsExamples::PlotHelpers::Binning(
-      PlotToolNumName,
-      PlotToolNumNBins,
-      PlotToolNumMin,
-      PlotToolNumMax);
+      PerfPlotToolNumName,
+      PerfPlotToolNumNBins,
+      PerfPlotToolNumMin,
+      PerfPlotToolNumMax);
   result.trackSummaryPlotToolConfig = trackSummaryConfig;
   result.filePath = outPath + "/" + Config::PerfFilePath;
 
