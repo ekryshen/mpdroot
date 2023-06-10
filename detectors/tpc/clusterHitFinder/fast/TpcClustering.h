@@ -214,21 +214,28 @@ public:
    }
 };
 class AdcHit {
-   uint  _nTimeBin; // timebin number [0..310)
-   float _fAdc;
+   uint                               _nTimeBin; // timebin number [0..310)
+   float                              _fAdc;
+   std::vector<std::pair<int, float>> _vTrackId; //_vTrackId- all unique tracks ID (TpcPoint->getTrackID())
 
 public:
    AdcHit() : _fAdc(0), _nTimeBin(0) {}
    AdcHit(int n, float f) : _nTimeBin(n), _fAdc(f) {}
-   AdcHit(const AdcHit &r) : _nTimeBin(r._nTimeBin), _fAdc(r._fAdc) {}
-   ~AdcHit() {}
+   AdcHit(int n, float f, int nTrackId) : _nTimeBin(n), _fAdc(f) { _vTrackId.push_back(std::make_pair(nTrackId, f)); }
+   AdcHit(const AdcHit &r) : _nTimeBin(r._nTimeBin), _fAdc(r._fAdc) { _vTrackId = r._vTrackId; }
+   ~AdcHit() { _vTrackId.clear(); }
    const AdcHit &operator=(const AdcHit &r)
    {
       if (this != &r) {
          _nTimeBin = r._nTimeBin;
          _fAdc     = r._fAdc;
+         _vTrackId = r._vTrackId;
       }
       return *this;
+   }
+   inline std::vector<std::pair<int, float>> getTrackID() const
+   {
+      return _vTrackId; // all unique tracks ID (TpcPoint->getTrackID())
    }
    inline float getAdc() const { return _fAdc; }
    inline void  setAdc(float f) { _fAdc = f; }
@@ -1186,10 +1193,10 @@ public:
    std::vector<std::list<PadCluster *>::iterator> _viPadClusters;
    RowClusters() : _nRow(0), _nClusterId(0), _RowStat() {}
    RowClusters(uint nRow) : _nRow(nRow), _nClusterId(0), _RowStat() {}
-   RowClusters(uint nRow, uint nPad, uint nTimeBin, float fAdc)
+   RowClusters(uint nRow, uint nPad, uint nTimeBin, float fAdc, int nTrackId = 0)
       : _nRow(nRow), _nClusterId(0), _RowStat(nPad, nTimeBin, fAdc)
    {
-      AdcHit adcHit(nTimeBin, fAdc); // new ADC hit
+      AdcHit adcHit(nTimeBin, fAdc, nTrackId); // new ADC hit
       _lstPadClusters.push_back(new PadCluster(nPad, adcHit));
       _viPadClusters.push_back(_lstPadClusters.begin());
    }
@@ -1205,10 +1212,10 @@ public:
    inline uint                        getRow() const { return _nRow; }
    inline const std::list<Cluster *> &getClusters() const { return _lstClusters; }
    inline bool                        isEmpty() const { return _lstClusters.empty(); }
-   inline void                        Load(uint nPad, uint nTimeBin, float fAdc)
+   inline void                        Load(uint nPad, uint nTimeBin, float fAdc, int nTrackId = 0)
    {
       _RowStat.PickOut(nPad, nTimeBin, fAdc);
-      AdcHit adcHit(nTimeBin, fAdc); // new ADC hit
+      AdcHit adcHit(nTimeBin, fAdc, nTrackId); // new ADC hit
 
       assert(!_lstPadClusters.empty());
 
@@ -1380,9 +1387,9 @@ public:
    std::list<RowClusters *> _lstRowClusters;
    SectorClusters() : _nSector(0) {}
    SectorClusters(int nSector) : _nSector(nSector) {}
-   SectorClusters(int nSector, uint nRow, uint nPad, uint nTimeBin, float fAdc) : _nSector(nSector)
+   SectorClusters(int nSector, uint nRow, uint nPad, uint nTimeBin, float fAdc, int nTrackId = 0) : _nSector(nSector)
    {
-      _lstRowClusters.push_back(new RowClusters(nRow, nPad, nTimeBin, fAdc));
+      _lstRowClusters.push_back(new RowClusters(nRow, nPad, nTimeBin, fAdc, nTrackId));
    }
    virtual ~SectorClusters()
    {
@@ -1416,7 +1423,7 @@ public:
    }
    inline const std::list<RowClusters *> &getRowClusters() const { return _lstRowClusters; }
    inline void                            Add(RowClusters *pRowClusters) { _lstRowClusters.push_back(pRowClusters); }
-   inline void                            Load(uint nRow, uint nPad, uint nTimeBin, float fAdc)
+   inline void                            Load(uint nRow, uint nPad, uint nTimeBin, float fAdc, int nTrackId = 0)
    {
       if (_lstRowClusters.empty())
          _lstRowClusters.push_back(new RowClusters(nRow, nPad, nTimeBin, fAdc));
@@ -1425,7 +1432,7 @@ public:
          if (pRowClusters->getRow() != nRow)
             _lstRowClusters.push_back(new RowClusters(nRow, nPad, nTimeBin, fAdc));
          else
-            pRowClusters->Load(nPad, nTimeBin, fAdc);
+            pRowClusters->Load(nPad, nTimeBin, fAdc, nTrackId);
       }
    }
    void Type(std::ostringstream &oss) const
@@ -1516,16 +1523,16 @@ public:
    inline SectorClusters *getFront() { return _lstSectorClusters.empty() ? NULL : _lstSectorClusters.front(); }
    inline SectorClusters *getBack() { return _lstSectorClusters.empty() ? NULL : _lstSectorClusters.back(); }
    inline void            Add(SectorClusters *pSectorClusters) { _lstSectorClusters.push_back(pSectorClusters); }
-   inline void            Load(uint nSector, uint nRow, uint nPad, uint nTimeBin, float fAdc)
+   inline void            Load(uint nSector, uint nRow, uint nPad, uint nTimeBin, float fAdc, int nTrackId = 0)
    {
       if (_lstSectorClusters.empty())
-         _lstSectorClusters.push_back(new SectorClusters(nSector, nRow, nPad, nTimeBin, fAdc));
+         _lstSectorClusters.push_back(new SectorClusters(nSector, nRow, nPad, nTimeBin, fAdc, nTrackId));
       else {
          SectorClusters *pSectorClusters = _lstSectorClusters.back();
          if (pSectorClusters->getSector() != nSector)
-            _lstSectorClusters.push_back(new SectorClusters(nSector, nRow, nPad, nTimeBin, fAdc));
+            _lstSectorClusters.push_back(new SectorClusters(nSector, nRow, nPad, nTimeBin, fAdc, nTrackId));
          else
-            pSectorClusters->Load(nRow, nPad, nTimeBin, fAdc);
+            pSectorClusters->Load(nRow, nPad, nTimeBin, fAdc, nTrackId);
       }
    }
    void Type(std::ostringstream &oss) const
