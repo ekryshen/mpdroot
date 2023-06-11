@@ -53,6 +53,9 @@ public:
    double GetDriftTime() const { return fDriftTime; }
    float  GetTotalSignal() const { return (float)fQ; }
 
+   void SetPadCoordinate(double padCoordinate) { fLocalX = padCoordinate; }
+   void SetTimeBinCoordinate(double timeBinCoordinate) { fLocalZ = timeBinCoordinate; }
+
    /** Accessors **/
    Int_t    GetModular() const { return GetUniqueID(); }
    Int_t    GetPad() const { return fiPad; }

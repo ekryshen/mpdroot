@@ -27,12 +27,12 @@ void TpcClusterHitFinderFast::FindHits()
    LOG(info) << "TpcClusterHitFinderFast::Exec started: Event " << nEvent;
 
    /*
-      inline void EventClusters::Load(uint nSector, uint nRow, uint nPad, uint nTimeBin, float fAdc)
+      void EventClusters::Load(uint nSector, uint nRow, uint nPad, uint nTimeBin, float fAdc, int nTrackId)
       - initial loading of digits
       - partial sorting of digits to pre-clusters
       - charge correction at the boundary between pre-clusters
 
-      EventClusters::DefineClusters(std::ostringstream& debugInfo)
+      void EventClusters::DefineClusters(std::ostringstream& debugInfo)
       - transforming pre-clusters into clusters, where they are grouped with neighboring digits
         until cluster closure
       - on cluster closure the local coordinate of the Hit is evaluated
@@ -117,7 +117,7 @@ void TpcClusterHitFinderFast::calcSector(const EventClusters *pEventClusters)
             //  AZ expression for zloc = TimeBin2Z(ftime) is equivalent to the one below
             double zloc = 170 + (0.037 - 0.5 - fTime) * _pSecGeo->TIMEBIN_LENGTH * fV_DRIFT;
             if (nSector >= _pSecGeo->SECTOR_COUNT_HALF) zloc = -zloc;
-            TVector2 p2loc(_pSecGeo->PadRow2Local(fPad + 0.5, nRow + 0.5));
+            TVector2 p2loc(_pSecGeo->PadRow2Local((double)fPad, (double)(0.5 + nRow)));
             TVector3 p3loc(p2loc.X(), p2loc.Y(), zloc);
 
             TVector3 p3glob(p3loc.Y() + _pSecGeo->YPADAREA_LOWEREDGE, p3loc.X(), p3loc.Z());
@@ -133,6 +133,8 @@ void TpcClusterHitFinderFast::calcSector(const EventClusters *pEventClusters)
             hit->SetModular(1);
             hit->SetPad(int(fPad));
             hit->SetBin(int(fTime));
+            hit->SetPadCoordinate(fPad);
+            hit->SetTimeBinCoordinate(fTime);
             hit->SetNdigits(rlstPadClusters.size());
             hit->SetStep(_pSecGeo->PAD_HEIGHT[currentPadArea]);
             for (vector<pair<int, float>>::const_iterator i5 = vnTrackId.begin(); i5 != vnTrackId.end(); ++i5)
