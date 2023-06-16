@@ -109,23 +109,23 @@ void TpcClusterHitFinderFast::calcSector(const EventClusters *pEventClusters)
             // ----- write hits -----
             float                     fPad           = pCluster->getPad();
             float                     fTime          = pCluster->getTime();
-            BaseTpcSectorGeo::PadArea currentPadArea = (nRow < _pSecGeo->ROW_COUNT[BaseTpcSectorGeo::inner])
+            BaseTpcSectorGeo::PadArea currentPadArea = (nRow < secGeo->ROW_COUNT[BaseTpcSectorGeo::inner])
                                                           ? currentPadArea = BaseTpcSectorGeo::inner
                                                           : BaseTpcSectorGeo::outer;
 
             //  !!! AZ geometry transformations written in BaseTpcSectorGeo notation !!!
             //  AZ expression for zloc = TimeBin2Z(ftime) is equivalent to the one below
-            double zloc = 170 + (0.037 - 0.5 - fTime) * _pSecGeo->TIMEBIN_LENGTH * fV_DRIFT;
-            if (nSector >= _pSecGeo->SECTOR_COUNT_HALF) zloc = -zloc;
-            TVector2 p2loc(_pSecGeo->PadRow2Local((double)fPad, (double)(0.5 + nRow)));
+            double zloc = 170 + (0.037 - 0.5 - fTime) * secGeo->TIMEBIN_LENGTH * fV_DRIFT;
+            if (nSector >= secGeo->SECTOR_COUNT_HALF) zloc = -zloc;
+            TVector2 p2loc(secGeo->PadRow2Local((double)fPad, (double)(0.5 + nRow)));
             TVector3 p3loc(p2loc.X(), p2loc.Y(), zloc);
 
-            TVector3 p3glob(p3loc.Y() + _pSecGeo->YPADAREA_LOWEREDGE, p3loc.X(), p3loc.Z());
-            double   phSec = nSector * _pSecGeo->SECTOR_PHI_RAD;
+            TVector3 p3glob(p3loc.Y() + secGeo->YPADAREA_LOWEREDGE, p3loc.X(), p3loc.Z());
+            double   phSec = nSector * secGeo->SECTOR_PHI_RAD;
             p3glob.RotateZ(phSec);
 
             /* write hit(s) */
-            int        padID = (nSector % _pSecGeo->SECTOR_COUNT_HALF) | (nRow << 5);
+            int        padID = (nSector % secGeo->SECTOR_COUNT_HALF) | (nRow << 5);
             MpdTpcHit *hit = new ((*hitArray)[nHits]) MpdTpcHit(padID, p3glob, TVector3(0.05, 0.0, 0.2), nClusters - 1);
             hit->SetLayer(nRow);
             hit->SetLocalPosition(p3loc);
@@ -136,7 +136,7 @@ void TpcClusterHitFinderFast::calcSector(const EventClusters *pEventClusters)
             hit->SetPadCoordinate(fPad);
             hit->SetTimeBinCoordinate(fTime);
             hit->SetNdigits(rlstPadClusters.size());
-            hit->SetStep(_pSecGeo->PAD_HEIGHT[currentPadArea]);
+            hit->SetStep(secGeo->PAD_HEIGHT[currentPadArea]);
             for (vector<pair<int, float>>::const_iterator i5 = vnTrackId.begin(); i5 != vnTrackId.end(); ++i5)
                hit->AddTrackID((*i5).first, (*i5).second);
             ++nHits;

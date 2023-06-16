@@ -10,9 +10,6 @@
 // Interface Header
 #include "AbstractTpcClusterHitFinder.h"
 
-// Base Class Headers ----------------
-#include "BaseTpcSectorGeo.h"
-
 // Fast ClusterHitFinder library
 #include "TpcClustering.h"
 
@@ -23,7 +20,7 @@ class TpcClusterHitFinderFast : public AbstractTpcClusterHitFinder {
 public:
    // Constructors/Destructors ---------
    TpcClusterHitFinderFast(BaseTpcSectorGeo &secGeo)
-      : AbstractTpcClusterHitFinder(secGeo, "TPC Cluster finder Fast", kFALSE), _pSecGeo(&secGeo)
+      : AbstractTpcClusterHitFinder(secGeo, "TPC Cluster finder Fast", kFALSE)
    {
    }
    ~TpcClusterHitFinderFast() {}
@@ -38,8 +35,7 @@ public:
    void SetPersistence(Bool_t opt = kTRUE) { fPersistence = opt; }
 
 private:
-   Bool_t            fPersistence;
-   BaseTpcSectorGeo *_pSecGeo;
+   Bool_t fPersistence;
 
    void calcSector(const tpcClustering::EventClusters *pEventClusters);
 
