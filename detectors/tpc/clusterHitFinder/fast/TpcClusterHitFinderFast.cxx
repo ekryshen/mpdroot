@@ -33,7 +33,7 @@ void TpcClusterHitFinderFast::FindHits()
       - charge correction at the boundary between pre-clusters
 
       void EventClusters::DefineClusters(std::ostringstream& debugInfo)
-      - transforming pre-clusters into clusters, where they are grouped with neighboring digits
+      - converting pre-clusters into clusters, where they are grouped with neighboring digits
         until cluster closure
       - on cluster closure the local coordinate of the Hit is evaluated
    */
@@ -55,13 +55,13 @@ void TpcClusterHitFinderFast::FindHits()
 
    if (!pEventClusters->isEmpty()) {
       pEventClusters->DefineClusters(oss);
-      calcSector(pEventClusters);
+      transform(pEventClusters);
    }
 
    delete pEventClusters;
 }
 
-void TpcClusterHitFinderFast::calcSector(const EventClusters *pEventClusters)
+void TpcClusterHitFinderFast::transform(const EventClusters *pEventClusters)
 {
 
    /*

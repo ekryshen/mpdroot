@@ -37,7 +37,7 @@ public:
 private:
    Bool_t fPersistence;
 
-   void calcSector(const tpcClustering::EventClusters *pEventClusters);
+   void transform(const tpcClustering::EventClusters *pEventClusters);
 
    ClassDef(TpcClusterHitFinderFast, 1);
 };
