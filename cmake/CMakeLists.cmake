@@ -47,6 +47,7 @@ find_package(GSL REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(NLOHMANN_JSON REQUIRED)
 find_package(Pythia8 REQUIRED)
+set(ZeroMQ_DIR "${ZEROMQ_ROOT}/lib/cmake/ZeroMQ")
 find_package(ZeroMQ REQUIRED)
 if (${ZeroMQ_FOUND}) # hack since ZeroMQ find is "quiet"
   message("-- Found ZeroMQ: " ${ZeroMQ_INCLUDE_DIR})
