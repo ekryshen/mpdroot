@@ -47,14 +47,17 @@ find_package(GSL REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(NLOHMANN_JSON REQUIRED)
 find_package(Pythia8 REQUIRED)
+find_package(ZeroMQ REQUIRED)
+if (${ZeroMQ_FOUND}) # hack since ZeroMQ find is "quiet"
+  message("-- Found ZeroMQ: " ${ZeroMQ_INCLUDE_DIR})
+endif()
 find_package(VMC QUIET)
 
 #set(BASE_INCLUDE_DIRECTORIES ${BASE_INCLUDE_DIRECTORIES} ${SIMPATH}/include/root ${SIMPATH}/include/vmc)
-#list(APPEND BASE_INCLUDE_DIR ${ROOT_INCLUDE_DIR} ${FAIRROOT_INCLUDE_DIR} ${FairLogger_INCDIR} "${FMT_ROOT}/include")
 list(APPEND BASE_INCLUDE_DIR ${ROOT_INCLUDE_DIR} ${FAIRROOT_INCLUDE_DIR} ${FairLogger_INCDIR} ${FMT_INCLUDE_DIRS}
                              ${PYTHIA8_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIRS}
                              ${Geant3_INCLUDE_DIRS} ${Eigen3_INCLUDE_DIRS} ${NLOHMANN_JSON_INCLUDE_DIRS}
-                             ${GSL_INCLUDE_DIRS}
+                             ${GSL_INCLUDE_DIRS} ${ZeroMQ_INCLUDE_DIR}
                              )
 
 if(VMC_FOUND)

@@ -47,6 +47,7 @@ checkPath(FAIRLOGGER_ROOT FAIRLOGGER_ROOT "FairLogger root")
 checkPath(GEANT3_ROOT GEANT3_ROOT "Geant3 root")
 checkPath(GSL_ROOT_DIR GSL_ROOT_DIR "GSL root")
 checkPath(NLOHMANN_JSON_ROOT NLOHMANN_JSON_ROOT "NLOHMANN_JSON root")
+checkPath(ZEROMQ_ROOT ZEROMQ_ROOT "ZeroMQ root")
 
 if ((NOT ("${PC_LIBXML_INCLUDEDIR}" STREQUAL "")) AND (NOT ("${PC_LIBXML_LIBDIR}" STREQUAL ""))) # if user has provided LIBXML path, don't look for LIBXML2_ROOT
   list(APPEND PTH_FOUND "libXML2 include dir: ${PC_LIBXML_INCLUDEDIR}")
