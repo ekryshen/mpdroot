@@ -12,11 +12,10 @@ MpdTofHit::MpdTofHit()
    fFlag                                  = 0;
 }
 //------------------------------------------------------------------------------------------------------------------------
-MpdTofHit::MpdTofHit(Int_t suid, TVector3 pos, TVector3 dpos, Int_t index, Double_t time, Int_t flag)
-   : FairHit(suid, pos, dpos, index)
+MpdTofHit::MpdTofHit(Int_t suid, TVector3 pos, TVector3 dpos, Int_t index, Double_t time, Int_t flag, Double_t ampl)
+   : FairHit(suid, pos, dpos, index), fTime(time), fFlag(flag), fAmplitude(ampl)
 {
-   fTime = time;
-   fFlag = flag;
+   
 }
 //------------------------------------------------------------------------------------------------------------------------
 bool MpdTofHit::CheckSuid(Int_t suid) const
@@ -63,10 +62,11 @@ void MpdTofHit::Print(const char *comment, ostream &os) const
 {
    if (comment != nullptr) os << comment;
 
-   os << " [MpdTofHit] uid: " << fDetectorID << " pos.: (" << fX << ", " << fY << ", " << fZ << ") cm"
-      << " pos. err.: (" << fDx << ", " << fDy << ", " << fDz << ") cm"
-      << " Time: " << fTime << " ns"
-      << ", Flag: " << fFlag;
+   os << " [MpdTofHit] uid: " << fDetectorID << " pos.=("<<fX<<", "<<fY<<", "<<fZ
+	<<") cm,  pos. err.=(" << fDx << ", " << fDy << ", " << fDz 
+	<<") cm, time=" << fTime << " ns, flag="<<fFlag<<", ampl.="<<fAmplitude;
+
+   if(GetNLinks() == 0) return; // for hits from MpdTofDigit( MC data is absent)
 
    os << " MCtid: ";
    for (Int_t i = 0, nLinks = GetNLinks(); i < nLinks; i++) {

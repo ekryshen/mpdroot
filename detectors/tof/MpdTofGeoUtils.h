@@ -132,6 +132,7 @@ public:
    Int_t          sectorID, detectorID, stripID;
    Int_t          neighboring[2]; // dim same as  Side_t enum
    TGeoCombiTrans fMatrix;
+   Double_t	  timeCL = 0.;
 
    LStrip();
    LStrip(Int_t uid, Int_t sector, Int_t detector, Int_t strip);
@@ -155,6 +156,8 @@ public:
 
    void     Dump(const char *comment = nullptr, std::ostream &out = std::cout) const;
    Double_t Distance(Side_t side, const LStrip &strip) const;
+
+	TVector3	RotateErrors(const TVector3&) const;
 };
 //------------------------------------------------------------------------------------------------------------------------
 class MpdTofHitProducerQA;
@@ -167,6 +170,7 @@ class MpdTofGeoUtils {
    TmStrips      mStrips;                   //! mapping strips by suid
    TintervalTree mDetectorsZ, mStripsZ;     //! detectors Z[cm] location interval tree
    TintervalTree mDetectorsPhi, mStripsPhi; //! detectors Phi[rads] location interval tree
+	size_t mNSectors = 0, mNDetectors = 0, mNStrips = 0;
 
    static MpdTofGeoUtils *instance;
 
@@ -196,6 +200,10 @@ public:
 
    const TintervalTree *GetStripZ() { return &mStripsZ; };
    const TintervalTree *GetStripPhi() { return &mStripsPhi; };
+
+    size_t GetNSectors()const { return mNSectors; };
+    size_t GetNDetectors()const { return mNDetectors; };
+    size_t GetNStrips() const{ return mNStrips; };
 };
 //------------------------------------------------------------------------------------------------------------------------
 #endif // #ifndef __MPD_TOF_GEO_UTILS_H

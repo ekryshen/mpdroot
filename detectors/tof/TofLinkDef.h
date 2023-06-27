@@ -20,4 +20,6 @@
 #pragma link C++ class MpdTofBayesPid+;
 #pragma link C++ class MpdBayesPriors+;
 #pragma link C++ class MpdTOFpid+;
+#pragma link C++ class MpdTofDigit+;
+#pragma link C++ class MpdTofDigitProducer+;
 #endif

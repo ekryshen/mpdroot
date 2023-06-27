@@ -86,7 +86,6 @@ void MpdTofGeoUtils::ParseTGeoManager(MpdTofHitProducerQA *pQA, bool forced, con
    gGeoManager->cd(pathTOF);
 
    Double_t *local = new Double_t[3](), master[3] = {0}, dX, dY, dZ;
-   int       nSectors = 0, nDetectors = 0, nStrips = 0;
 
    TObjArray *array = gGeoManager->GetCurrentVolume()->GetNodes();
    auto       it1   = array->MakeIterator();
@@ -101,7 +100,7 @@ void MpdTofGeoUtils::ParseTGeoManager(MpdTofHitProducerQA *pQA, bool forced, con
 
       TString PATH1    = pathTOF + "/" + sectorNode->GetName();
       Int_t   sectorID = sectorNode->GetNumber(); // sector [1,...,14]
-      nSectors++;
+      mNSectors++;
 
       if (ofs.is_open())
          ofs << "\n SECTOR: " << sectorNode->GetName() << ", copy# " << sectorID << " path= " << PATH1.Data();
@@ -114,7 +113,7 @@ void MpdTofGeoUtils::ParseTGeoManager(MpdTofHitProducerQA *pQA, bool forced, con
 
          TString PATH3      = PATH1 + "/" + detName;
          Int_t   detectorID = detectorNode->GetNumber(); // detector [1,...,20]
-         nDetectors++;
+         mNDetectors++;
 
          if (ofs.is_open())
             ofs << "\n\t\t DETECTOR: " << detName.Data() << ", copy# " << detectorID << " path= " << PATH3.Data();
@@ -177,7 +176,7 @@ void MpdTofGeoUtils::ParseTGeoManager(MpdTofHitProducerQA *pQA, bool forced, con
 
             TString PATH4   = PATH3 + "/" + stripBoxName;
             Int_t   stripID = stripBoxNode->GetNumber(); // strip[1,...,72]
-            nStrips++;
+            mNStrips++;
 
             if (ofs.is_open())
                ofs << "\n\t\t\t STRIP: " << stripBoxName.Data() << ", copy# " << stripID << " path= " << PATH4.Data();
@@ -267,8 +266,8 @@ void MpdTofGeoUtils::ParseTGeoManager(MpdTofHitProducerQA *pQA, bool forced, con
 
    delete[] local;
 
-   LOG(debug1) << "[MpdTof::ParseTGeoManager] Sectors=" << nSectors << ", detectors=" << nDetectors
-               << ", strips=" << nStrips << ".";
+   LOG(debug1) << "[MpdTof::ParseTGeoManager] Sectors=" << mNSectors << ", detectors=" << mNDetectors
+               << ", strips=" << mNStrips << ".";
 }
 //------------------------------------------------------------------------------------------------------------------------
 void MpdTofGeoUtils::localToMaster(const TGeoMatrix *matrix, Double_t *local, TVector3 &position,
@@ -515,6 +514,15 @@ void LStrip::Dump(const char *comment, ostream &out) const
    out << "  ids: " << sectorID << ", " << detectorID << ", " << stripID;
 
    LRectangle::Dump(nullptr, out);
+}
+//------------------------------------------------------------------------------------------------------------------------
+TVector3	LStrip::RotateErrors(const TVector3& origin) const
+{
+	Double_t local[3], master[3];
+	origin.GetXYZ(local);
+	fMatrix.GetRotation()->LocalToMaster(local, master);
+
+return TVector3(fabs(master[0]), fabs(master[1]), fabs(master[2]));
 }
 //------------------------------------------------------------------------------------------------------------------------
 Double_t LStrip::Distance(Side_t side, const LStrip &strip) const

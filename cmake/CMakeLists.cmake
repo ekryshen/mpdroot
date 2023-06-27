@@ -121,6 +121,7 @@ add_subdirectory (reconstruction/tracking/kalman) # mpdfield
 add_subdirectory (physics) # mpdbase mpddst
 add_subdirectory (simulation/mcDst)
 add_subdirectory (simulation/mcStack) # MpdGen
+add_subdirectory (decoder)
 # LEVEL 3
 add_subdirectory (tools/tdd)
 add_subdirectory (tools/eventDisplay) # emc xml2 TODO - remove dependencies on root configuration

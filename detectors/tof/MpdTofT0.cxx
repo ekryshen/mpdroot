@@ -19,7 +19,6 @@
 
 #include "MpdMCTrack.h"
 #include "FairLogger.h"
-#include "FairRootManager.h"
 
 #include "MpdTofUtils.h"
 #include "MpdTofPoint.h"
@@ -28,10 +27,11 @@
 #include "FairMCEventHeader.h"
 
 #include "MpdTpcKalmanTrack.h"
-// #include "MpdTofHit.h"
 #include "MpdTofMatchingData.h"
 
 #include "MpdTofT0.h"
+
+using namespace std;
 
 ClassImp(MpdTofT0);
 ClassImp(MpdTofT0Data);

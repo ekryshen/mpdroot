@@ -7,6 +7,10 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_LIST_DIR}
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
   ${CMAKE_SOURCE_DIR}/simulation/mcStack
+  ${CMAKE_SOURCE_DIR}/tools/database/uniCommon
+  ${CMAKE_SOURCE_DIR}/tools/database/uniDb
+  ${CMAKE_SOURCE_DIR}/decoder
+  ${CMAKE_SOURCE_DIR}/decoder/Devices
 )
 
 set(SYSTEM_INCLUDE_DIRECTORIES
@@ -40,6 +44,9 @@ set(SRCS
   MpdTOFpid.cxx
   MpdTofPoint.cxx
   MpdTofT0.cxx
+  MpdTofDigit.cxx
+  MpdTofDigitProducer.cxx
+  MpdTofDigitImpl.cxx
 )
 
 set(HEADERS
@@ -60,6 +67,9 @@ set(HEADERS
   MpdTOFpid.h
   MpdTofPoint.h
   MpdTofT0.h
+  MpdTofDigit.h
+  MpdTofDigitProducer.h
+  MpdTofDigitImpl.h
   MpdTofUtils.h
 )
 

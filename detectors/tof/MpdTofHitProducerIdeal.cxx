@@ -51,7 +51,7 @@ InitStatus MpdTofHitProducerIdeal::Init()
       assert(aMcPoints);
       assert(aMcTracks);
    } else {
-      aExpDigits = (TClonesArray *)FairRootManager::Instance()->GetObject("??????"); // FIXME: NOW unknown name
+      aExpDigits = (TClonesArray *)FairRootManager::Instance()->GetObject("TOFDigit");
       assert(aExpDigits);
    }
 

@@ -7,6 +7,7 @@
 ///
 /// \brief
 /// \author Sergei Lobastov (LHE, JINR, Dubna)
+/// \author Victor Baryshnikov
 //------------------------------------------------------------------------------------------------------------------------
 #include <iostream>
 
@@ -24,6 +25,9 @@ class MpdTofHitProducer : public MpdTofHitProducerIdeal {
    Double_t  fStripLength;                          // [cm] strip length, default: 65 cm
    Double_t  fErrX = 0.5, fErrZ = 1.25 / sqrt(12.); // Uncertainties of coordinates, gaus sigma [cm]
    TRandom2 *pRandom = nullptr;
+   TString  fCLCflnm = {};
+
+    static constexpr Double_t fSlope = 1./ 0.062 / 2.; //  1. / 0.062 ns/cm (signal velosity) / 2. ( dt from two sides)
 
    // value - distance to the strip edge [cm], gap - 1,3 = outer strip gap, 2 = middle strip gap
    Bool_t IsHitCreated(Double_t value, Int_t gap);
@@ -31,15 +35,16 @@ class MpdTofHitProducer : public MpdTofHitProducerIdeal {
 
 public:
    MpdTofHitProducer(const char *name = "TOF HitProducer", Bool_t useMCdata = true, Int_t verbose = 1,
-                     Bool_t DoTest = false, const char *flnm = "QA.MpdTofHitProducer.root", double StripLength = 65.);
+                     const char *CLCflnm = nullptr, Bool_t DoTest = false, const char *flnm = "QA.MpdTofHitProducer.root", double StripLength = 65.);
    virtual ~MpdTofHitProducer();
 
    virtual InitStatus Init();
    virtual void       Exec(Option_t *option);
    virtual void       Finish();
 
+	Bool_t		LoadCLcorrections(const char* flnm);
    void SetTimeResolution(Double_t sigma) { fTimeSigma = sigma; };
-   void SetAlongStripzResolution(Double_t Xerr) { fErrX = Xerr; };
+   void SetAlongStripResolution(Double_t Xerr) { fErrX = Xerr; };
    void SetSeed(UInt_t seed = 0);
 
    virtual void AddParameters(TString &buf) const;

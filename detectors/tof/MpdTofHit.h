@@ -11,15 +11,17 @@ class MpdTofHit : public FairHit {
 protected:
    Double_t fTime; // Time since event start [ns]
    Int_t    fFlag; // Flag for general purposes [TDC, event tagging...]
+   Double_t fAmplitude = 0.;
 
 public:
    MpdTofHit();
-   MpdTofHit(Int_t suid, TVector3 pos, TVector3 dpos, Int_t refIndex, Double_t tof, Int_t flag = 0);
+   MpdTofHit(Int_t suid, TVector3 pos, TVector3 dpos, Int_t refIndex, Double_t tof, Int_t flag = 0, Double_t amplitude = 0.);
 
    void Print(const char *comment = nullptr, std::ostream &os = std::cout) const;
 
    Double_t GetTime() const { return fTime; };
    Int_t    GetFlag() const { return fFlag; };
+   Double_t GetAmplitude() const { return fAmplitude; };
 
    void SetTime(Double_t time) { fTime = time; };
    void SetFlag(Int_t flag) { fFlag = flag; };
