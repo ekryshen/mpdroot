@@ -363,15 +363,14 @@ InitStatus MpdTpcTracker::ReInit() {
 //===----------------------------------------------------------------------===//
 
 void MpdTpcTracker::Exec(Option_t *option) {
-  // For naming files during debug.
-  static Int_t eventCounter = -1;
-  eventCounter++;
-
   std::cout << "[MpdTpcTracker::Exec]: Started" << std::endl;
 
   if (MpdCodeTimer::Active()) {
     MpdCodeTimer::Instance()->Start(Class()->GetName(), __FUNCTION__);
   }
+
+  // For naming files during debug.
+  Int_t eventCounter = FairRootManager::Instance()->GetEntryNr();
 
   // Get the MC points and TPC hits.
   fPoints = getArray("TpcPoint");
