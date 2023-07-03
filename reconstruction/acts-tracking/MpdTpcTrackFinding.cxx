@@ -229,8 +229,8 @@ void TrackFinding::constructTrackCandidates(
                  b.measurementIndex();
         }
     );
-    fout <<
-        "# format: (hit-index, x, y, z, phi, theta, q/p, t, chi2, seed-index)+" <<
+    fout << "# format: "
+        "(x, y, z, hit-index, phi, theta, q/p, t, chi2, seed-index)+" <<
         std::endl;
     std::cout << fname << " has been created" << std::endl;
   }
@@ -290,10 +290,10 @@ void TrackFinding::constructTrackCandidates(
             fout << ", ";
           }
           firstPass = false;
-          fout << hitIdx   << ", " <<
-                  x        << ", " <<
+          fout << x        << ", " <<
                   y        << ", " <<
                   z        << ", " <<
+                  hitIdx   << ", " <<
                   phi      << ", " <<
                   theta    << ", " <<
                   qOverP   << ", " <<
