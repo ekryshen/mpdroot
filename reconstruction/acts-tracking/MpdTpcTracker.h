@@ -42,6 +42,9 @@ private:
 
   TClonesArray *fPoints;
   TClonesArray *fHits;
+  /// Needed to collect performance statistics.
+  TClonesArray *fMCTracks;
+
   TClonesArray *fTracks;
 
   const BaseTpcSectorGeo &fSecGeo;

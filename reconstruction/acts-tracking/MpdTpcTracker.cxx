@@ -345,9 +345,10 @@ InitStatus MpdTpcTracker::Init() {
   auto perfCfg = fRunner->config().perfWriterCfg(fOutPath);
   fPerfWriter = new ActsExamples::CKFPerformanceWriter(perfCfg, level);
 
-  fPoints = getArray("TpcPoint");
-  fHits   = getArray("TpcRecPoint");
-  fTracks = new TClonesArray("MpdTpcTrack");
+  fPoints   = getArray("TpcPoint");
+  fHits     = getArray("TpcRecPoint");
+  fMCTracks = getArray("MCTrack");
+  fTracks   = new TClonesArray("MpdTpcTrack");
   FairRootManager::Instance()->Register(
       "TpcKalmanTrack", "MpdKalmanTrack", fTracks, kTRUE);
 
@@ -379,9 +380,8 @@ void MpdTpcTracker::Exec(Option_t *option) {
                         : convertTpcHits(fHits, fPoints);
 
   // Get the information necessary to collect Acts statistics.
-  auto mcTracks = getArray("MCTrack");
-  auto trackIdToBarcodeMap = createTrackIdToBarcodeMap(mcTracks);
-  auto inputParticles = createInputParticles(mcTracks, trackIdToBarcodeMap);
+  auto trackIdToBarcodeMap = createTrackIdToBarcodeMap(fMCTracks);
+  auto inputParticles = createInputParticles(fMCTracks, trackIdToBarcodeMap);
   auto hitToParticlesMap = createHitToParticlesMap(hits, trackIdToBarcodeMap);
 
   // Run the track finding algorithm.
