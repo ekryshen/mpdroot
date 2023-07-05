@@ -345,6 +345,8 @@ InitStatus MpdTpcTracker::Init() {
   auto perfCfg = fRunner->config().perfWriterCfg(fOutPath);
   fPerfWriter = new ActsExamples::CKFPerformanceWriter(perfCfg, level);
 
+  fPoints = getArray("TpcPoint");
+  fHits   = getArray("TpcRecPoint");
   fTracks = new TClonesArray("MpdTpcTrack");
   FairRootManager::Instance()->Register(
       "TpcKalmanTrack", "MpdKalmanTrack", fTracks, kTRUE);
@@ -371,10 +373,6 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
   // For naming files during debug.
   Int_t eventCounter = FairRootManager::Instance()->GetEntryNr();
-
-  // Get the MC points and TPC hits.
-  fPoints = getArray("TpcPoint");
-  fHits = getArray("TpcRecPoint");
 
   // Convert the input points to the internal representation.
   auto hits = UseMcHits ? convertTpcPoints(fPoints)

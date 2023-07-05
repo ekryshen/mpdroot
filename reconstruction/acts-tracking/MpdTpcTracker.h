@@ -28,7 +28,9 @@ public:
                          const char *title = TaskTitle):
       FairTask(title), fSecGeo(secGeo), fOutPath(std::move(outPath)) {}
 
-  virtual ~MpdTpcTracker() {}
+  virtual ~MpdTpcTracker() {
+    delete fTracks; // TODO: investigate Clear()
+}
 
   InitStatus Init() override;
   InitStatus ReInit() override;
