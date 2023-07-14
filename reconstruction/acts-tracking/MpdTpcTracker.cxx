@@ -4,6 +4,7 @@
 
 #include "MpdTpcTracker.h"
 #include "PlotUtils.h"
+#include "PerfUtils.h"
 
 #include "ActsExamples/EventData/Index.hpp"
 #include "ActsExamples/Framework/WhiteBoard.hpp"
@@ -342,7 +343,8 @@ InitStatus MpdTpcTracker::Init() {
       level
   );
 
-  auto perfCfg = fRunner->config().perfWriterCfg(fOutPath);
+  const auto &config = fRunner->config();
+  auto perfCfg = config.perfWriterCfg(fOutPath);
   fPerfWriter = new ActsExamples::CKFPerformanceWriter(perfCfg, level);
 
   fPoints   = getArray("TpcPoint");
@@ -351,6 +353,20 @@ InitStatus MpdTpcTracker::Init() {
   fTracks   = new TClonesArray("MpdTpcTrack");
   FairRootManager::Instance()->Register(
       "TpcKalmanTrack", "MpdKalmanTrack", fTracks, kTRUE);
+
+  fEffPt = new TEfficiency(
+      "trackeff_vs_pT",
+      "Tracking efficiency;Truth pT [GeV/c];Efficiency",
+      config.PerfPlotToolPtNBins,
+      config.PerfPlotToolPtMin,
+      config.PerfPlotToolPtMax);
+
+  fEffEta = new TEfficiency(
+      "trackeff_vs_eta",
+      "Tracking efficiency;Truth #eta;Efficiency",
+      config.PerfPlotToolEtaNBins,
+      config.PerfPlotToolEtaMin,
+      config.PerfPlotToolEtaMax);
 
   std::cout << "[MpdTpcTracker::Init]: Finished" << std::endl;
   return kSUCCESS;
@@ -392,6 +408,10 @@ void MpdTpcTracker::Exec(Option_t *option) {
   fRunner->execute(hits, inputParticles, hitToParticlesMap,
                    fPerfWriter, context, fOutPath);
 
+    const auto &selectedHits =
+        context.eventStore.get<Mpd::Tpc::InputHitContainer>(
+            config.particleSelector.outputSimHits);
+
   // Dump hits to file.
   if (config.DumpData) {
     const auto &selectedHits =
@@ -408,14 +428,25 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
   convertTracks(fHits, fTracks, trajectories);
 
+
+  // Path with dumped trackIds for efficiency calculation
+  std::string pathWithTrackIds;
+
+  Bool_t onlyCertainTracks = true;
+  runPerformance(
+      fEffPt, fEffEta,
+      pathWithTrackIds,
+      fOutPath,
+      eventCounter, trajectories,
+      selectedHits, fMCTracks,
+      config.MeasurementsMin, config.TruthMatchProbMin,
+      onlyCertainTracks);
+
   // Plot graphs if required.
   if constexpr(PlotGraphs) {
     const auto &spacePoints =
         context.eventStore.get<Mpd::Tpc::SpacePointContainer>(
             config.spacePointMaking.outputSpacePoints);
-    const auto &selectedHits =
-        context.eventStore.get<Mpd::Tpc::InputHitContainer>(
-            config.particleSelector.outputSimHits);
 
     // Get the track recognition statistics.
     auto statistics = fRunner->getStatistics(context);

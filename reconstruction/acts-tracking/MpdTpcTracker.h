@@ -47,6 +47,8 @@ private:
 
   TClonesArray *fTracks;
 
+  TEfficiency *fEffPt;    // Add delete memory
+  TEfficiency *fEffEta;   // Add delete memory
   const BaseTpcSectorGeo &fSecGeo;
   std::string fOutPath;
   ActsExamples::CKFPerformanceWriter *fPerfWriter;
