@@ -24,10 +24,14 @@
 
 //__________________________________________________________________________
 
-AbstractTpcClusterHitFinder::AbstractTpcClusterHitFinder(BaseTpcSectorGeo &tpcGeo, const char *name, Bool_t val)
+AbstractTpcClusterHitFinder::AbstractTpcClusterHitFinder(BaseTpcSectorGeo &tpcGeo, BaseQA *qaObject, const char *name,
+                                                         Bool_t val)
    : FairTask(name), persistence(val)
 {
    secGeo = &tpcGeo;
+
+   localQAptr = dynamic_cast<QA_TpcClusterHitFinder *>(qaObject);
+   if (localQAptr) LOG(info) << "QA mode on: TpcClusterHitFinder";
 }
 
 //__________________________________________________________________________
@@ -38,10 +42,9 @@ AbstractTpcClusterHitFinder::~AbstractTpcClusterHitFinder() {}
 
 InitStatus AbstractTpcClusterHitFinder::Init()
 {
-   if (ReadGeometryParameters() == kERROR)
-      return kERROR;
-   else
-      return ReadInputRegisterOutput();
+   if (localQAptr) localQAptr->moduleNameSuffix = ModuleNameSuffix();
+
+   return ReadInputRegisterOutput();
 }
 
 //__________________________________________________________________________
@@ -52,25 +55,8 @@ void AbstractTpcClusterHitFinder::Exec(Option_t *opt)
    TransformInputData();
    FindClusters();
    FindHits();
-}
 
-//__________________________________________________________________________
-
-void AbstractTpcClusterHitFinder::Finish()
-{
-
-   if (AbstractQA::qaEngineMode == EQAMode::TPCCLUSTERHITFINDER) {
-      TString infoMessage =
-         TString("QA Engine turned on in TpcClusterHitFinder mode: ") + ModuleNameSuffix() + TString(" module");
-      LOG(info) << infoMessage;
-   }
-}
-
-//__________________________________________________________________________
-
-InitStatus AbstractTpcClusterHitFinder::ReadGeometryParameters()
-{
-   return kSUCCESS;
+   if (localQAptr) GatherQAData();
 }
 
 //__________________________________________________________________________
@@ -100,7 +86,8 @@ InitStatus AbstractTpcClusterHitFinder::ReadInputRegisterOutput()
    /////////////////////////////////////////////////////////////////////////
 
    // Create and register output arrays
-   clusArray = new TClonesArray("MpdTpc2dCluster");
+   clusArray = (ModuleNameSuffix().EqualTo(TString("Mlem"))) ? new TClonesArray("MpdTpc2dCluster")
+                                                             : new TClonesArray("Tpc2dClusterFast");
    ioman->Register("TpcCluster", "Tpc", clusArray, persistence);
    hitArray = new TClonesArray("MpdTpcHit");
    ioman->Register("TpcRecPoint", "Tpc", hitArray, persistence);
@@ -114,6 +101,18 @@ void AbstractTpcClusterHitFinder::ClearClustersHits()
 {
    clusArray->Delete();
    hitArray->Delete();
+}
+
+//__________________________________________________________________________
+
+void AbstractTpcClusterHitFinder::GatherQAData()
+{
+   int currentEvent = ioman->GetEntryNr();
+   localQAptr->eventNumber.push_back(currentEvent);
+   localQAptr->eventClusArray.push_back(new TClonesArray());
+   localQAptr->eventClusArray.back() = (TClonesArray *)clusArray->Clone();
+   localQAptr->eventHitArray.push_back(new TClonesArray());
+   localQAptr->eventHitArray.back() = (TClonesArray *)hitArray->Clone();
 }
 
 //__________________________________________________________________________

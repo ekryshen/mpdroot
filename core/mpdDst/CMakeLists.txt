@@ -18,6 +18,7 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
   ${CMAKE_SOURCE_DIR}/reconstruction/tracking/lheTrack
   ${CMAKE_SOURCE_DIR}/simulation/mcStack
+  ${CMAKE_SOURCE_DIR}/tools/tdd/QA
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES

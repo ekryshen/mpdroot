@@ -3,6 +3,7 @@
 set(INCLUDE_DIRECTORIES
   ${BASE_INCLUDE_DIRECTORIES}
   ${CMAKE_CURRENT_LIST_DIR}
+  ${CMAKE_SOURCE_DIR}/detectors/tpc
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES
@@ -20,12 +21,12 @@ link_directories(${LINK_DIRECTORIES})
 
 # List of source files
 set(SRCS
- AbstractQA.cpp
+ BaseQA.cpp
  QA_TpcClusterHitFinder.cxx
 )
 
 Set(HEADERS
- AbstractQA.h
+ BaseQA.h
  QA_TpcClusterHitFinder.h
 )
 

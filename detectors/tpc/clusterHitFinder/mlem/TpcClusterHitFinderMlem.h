@@ -41,7 +41,7 @@ class TH2D;
 class TpcClusterHitFinderMlem : public AbstractTpcClusterHitFinder {
 public:
    // Constructors/Destructors ---------
-   TpcClusterHitFinderMlem(BaseTpcSectorGeo &tpcGeo);
+   TpcClusterHitFinderMlem(BaseTpcSectorGeo &tpcGeo, BaseQA *qaObject = nullptr);
    ~TpcClusterHitFinderMlem();
 
    // Interface Implementation
@@ -49,11 +49,6 @@ public:
    void    TransformInputData();
    void    FindClusters();
    void    FindHits();
-
-   // Accessors -----------------------
-
-   // Modifiers -----------------------
-   void SetPersistence(Bool_t opt = kTRUE) { persistence = opt; }
 
    // Operations ----------------------
 

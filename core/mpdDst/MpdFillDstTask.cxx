@@ -41,7 +41,7 @@ using namespace std;
 
 // -----   constructor with names ------------------------------------
 
-MpdFillDstTask::MpdFillDstTask(const char *name, const char *title)
+MpdFillDstTask::MpdFillDstTask(BaseQA *qaObject, const char *name, const char *title)
    : FairTask(name), fEvent(nullptr), fKFTracks(nullptr), fKFEctTracks(nullptr), fMCTracks(nullptr),
      fGenTracks(nullptr), fTpcHits(nullptr), fMCEventHeader(nullptr), fTofMatching(nullptr), fEtofMatching(nullptr),
      fVertex(nullptr), fZdcSkeletonesSaved(kFALSE), fHistZdc1En(nullptr), fHistZdc2En(nullptr),
@@ -49,6 +49,8 @@ MpdFillDstTask::MpdFillDstTask(const char *name, const char *title)
      fhTrackMotherId(nullptr), fhTrackPrimaryPDG(nullptr), fhTrackVertex(nullptr), fhTruthVertex(nullptr),
      fPID(nullptr), fSharedHitArraySize(0), fSharedHitArray(nullptr)
 {
+   localQAptr = qaObject;
+   if (localQAptr) LOG(info) << "QA mode on: BaseQA";
 }
 // -----   Destructor -----------------------------------------------
 

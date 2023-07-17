@@ -33,14 +33,14 @@
 #include "TpcSectorGeoAZ.h"
 #include "TpcClusterHitFinderFast.h"
 #include "TpcClusterHitFinderMlem.h"
-#include "AbstractQA.h"
+#include "QA_TpcClusterHitFinder.h"
 
 #include <iostream>
 
 // Choose: UseMlem (MLEM clusterhitfinder)
 //         UseHitProducer (simple hit producer without digitizer)
 //         comment out the line for Fast clusterhitfinder
-#define UseMlem 
+#define UseMlem
 
 #include "commonFunctions.C"
 
@@ -49,7 +49,7 @@
 // outFile - output file with reconstructed data, default: mpddst.root
 // nStartEvent - number (start with zero) of first event to process, default: 0
 // nEvents - number of events to process, 0 - all events of given file will be proccessed, default: 1
-// qaSetting - stored in static qaEngineMode enum variable to generate desired QA plots
+// qaSetting - enum variable defining which QA data are collected
 void runReco(TString inFile = "evetest.root", TString outFile = "mpddst.root", Int_t nStartEvent = 0,
              Int_t nEvents = 10, EQAMode qaSetting = EQAMode::OFF)
 {
@@ -64,7 +64,25 @@ void runReco(TString inFile = "evetest.root", TString outFile = "mpddst.root", I
    timer.Start();
 
    // -----   set QA Engine Mode   -------------------------------------------
-   AbstractQA::qaEngineMode = qaSetting; 
+   BaseQA *qaObject;
+   switch (qaSetting) {
+   case EQAMode::OFF: {
+      qaObject = nullptr;
+      break;
+   }
+   case EQAMode::BASIC: {
+      qaObject = new BaseQA();
+      break;
+   }
+   case EQAMode::TPCCLUSTERHITFINDER: {
+      qaObject = new QA_TpcClusterHitFinder();
+      break;
+   }
+   default: {
+      std::cerr << "Error. You've set the non-existing QA Engine mode.\n";
+      return;
+   }
+   }
 
    // -----   Digitization run   ---------------------------------------------
    FairRunAna *fRun;
@@ -90,7 +108,7 @@ void runReco(TString inFile = "evetest.root", TString outFile = "mpddst.root", I
    // ------------------------------------------------------------------------
 
    // -----  Initialize geometry   --------------------------------------------
-   BaseTpcSectorGeo *secGeo = new TpcSectorGeoAZ(); 
+   BaseTpcSectorGeo *secGeo = new TpcSectorGeoAZ();
 
    // ------------------------------------------------------------------------
 
@@ -105,11 +123,11 @@ void runReco(TString inFile = "evetest.root", TString outFile = "mpddst.root", I
    MpdTpcDigitizerAZlt *tpcDigitizer = new MpdTpcDigitizerAZlt(*secGeo);
    tpcDigitizer->SetPersistence(kTRUE);
    fRun->AddTask(tpcDigitizer);
- #ifdef UseMlem
-   TpcClusterHitFinderMlem *tpcClus = new TpcClusterHitFinderMlem(*secGeo);
- #else
-   TpcClusterHitFinderFast *tpcClus = new TpcClusterHitFinderFast(*secGeo);
- #endif 
+#ifdef UseMlem
+   TpcClusterHitFinderMlem *tpcClus = new TpcClusterHitFinderMlem(*secGeo, qaObject);
+#else
+   TpcClusterHitFinderFast *tpcClus = new TpcClusterHitFinderFast(*secGeo, qaObject);
+#endif
    fRun->AddTask(tpcClus);
 #endif
 
@@ -165,13 +183,13 @@ void runReco(TString inFile = "evetest.root", TString outFile = "mpddst.root", I
    // MpdPidRefitTrackTask* trRefit = new MpdPidRefitTrackTask("Track PID and Refit");
    // fRun->AddTask(trRefit);
 
-   MpdFillDstTask *fillDST = new MpdFillDstTask("MpdDst task");
+   MpdFillDstTask *fillDST = new MpdFillDstTask(qaObject, "MpdDst task");
    fRun->AddTask(fillDST);
 
    MpdMiniDstFillTask *miniDst = new MpdMiniDstFillTask(outFile);
    fRun->AddTask(miniDst);
 
-   // -----   Intialise   ----------------------------------------------------
+   // -----   Initialize   ----------------------------------------------------
    fRun->Init();
    cout << "Field: " << fRun->GetField()->GetBz(0., 0., 0.) << endl;
 
@@ -180,6 +198,9 @@ void runReco(TString inFile = "evetest.root", TString outFile = "mpddst.root", I
 
    // -----   Run   ______________--------------------------------------------
    fRun->Run(nStartEvent, nStartEvent + nEvents);
+
+   // -----   QA Engine Output  -------------------------------------------
+   if (qaObject) qaObject->WriteToFile();
 
    // -----   Finish   -------------------------------------------------------
    timer.Stop();

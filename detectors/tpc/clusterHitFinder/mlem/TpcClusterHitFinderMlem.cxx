@@ -50,8 +50,8 @@ using namespace std;
 
 //__________________________________________________________________________
 
-TpcClusterHitFinderMlem::TpcClusterHitFinderMlem(BaseTpcSectorGeo &secGeo)
-   : AbstractTpcClusterHitFinder(secGeo, "TPC Cluster finder Mlem", kFALSE)
+TpcClusterHitFinderMlem::TpcClusterHitFinderMlem(BaseTpcSectorGeo &secGeo, BaseQA *qaObject)
+   : AbstractTpcClusterHitFinder(secGeo, qaObject, "TPC Cluster finder Mlem", kFALSE)
 {
    /*
    std::string tpcGasFile = gSystem->Getenv("VMCWORKDIR");

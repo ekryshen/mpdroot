@@ -1,27 +1,24 @@
-//--------------------------------------------------------------------
-// Description:
-//      QA for ClusterHitFinder modules
-//
-// Environment:
-//      Software for the MPD Detector at NICA.
-//
-// Authors:
-//      Slavomir Hnatic
-//      JINR, March, 2023
-//--------------------------------------------------------------------
-
 #ifndef QA_TPCCLUSTERHITFINDER_HH
 #define QA_TPCCLUSTERHITFINDER_HH
 
-#include "AbstractQA.h"
+#include "BaseQA.h"
 
-class QA_TpcClusterHitFinder : public AbstractQA {
+#include "AbstractTpcHit.h"
+
+class QA_TpcClusterHitFinder : public BaseQA {
 
 public:
    QA_TpcClusterHitFinder() {}
    virtual ~QA_TpcClusterHitFinder() {}
 
+   void WriteToFile();
+
+   std::vector<TClonesArray *> eventClusArray;
+   std::vector<TClonesArray *> eventHitArray;
+
 private:
+   void WriteTpcClusterHitFinderQA();
+
    ClassDef(QA_TpcClusterHitFinder, 1);
 };
 

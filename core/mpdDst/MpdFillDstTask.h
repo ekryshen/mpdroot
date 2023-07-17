@@ -14,6 +14,8 @@
 #include "TH1F.h"
 #include "TH2F.h"
 
+#include "BaseQA.h"
+
 class MpdFillDstTask : public FairTask {
 
 private:
@@ -48,7 +50,7 @@ private:
    void     CalculateSharedArrayMap();
 
 public:
-   MpdFillDstTask(const char *name = "MpdFillDstTask", const char *title = "MPD Task");
+   MpdFillDstTask(BaseQA *qaObject = nullptr, const char *name = "MpdFillDstTask", const char *title = "MPD Task");
    virtual ~MpdFillDstTask(); // Destructor
    virtual void       SetPIDAlgorithm(MpdPid *pid) { fPID = pid; };
    virtual void       Exec(Option_t *option);
@@ -66,6 +68,7 @@ public:
 
    // MpdEvent *AddEvent(Option_t * option);
    MpdTrack *AddPrimaryTrack();
+   BaseQA   *localQAptr;
 
    ClassDef(MpdFillDstTask, 0); // fill MpdDst branch
 };

@@ -19,8 +19,8 @@ class TClonesArray;
 class TpcClusterHitFinderFast : public AbstractTpcClusterHitFinder {
 public:
    // Constructors/Destructors ---------
-   TpcClusterHitFinderFast(BaseTpcSectorGeo &secGeo)
-      : AbstractTpcClusterHitFinder(secGeo, "TPC Cluster finder Fast", kFALSE)
+   TpcClusterHitFinderFast(BaseTpcSectorGeo &secGeo, BaseQA *qaObject = nullptr)
+      : AbstractTpcClusterHitFinder(secGeo, qaObject, "TPC Cluster finder Fast", kFALSE)
    {
    }
    ~TpcClusterHitFinderFast() {}
@@ -31,12 +31,7 @@ public:
    void    FindClusters() {}
    void    FindHits();
 
-   // Modifiers -----------------------
-   void SetPersistence(Bool_t opt = kTRUE) { fPersistence = opt; }
-
 private:
-   Bool_t fPersistence;
-
    void TransformOutput(const tpcClustering::EventClusters *pEventClusters);
 
    ClassDef(TpcClusterHitFinderFast, 1);

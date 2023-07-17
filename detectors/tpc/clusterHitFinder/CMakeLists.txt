@@ -12,6 +12,7 @@ set(INCLUDE_DIRECTORIES
  ${CMAKE_SOURCE_DIR}/detectors/tpc/geometry
  ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
  ${CMAKE_SOURCE_DIR}/simulation/generators/mpdGen
+ ${CMAKE_SOURCE_DIR}/tools/tdd/QA
 )
 
 set(SYSTEM_INCLUDE_DIRECTORIES

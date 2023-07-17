@@ -21,6 +21,7 @@
 
 // MpdRoot Class Headers -----------------
 #include "BaseTpcSectorGeo.h"
+#include "QA_TpcClusterHitFinder.h"
 
 // ROOT Class Headers & Declarations ---------------
 #include <TString.h>
@@ -30,20 +31,22 @@ class AbstractTpcClusterHitFinder : public FairTask {
 public:
    // Constructors/Destructors ---------
    // default constructor set to private, the subclasses must access/implement the custom one below
-   AbstractTpcClusterHitFinder(BaseTpcSectorGeo &tpcGeo, const char *name, Bool_t val);
+   AbstractTpcClusterHitFinder(BaseTpcSectorGeo &tpcGeo, BaseQA *qaObject, const char *name, Bool_t val);
    virtual ~AbstractTpcClusterHitFinder();
 
    // FairRun methods left virtual for development purposes
    // specific implementation of this interface should not implement them
    virtual InitStatus Init();
    virtual void       Exec(Option_t *opt);
-   void               Finish();
 
    // Methods to be implemented by specific algorithm
    virtual TString ModuleNameSuffix()   = 0;
    virtual void    TransformInputData() = 0;
    virtual void    FindClusters()       = 0;
    virtual void    FindHits()           = 0;
+
+   QA_TpcClusterHitFinder *localQAptr;
+   void                    SetPersistence(bool opt = kTRUE) { persistence = opt; }
 
 protected:
    FairRootManager  *ioman;
@@ -65,9 +68,9 @@ private:
    // disable default constructor
    AbstractTpcClusterHitFinder();
 
-   InitStatus ReadGeometryParameters();  // read geometry parameters
    InitStatus ReadInputRegisterOutput(); // read input digiArray, register outputs clusArray & hitArray
    void       ClearClustersHits();       // clears clusArray, hitArray
+   void       GatherQAData();            // collects data for QA
 
    ClassDef(AbstractTpcClusterHitFinder, 1);
 };
