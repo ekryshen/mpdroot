@@ -31,12 +31,12 @@ void runPerformance(
 Int_t calcNumberPriHits(const Mpd::Tpc::InputHitContainer &hits,
                         TClonesArray *mcTracks);
 
-void dumpTrackIds(
+void uploadTrackIds(
     const std::vector<Int_t> &trackIds,
     Int_t eventNumber,
     std::string path);
 
-std::vector<Int_t> readTrackIdsA(
+std::vector<Int_t> downloadTrackIds(
     Int_t eventNumber,
     std::string path);
 

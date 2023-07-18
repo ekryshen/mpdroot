@@ -20,7 +20,8 @@
 #include <iostream>
 #include <fstream>
 
-void dumpTrackIds(
+// Dump trackIds to file.
+void uploadTrackIds(
     const std::vector<Int_t> &trackIds,
     Int_t eventNumber,
     std::string path) {
@@ -32,14 +33,15 @@ void dumpTrackIds(
   }
 }
 
-std::vector<Int_t> readTrackIdsA(
+// Read trackIds from file
+std::vector<Int_t> downloadTrackIds(
     Int_t eventNumber,
     std::string path) {
   std::string fname = path + "/"
         "event_" + std::to_string(eventNumber) + "_trackIds.txt";
   std::ifstream f(fname);
   std::vector<Int_t> result;
-  std::string prefix = "readTrackIdsA(): ";
+  std::string prefix = "downloadTrackIds(): ";
   if (!f.good()) {
     std::cout << prefix << "Cannot open file " << fname << std::endl;
     return result;
@@ -214,7 +216,7 @@ void runPerformance(
     Int_t measurementsMin,
     Double_t truthMatchProbMin,
     Bool_t onlySelectedTracks) {
-  auto trackIds = readTrackIdsA(eventNumber, inPath);
+  auto trackIds = downloadTrackIds(eventNumber, inPath);
   std::map<Int_t, Bool_t> trackIdToRecoMap;
 
   auto realTracks = calcRealTracks(hits);
