@@ -4,6 +4,7 @@ Wagon for the analysis of hyperon global polarization. Utilizes Centrality (evCe
 - MpdGlobalPolarizationMC: for testing the simulation and the performance of polarization extraction method on MCTracks
 - MpdGlobalPolarizationRECO: for the polarization analysis of fully reconstructed Lambda ($`\Lambda`$) hyperons
 
+The wagon is intended to work with datasets containing polarization (e.g. Request 30).
 The reconstruction of hyperons is largely based on the code by A. Zinchenko (Hyperons wagon), with modification to include the necessary information for polarization reconstruction.
 ## [Overview (MpdGlobalPolarizationMC)](Description_WagonMC.md)
 

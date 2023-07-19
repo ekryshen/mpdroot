@@ -64,7 +64,7 @@ The main macro to start the wagon is *RunAnalysesRECO.C*, which has following ar
 
 For example:
 ```bash
-root -b -q RunAnalysesMC.C\(\"pGlobalPolRECO\",\"selection\",\"omega2\"\)
+root -b -q RunAnalysesRECO.C\(\"pGlobalPolRECO\",\"selection\",\"omega2\"\)
 ```
 The macro will use the provided list of input files *list.txt* and the corresponding parameter files for the three used wagons (evCentrality, evPlane and globalPolarization).
 
