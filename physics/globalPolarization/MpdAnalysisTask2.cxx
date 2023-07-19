@@ -36,7 +36,7 @@ void MpdAnalysisTask2::readParameters(std::string fname)
          ifs.ignore(999, '\n');
          continue;
       } else {
-	      ifs >> b;
+         ifs >> b;
          mMap.insert({a, b});
       }
    }

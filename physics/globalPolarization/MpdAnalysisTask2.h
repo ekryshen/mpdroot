@@ -18,8 +18,9 @@ public:
    ~MpdAnalysisTask2() {}
 
    /**
-    * @brief reads parameters from given file and stores them in map. parameters can be extracted with param(...) function
-    * 
+    * @brief reads parameters from given file and stores them in map. parameters can be extracted with param(...)
+    * function
+    *
     * @param fname path to file in txt format. the extension .txt must not be written as it will be attached
     */
    void readParameters(std::string fname);
@@ -31,9 +32,9 @@ public:
    void param(std::string name, std::string &param, std::string defaultvalue);
 
    bool printoutparams = true;
-   
-   std::map<std::string, std::string> mMap;
-private:
 
+   std::map<std::string, std::string> mMap;
+
+private:
 };
 #endif
