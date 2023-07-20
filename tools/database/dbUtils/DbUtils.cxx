@@ -10,7 +10,7 @@ using json = nlohmann::json;
 #define DB_UTILS_fNumYLayers 1
 static const std::string TPC_VELOCITY_DETECTOR_NAME = "TPC";
 static const std::string TPC_VELOCITY_PARAMETR_NAME = "TPC_VELOCITY";
-static const std::string TPC_CONST_PARAMETR_NAME = "TPC_CONST";
+static const std::string TPC_CONST_PARAMETR_NAME    = "TPC_CONST";
 bool DbUtils::getTpcVelocityMap(size_t periodID, size_t runID, std::vector<std::vector<std::vector<double>>> &vecRes)
 {
    // define some const
@@ -98,7 +98,8 @@ int DbUtils::setTpcVelocityMap(size_t periodID, size_t runID, std::vector<std::v
    return -1;
 }
 
-json DbUtils::getTpcConsts(size_t periodID, size_t runID){
+json DbUtils::getTpcConsts(size_t periodID, size_t runID)
+{
    UniDbDetectorParameter *pDetectorParameter = UniDbDetectorParameter::GetDetectorParameter(
       TPC_VELOCITY_DETECTOR_NAME, TPC_CONST_PARAMETR_NAME, periodID, runID);
    if (pDetectorParameter == nullptr) {
@@ -112,128 +113,127 @@ json DbUtils::getTpcConsts(size_t periodID, size_t runID){
    }
    return j_out;
 }
-bool DbUtils::setTpcConsts(int sector_count,double sector_phi_rad,double z_min,double drift_length,int timebin_count, double timebin_length, std::vector<int>& row_count,std::vector<double>& pad_height,std::vector<double>& pad_width,std::vector<int>& pad_count,double ypadplane_offset, double ypadplane2padarea_offset, size_t periodID, size_t runID){
+bool DbUtils::setTpcConsts(int sector_count, double sector_phi_rad, double z_min, double drift_length,
+                           int timebin_count, double timebin_length, std::vector<int> &row_count,
+                           std::vector<double> &pad_height, std::vector<double> &pad_width, std::vector<int> &pad_count,
+                           double ypadplane_offset, double ypadplane2padarea_offset, size_t periodID, size_t runID)
+{
    if (UniDbDetector::CheckDetectorExists(TPC_VELOCITY_DETECTOR_NAME) != 1) {
       TString name = "Unknown";
       UniDbDetector::CreateDetector(TPC_VELOCITY_DETECTOR_NAME, &name);
    }
    if (UniDbParameter::CheckParameterExists(TPC_CONST_PARAMETR_NAME) != 1)
       UniDbParameter::CreateParameter(TPC_CONST_PARAMETR_NAME, 17, true);
-  json jsOut       = {};
-  jsOut["version"] = 1.0;
-  jsOut["SECTOR_COUNT"]=sector_count;
-  jsOut["SECTOR_PHI_RAD"]=sector_phi_rad;
-  jsOut["Z_MIN"]=z_min;
-  jsOut["DRIFT_LENGTH"]=drift_length;
-  jsOut["TIMEBIN_COUNT"]=timebin_count;
-  jsOut["TIMEBIN_LENGTH"]=timebin_length;
-  json arrRCount(json::value_t::array);
-  unsigned int i;
-  for (i = 0; i < row_count.size(); i++) {
-    int val = row_count[i];
-    arrRCount.push_back(val);
-  }
-  jsOut["ROW_COUNT"]=arrRCount;
-  json arrPadH(json::value_t::array);
-  for (i = 0; i < pad_height.size(); i++) {
-    double val = pad_height[i];
-    arrPadH.push_back(val);
-  }
-  jsOut["PAD_HEIGHT"]=arrPadH;
-  json arrPadW(json::value_t::array);
-  for (i = 0; i < pad_width.size(); i++) {
-    double val = pad_width[i];
-    arrPadW.push_back(val);
-  }
-  jsOut["PAD_WIDTH"]=arrPadW;
-  json arrPadC(json::value_t::array);
-  for (i = 0; i < pad_count.size(); i++) {
-    int val = pad_count[i];
-    arrPadC.push_back(val);
-  }
-  jsOut["PAD_COUNT"]=arrPadC;
-  jsOut["YPADPLANE_OFFSET"]=ypadplane_offset;
-  jsOut["YPADPLANE2PADAREA_OFFSET"]=ypadplane2padarea_offset;
-  JSONValue               bValue(jsOut);
-  UniDbDetectorParameter *pDetectorParameter = UniDbDetectorParameter::CreateDetectorParameter(
+   json jsOut              = {};
+   jsOut["version"]        = 1.0;
+   jsOut["SECTOR_COUNT"]   = sector_count;
+   jsOut["SECTOR_PHI_RAD"] = sector_phi_rad;
+   jsOut["Z_MIN"]          = z_min;
+   jsOut["DRIFT_LENGTH"]   = drift_length;
+   jsOut["TIMEBIN_COUNT"]  = timebin_count;
+   jsOut["TIMEBIN_LENGTH"] = timebin_length;
+   json         arrRCount(json::value_t::array);
+   unsigned int i;
+   for (i = 0; i < row_count.size(); i++) {
+      int val = row_count[i];
+      arrRCount.push_back(val);
+   }
+   jsOut["ROW_COUNT"] = arrRCount;
+   json arrPadH(json::value_t::array);
+   for (i = 0; i < pad_height.size(); i++) {
+      double val = pad_height[i];
+      arrPadH.push_back(val);
+   }
+   jsOut["PAD_HEIGHT"] = arrPadH;
+   json arrPadW(json::value_t::array);
+   for (i = 0; i < pad_width.size(); i++) {
+      double val = pad_width[i];
+      arrPadW.push_back(val);
+   }
+   jsOut["PAD_WIDTH"] = arrPadW;
+   json arrPadC(json::value_t::array);
+   for (i = 0; i < pad_count.size(); i++) {
+      int val = pad_count[i];
+      arrPadC.push_back(val);
+   }
+   jsOut["PAD_COUNT"]                = arrPadC;
+   jsOut["YPADPLANE_OFFSET"]         = ypadplane_offset;
+   jsOut["YPADPLANE2PADAREA_OFFSET"] = ypadplane2padarea_offset;
+   JSONValue               bValue(jsOut);
+   UniDbDetectorParameter *pDetectorParameter = UniDbDetectorParameter::CreateDetectorParameter(
       TPC_VELOCITY_DETECTOR_NAME, TPC_CONST_PARAMETR_NAME, periodID, runID, periodID, runID, &bValue);
-  return true;
+   return true;
 }
 
- bool DbUtils::parceIntVectorFromJson(std::string jsonDump, std::vector<int>& vec, const char* fieldName){
+bool DbUtils::parceIntVectorFromJson(std::string jsonDump, std::vector<int> &vec, const char *fieldName)
+{
    bool res = false;
    json js;
-   try
-   {
-     js = json::parse(jsonDump);
-   }catch (json::parse_error& e)
-   {
-        std::cerr << "message: " << e.what() << '\n'
-                  << "exception id: " << e.id << '\n'
-                  << "byte position of error: " << e.byte << std::endl;
-        return res;
+   try {
+      js = json::parse(jsonDump);
+   } catch (json::parse_error &e) {
+      std::cerr << "message: " << e.what() << '\n'
+                << "exception id: " << e.id << '\n'
+                << "byte position of error: " << e.byte << std::endl;
+      return res;
    }
    json arr;
-   if(fieldName!=NULL){
-     if(!js.contains(fieldName)){
-        std::cerr<<"DbUtils::parceIntVectorFromJson json has not field "<<fieldName<<std::endl;
-        return res;
-     }
-     arr=js[fieldName];
-   }
-   else
-     arr=js;
-   
-   if(!arr.is_array()){
-	std::cerr<<"DbUtils::parceIntVectorFromJson field "<<fieldName<<" is not array"<<std::endl;
-   	return res;
+   if (fieldName != NULL) {
+      if (!js.contains(fieldName)) {
+         std::cerr << "DbUtils::parceIntVectorFromJson json has not field " << fieldName << std::endl;
+         return res;
+      }
+      arr = js[fieldName];
+   } else
+      arr = js;
+
+   if (!arr.is_array()) {
+      std::cerr << "DbUtils::parceIntVectorFromJson field " << fieldName << " is not array" << std::endl;
+      return res;
    }
    for (int i = 0; i < arr.size(); i++) {
-            int val = arr[i];
-            vec.push_back(val);
+      int val = arr[i];
+      vec.push_back(val);
    }
-   if(vec.size()>0){
-     res=true;
+   if (vec.size() > 0) {
+      res = true;
    }
    return res;
- }
- bool DbUtils::parceDoubleVectorFromJson(std::string jsonDump, std::vector<double>& vec, const char* fieldName){
+}
+bool DbUtils::parceDoubleVectorFromJson(std::string jsonDump, std::vector<double> &vec, const char *fieldName)
+{
    bool res = false;
    json js;
-   try
-   {
-     js = json::parse(jsonDump);
-   }catch (json::parse_error& e)
-   {
-        std::cerr << "message: " << e.what() << '\n'
-                  << "exception id: " << e.id << '\n'
-                  << "byte position of error: " << e.byte << std::endl;
-        return false;
+   try {
+      js = json::parse(jsonDump);
+   } catch (json::parse_error &e) {
+      std::cerr << "message: " << e.what() << '\n'
+                << "exception id: " << e.id << '\n'
+                << "byte position of error: " << e.byte << std::endl;
+      return false;
    }
    json arr;
-   if(fieldName!=NULL){
-     if(!js.contains(fieldName)){
-        std::cerr<<"DbUtils::parceDoubleVectorFromJson json has not field "<<fieldName<<std::endl;
-        return res;
-     }
-     arr=js[fieldName];
-   }
-   else
-     arr=js;
+   if (fieldName != NULL) {
+      if (!js.contains(fieldName)) {
+         std::cerr << "DbUtils::parceDoubleVectorFromJson json has not field " << fieldName << std::endl;
+         return res;
+      }
+      arr = js[fieldName];
+   } else
+      arr = js;
 
-   if(!arr.is_array()){
-        std::cerr<<"DbUtils::parceDoubleVectorFromJson field "<<fieldName<<" is not array"<<std::endl;
-        return res;
+   if (!arr.is_array()) {
+      std::cerr << "DbUtils::parceDoubleVectorFromJson field " << fieldName << " is not array" << std::endl;
+      return res;
    }
    for (int i = 0; i < arr.size(); i++) {
-            double val = arr[i];
-            vec.push_back(val);
+      double val = arr[i];
+      vec.push_back(val);
    }
-   if(vec.size()>0){
-     res=true;
+   if (vec.size() > 0) {
+      res = true;
    }
    return res;
-
- }
+}
 
 // ClassImp(DBUtils)
