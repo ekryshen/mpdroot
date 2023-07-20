@@ -41,6 +41,9 @@ void RunAnalyses(int nEvents = -1, TString inFileList = "list.txt"){
    MpdPairKK pKK("pKK","pKK") ;
    man.AddTask(&pKK) ;
 
+   MpdPairPK pPK("pPK","pPK") ;
+   man.AddTask(&pPK) ;
+
    man.Process() ;
 
 }

@@ -167,18 +167,18 @@ public:
    }
 
    // ECAL
-   float GetEp() const { return fEp; }
-   float GetEt() const { return fEt; }
-   float GetEl() const { return fEl; }
-   int   GetEi() const { return fEi; }
+   float GetTrackECALEn() const { return fEp; }
+   float GetTrackECALTime() const { return fEt; }
+   float GetTrackECALLength() const { return fEl; }
+   int   GetTrackECALIndex() const { return fEi; }
    // Track-cluster matching in sigmal
    float GetECALDphiSigma() const { return fEcalDphiSigma; }
    float GetECALDzSigma() const { return fEcalDzSigma; }
 
-   void SetEp(float ep) { fEp = ep; }
-   void SetEt(float ep) { fEt = ep; }
-   void SetEl(float ep) { fEl = ep; }
-   void SetEi(int ep) { fEi = ep; }
+   void SetTrackECALEn(float ep) { fEp = ep; }
+   void SetTrackECALTime(float ep) { fEt = ep; }
+   void SetTrackECALLength(float ep) { fEl = ep; }
+   void SetTrackECALIndex(int ep) { fEi = ep; }
 
    void SetEcalMatching(float dphi, float dz)
    {

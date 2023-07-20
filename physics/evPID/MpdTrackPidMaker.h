@@ -29,6 +29,10 @@ protected:
    float dEdx_sigma_Pi(float dEdx, float mom) const;
    float dEdx_sigma_K(float dEdx, float mom) const;
    float dEdx_sigma_P(float dEdx, float mom) const;
+   float dEdx_sigma_De(float dEdx, float mom) const;
+   float dEdx_sigma_Tr(float dEdx, float mom) const;
+   float dEdx_sigma_He3(float dEdx, float mom) const;
+   float dEdx_sigma_He4(float dEdx, float mom) const;
 
    float TofdPhiMatch(int charge, float pt, float dphi) const;
    float TofdZedMatch(float pt, float dzed) const;
@@ -36,6 +40,10 @@ protected:
    float Beta_sigma_Pi(float beta, float mom) const;
    float Beta_sigma_K(float beta, float mom) const;
    float Beta_sigma_P(float beta, float mom) const;
+   float Beta_sigma_De(float beta, float mom) const;
+   float Beta_sigma_Tr(float beta, float mom) const;
+   float Beta_sigma_He3(float beta, float mom) const;
+   float Beta_sigma_He4(float beta, float mom) const;
 
    float EmcdPhiMatch(int charge, float pt, float dphi) const;
    float EmcdZedMatch(float pt, float dzed) const;
@@ -67,12 +75,20 @@ private:
    TH2F *mhTPCPi      = nullptr;
    TH2F *mhTPCK       = nullptr;
    TH2F *mhTPCP       = nullptr;
+   TH2F *mhTPCDe      = nullptr;
+   TH2F *mhTPCTr      = nullptr;
+   TH2F *mhTPCHe3     = nullptr;
+   TH2F *mhTPCHe4     = nullptr;
    TH2F *mhTOFsdPhi   = nullptr;
    TH2F *mhTOFsdZed   = nullptr;
    TH2F *mhTOFEl      = nullptr;
    TH2F *mhTOFPi      = nullptr;
    TH2F *mhTOFK       = nullptr;
    TH2F *mhTOFP       = nullptr;
+   TH2F *mhTOFDe      = nullptr;
+   TH2F *mhTOFTr      = nullptr;
+   TH2F *mhTOFHe3     = nullptr;
+   TH2F *mhTOFHe4     = nullptr;
    TH2F *mhECALsdPhi  = nullptr;
    TH2F *mhECALsdZed  = nullptr;
    TH2F *mhEP         = nullptr;

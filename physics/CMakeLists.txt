@@ -8,6 +8,8 @@ add_subdirectory(photons)
 
 add_subdirectory(pairKK)
 
+add_subdirectory(pairPK)
+
 add_subdirectory(evCentrality)
 
 add_subdirectory(evPlane)
@@ -15,6 +17,7 @@ add_subdirectory(evPlane)
 add_subdirectory(evPID)
 
 add_subdirectory(globalPolarization)
+
 
 
 # Create a library called "MpdPhysics" which includes the source files given in the array.
