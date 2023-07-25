@@ -368,6 +368,10 @@ InitStatus MpdTpcTracker::Init() {
       config.PerfPlotToolEtaMin,
       config.PerfPlotToolEtaMax);
 
+  fNTruth      = 0;
+  fNFake       = 0;
+  fNRealTracks = 0;
+
   std::cout << "[MpdTpcTracker::Init]: Finished" << std::endl;
   return kSUCCESS;
 }
@@ -429,12 +433,13 @@ void MpdTpcTracker::Exec(Option_t *option) {
   convertTracks(fHits, fTracks, trajectories);
 
 
-  // Path with dumped trackIds for efficiency calculation
+  // Here must be a path with dumped trackIds for efficiency calculation.
   std::string pathWithTrackIds;
 
   Bool_t onlyCertainTracks = true;
   runPerformance(
       fEffPt, fEffEta,
+      fNTruth, fNFake, fNRealTracks,
       pathWithTrackIds,
       fOutPath,
       eventCounter, trajectories,

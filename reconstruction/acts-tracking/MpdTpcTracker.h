@@ -49,6 +49,11 @@ private:
 
   TEfficiency *fEffPt;    // Add delete memory
   TEfficiency *fEffEta;   // Add delete memory
+
+  Int_t fNTruth;
+  Int_t fNFake;
+  Int_t fNRealTracks;
+
   const BaseTpcSectorGeo &fSecGeo;
   std::string fOutPath;
   ActsExamples::CKFPerformanceWriter *fPerfWriter;

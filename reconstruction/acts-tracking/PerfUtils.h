@@ -18,6 +18,9 @@
 void runPerformance(
     TEfficiency *effPt,
     TEfficiency *effEta,
+    Int_t &nTruth,
+    Int_t &nFake,
+    Int_t &nRealTracks,
     std::string inPath,
     std::string outPath,
     Int_t eventNumber,

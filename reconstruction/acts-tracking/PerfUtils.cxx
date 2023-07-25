@@ -204,9 +204,43 @@ std::unordered_map<Int_t, Mpd::Tpc::ProtoTrack> calcRealTracks(
   return tracks;
 }
 
+std::tuple<Int_t, Int_t, Int_t> changeTotalNFake(
+    std::map<Int_t, std::pair<Int_t, Int_t>> trackIdToTruthFakeMap,
+    Int_t &nTruthT,
+    Int_t &nFakeT,
+    Int_t &nRealTracksT) {
+  Int_t nTruth      = 0;
+  Int_t nFake       = 0;
+  Int_t nRealTracks = 0;
+  for (auto &[trackId, truthFakePair] : trackIdToTruthFakeMap) {
+    nTruth += truthFakePair.first;
+    nFake  += truthFakePair.second;
+    nRealTracks++;
+  }
+  nTruthT      += nTruth;
+  nFakeT       += nFake;
+  nRealTracksT += nRealTracks;
+  return std::make_tuple(nTruth, nFake, nRealTracks);
+}
+
+void printFake(Int_t nTruth,
+               Int_t nFake,
+               Int_t nRealTracks,
+               std::string prefix) {
+  std::cout << prefix << std::endl <<
+      "    truth track candidates:" << nTruth                 << std::endl <<
+      "    fake track candidates: " << nFake                  << std::endl <<
+      "    n real tracks:         " << nRealTracks            << std::endl <<
+      "    fake / real:           " << 1.*nFake / nRealTracks << std::endl <<
+      "    fake / truth:          " << 1.*nFake / nTruth      << std::endl;
+}
+
 void runPerformance(
     TEfficiency *effPt,
     TEfficiency *effEta,
+    Int_t &nTruthT,
+    Int_t &nFakeT,
+    Int_t &nRealTracksT,
     std::string inPath,
     std::string outPath,
     Int_t eventNumber,
@@ -218,6 +252,9 @@ void runPerformance(
     Bool_t onlySelectedTracks) {
   auto trackIds = downloadTrackIds(eventNumber, inPath);
   std::map<Int_t, Bool_t> trackIdToRecoMap;
+
+  // trackId -> (the number of truth reco, the number of fake tracks)
+  std::map<Int_t, std::pair<Int_t, Int_t>> trackIdToTruthFakeMap;
 
   auto realTracks = calcRealTracks(hits);
 
@@ -234,6 +271,7 @@ void runPerformance(
     Bool_t needStoreTrack = trackIsSelected && lenOk;
     if (needStoreTrack) {
       trackIdToRecoMap[trackId] = false;
+      trackIdToTruthFakeMap[trackId] = std::make_pair(0, 0);
     }
   }
 
@@ -247,13 +285,18 @@ void runPerformance(
       continue;
     }
     // Skip short tracks.
-    if (realTracks.at(majTrackId).size() < measurementsMin) {
+    if (track.size() < measurementsMin) {
       continue;
     }
-
-    trackIdToRecoMap[majTrackId] =
-        trackIdToRecoMap[majTrackId] ||
+    Bool_t isReco =
         evalIsReco(track, hits, majTrackId, measurementsMin, truthMatchProbMin);
+    trackIdToRecoMap[majTrackId] = trackIdToRecoMap[majTrackId] || isReco;
+
+    if (isReco) {
+      trackIdToTruthFakeMap[majTrackId].first++;
+    } else {
+      trackIdToTruthFakeMap[majTrackId].second++;
+    }
   }
 
   printEff(trackIdToRecoMap,
@@ -269,6 +312,13 @@ void runPerformance(
 
   printEff("Total efficiency (effPt): ",  effPt);
   printEff("Total efficiency (effEta): ", effEta);
+
+  auto [nTruth, nFake, nRealTracks] =
+      changeTotalNFake(trackIdToTruthFakeMap, nTruthT, nFakeT, nRealTracksT);
+  printFake(nTruth, nFake, nRealTracks,
+      "Fake stat for event: " + std::to_string(eventNumber));
+  printFake(nTruthT, nFakeT, nRealTracksT,
+      "Fake stat for all events: ");
 
   saveToRoot(effPt, effEta, outPath + "/eff.root");
 }
