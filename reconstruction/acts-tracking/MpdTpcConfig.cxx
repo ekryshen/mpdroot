@@ -164,6 +164,7 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
   trackFinding.newHitsRatio = NewHitsRatio;
   trackFinding.spacePointsID = SpacePointsID;
   trackFinding.dumpData = DumpData;
+  trackFinding.postProcess = PostProcess;
 }
 
 ActsExamples::CKFPerformanceWriter::Config Config::perfWriterCfg(

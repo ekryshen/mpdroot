@@ -349,7 +349,8 @@ void TrackFinding::constructTrackCandidates(
     }
 
     auto ratio = static_cast<Double_t>(nNewHits) / track.size();
-    if (ratio >= m_config.newHitsRatio && nSegments > 0) {
+    if (!m_config.postProcess ||
+        (ratio >= m_config.newHitsRatio && nSegments > 0)) {
       protoTracks.push_back(track);
       std::for_each(track.begin(), track.end(), [&](auto hitIndex) {
         coverage.insert(hitIndex);

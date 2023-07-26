@@ -83,9 +83,12 @@ public:
     /// Coverage ratio (new hits in a track / track size).
     Double_t newHitsRatio;
 
-    // Dump options.
     /// Whether to dump prototracks to file.
     Bool_t dumpData;
+
+    /// Whether to run post-processing of found tracks to filter them.
+    Bool_t postProcess;
+
     /// Storage ID for SpacePoints.
     std::string spacePointsID;
     std::string outPath;

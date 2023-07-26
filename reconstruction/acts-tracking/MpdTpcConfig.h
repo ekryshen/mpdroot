@@ -137,6 +137,7 @@ struct Config final {
   static constexpr auto TrackMinLength      = 4u;
   static constexpr auto NewHitsInRow        = 3u;
   static constexpr auto NewHitsRatio        = 0.25;
+  static constexpr auto PostProcess         = true;
 
   //===--------------------------------------------------------------------===//
   // Performance writer
