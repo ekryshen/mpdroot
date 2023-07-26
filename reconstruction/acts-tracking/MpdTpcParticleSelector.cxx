@@ -38,33 +38,50 @@ namespace Mpd::Tpc {
       && "Missing output hit-particles map collection");
   }
 
+  // Get barcodes of particles.
+  std::set<ActsFatras::Barcode> getParticleIds(
+      const ActsExamples::SimParticleContainer &particles) {
+    std::set<ActsFatras::Barcode> result;
+    for (auto particle : particles) {
+      ActsFatras::Barcode particleId = particle.particleId();
+      result.insert(particleId);
+    }
+    return result;
+  }
+
+  // Make a selection of hits and hitParticlesMap
+  // based on already selected particles.
   std::pair<InputHitContainer, ActsExamples::IndexMultimap<ActsFatras::Barcode>>
       selectHitsAndHitParticlesMap(
           const InputHitContainer &hits,
           const ActsExamples::IndexMultimap<ActsFatras::Barcode>
               &hitParticlesMap,
-          const ActsExamples::SimParticleContainer &particles) {
-    InputHitContainer selectedHits;
+          const std::set<ActsFatras::Barcode> &particlesIds) {
+
     ActsExamples::IndexMultimap<ActsFatras::Barcode> selectedHitParticlesMap;
+    InputHitContainer selectedHits;
 
-    size_t nHits = hits.size();
-    selectedHits.reserve(nHits);
+    Int_t iselectedHit = 0;
+    Int_t ihit = -1;
+    for (auto hit : hits) {
+      ihit++;
 
-    size_t newIndex = 0;
-    std::set<size_t> hitAdded;
-    std::map<size_t, size_t> oldNewIndexMap;
+      Bool_t needAddHit = false;
 
-    for (const auto &[hitIndex, particleId] : hitParticlesMap) {
-      if (particles.find(particleId) == particles.end()) {
-        continue;
+      // Loop over multimap particlesIds[ihit]
+      auto pairs = hitParticlesMap.equal_range(ihit);
+      for (auto hitParticle = pairs.first; hitParticle != pairs.second;
+          hitParticle++) {
+        ActsFatras::Barcode particleId = hitParticle->second;
+        if (particlesIds.count(particleId) == 0) {
+          continue;
+        }
+        selectedHitParticlesMap.emplace(iselectedHit++, particleId);
+        needAddHit = true;
       }
-      if (hitAdded.count(hitIndex) == 0) {
-        auto hit = hits.at(hitIndex);
+      if (needAddHit) {
         selectedHits.push_back(hit);
-        hitAdded.insert(hitIndex);
-        oldNewIndexMap[hitIndex] = newIndex++;
       }
-      selectedHitParticlesMap.emplace(oldNewIndexMap[hitIndex], particleId);
     }
     return std::make_pair(selectedHits, selectedHitParticlesMap);
   }
@@ -118,26 +135,37 @@ namespace Mpd::Tpc {
           (not m_config.primaryParticlesOnly or (particleId.generation() == 0));
     };
 
-    // create prototracks for all input particles
-    for (const auto& particle : inputParticles) {
-      if (isValidparticle(particle)) {
-        selectedParticles.insert(particle);
-      }
-    }
+    InputHitContainer selectedHits;
+    ActsExamples::IndexMultimap<ActsFatras::Barcode> selectedMap;
 
     const auto& hits = context.eventStore.get<InputHitContainer>(
         m_config.inputSimHits);
 
-    auto [selectedHits, selectedHitParticlesMap] = selectHitsAndHitParticlesMap(
-        hits,
-        hitParticlesMap,
-        selectedParticles);
-
+    if (m_config.selectorEnabled) {
+      // Create prototracks for all input particles
+      for (const auto& particle : inputParticles) {
+        if (isValidparticle(particle)) {
+          selectedParticles.insert(particle);
+        }
+      }
+      std::set<ActsFatras::Barcode> selectedParticleIds =
+          getParticleIds(selectedParticles);
+      auto hitMapPair = selectHitsAndHitParticlesMap(
+          hits,
+          hitParticlesMap,
+          selectedParticleIds);
+      selectedHits = std::move(hitMapPair.first);
+      selectedMap  = std::move(hitMapPair.second);
+    } else {
+      selectedParticles = std::move(inputParticles);
+      selectedHits      = std::move(hits);
+      selectedMap       = std::move(hitParticlesMap);
+    }
     context.eventStore.add(seedConfig.outputParticles,
         std::move(selectedParticles));
     context.eventStore.add(m_config.outputSimHits,std::move(selectedHits));
     context.eventStore.add(m_config.outputHitsParticlesMap,
-        std::move(selectedHitParticlesMap));
+        std::move(selectedMap));
 
     return ActsExamples::ProcessCode::SUCCESS;
   }

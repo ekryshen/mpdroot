@@ -288,8 +288,8 @@ ActsExamples::IndexMultimap<ActsFatras::Barcode> createHitToParticlesMap(
   ActsExamples::IndexMultimap<ActsFatras::Barcode> hitToParticlesMap;
 
   Int_t nHits = hits.size();
-  for (Int_t i = 0; i < nHits; i++) {
-    auto hit = hits.at(i);
+  for (Int_t ihit = 0; ihit < nHits; ihit++) {
+    auto hit = hits.at(ihit);
     auto trackId = hit.trackId;
 
     if (trackIdToBarcodeMap.count(trackId) == 0) {
@@ -299,7 +299,7 @@ ActsExamples::IndexMultimap<ActsFatras::Barcode> createHitToParticlesMap(
       continue;
     }
     auto barcode = trackIdToBarcodeMap.at(trackId);
-    hitToParticlesMap.emplace(i, barcode);
+    hitToParticlesMap.emplace(ihit, barcode);
   }
   return hitToParticlesMap;
 }
@@ -432,10 +432,11 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
   convertTracks(fHits, fTracks, trajectories);
 
-
-  // Here must be a path with dumped trackIds for efficiency calculation.
+  // There must be a path to files with dumped trackIds
+  // to calculate efficiency for tracks with this trackIds only.
   std::string pathWithTrackIds;
 
+  // If onlyCertainTracks then calculate efficiency only for certain trackIds.
   Bool_t onlyCertainTracks = true;
   runPerformance(
       fEffPt, fEffEta,

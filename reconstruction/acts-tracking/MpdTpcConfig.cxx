@@ -26,14 +26,18 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
   assert(referenceSurface && "Missing reference surface");
 
   // Selecting particles.
+  particleSelector.selectorEnabled = SelectorEnabled;
+
   particleSelector.truthSeedSelectorConfig.inputParticles = ParticlesID;
   particleSelector.truthSeedSelectorConfig.inputMeasurementParticlesMap =
       HitParticlesMapID;
+  particleSelector.inputSimHits = SimHitsID;
+
   particleSelector.truthSeedSelectorConfig.outputParticles =
       SelectedParticlesID;
   particleSelector.outputHitsParticlesMap = SelectedHitParticlesMapID;
-  particleSelector.inputSimHits = SimHitsID;
   particleSelector.outputSimHits = SelectedSimHitsID;
+
   particleSelector.primaryParticlesOnly = PrimaryParticlesOnly;
   particleSelector.truthSeedSelectorConfig.rhoMin = SelectorRmin;
   particleSelector.truthSeedSelectorConfig.rhoMax = SelectorRmax;

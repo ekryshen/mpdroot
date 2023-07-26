@@ -53,6 +53,7 @@ struct Config final {
   // Particle selector
   //===--------------------------------------------------------------------===//
 
+  static constexpr auto SelectorEnabled     =  true;
   static constexpr auto PrimaryParticlesOnly = false;
   // Truth particle kinematic cuts.
   static constexpr auto SelectorRmin        =  Detector::Rmin;      // ~ 0.4 m
@@ -136,7 +137,6 @@ struct Config final {
   static constexpr auto TrackMinLength      = 4u;
   static constexpr auto NewHitsInRow        = 3u;
   static constexpr auto NewHitsRatio        = 0.25;
-
 
   //===--------------------------------------------------------------------===//
   // Performance writer

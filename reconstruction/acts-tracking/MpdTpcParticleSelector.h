@@ -27,6 +27,7 @@ public:
     std::string outputSimHits;
     std::string outputHitsParticlesMap;
 
+    Bool_t selectorEnabled;
     Bool_t primaryParticlesOnly;
   };
 
