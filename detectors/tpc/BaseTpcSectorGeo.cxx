@@ -24,16 +24,16 @@ BaseTpcSectorGeo::~BaseTpcSectorGeo() {}
 
 int BaseTpcSectorGeo::SectorNumberFromGlobal(const TVector3 &globalXYZ)
 {
-   double phiGlobalNormalized = TMath::ATan2(globalXYZ.X(), globalXYZ.Y()) / SECTOR_PHI_RAD;
+   double phiGlobalNormalized = TMath::ATan2(globalXYZ.X(), globalXYZ.Y()) / sectorPhiRad;
    // convention: 105 deg is start of Sector 0, 75 deg is start of Sector 1, ..
    const double PHI_SHIFT_NORMALIZED = 3.5;
    int          iSector;
    if (phiGlobalNormalized > PHI_SHIFT_NORMALIZED)
-      iSector = static_cast<int>(PHI_SHIFT_NORMALIZED - phiGlobalNormalized + SECTOR_COUNT_HALF);
+      iSector = static_cast<int>(PHI_SHIFT_NORMALIZED - phiGlobalNormalized + sectorCountHalf);
    else
       iSector = static_cast<int>(PHI_SHIFT_NORMALIZED - phiGlobalNormalized);
 
-   if (globalXYZ.Z() < 0.0) iSector += SECTOR_COUNT_HALF;
+   if (globalXYZ.Z() < 0.0) iSector += sectorCountHalf;
 
    return iSector;
 }
@@ -44,12 +44,12 @@ TVector2 BaseTpcSectorGeo::PadRow2Local(double pad, double row)
 {
    double x, y;
    int    rowInt = static_cast<int>(row);
-   if (row > ROW_COUNT[inner]) {
-      y = YPADAREA_LENGTH[inner] + (row - ROW_COUNT[inner]) * PAD_HEIGHT[outer];
-      x = (pad - PAD_COUNT[rowInt]) * PAD_WIDTH[outer];
+   if (row > rowCount[inner]) {
+      y = yPadAreaLength[inner] + (row - rowCount[inner]) * padHeight[outer];
+      x = (pad - padCount[rowInt]) * padWidth[outer];
    } else {
-      y = row * PAD_HEIGHT[inner];
-      x = (pad - PAD_COUNT[rowInt]) * PAD_WIDTH[inner];
+      y = row * padHeight[inner];
+      x = (pad - padCount[rowInt]) * padWidth[inner];
    }
 
    return {x, y};
@@ -71,36 +71,36 @@ std::pair<double, double> BaseTpcSectorGeo::Local2PadRow(const TVector3 &localXY
    const std::pair<double, double> PAD_OUTOFRANGE(1e4, 0);
 
    PadArea currentPadArea;
-   if (localXYZ.Y() >= YPADAREA_LOCAL[lowerEdge] && localXYZ.Y() <= YPADAREA_LOCAL[midBoundary]) {
+   if (localXYZ.Y() >= yPadAreaLocal[lowerEdge] && localXYZ.Y() <= yPadAreaLocal[midBoundary]) {
       currentPadArea = inner;
-      row            = localXYZ.Y() / PAD_HEIGHT[inner];
-   } else if (localXYZ.Y() > YPADAREA_LOCAL[midBoundary] && localXYZ.Y() < YPADAREA_LOCAL[upperEdge]) {
+      row            = localXYZ.Y() / padHeight[inner];
+   } else if (localXYZ.Y() > yPadAreaLocal[midBoundary] && localXYZ.Y() < yPadAreaLocal[upperEdge]) {
       currentPadArea = outer;
-      row            = ROW_COUNT[inner] + (localXYZ.Y() - YPADAREA_LENGTH[inner]) / PAD_HEIGHT[outer];
+      row            = rowCount[inner] + (localXYZ.Y() - yPadAreaLength[inner]) / padHeight[outer];
    } else
       return ROW_OUTOFRANGE;
 
-   pad = localXYZ.X() / PAD_WIDTH[currentPadArea] + PAD_COUNT[static_cast<int>(row)];
+   pad = localXYZ.X() / padWidth[currentPadArea] + padCount[static_cast<int>(row)];
 
-   if (pad < 0 || pad >= 2 * PAD_COUNT[static_cast<int>(row)]) return PAD_OUTOFRANGE;
+   if (pad < 0 || pad >= 2 * padCount[static_cast<int>(row)]) return PAD_OUTOFRANGE;
 
    return std::make_pair(pad, row);
 }
 
 //__________________________________________________________________________
 
-TVector3 BaseTpcSectorGeo::Global2Local(const TVector3 &globalXYZ, int &iSector)
+TVector3 BaseTpcSectorGeo::Global2Local(const TVector3 &globalXYZ, int iSector)
 {
    iSector = SectorNumberFromGlobal(globalXYZ);
 
    TVector3 localXYZ(globalXYZ);
 
-   localXYZ.RotateZ(SECTOR_PHI_RAD * iSector);
+   localXYZ.RotateZ(sectorPhiRad * iSector);
 
    if (localXYZ.Z() > 0) localXYZ.RotateY(TMath::Pi());
 
-   localXYZ.SetY(localXYZ.Y() - YPADAREA_LOWEREDGE);
-   localXYZ.SetZ(localXYZ.Z() + DRIFT_LENGTH);
+   localXYZ.SetY(localXYZ.Y() - yPadAreaLowerEdge);
+   localXYZ.SetZ(localXYZ.Z() + driftLength);
 
    return localXYZ;
 }
@@ -122,12 +122,12 @@ TVector3 BaseTpcSectorGeo::Local2Global(const TVector3 &localXYZ, int iSector)
 
    TVector3 globalXYZ(localXYZ);
 
-   globalXYZ.SetZ(localXYZ.Z() - DRIFT_LENGTH);
-   globalXYZ.SetY(localXYZ.Y() + YPADAREA_LOWEREDGE);
+   globalXYZ.SetZ(localXYZ.Z() - driftLength);
+   globalXYZ.SetY(localXYZ.Y() + yPadAreaLowerEdge);
 
-   if (iSector < SECTOR_COUNT_HALF) globalXYZ.RotateY(TMath::Pi());
+   if (iSector < sectorCountHalf) globalXYZ.RotateY(TMath::Pi());
 
-   globalXYZ.RotateZ(-SECTOR_PHI_RAD * iSector);
+   globalXYZ.RotateZ(-sectorPhiRad * iSector);
 
    return globalXYZ;
 }
