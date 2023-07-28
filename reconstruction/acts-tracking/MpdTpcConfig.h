@@ -69,8 +69,10 @@ struct Config final {
   static constexpr auto SelectorPtMin       =  0.02_GeV;            // 0.02 < Pt < 10 GeV
   static constexpr auto SelectorPtMax       =  10._GeV;
   static constexpr auto KeepNeutral         =  false;
+
   /// Requirement on number of recorded hits.
   static constexpr auto NHitsMin            =  9;
+
   static constexpr auto NHitsMax            =  std::numeric_limits<size_t>::max();
 
   //===--------------------------------------------------------------------===//
@@ -146,7 +148,7 @@ struct Config final {
   static constexpr auto PerfFilePath        = "performance_ckf.root";
   /// Min reco-truth matching probability.
   static constexpr auto TruthMatchProbMin   = 0.5;
-  static constexpr auto MeasurementsMin     = 9u;
+  static constexpr auto MeasurementsMin     = NHitsMin;
   static constexpr auto PerfPtMin           = SelectorPtMin;
 
   // Parameters for EffPlotTool, FakeRatePlotTool,

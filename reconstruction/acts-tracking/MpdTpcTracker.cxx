@@ -243,15 +243,39 @@ TrackIdToBarcodeMap createTrackIdToBarcodeMap(TClonesArray *mcTracks) {
   return trackIdToBarcodeMap;
 }
 
+/// Selects only those tracks that have hits.
+std::set<Int_t> findTracksWithHits(
+    const Mpd::Tpc::InputHitContainer &hits,
+    TClonesArray *mcTracks,
+    Bool_t onlyPrimary) {
+  std::set<Int_t> trackIds;
+  for (auto hit : hits) {
+    auto trackId = hit.trackId;
+    auto mcTrack = static_cast<MpdMCTrack*>(mcTracks->UncheckedAt(trackId));
+    if ((onlyPrimary == false) || (mcTrack->GetMotherId() == -1)) {
+      trackIds.insert(trackId);
+    }
+  }
+  return trackIds;
+}
+
 /// Get input particles
 ActsExamples::SimParticleContainer createInputParticles(
     TClonesArray *mcTracks,
-    const TrackIdToBarcodeMap &trackIdToBarcodeMap) {
+    const TrackIdToBarcodeMap &trackIdToBarcodeMap,
+    const Mpd::Tpc::InputHitContainer &hits) {
 
   ActsExamples::SimParticleContainer particles;
 
+  auto onlyPrimary = false;
+  std::set<Int_t> trackIdsWithHits = findTracksWithHits(
+      hits, mcTracks, onlyPrimary);
+
   Int_t nMC = mcTracks->GetEntriesFast();
   for (size_t i = 0; i < nMC; i++) {
+    if (trackIdsWithHits.find(i) == trackIdsWithHits.end()) {
+      continue;
+    }
     auto track = static_cast<MpdMCTrack*>(mcTracks->UncheckedAt(i));
 
     if (trackIdToBarcodeMap.count(i) == 0) {
@@ -401,7 +425,8 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
   // Get the information necessary to collect Acts statistics.
   auto trackIdToBarcodeMap = createTrackIdToBarcodeMap(fMCTracks);
-  auto inputParticles = createInputParticles(fMCTracks, trackIdToBarcodeMap);
+  auto inputParticles = createInputParticles(
+      fMCTracks, trackIdToBarcodeMap, hits);
   auto hitToParticlesMap = createHitToParticlesMap(hits, trackIdToBarcodeMap);
 
   // Run the track finding algorithm.
@@ -409,12 +434,13 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
   ActsExamples::WhiteBoard whiteBoard;
   ActsExamples::AlgorithmContext context(0, eventCounter, whiteBoard);
+
   fRunner->execute(hits, inputParticles, hitToParticlesMap,
                    fPerfWriter, context, fOutPath);
 
-    const auto &selectedHits =
-        context.eventStore.get<Mpd::Tpc::InputHitContainer>(
-            config.particleSelector.outputSimHits);
+  const auto &selectedHits =
+      context.eventStore.get<Mpd::Tpc::InputHitContainer>(
+          config.particleSelector.outputSimHits);
 
   // Dump hits to file.
   if (config.DumpData) {
