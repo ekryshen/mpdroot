@@ -12,8 +12,8 @@ bool CheckFileExist(TString fileName){
 
 void RunAnalyses(int nEvents = -1, TString inFileList = "list.txt"){
 
-  //gROOT->LoadMacro("mpdloadlibs.C");
-  //gROOT->ProcessLine("mpdloadlibs()");
+//  gROOT->LoadMacro("mpdloadlibs.C");
+//  gROOT->ProcessLine("mpdloadlibs()");
 
    gSystem->Load("libZdc.so") ;
    gSystem->Load("libEmc.so") ;
@@ -38,11 +38,20 @@ void RunAnalyses(int nEvents = -1, TString inFileList = "list.txt"){
 //   MpdConvPi0 pDef("pi0Def","ConvDef") ; //name, parametes file
 //   man.AddTask(&pDef) ;
 
+//   MpdGlobalPolarizationRECO pGlobalPol("pGlobalPolRECO","pGlobalPolRECO","selection","omega2") ;
+//   man.AddTask(&pGlobalPol) ;
+
    MpdPairKK pKK("pKK","pKK") ;
    man.AddTask(&pKK) ;
 
    MpdPairPK pPK("pPK","pPK") ;
    man.AddTask(&pPK) ;
+
+   MpdPairPiK pPiK("pPiK","pPiK") ;
+   man.AddTask(&pPiK) ;
+
+   MpdPairPiPi pPiPi("pPiPi","pPiPi") ;
+   man.AddTask(&pPiPi) ;
 
    man.Process() ;
 
