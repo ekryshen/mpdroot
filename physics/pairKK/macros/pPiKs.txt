@@ -1,0 +1,21 @@
+#-------Parameters used for analysis------
+# Event selection: 
+mZvtxCut     130 //  cut on vertex z coordinate
+# PID cuts: 
+mPIDsigTPC   2  // dEdx PID parameters
+mPIDsigTOF   2  // dEdx PID parameters
+mNofHitsCut  10  // minimum number of hits for a track
+mEtaCut      1.0  // maximum pseudorapidity for a track
+mPtminCut    0.1  // minimum pt for a track
+mDCACut      2.0  // maximum DCA for a track
+# Pair cuts: 
+mYCut        0.5  // pair rapidity cut
+# Ks cuts:
+mChi2PionKs 7.0  // minimum Chi2-to-PV for pion from Ks
+mKsEtaCut   1.2  // maximum pseudorapidity for Ks
+mChi2Ks     3.0  // maximum Chi2 for Ks secondary vertex
+mPAKs       0.1  // maximum pointing angle for Ks
+mDecayKs    0.5  // minimum decay distance for Ks
+mDistKs     1.0  // maximum distance between pi-pi in the secondary vertex from Ks
+mNSigmaKs   2.0  // n-sigma selection for Ks candidates
+mWidthKs    5e-3 // width of Ks peak

@@ -1,0 +1,22 @@
+#-------Parameters used for analysis------
+# Event selection: 
+mZvtxCut     130 //  cut on vertex z coordinate
+# PID cuts: 
+mPIDsigTPC   2  // dEdx PID parameters
+mPIDsigTOF   2  // dEdx PID parameters
+mNofHitsCut  10  // minimum number of hits for a track
+mEtaCut      1.0  // maximum pseudorapidity for a track
+mPtminCut    0.1  // minimum pt for a track
+mDCACut      2.0  // maximum DCA for a track
+# Pair cuts: 
+mYCut        0.5  // pair rapidity cut
+# Lambda cuts:
+mChi2PionLam 7.0  // minimum Chi2-to-PV for pion from Lambda
+mChi2ProtLam 3.0  // minimum Chi2-to-PV for proton from Lambda
+mLamEtaCut   1.2  // maximum pseudorapidity for Lambda
+mChi2Lam     3.0  // maximum Chi2 for Lambda secondary vertex
+mPALam       0.1  // maximum pointing angle for Lambda
+mDecayLam    0.5  // minimum decay distance for Lambda
+mDistLam     1.0  // maximum distance between p-pi in the secondary vertex from Lambda
+mNSigmaLam   2.0  // n-sigma selection for Lambda candidates
+mWidthLam    2e-3 // width of Lambda peak

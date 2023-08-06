@@ -53,6 +53,12 @@ void RunAnalyses(int nEvents = -1, TString inFileList = "list.txt"){
    MpdPairPiPi pPiPi("pPiPi","pPiPi") ;
    man.AddTask(&pPiPi) ;
 
+   MpdPairPiLambda pPiLambda("pPiLambda","pPiLambda") ;
+   man.AddTask(&pPiLambda) ;
+
+   MpdPairPiKs pPiKs("pPiKs","pPiKs") ;
+   man.AddTask(&pPiKs) ;
+
    man.Process() ;
 
 }
