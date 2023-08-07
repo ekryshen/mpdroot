@@ -29,7 +29,8 @@ void runPerformance(
     TClonesArray *mcTracks,
     Int_t measurementsMin,
     Double_t truthMatchProbMin,
-    Bool_t onlySelectedTracks);
+    Bool_t onlySelectedTracks,
+    std::string outFile);
 
 Int_t calcNumberPriHits(const Mpd::Tpc::InputHitContainer &hits,
                         TClonesArray *mcTracks);

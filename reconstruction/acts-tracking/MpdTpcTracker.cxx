@@ -458,21 +458,16 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
   convertTracks(fHits, fTracks, trajectories);
 
-  // There must be a path to files with dumped trackIds
-  // to calculate efficiency for tracks with this trackIds only.
-  std::string pathWithTrackIds;
-
-  // If onlyCertainTracks then calculate efficiency only for certain trackIds.
-  Bool_t onlyCertainTracks = true;
   runPerformance(
       fEffPt, fEffEta,
       fNTruth, fNFake, fNRealTracks,
-      pathWithTrackIds,
+      config.PathWithTrackIds,
       fOutPath,
       eventCounter, trajectories,
       selectedHits, fMCTracks,
-      config.MeasurementsMin, config.TruthMatchProbMin,
-      onlyCertainTracks);
+      config.OMeasurementsMin, config.OTruthMatchProbMin,
+      config.OnlyCertainTracks,
+      config.OPerfFilePath);
 
   // Plot graphs if required.
   if constexpr(PlotGraphs) {

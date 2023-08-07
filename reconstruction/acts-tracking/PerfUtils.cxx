@@ -249,7 +249,8 @@ void runPerformance(
     TClonesArray *mcTracks,
     Int_t measurementsMin,
     Double_t truthMatchProbMin,
-    Bool_t onlySelectedTracks) {
+    Bool_t onlySelectedTracks,
+    std::string outFile) {
   auto trackIds = downloadTrackIds(eventNumber, inPath);
   std::map<Int_t, Bool_t> trackIdToRecoMap;
 
@@ -320,6 +321,6 @@ void runPerformance(
   printFake(nTruthT, nFakeT, nRealTracksT,
       "Fake stat for all events: ");
 
-  saveToRoot(effPt, effEta, outPath + "/eff.root");
+  saveToRoot(effPt, effEta, outPath + "/" + outFile);
 }
 

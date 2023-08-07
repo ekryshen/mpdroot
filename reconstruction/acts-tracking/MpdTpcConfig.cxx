@@ -173,8 +173,8 @@ ActsExamples::CKFPerformanceWriter::Config Config::perfWriterCfg(
   result.inputTrajectories = TrajectoriesID;
   result.inputParticles = SelectedParticlesID;
   result.inputMeasurementParticlesMap = SelectedHitParticlesMapID;
-  result.truthMatchProbMin = TruthMatchProbMin;
-  result.nMeasurementsMin = MeasurementsMin;
+  result.truthMatchProbMin = ActsTruthMatchProbMin;
+  result.nMeasurementsMin = ActsMeasurementsMin;
   result.ptMin = PerfPtMin;
 
   ActsExamples::EffPlotTool::Config effConfig;
@@ -263,7 +263,7 @@ ActsExamples::CKFPerformanceWriter::Config Config::perfWriterCfg(
       PerfPlotToolNumMin,
       PerfPlotToolNumMax);
   result.trackSummaryPlotToolConfig = trackSummaryConfig;
-  result.filePath = outPath + "/" + Config::PerfFilePath;
+  result.filePath = outPath + "/" + Config::ActsPerfFilePath;
 
   return result;
 }

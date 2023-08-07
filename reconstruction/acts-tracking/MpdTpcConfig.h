@@ -142,13 +142,13 @@ struct Config final {
   static constexpr auto PostProcess         = true;
 
   //===--------------------------------------------------------------------===//
-  // Performance writer
+  // Performance writer Acts implementation
   //===--------------------------------------------------------------------===//
 
-  static constexpr auto PerfFilePath        = "performance_ckf.root";
+  static constexpr auto ActsPerfFilePath    = "performance_ckf.root";
   /// Min reco-truth matching probability.
-  static constexpr auto TruthMatchProbMin   = 0.5;
-  static constexpr auto MeasurementsMin     = NHitsMin;
+  static constexpr auto ActsTruthMatchProbMin = 0.5;
+  static constexpr auto ActsMeasurementsMin = NHitsMin;
   static constexpr auto PerfPtMin           = SelectorPtMin;
 
   // Parameters for EffPlotTool, FakeRatePlotTool,
@@ -173,6 +173,20 @@ struct Config final {
   static constexpr auto PerfPlotToolNumNBins=  30;
   static constexpr auto PerfPlotToolNumMin  = -0.5;
   static constexpr auto PerfPlotToolNumMax  =  29.5;
+
+  //===--------------------------------------------------------------------===//
+  // Performance writer own implementation
+  //===--------------------------------------------------------------------===//
+
+  static constexpr auto OPerfFilePath       = "eff.root";
+  ///Whether calculate efficiency only for certain trackIds.
+  static constexpr auto OnlyCertainTracks   = false;
+  /// Path to files with saved trackIds.
+  /// Used for calculation efficiency for tracks with certain trackIds only.
+  static constexpr auto PathWithTrackIds    = "";
+  /// Min reco-truth matching probability.
+  static constexpr auto OTruthMatchProbMin  = ActsTruthMatchProbMin;
+  static constexpr auto OMeasurementsMin    = ActsMeasurementsMin;
 
   //===--------------------------------------------------------------------===//
   // System parameters
