@@ -91,7 +91,7 @@ void MpdTrackPidMaker::UserInit()
    fOutputList->Add(mhEM2);
 
    // DCAs
-   cout << "[MpdPairKK]: Reading DCA parameterizations ... " << endl;
+   cout << "[MpdTrackPidMaker]: Reading DCA parameterizations ... " << endl;
 
    // Read-out DCA parameterization
    dcaFile = new TFile("DCAs.root", "READ");
@@ -125,6 +125,12 @@ void MpdTrackPidMaker::ProcessEvent(MpdAnalysisEvent &event)
    TClonesArray *mKalmanTracks   = event.fTPCKalmanTrack;
    TClonesArray *mpdTofMatching  = event.fTOFMatching;
    TObjArray    *mpdEMCClusters  = event.fEMCCluster;
+
+   Bool_t isECAL = kTRUE;
+   if (mpdEMCClusters == nullptr) {
+      cout << "[MpdTrackPidMaker]: No ECAL information found -> no PID for ECAL will be provided " << endl;
+      isECAL = kFALSE;
+   }
 
    int nTracks = mpdGlobalTracks->GetEntriesFast();
 
@@ -285,117 +291,120 @@ void MpdTrackPidMaker::ProcessEvent(MpdAnalysisEvent &event)
       const int rE_bins = 20;
       float     xyzTr[rE_bins][4];
 
-      // slow procedure -> run for tracks identified as electrons in the TPC
-      // if ( fabs(mpdtrack -> GetTPCNSigma(kEl)) < 3.0 )
-      if (fabs(mpdtrack->GetTPCNSigma(kEl)) < 3.0 && fabs(mpdtrack->GetPt()) > 0.09) {
-         if (fabs((*tr->GetParamAtHit())(1, 0)) < 310 && mpdEMCClusters->GetEntries() > 0) {
-            MpdKalmanHit hEnd;
-            hEnd.SetType(MpdKalmanHit::kFixedR);
-            dDmin = 1e9;
+      if (isECAL) {
+         // slow procedure -> run for tracks identified as electrons in the TPC
+         // if ( fabs(mpdtrack -> GetTPCNSigma(kEl)) < 3.0 )
+         if (fabs(mpdtrack->GetTPCNSigma(kEl)) < 3.0 && fabs(mpdtrack->GetPt()) > 0.09) {
+            if (fabs((*tr->GetParamAtHit())(1, 0)) < 310 && mpdEMCClusters->GetEntries() > 0) {
+               MpdKalmanHit hEnd;
+               hEnd.SetType(MpdKalmanHit::kFixedR);
+               dDmin = 1e9;
 
-            for (int l = 0; l < rE_bins; l++) {
-               xyzTr[l][0] = -999;
-               xyzTr[l][1] = -999;
-               xyzTr[l][2] = -999;
-               xyzTr[l][3] = -999;
+               for (int l = 0; l < rE_bins; l++) {
+                  xyzTr[l][0] = -999;
+                  xyzTr[l][1] = -999;
+                  xyzTr[l][2] = -999;
+                  xyzTr[l][3] = -999;
 
-               rCl = rEmin + (rEmax - rEmin) / float(rE_bins) * (0.5 + l);
-               hEnd.SetPos(rCl);
+                  rCl = rEmin + (rEmax - rEmin) / float(rE_bins) * (0.5 + l);
+                  hEnd.SetPos(rCl);
 
-               MpdTpcKalmanTrack tr1(*tr); // new
-               tr1.SetParam(*tr1.GetParamAtHit());
-               tr1.SetParamNew(*tr1.GetParamAtHit());
-               tr1.SetWeight(*tr1.GetWeightAtHit());
-               tr1.SetPos(tr1.GetPosAtHit());
-               tr1.SetPosNew(tr1.GetPos());
-               tr1.SetLength(tr1.GetLengAtHit());
+                  MpdTpcKalmanTrack tr1(*tr); // new
+                  tr1.SetParam(*tr1.GetParamAtHit());
+                  tr1.SetParamNew(*tr1.GetParamAtHit());
+                  tr1.SetWeight(*tr1.GetWeightAtHit());
+                  tr1.SetPos(tr1.GetPosAtHit());
+                  tr1.SetPosNew(tr1.GetPos());
+                  tr1.SetLength(tr1.GetLengAtHit());
 
-               iok = pKF->PropagateToHit(&tr1, &hEnd, kTRUE);
+                  iok = pKF->PropagateToHit(&tr1, &hEnd, kTRUE);
 
-               if (iok) {
-                  phiTr       = tr1.GetParamNew(0) / tr1.GetPosNew();
-                  xyzTr[l][0] = tr1.GetPosNew() * cos(phiTr);
-                  xyzTr[l][1] = tr1.GetPosNew() * sin(phiTr);
-                  xyzTr[l][2] = tr1.GetParamNew(1);
-                  xyzTr[l][3] = tr1.GetParamNew(0) / tr1.GetPosNew();
-                  // cout<<"Track: "<<i<<" attempt: "<<l<<"  ||  "<<xyzTr[l][0]<<" "<<xyzTr[l][1]<<" "<<xyzTr[l][2]<<"
-                  // "<<xyzTr[l][3]<<" R: "<<rCl<<endl;
-               }
+                  if (iok) {
+                     phiTr       = tr1.GetParamNew(0) / tr1.GetPosNew();
+                     xyzTr[l][0] = tr1.GetPosNew() * cos(phiTr);
+                     xyzTr[l][1] = tr1.GetPosNew() * sin(phiTr);
+                     xyzTr[l][2] = tr1.GetParamNew(1);
+                     xyzTr[l][3] = tr1.GetParamNew(0) / tr1.GetPosNew();
+                     // cout<<"Track: "<<i<<" attempt: "<<l<<"  ||  "<<xyzTr[l][0]<<" "<<xyzTr[l][1]<<"
+                     // "<<xyzTr[l][2]<<"
+                     // "<<xyzTr[l][3]<<" R: "<<rCl<<endl;
+                  }
 
-            } // l
+               } // l
 
-            for (Int_t clu = 0; clu < mpdEMCClusters->GetEntries(); ++clu) {
-               MpdEmcClusterKI *EMCCluster = (MpdEmcClusterKI *)mpdEMCClusters->At(clu);
+               for (Int_t clu = 0; clu < mpdEMCClusters->GetEntries(); ++clu) {
+                  MpdEmcClusterKI *EMCCluster = (MpdEmcClusterKI *)mpdEMCClusters->At(clu);
 
-               if (EMCCluster->GetE() / 0.324 < 0.05) continue;
-               if (EMCCluster->GetMultiplicity() < 2) continue;
-               xCl   = EMCCluster->GetX();
-               yCl   = EMCCluster->GetY();
-               zCl   = EMCCluster->GetZ();
-               rCl   = sqrt(xCl * xCl + yCl * yCl);
-               phiCl = TMath::ATan2(yCl, xCl);
+                  if (EMCCluster->GetE() / 0.324 < 0.05) continue;
+                  if (EMCCluster->GetMultiplicity() < 2) continue;
+                  xCl   = EMCCluster->GetX();
+                  yCl   = EMCCluster->GetY();
+                  zCl   = EMCCluster->GetZ();
+                  rCl   = sqrt(xCl * xCl + yCl * yCl);
+                  phiCl = TMath::ATan2(yCl, xCl);
 
-               int tr_bin = int((rCl - rEmin) / (rEmax - rEmin) * float(rE_bins));
-               if (tr_bin > rE_bins) tr_bin = rE_bins;
-               if (tr_bin < 0) tr_bin = 0;
+                  int tr_bin = int((rCl - rEmin) / (rEmax - rEmin) * float(rE_bins));
+                  if (tr_bin > rE_bins) tr_bin = rE_bins;
+                  if (tr_bin < 0) tr_bin = 0;
 
-               xTr   = xyzTr[tr_bin][0];
-               yTr   = xyzTr[tr_bin][1];
-               zTr   = xyzTr[tr_bin][2];
-               phiTr = xyzTr[tr_bin][3];
+                  xTr   = xyzTr[tr_bin][0];
+                  yTr   = xyzTr[tr_bin][1];
+                  zTr   = xyzTr[tr_bin][2];
+                  phiTr = xyzTr[tr_bin][3];
 
-               dD = sqrt(pow(xTr - xCl, 2) + pow(yTr - yCl, 2) + pow(zTr - zCl, 2));
+                  dD = sqrt(pow(xTr - xCl, 2) + pow(yTr - yCl, 2) + pow(zTr - zCl, 2));
 
-               // cout<<"Track: "<<i<<" Clu: "<<clu<<"  ||  "<<xCl<<" "<<yCl<<" "<<zCl<<" "<<phiCl<<" R: "<<rCl<<"
-               // "<<dD<<endl;
+                  // cout<<"Track: "<<i<<" Clu: "<<clu<<"  ||  "<<xCl<<" "<<yCl<<" "<<zCl<<" "<<phiCl<<" R: "<<rCl<<"
+                  // "<<dD<<endl;
 
-               if (dD < dDmin && xTr > -999) {
-                  dDmin = dD;
-                  indTr = clu;
-               } // min
-            }    // clu
+                  if (dD < dDmin && xTr > -999) {
+                     dDmin = dD;
+                     indTr = clu;
+                  } // min
+               }    // clu
 
-            if (indTr > 0) {
-               // Refit for the best match
-               MpdEmcClusterKI *EMCCluster = (MpdEmcClusterKI *)mpdEMCClusters->At(indTr);
-               xCl                         = EMCCluster->GetX();
-               yCl                         = EMCCluster->GetY();
-               zCl                         = EMCCluster->GetZ();
-               rCl                         = sqrt(xCl * xCl + yCl * yCl);
-               phiCl                       = TMath::ATan2(yCl, xCl);
+               if (indTr > 0) {
+                  // Refit for the best match
+                  MpdEmcClusterKI *EMCCluster = (MpdEmcClusterKI *)mpdEMCClusters->At(indTr);
+                  xCl                         = EMCCluster->GetX();
+                  yCl                         = EMCCluster->GetY();
+                  zCl                         = EMCCluster->GetZ();
+                  rCl                         = sqrt(xCl * xCl + yCl * yCl);
+                  phiCl                       = TMath::ATan2(yCl, xCl);
 
-               hEnd.SetPos(rCl);
+                  hEnd.SetPos(rCl);
 
-               MpdTpcKalmanTrack tr1(*tr); // new
-               tr1.SetParam(*tr1.GetParamAtHit());
-               tr1.SetParamNew(*tr1.GetParamAtHit());
-               tr1.SetWeight(*tr1.GetWeightAtHit());
-               tr1.SetPos(tr1.GetPosAtHit());
-               tr1.SetPosNew(tr1.GetPos());
-               tr1.SetLength(tr1.GetLengAtHit());
+                  MpdTpcKalmanTrack tr1(*tr); // new
+                  tr1.SetParam(*tr1.GetParamAtHit());
+                  tr1.SetParamNew(*tr1.GetParamAtHit());
+                  tr1.SetWeight(*tr1.GetWeightAtHit());
+                  tr1.SetPos(tr1.GetPosAtHit());
+                  tr1.SetPosNew(tr1.GetPos());
+                  tr1.SetLength(tr1.GetLengAtHit());
 
-               iok = pKF->PropagateToHit(&tr1, &hEnd, kTRUE);
+                  iok = pKF->PropagateToHit(&tr1, &hEnd, kTRUE);
 
-               if (iok) {
-                  phiTr = tr1.GetParamNew(0) / tr1.GetPosNew();
-                  xTr   = tr1.GetPosNew() * cos(phiTr);
-                  yTr   = tr1.GetPosNew() * sin(phiTr);
-                  zTr   = tr1.GetParamNew(1);
+                  if (iok) {
+                     phiTr = tr1.GetParamNew(0) / tr1.GetPosNew();
+                     xTr   = tr1.GetPosNew() * cos(phiTr);
+                     yTr   = tr1.GetPosNew() * sin(phiTr);
+                     zTr   = tr1.GetParamNew(1);
 
-                  ETr = EMCCluster->GetE();
-                  TTr = EMCCluster->GetTime();
+                     ETr = EMCCluster->GetE();
+                     TTr = EMCCluster->GetTime();
 
-                  emcdPhi = phiTr - phiCl;
-                  if (emcdPhi < -3.14159265359) emcdPhi = emcdPhi + 2 * 3.14159265359;
-                  if (emcdPhi > 3.14159265359) emcdPhi = emcdPhi - 2 * 3.14159265359;
+                     emcdPhi = phiTr - phiCl;
+                     if (emcdPhi < -3.14159265359) emcdPhi = emcdPhi + 2 * 3.14159265359;
+                     if (emcdPhi > 3.14159265359) emcdPhi = emcdPhi - 2 * 3.14159265359;
 
-                  emcdZed = zTr - zCl;
+                     emcdZed = zTr - zCl;
 
-                  LgTr = tr1.GetLength();
-               } // refit
-            }    // indTr > 0
-         }       // 310
-      }          // el
+                     LgTr = tr1.GetLength();
+                  } // refit
+               }    // indTr > 0
+            }       // 310
+         }          // el
+      }
 
       emcsdPhi = EmcdPhiMatch(mpdtrack->GetCharge(), fabs(mpdtrack->GetPt()), emcdPhi);
       emcsdZed = EmcdZedMatch(fabs(mpdtrack->GetPt()), emcdZed);

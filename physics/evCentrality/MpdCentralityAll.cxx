@@ -218,6 +218,29 @@ bool MpdCentralityAll::selectEvent(MpdAnalysisEvent &event)
       return false;
    }
 
+   // Reject broken events (VHLLE)
+   float nTrTPCEff = 0;
+
+   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
+
+   for (long int i = 0; i < mMpdGlobalTracks->GetEntriesFast(); i++) {
+      MpdTrack *mpdtrack = (MpdTrack *)mMpdGlobalTracks->UncheckedAt(i);
+      if (!selectTrack(mpdtrack)) continue;
+
+      int   binn   = mhTrEff->FindBin(mPrimaryVertex.Z(), mpdtrack->GetEta());
+      float weight = mhTrEff->GetBinContent(binn);
+      if (weight != 0) weight = 1. / weight;
+
+      nTrTPCEff += weight;
+   }
+
+   mMCHeader = event.fMCEventHeader;
+
+   if (mParams.mProdGenerator == "Req32-VHLLE" &&
+       mMCHeader->GetB() < (-0.1 * float(nTrTPCEff) + 11.)) { // broken events --> Request32-VHLLE
+      return false;
+   }
+
    mhEvents->Fill(2.5);
 
    return true;

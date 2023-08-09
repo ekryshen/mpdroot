@@ -60,6 +60,7 @@ private:
 
    std::string mOutFile = "histos.root";
 
+   FairMCEventHeader    *mMCHeader        = nullptr;
    MpdKalmanFilter      *mKF              = nullptr;
    TClonesArray         *mMCTracks        = nullptr;
    TObjArray            *mEMCClusters     = nullptr;
