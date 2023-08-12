@@ -52,7 +52,7 @@ add_subdirectory(evPID)
 
 add_subdirectory(globalPolarization)
 
-
+add_subdirectory(hyperons)
 
 
 
