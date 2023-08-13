@@ -48,6 +48,8 @@ public:
       fEventPlaneSet = kTRUE;
    }
 
+   void SetLabSystem() { fIsLabSystem = true; }
+  
 private:
    Long64_t   fEventNumber; //!
    TFile     *fInFile;
@@ -68,9 +70,8 @@ private:
 
    Double_t fGammaCM;
    Double_t fBetaCM;
-   Bool_t fIsLabSystem;
+   Bool_t   fIsLabSystem;
 
-   void SetLabSystem() { fIsLabSystem = true; }
 
    Int_t GetIonCharge(Int_t pdgCode) const { return (pdgCode % kPdgLambda) / kPdgCharge; }
    Int_t GetIonLambdas(Int_t pdgCode) { return (pdgCode % (10 * kPdgLambda)) / kPdgLambda; }
