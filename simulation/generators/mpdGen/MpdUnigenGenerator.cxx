@@ -2,13 +2,13 @@
 
 MpdUnigenGenerator::MpdUnigenGenerator()
    : FairGenerator(), fEventNumber(0), fInFile(nullptr), fInTree(nullptr), fEvent(nullptr), fParticle(nullptr),
-     fEventPlaneSet(kFALSE), fSpectatorsON(kFALSE), fPhiMin(0.), fPhiMax(0.)
+     fEventPlaneSet(kFALSE), fSpectatorsON(kFALSE), fPhiMin(0.), fPhiMax(0.), fGammaCM(0.), fBetaCM(0.), fIsLabSystem(false)
 {
 }
 
 MpdUnigenGenerator::MpdUnigenGenerator(TString fileName, Bool_t isSpectator)
    : FairGenerator(), fEventNumber(0), fInFile(nullptr), fInTree(nullptr), fEvent(nullptr), fParticle(nullptr),
-     fEventPlaneSet(kFALSE), fPhiMin(0.), fPhiMax(0.)
+     fEventPlaneSet(kFALSE), fPhiMin(0.), fPhiMax(0.), fGammaCM(0.), fBetaCM(0.), fIsLabSystem(false)
 {
    std::cout << "-I MpdUnigenGenerator: Opening input file " << fileName.Data() << std::endl;
 
@@ -18,7 +18,25 @@ MpdUnigenGenerator::MpdUnigenGenerator(TString fileName, Bool_t isSpectator)
       exit(1);
    }
    fInTree = (TTree *)fInFile->Get("events");
-
+   if (fIsLabSystem) {
+     fRun = dynamic_cast<URun*>(fInFile->Get("run"));
+     if (!fRun) {
+       Fatal("MpdUnigenGenerator", "Cannot open URun in the input file! Cannot perform Lorentz boost (cme->lab). Aborting.");
+       exit(1);
+     }
+     Double_t mProt = 0.938272;
+     Double_t pTarg = fRun->GetPTarg();  // target momentum per nucleon
+     Double_t pProj = fRun->GetPProj();  // projectile momentum per nucleon
+     Double_t eTarg = TMath::Sqrt(pProj * pProj + mProt * mProt);
+     Double_t eProj = TMath::Sqrt(pTarg * pTarg + mProt * mProt);
+     fBetaCM        = pProj / eProj;
+     fGammaCM       = 1. / TMath::Sqrt(1. - fBetaCM * fBetaCM);
+     Double_t pBeam = fGammaCM * (pProj - fBetaCM * eProj);
+     std::cout << "-I MpdUnigenGenerator: fixed-target mode selected." << std::endl;
+     std::cout << "-I MpdUnigenGenerator: sqrt(s_NN) = " << fRun->GetNNSqrtS() << " GeV, p_beam = " << pBeam << " GeV/u" << std::endl;
+     std::cout << "-I MpdUnigenGenerator: Lorentz transformation to lab system: " << " beta " << fBetaCM << ", gamma " << fGammaCM << std::endl;
+   }
+  
    if (!fInTree) {
       Fatal("MpdUnigenGenerator", "Cannot open TTree from the file.");
       exit(1);
@@ -79,6 +97,14 @@ Bool_t MpdUnigenGenerator::ReadEvent(FairPrimaryGenerator *primGen)
 
       Double_t px = fParticle->Px();
       Double_t py = fParticle->Py();
+      Double_t pz = fParticle->Pz();
+      Double_t mass = fParticle->GetMomentum().M();
+      Double_t en = sqrt(mass * mass + px * px + py * py + pz * pz);
+
+      // Perform a Lorentz boost if fixed-target mode is set
+      if (fIsLabSystem) {
+        pz = fGammaCM * (pz + fBetaCM * en);
+      }
 
       if (fEventPlaneSet) {
          Double_t pt   = TMath::Sqrt(px * px + py * py);
