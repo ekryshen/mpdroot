@@ -131,7 +131,8 @@ void TpcClusterHitFinderMlem::FindHits()
 
    // Get vertex Z-position estimate - at present is is taken as true MC value
    // cout << " ******** header " << gROOT->FindObjectAny("MCEventHeader.") << endl;
-   fVertexZ = ((MpdMCEventHeader *)gROOT->FindObjectAny("MCEventHeader."))->GetZ();
+   // fVertexZ = ((MpdMCEventHeader *)gROOT->FindObjectAny("MCEventHeader."))->GetZ();
+   fVertexZ = ((MpdMCEventHeader *)FairRootManager::Instance()->GetObject("MCEventHeader."))->GetZ();
 
    // Find hits
    findHits();

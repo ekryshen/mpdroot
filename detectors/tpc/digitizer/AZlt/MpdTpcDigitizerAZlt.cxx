@@ -218,7 +218,8 @@ void MpdTpcDigitizerAZlt::Exec(Option_t *opt)
    multimap<Double_t, Int_t> *pointsM = new multimap<Double_t, Int_t>[nSectors];
    for (Int_t ip = 0; ip < nPoints; ++ip) {
       TpcPoint *point = (TpcPoint *)fMCPointArray->UncheckedAt(ip);
-      Float_t   phi   = ATan2(point->GetY(), point->GetX()); // angle in global coordinates
+      if (point == NULL) continue;
+      Float_t phi = ATan2(point->GetY(), point->GetX()); // angle in global coordinates
       if (phi < 0) phi += TMath::TwoPi();
       UInt_t isec = (UInt_t)(phi / phiStep + 0.5); // index of current sector
       if (isec == nSectors / 2) isec = 0;
