@@ -55,6 +55,10 @@ MpdAnalysisEvent::~MpdAnalysisEvent()
       delete fZDCEloss2Histo;
       fZDCEloss2Histo = nullptr;
    }
+   if (fV0) {
+      delete fV0;
+      fV0 = nullptr;
+   }
 }
 void MpdAnalysisEvent::Clear()
 {
@@ -72,4 +76,5 @@ void MpdAnalysisEvent::Clear()
    if (fZDCEloss2Value) fZDCEloss2Value->Clear();
    if (fZDCEloss1Histo) fZDCEloss1Histo->Clear();
    if (fZDCEloss2Histo) fZDCEloss2Histo->Clear();
+   if (fV0) fV0->Clear();
 }

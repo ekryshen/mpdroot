@@ -12,7 +12,6 @@
 
 #include "MpdEvent.h"
 #include "MpdPid.h"
-#include "MpdHelix.h"
 #include "FairMCEventHeader.h"
 #include "MpdKalmanFilter.h"
 #include "MpdAnalysisTask.h"
@@ -20,187 +19,251 @@
 #include "MpdPhoton.h"
 #include "MpdPhotonAnalysisParams.h"
 
-  class V0{
-  public:
-    V0()=default ;
-    V0(bool it,float pt,float chi2,float mee,float rConv,float alpha,float dca, float qt, float qta,float asym,float psi):
-    isTrue(it),mpt(pt),mchi2(chi2),mmee(mee),mrConv(rConv),malpha(alpha),mdca(dca),mqt(qt),mqta(qta),masym(asym),mpsi(psi){}
+class TProfile2D;
+class TProfile3D;
+class MpdV0;
 
-    ~V0()=default ;
-    bool isTrue;
-    float mpt;
-    float mchi2;
-    float mmee;
-    float mrConv;
-    float malpha;
-    float mdca;
-    float mqt;
-    float mqta;
-    float masym;
-    float mpsi;
-  };
+namespace eventCutId {
+enum eventCutId { kNone = 0, kVertexPresent, kVertexZ, kGoodCentrality, kNcuts };
+}
 
+namespace trackCutId {
+enum trackCutId { kNone = 0, kNhits, kEtaPt, kProbElectron, kTpcTofPid, kNcuts };
+}
+
+namespace V0CutId {
+enum V0CutId {
+   kNone = 0,
+   kGoodTracks,
+   kNonZeroPt,
+   kChi2,
+   kRconv,
+   kAlpha,
+   kDist,
+   kMass,
+   kQt,
+   kAsymmetry,
+   kCosPsi,
+   kPhotonAOD,
+   kNcuts
+};
+}
+
+namespace clustCutId {
+enum clustCutId { kNone = 0, kE, kMult, kTof, kDisp, kCPV, kNcuts };
+}
+
+class V0 {
+public:
+   V0() = default;
+   V0(bool it, float pt, float chi2, float mee, float rConv, float alpha, float dca, float qt, float qta, float asym,
+      float psi)
+      : isTrue(it), mpt(pt), mchi2(chi2), mmee(mee), mrConv(rConv), malpha(alpha), mdca(dca), mqt(qt), mqta(qta),
+        masym(asym), mpsi(psi)
+   {
+   }
+
+   ~V0() = default;
+   bool  isTrue;
+   float mpt;
+   float mchi2;
+   float mmee;
+   float mrConv;
+   float malpha;
+   float mdca;
+   float mqt;
+   float mqta;
+   float masym;
+   float mpsi;
+};
 
 class MpdTpcKalmanTrack;
 
 class MpdConvPi0 : public MpdAnalysisTask {
 
-  public : 
-  MpdConvPi0() {}
-  MpdConvPi0(const char *name, const char *outputName="taskName") ;
-  ~MpdConvPi0() {}  //TODO: normal descructor with cleaning off histos
+public:
+   MpdConvPi0() {}
+   MpdConvPi0(const char *name, const char *outputName = "taskName");
+   ~MpdConvPi0() {} // TODO: normal descructor with cleaning off histos
 
-  void UserInit();
-  void ProcessEvent(MpdAnalysisEvent &event) ;
-  void Finish() ;
+   void UserInit();
+   void ProcessEvent(MpdAnalysisEvent &event);
+   void Finish();
 
-  void setOutFile(std::string filename = "histos.root"){mOutFile=filename ;}
+   void setOutFile(std::string filename = "histos.root") { mOutFile = filename; }
 
+protected:
+   bool selectEvent(MpdAnalysisEvent &event);
 
- protected:
+   void selectConversion(MpdAnalysisEvent &event);
 
-  bool selectEvent(MpdAnalysisEvent &event) ; 	
+   bool selectTrack(MpdTrack *tr);
 
-  void selectConversion(MpdAnalysisEvent &event) ;
+   bool selectV0(MpdV0 *v0);
 
-  bool selectTrack(MpdTrack *tr) ;
+   void selectClusters(MpdAnalysisEvent &event);
 
-  bool createSelectV0(MpdTrack *tr1, MpdTpcKalmanTrack *ktr1,  MpdTrack *tr2, MpdTpcKalmanTrack *ktr2, MpdPhoton &v );
+   void processHistograms(MpdAnalysisEvent &event);
 
-  void selectClusters(MpdAnalysisEvent &event); 
+   bool ArmenterosQtCut(MpdV0 *v0) const;
 
-  void processHistograms(MpdAnalysisEvent &event) ;
+   bool AsymmetryCut(float asym, float pt) const;
 
-  int centrality(int tpcMultiplicity) const ;
- 
-  MpdHelix MakeHelix(const MpdKalmanTrack &tr) const ;
+   bool TestHybrid(MpdPhoton &clu, MpdPhoton &v0) const;
 
-  float Beta_sigma(float beta, float mom) const ;
- 
-  float dEdx_sigma(float dEdx, float mom) const ;
+   float distCPV(float dphi, float dz, float E) const;
 
-  void ArmenterosPodolanski(TVector3& p1, TVector3& p2, float &qt, float &alpha ) const ;
+   float lambdaCut(float l1, float l2, float E) const;
 
-  bool ArmenterosQtCut(float qt, float alpha, MpdParticle & part) const ;
+   float tofCut(float time, float E) const;
 
-  float CosPsiPair(TVector3& p1, TVector3& p2) const ;
+   float Nonlinearity(float oldE) const;
 
-  bool AsymmetryCut(float asym, float pt) const ;
-  
-  long int IsSameParent(long int prim1, long int prim2) const ;
-  
-  bool TestHybrid(MpdPhoton &clu, MpdPhoton &v0) const ;
+   template <typename T>
+   T addHist(T h)
+   {
+      fOutputList->Add(h);
+      return h;
+   }
 
-  float distCPV(float dphi, float dz, float E) const ;
+   template <typename T>
+   T addHistClone(T h, const char *postfix = "")
+   {
+      auto hClone = (T)h->Clone(Form("%s%s", h->GetName(), postfix));
+      fOutputList->Add(hClone);
+      return hClone;
+   }
 
-  float lambdaCut(float l1,float l2,float E) const; 
+private:
+   std::vector<V0> mStorage;
 
-  float tofCut(float time,float E) const;
-
-  float Nonlinearity(float oldE) const;
-private: 
-
-   std::vector<V0> mStorage ;
-
-   //Event properties
-   bool isInitialized = false ;
-   bool isMC  =  true ;
-   int mCenBin =0 ;
-   int mZvtxBin=0 ;
-   int mRPBin =0 ;
+   // Event properties
+   bool     isMC           = true;
+   bool     applySelection = true;
+   int      mCenBin        = 0;
+   int      mZvtxBin       = 0;
+   int      mEPBin         = 0;
    TVector3 mPrimaryVertex;
 
-   std::string mParamConfig ;
-   MpdPhotonAnalysisParams mParams ;
+   std::string             mParamConfig;
+   MpdPhotonAnalysisParams mParams;
 
-   std::string mOutFile = "histos.root" ;
+   std::string mOutFile = "histos.root";
 
-   MpdKalmanFilter* mKF          = nullptr ;
-   MpdPid *mPID                  = nullptr ;
-   TClonesArray * mMCTracks      = nullptr ;
-   TObjArray * mEMCClusters      = nullptr ;
-   TClonesArray * mKalmanTracks  = nullptr ;
-   TClonesArray * mMpdGlobalTracks=nullptr ;
-   vector<MpdParticle*> mPartK ;
-   MpdKalmanHit   mKHit  ;
+   TClonesArray *mMCTracks        = nullptr;
+   TObjArray    *mEMCClusters     = nullptr;
+   TClonesArray *mKalmanTracks    = nullptr;
+   TClonesArray *mMpdGlobalTracks = nullptr;
 
-   std::vector<MpdPhoton> mClusters ; /// EMC clusters in this event
-   std::vector<MpdPhoton> mV0 ;       /// EMC clusters in this event
+   std::vector<MpdPhoton> mClusters; /// EMC clusters in this event
+   std::vector<MpdPhoton> mV0;       /// V0 in this event
 
-   static constexpr short nMixEventZ = 20 ;      /// number of bins in z direction
-   static constexpr short nMixEventCent = 10 ;   /// number of bins of centrality
-   static constexpr short nMixEventRP = 5 ;      /// number of bins of Reaction Plane orientation
-   static constexpr short nMixTot = nMixEventZ* nMixEventCent * nMixEventRP ;	
+   static constexpr short nMixEventZ    = 5; /// number of bins in z direction
+   static constexpr short nMixEventCent = 5; /// number of bins of centrality
+   static constexpr short nMixEventEP   = 5; /// number of bins of Reaction Plane orientation
+   static constexpr short nMixTot       = nMixEventZ * nMixEventCent * nMixEventEP;
 
-   int mMaxMixSize = 10 ; 
-   std::array<std::deque<MpdPhoton>, nMixTot> mMixClu ;
-   std::array<std::deque<MpdPhoton>, nMixTot> mMixV0 ;
+   int                                        mMaxMixSize = 10;
+   std::array<std::deque<MpdPhoton>, nMixTot> mMixClu;
+   std::array<std::deque<MpdPhoton>, nMixTot> mMixV0;
+   vector<bool>                               isGoodTrack;
 
-   //Histograms
-   TList mHistoList; 
-   static constexpr short mHistoCentBins=5;
-   //General QA
-   TH1F * mhEvents = nullptr ;
-   TH1F * mhVertex = nullptr ;
-   TH1F * mhCentrality=nullptr ;
-   //TH2F * mhEPvsCen = nullptr ;  
+   // Histograms
+   TList          mHistoList;
+   int            mHistoCentBins;
+   float          psiEP, psiEPs, psiEPn, psiRP;
+   vector<double> mCentBins = {0, 10, 20, 30, 40, 60}; // TODO: make configurable
+   TAxis         *mAxCent;
+   // General QA
+   TH1F *mhEventCutEff = nullptr;
+   TH1F *mhVertex      = nullptr;
+   TH1F *mhCentrality  = nullptr;
+   // TH2F * mhEPvsCen = nullptr ;
 
-   //Single Track selection
-   TH1F * mhNhits   = nullptr ;    // Number of hits per track
-   TH2F * mhTracks  = nullptr ;    // track occupancy QA
-   TH2F * mhProbEl  = nullptr ;    // Electron PID probability estimate
-   TH2F * mhdEdx    = nullptr ;    // TPC dEdx
-   //V0selection
-   TH2F * mhCutEff  = nullptr ;
-   TH3F * mhConvMap = nullptr ;    //Conversion map for all V0
-   TH2F * mhAlpha = nullptr ;
-   TH2F * mhChi2  = nullptr ;
-   TH2F * mhDist  = nullptr ;
-   TH2F * hmMassEE= nullptr ;
-   TH2F * mhCosPsi= nullptr ;
-   TH2F * mhArmPo = nullptr ;    //Armesteros-Podolanski plot
-   TH2F * mhAsym  = nullptr ;    // electron asymmetry
-   TH2F * mhConvSp= nullptr ;    // spectrum of converted photons
+   // Single Track selection
+   TH2F *mhTrackCutEff               = nullptr;
+   TH1F *mhTrackNhits                = nullptr; // Number of hits per track
+   TH2F *mhTrackEtaPt                = nullptr; // track occupancy QA
+   TH2F *mhTrackProbEl               = nullptr; // Electron PID probability estimate
+   TH2F *mhTrackNsigDEdx             = nullptr; // TPC dEdx Nsigma
+   TH2F *mhTrackNsigBeta             = nullptr; // TOF beta Nsigma
+   TH2F *mhTrackNsigDEdxNsigBeta     = nullptr; // TOF beta Nsigma
+   TH1F *mhTrackNhitsTrue            = nullptr; // Number of hits per track
+   TH2F *mhTrackEtaPtTrue            = nullptr; // track occupancy QA
+   TH2F *mhTrackProbElTrue           = nullptr; // Electron PID probability estimate for true electrons
+   TH2F *mhTrackNsigDEdxTrue         = nullptr; // TPC dEdx Nsigma for true electrons
+   TH2F *mhTrackNsigBetaTrue         = nullptr; // TOF beta Nsigma for true electrons
+   TH2F *mhTrackNsigDEdxNsigBetaTrue = nullptr; // TOF beta Nsigma
 
+   // V0selection
+   TH2F *mhV0CutEff = nullptr;
+   TH3F *mhConvMap  = nullptr; // Conversion map for all V0
+   TH2F *mhAlpha    = nullptr;
+   TH2F *mhV0rConv  = nullptr;
+   TH2F *mhChi2     = nullptr;
+   TH2F *mhDist     = nullptr;
+   TH2F *mhMassEE   = nullptr;
+   TH2F *mhCosPsi   = nullptr;
+   TH2F *mhArmPo    = nullptr; // Armesteros-Podolanski plot
+   TH2F *mhAsym     = nullptr; // electron asymmetry
+   TH2F *mhConvSp   = nullptr; // spectrum of converted photons
 
-   TH2F * mhProbElTrue  = nullptr ;   // Electron PID probability estimate for true electrons
-   TH2F * mhdEdxTrue    = nullptr ;   // TPC dEdx for true electrons
-   TH3F * mhConvMapTrue = nullptr ;   //Conversion map for true conversions
-   TH2F * mhAlphaTrue   = nullptr ;
-   TH2F * mhChi2True    = nullptr ;
-   TH2F * mhDistTrue    = nullptr ;
-   TH2F * hmMassEETrue  = nullptr ;
-   TH2F * mhCosPsiTrue  = nullptr ;
-   TH2F * mhArmPoTrue   = nullptr ;    //Armesteros-Podolanski plot
-   TH2F * mhAsymTrue    = nullptr ;    // electron asymmetry
-   TH2F * mhConvSpTrue  = nullptr ;    // spectrum of converted photons
+   TH3F *mhConvMapTrue = nullptr; // Conversion map for true conversions
+   TH2F *mhAlphaTrue   = nullptr;
+   TH2F *mhChi2True    = nullptr;
+   TH2F *mhV0rConvTrue = nullptr;
+   TH2F *mhDistTrue    = nullptr;
+   TH2F *mhMassEETrue  = nullptr;
+   TH2F *mhCosPsiTrue  = nullptr;
+   TH2F *mhArmPoTrue   = nullptr; // Armesteros-Podolanski plot
+   TH2F *mhAsymTrue    = nullptr; // electron asymmetry
+   TH2F *mhConvSpTrue  = nullptr; // spectrum of converted photons
 
-   //Cluster selection
-   TH2F * mhCluCutEff  = nullptr ;
+   // Cluster selection
+   TH2F *mhCluCutEff   = nullptr;
+   TH2F *mhCluMult     = nullptr;
+   TH2F *mhCluTofSigma = nullptr;
+   TH2F *mhCluDistCPV  = nullptr;
 
    // Inv mass histos
-   TH2F * mhRealCalo[mHistoCentBins] ;
-   TH2F * mhMixedCalo[mHistoCentBins] ;
-   TH2F * mhRealHybrid[mHistoCentBins] ;
-   TH2F * mhMixedHybrid[mHistoCentBins] ;
-   TH2F * mhRealConv[mHistoCentBins] ;
-   TH2F * mhMixedConv[mHistoCentBins] ;
+   std::vector<TH2F *> mhRealCalo;
+   std::vector<TH2F *> mhRealHybrid;
+   std::vector<TH2F *> mhRealConv;
 
-   TH2F * mhRealCaloTrue[mHistoCentBins] ;
-   TH2F * mhRealHybridTrue[mHistoCentBins] ;
-   TH2F * mhRealConvTrue[mHistoCentBins] ;
+   std::vector<TH2F *> mhMixedCalo;
+   std::vector<TH2F *> mhMixedHybrid;
+   std::vector<TH2F *> mhMixedConv;
 
-   TH2F * mhRealCaloTrueEl[mHistoCentBins] ;
-   TH2F * mhRealHybridTrueEl[mHistoCentBins] ;
-   TH2F * mhRealConvTrueEl[mHistoCentBins] ;
+   std::vector<TH2F *> mhRealCaloTruePi;
+   std::vector<TH2F *> mhRealHybridTruePi;
+   std::vector<TH2F *> mhRealConvTruePi;
 
-   TH2F * mhRealCaloTrueAll[mHistoCentBins] ;
-   TH2F * mhRealHybridTrueAll[mHistoCentBins] ;
-   TH2F * mhRealConvTrueAll[mHistoCentBins] ;
+   std::vector<TH2F *> mhRealCaloTruePh;
+   std::vector<TH2F *> mhRealHybridTruePh;
+   std::vector<TH2F *> mhRealConvTruePh;
 
-   TH2F * hPrimPi0[mHistoCentBins] ;
+   std::vector<TH2F *> mhRealCaloTrueAll;
+   std::vector<TH2F *> mhRealHybridTrueAll;
+   std::vector<TH2F *> mhRealConvTrueAll;
 
-  ClassDef(MpdConvPi0, 1) ;
+   std::vector<TH2F *> hPrimPi;
+   std::vector<TH2F *> hPrimPh;
 
-} ;
+   // flow
+   std::vector<TProfile3D *> mp3V1etaPtMinvCalo;
+   std::vector<TProfile3D *> mp3V1etaPtMinvCaloTruePi;
+   std::vector<TProfile3D *> mp3V1etaPtMinvCaloTruePh;
+   std::vector<TProfile3D *> mp3V1etaPtMinvHybrid;
+   std::vector<TProfile3D *> mp3V1etaPtMinvHybridTruePi;
+   std::vector<TProfile3D *> mp3V1etaPtMinvHybridTruePh;
+   std::vector<TProfile3D *> mp3V1etaPtMinvConv;
+   std::vector<TProfile3D *> mp3V1etaPtMinvConvTruePi;
+   std::vector<TProfile3D *> mp3V1etaPtMinvConvTruePh;
+   std::vector<TProfile2D *> mp2V1etaPtPrimPiEP;
+   std::vector<TProfile2D *> mp2V1etaPtPrimPhEP;
+   std::vector<TProfile2D *> mp2V1etaPtPrimPiRP;
+   std::vector<TProfile2D *> mp2V1etaPtPrimPhRP;
+
+   ClassDef(MpdConvPi0, 1);
+};
 #endif

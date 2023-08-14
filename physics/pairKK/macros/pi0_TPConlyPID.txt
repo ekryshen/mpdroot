@@ -1,0 +1,35 @@
+#-------Parameters used for analysis------
+applySelection true
+# Event selection: 
+mZvtxCut 40 // cut on vertex z coordinate
+mNhitsCut 10 //  number of hits in TPC tracks used for centrality
+# V0 cuts: 
+mMinR2Cut 15  // (cm) Minimal conversion radius (to exclude Dalitz)
+mMaxR2Cut 100 // (cm) Maximal conversion radius (to exclude poorly reconstructed tracks)
+mPIDsigM   4  // dEdx PID parameters
+mPIDsigE   4  // dEdx PID parameters
+mPIDenergy 11  // dEdx PID parameters
+mPIDkoeff  1  // dEdx PID parameters
+mPIDgenerator NSIG  // dEdx PID parameters
+mPIDtracking  CF  // dEdx PID parameters
+mPIDparticles elpikapr  // dEdx PID parameters
+mNofHitsCut  10  // minimal number of hits to accept track
+mEtaCut      1  // maximal pseudorapidity accepted
+mPtminCut   0.05  // minimal pt used in analysis
+mNofHitsCut 10  // minimal number of hits to accept track
+mProbElCut  -1  // minimal dEdx probability for electrons (does not seem to be filled)
+mdEdxSigmaCut  3  // dEdx cut in sigmas
+mBetaSigmaCut  3  // beta cut
+mRequireTOFpid  false // mRequireTOFpid
+mAlphaCut 0.10200000 //r vs p angle
+mMassCut  0.051  // e+e- pair mass cut
+mDistCut  2.8    // maximal closest distance between daughters
+mCosPsiCut 0.275 // e+e- pair orientation wrt B-filed
+mChi2Cut  10  // maximal chi2 in Kalman fit
+# Cluster cuts: 
+mCluEmin  0.05  // (GeV) minimal cluster energy
+mCluMult  2  // minimal number of cells in cluster
+mCluTof   3  // (N) maximal time wrt photon arrival divided by time resolution
+mCluDisp  2.5  // disp cut
+mCluCPV   2  // (sigma) minimal distance to charged track extrapolation
+

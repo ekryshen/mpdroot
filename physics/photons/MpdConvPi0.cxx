@@ -1,6 +1,10 @@
 #include <iostream>
 #include <fstream> // std::ifstream
 
+#include "TFile.h"
+#include "TProfile2D.h"
+#include "TProfile3D.h"
+
 #include "MpdKalmanFilter.h"
 #include "MpdMCTrack.h"
 #include "MpdTpcKalmanTrack.h"
@@ -9,198 +13,233 @@
 #include "MpdVertex.h"
 #include "MpdEvent.h"
 #include "MpdEmcGeoUtils.h"
+#include "MpdV0.h"
+#include "MpdV0Maker.h"
 
 #include "MpdConvPi0.h"
-#include "TFile.h"
 
 ClassImp(MpdConvPi0);
 
 MpdConvPi0::MpdConvPi0(const char *name, const char *outputName) : MpdAnalysisTask(name, outputName)
 {
-   mParamConfig = outputName;
+   mParamConfig = Form("%s", outputName);
 }
 
 void MpdConvPi0::UserInit()
 {
-
+   cout << "MpdV0Maker::UserInit():\n";
    mParams.ReadFromFile(mParamConfig);
    mParams.Print();
-
-   // // Setup branches
-   // mChain->SetBranchAddress("MCEventHeader.", &mMCHeader);
-   // mChain->SetBranchAddress("MCTrack", &mMCTracks);
-   // mChain->SetBranchAddress("MPDEvent.", &mMPDEvent);
-
-   // mEMCClusters  = new TObjArray() ;
-   // mChain->SetBranchAddress("EmcCluster",&mEMCClusters);
-   // mChain->SetBranchAddress("Vertex",&mVertexes);
-
-   // mChain->SetBranchAddress("TpcKalmanTrack",&mKalmanTracks);
+   applySelection = mParams.mApplySelection;
 
    // Prepare histograms etc.
    fOutputList = new TList();
    fOutputList->SetOwner(kTRUE);
 
-   TH1::AddDirectory(kFALSE); // sets a global switch disabling the reference to histos in gROOT and their overwriting
+   mHistoCentBins = mCentBins.size() - 1;
+   mAxCent        = new TAxis(mHistoCentBins, mCentBins.data());
+
+   TH1::AddDirectory(false); // sets a global switch disabling the reference to histos in gROOT and their overwriting
 
    // General QA
-   mhEvents = new TH1F("hEvents", "Number of events", 10, 0., 10.);
-   fOutputList->Add(mhEvents);
-   mhVertex = new TH1F("hVertex", "Event vertex distribution", 50, -100., 100.);
-   fOutputList->Add(mhVertex);
-   mhCentrality = new TH1F("hCentrality", "Centrality distribution", 100, 0., 100.);
-   fOutputList->Add(mhCentrality);
+   mhEventCutEff = addHist(
+      new TH1F("hEventCutEff", "Number of events;Cut ID;N_{events}", eventCutId::kNcuts, 0, eventCutId::kNcuts));
+   mhVertex     = addHist(new TH1F("hVertex", "Event vertex distribution;Z_{vtx} (cm);N_{events}", 50, -100., 100.));
+   mhCentrality = addHist(new TH1F("hCentrality", "Centrality distribution;Centrality (%);N_{events}", 100, 0., 100.));
 
-   // V0selection
-   const int   nPtbin = 100;
-   const float pTmin  = 0.;
-   const float pTmax  = 5.;
-   mhCutEff           = new TH2F("hCutEff", "track cut efficiency", 21, 0., 21., nPtbin, pTmin, pTmax);
-   fOutputList->Add(mhCutEff);
-   mhNhits = new TH1F("hNhits", "Number of hits per track", 100, 0., 100.);
-   fOutputList->Add(mhNhits);
-   mhTracks = new TH2F("hTracks", "track occupancy pt vs eta", nPtbin, pTmin, pTmax, 100, -1.5, 1.5);
-   fOutputList->Add(mhTracks);
-   mhProbEl = new TH2F("hProbEl", "Electron probability", 100, 0., 1., nPtbin, pTmin, pTmax);
-   fOutputList->Add(mhProbEl);
-   mhdEdx = new TH2F("hdEdx", "dEdx", 100, -10, 10., nPtbin, pTmin, pTmax);
-   fOutputList->Add(mhdEdx);
-   mhConvMap = new TH3F("hConvMap", "Conversion map (r,phi,z)", 100, 0., 280., 100, 0., TMath::Pi(), 100, -200., 200.);
-   fOutputList->Add(mhConvMap);
-   mhAlpha = new TH2F("hAlpha", "#alpha distribution", 100, 0., 1., nPtbin, pTmin, pTmax);
-   fOutputList->Add(mhAlpha);
-   mhChi2 = new TH2F("hChi2", "#chi^{2}", 100, 0., 50., nPtbin, pTmin, pTmax);
-   fOutputList->Add(mhChi2);
-   mhDist = new TH2F("hDist", "track DCA", 100, 0., 10., nPtbin, pTmin, pTmax);
-   fOutputList->Add(mhDist);
-   hmMassEE = new TH2F("mEE", "m_{ee}", 100, 0., 0.3, nPtbin, pTmin, pTmax);
-   fOutputList->Add(hmMassEE);
-   mhCosPsi = new TH2F("cosPsi", "cos(#psi)", 100, 0., TMath::Pi(), nPtbin, pTmin, pTmax);
-   fOutputList->Add(mhCosPsi);
-   mhArmPo = new TH2F("Armenteros", "Armenteros", 100, -1, 1, 100, 0, 0.3);
-   fOutputList->Add(mhArmPo);
-   mhConvSp = new TH2F("ConvSp", "Conv Sp", nPtbin, pTmin, pTmax, 100, -1.5, 1.5);
-   fOutputList->Add(mhConvSp);
-   mhAsym = new TH2F("Asymetry", "Asymetry", 200, 0, 1, nPtbin, pTmin, pTmax);
-   fOutputList->Add(mhAsym);
+   // track selection
+   const int    nPtbin = 100;
+   const double pTmin  = 0.;
+   const double pTmax  = 5.;
+   mhTrackCutEff       = addHist(new TH2F("hTrackCutEff", "track cut efficiency;Cut ID;p_{T} (GeV/#it{c});Efficiency",
+                                          trackCutId::kNcuts, 0., trackCutId::kNcuts, nPtbin, pTmin, pTmax));
+   mhTrackNhits  = addHist(new TH1F("hTrackNhits", "Number of hits per track;N_{hits};N_{tracks}", 100, 0., 100.));
+   mhTrackEtaPt  = addHist(new TH2F("hTrackEtaPt", "track occupancy pt vs eta;p_{T} (GeV/#it{c});#eta;N_{tracks}",
+                                    nPtbin, pTmin, pTmax, 100, -1.5, 1.5));
+   mhTrackProbEl = addHist(
+      new TH2F("hTrackProbEl", "Electron probability;p (e^{-});p_{T} (GeV/#it{c})", 100, 0., 1., nPtbin, pTmin, pTmax));
+   mhTrackNsigDEdx = addHist(new TH2F("hTrackNsigDEdx", "N#sigma(dE/dx);N#sigma(dE/dx);p_{T} (GeV/#it{c})", 100, -10,
+                                      10., nPtbin, pTmin, pTmax));
+   mhTrackNsigBeta = addHist(new TH2F("hTrackNsigBeta", "N#sigma(#beta);N#sigma(#beta);p_{T} (GeV/#it{c})", 100, -10,
+                                      10., nPtbin, pTmin, pTmax));
+   mhTrackNsigDEdxNsigBeta = addHist(
+      new TH2F("hTrackNsigDEdxNsigBeta", "N#sigma(beta):N#sigma(dE/dx);N#sigma(dE/dx);N#sigma(beta);p_{T} (GeV/#it{c})",
+               100, -10, 10., 100, -10, 10.));
    if (isMC) {
-      mhProbElTrue = new TH2F("hProbElTrue", "Electron probability, true electrons", 100, 0., 1., nPtbin, pTmin, pTmax);
-      fOutputList->Add(mhProbElTrue);
-      mhdEdxTrue = new TH2F("hdEdxTrue", "dEdx", 100, -10, 10., nPtbin, pTmin, pTmax);
-      fOutputList->Add(mhdEdxTrue);
-      mhConvMapTrue =
-         new TH3F("hConvMapTrue", "Conversion map (r,phi,z)", 100, 0., 280., 100, 0., TMath::Pi(), 100, -200., 200.);
-      fOutputList->Add(mhConvMapTrue);
-      mhAlphaTrue = new TH2F("hAlphaTrue", "#alpha distribution", 100, 0., 1., nPtbin, pTmin, pTmax);
-      fOutputList->Add(mhAlphaTrue);
-      mhChi2True = new TH2F("hChi2True", "#chi^{2}", 100, 0., 50., nPtbin, pTmin, pTmax);
-      fOutputList->Add(mhChi2True);
-      mhDistTrue = new TH2F("hDistTrue", "track DCA", 100, 0., 10., nPtbin, pTmin, pTmax);
-      fOutputList->Add(mhDistTrue);
-      hmMassEETrue = new TH2F("mEETrue", "m_{ee}", 100, 0., 0.3, nPtbin, pTmin, pTmax);
-      fOutputList->Add(hmMassEETrue);
-      mhCosPsiTrue = new TH2F("cosPsiTrue", "cos(#psi)", 100, 0., TMath::Pi(), nPtbin, pTmin, pTmax);
-      fOutputList->Add(mhCosPsiTrue);
-      mhArmPoTrue = new TH2F("ArmenterosTrue", "Armenteros", 100, -1, 1, 100, 0, 0.3);
-      fOutputList->Add(mhArmPoTrue);
-      mhAsymTrue = new TH2F("AsymetryTrue", "Asymetry", 200, 0, 1, nPtbin, pTmin, pTmax);
-      fOutputList->Add(mhAsymTrue);
-      mhConvSpTrue = new TH2F("ConvSpTrue", "Conv Sp", nPtbin, pTmin, pTmax, 100, -1.5, 1.5);
-      fOutputList->Add(mhConvSpTrue);
+      mhTrackNhitsTrue            = addHistClone(mhTrackNhits, "True");
+      mhTrackEtaPtTrue            = addHistClone(mhTrackEtaPt, "True");
+      mhTrackProbElTrue           = addHistClone(mhTrackProbEl, "True");
+      mhTrackNsigDEdxTrue         = addHistClone(mhTrackNsigDEdx, "True");
+      mhTrackNsigBetaTrue         = addHistClone(mhTrackNsigBeta, "True");
+      mhTrackNsigDEdxNsigBetaTrue = addHistClone(mhTrackNsigDEdxNsigBeta, "True");
+   }
+
+   // V0 selection
+   mhV0CutEff = addHist(new TH2F("hV0CutEff", "V0 cut efficiency;Cut ID;p_{T} (GeV/#it{c});Efficiency", V0CutId::kNcuts,
+                                 0., V0CutId::kNcuts, nPtbin, pTmin, pTmax));
+   mhAlpha    = addHist(
+         new TH2F("hAlpha", "#alpha distribution;#alpha (rad);p_{T} (GeV/#it{c})", 100, 0., 1., nPtbin, pTmin, pTmax));
+   mhChi2    = addHist(new TH2F("hChi2", "#chi^{2};#chi^{2};p_{T} (GeV/#it{c})", 100, 0., 10., nPtbin, pTmin, pTmax));
+   mhConvMap = addHist(new TH3F("hConvMap", "Conversion map (r,phi,z);r (cm);#phi (rad);z (cm)", 100, 0., 280., 100, 0.,
+                                TMath::Pi(), 100, -200., 200.));
+   mhV0rConv =
+      addHist(new TH2F("hV0rConv", "R^{conv};R^{conv} (cm);p_{T} (GeV/#it{c})", 200, 0., 200., nPtbin, pTmin, pTmax));
+   mhDist   = addHist(new TH2F("hDist", "track DCA;DCA (cm);p_{T} (GeV/#it{c})", 100, 0., 10., nPtbin, pTmin, pTmax));
+   mhMassEE = addHist(
+      new TH2F("hMassEE", "m_{ee};m_{ee} (GeV/#it{c}^{2});p_{T} (GeV/#it{c})", 100, 0., 0.3, nPtbin, pTmin, pTmax));
+   mhCosPsi = addHist(new TH2F("cosPsi", "cos(#psi);cos(#psi);p_{T} (GeV/#it{c})", 100, -1., 1., nPtbin, pTmin, pTmax));
+   mhArmPo  = addHist(new TH2F("Armenteros", "Armenteros", 100, -1, 1, 100, 0, 0.3));
+   mhAsym   = addHist(new TH2F("Asymetry", "Asymmetry;Asymmetry;p_{T} (GeV/#it{c})", 200, 0, 1, nPtbin, pTmin, pTmax));
+   mhConvSp = addHist(new TH2F("ConvSp", "Conv Sp;p_{T} (GeV/#it{c});#eta", nPtbin, pTmin, pTmax, 100, -1.5, 1.5));
+   if (isMC) {
+      mhConvMapTrue = addHistClone(mhConvMap, "True");
+      mhAlphaTrue   = addHistClone(mhAlpha, "True");
+      mhChi2True    = addHistClone(mhChi2, "True");
+      mhV0rConvTrue = addHistClone(mhV0rConv, "True");
+      mhDistTrue    = addHistClone(mhDist, "True");
+      mhMassEETrue  = addHistClone(mhMassEE, "True");
+      mhCosPsiTrue  = addHistClone(mhCosPsi, "True");
+      mhArmPoTrue   = addHistClone(mhArmPo, "True");
+      mhAsymTrue    = addHistClone(mhAsym, "True");
+      mhConvSpTrue  = addHistClone(mhConvSp, "True");
    }
 
    // Cluster selection
-   mhCluCutEff = new TH2F("hCluCutEff", "cluster cut efficiency", 10, 0., 10., nPtbin, pTmin, pTmax);
-   fOutputList->Add(mhCluCutEff);
+   int   nBinsE = 100;
+   float Emin = 0, Emax = 2.5;
+   mhCluCutEff = addHist(new TH2F("hCluCutEff", "Cluster cut efficiency;Cut ID;e (GeV)", clustCutId::kNcuts, 0.,
+                                  clustCutId::kNcuts, nBinsE, Emin, Emax));
+   mhCluMult   = addHist(new TH2F("hCluMult", "Cluster multiplicity;Mult;e (GeV)", 100, 0, 100, nBinsE, Emin, Emax));
+   mhCluTofSigma =
+      addHist(new TH2F("hCluTofSigma", "Cluster #sigma_{TOF};#sigma_{TOF};e (GeV)", 200, -10, 10, nBinsE, Emin, Emax));
+   mhCluDistCPV =
+      addHist(new TH2F("hCluDistCPV", "Cluster DistCPV;DistCPV (cm);e (GeV)", 100, 0, 30, nBinsE, Emin, Emax));
    // Inv mass histos
    const int   nMbins = 200;
    const float mMax   = 1.;
    for (int cen = 0; cen < mHistoCentBins; cen++) {
-      mhRealCalo[cen] = new TH2F(Form("hRealCalo_cen%d", cen), Form("Real inv mass, calorimeter"), nMbins, 0., mMax,
-                                 nPtbin, pTmin, pTmax);
-      fOutputList->Add(mhRealCalo[cen]);
-      mhMixedCalo[cen] = new TH2F(Form("hMixedCalo_cen%d", cen), Form("Mixed inv mass, calorimeter"), nMbins, 0., mMax,
-                                  nPtbin, pTmin, pTmax);
-      fOutputList->Add(mhMixedCalo[cen]);
-      mhRealHybrid[cen] = new TH2F(Form("hRealHybrid_cen%d", cen), Form("Real inv mass, hybrid"), nMbins, 0., mMax,
-                                   nPtbin, pTmin, pTmax);
-      fOutputList->Add(mhRealHybrid[cen]);
-      mhMixedHybrid[cen] = new TH2F(Form("hMixedHybrid_cen%d", cen), Form("Mixed inv mass, hybrid"), nMbins, 0., mMax,
-                                    nPtbin, pTmin, pTmax);
-      fOutputList->Add(mhMixedHybrid[cen]);
-      mhRealConv[cen] = new TH2F(Form("hRealConv_cen%d", cen), Form("Real inv mass, conversion"), nMbins, 0., mMax,
-                                 nPtbin, pTmin, pTmax);
-      fOutputList->Add(mhRealConv[cen]);
-      mhMixedConv[cen] = new TH2F(Form("hMixedConversion_cen%d", cen), Form("Mixed inv mass, conversion"), nMbins, 0.,
-                                  mMax, nPtbin, pTmin, pTmax);
-      fOutputList->Add(mhMixedConv[cen]);
+      std::string centrality = Form("%.0f-%.0f", mAxCent->GetBinLowEdge(cen + 1), mAxCent->GetBinUpEdge(cen + 1));
+      mhRealCalo.push_back(addHist(
+         new TH2F(Form("hRealCalo_cen_%s", centrality.c_str()),
+                  Form("Real inv mass, calorimeter, %s;M_{inv} (GeV/#it{c}));p_{T} (GeV/#it{c})", centrality.c_str()),
+                  nMbins, 0., mMax, nPtbin, pTmin, pTmax)));
+      mhMixedCalo.push_back(addHist(
+         new TH2F(Form("hMixedCalo_cen_%s", centrality.c_str()),
+                  Form("Mixed inv mass, calorimeter, %s;M_{inv} (GeV/#it{c});p_{T} (GeV/#it{c})", centrality.c_str()),
+                  nMbins, 0., mMax, nPtbin, pTmin, pTmax)));
+      mhRealHybrid.push_back(
+         addHist(new TH2F(Form("hRealHybrid_cen_%s", centrality.c_str()),
+                          Form("Real inv mass, hybrid, %s;M_{inv} (GeV/#it{c});p_{T} (GeV/#it{c})", centrality.c_str()),
+                          nMbins, 0., mMax, nPtbin, pTmin, pTmax)));
+      mhMixedHybrid.push_back(addHist(
+         new TH2F(Form("hMixedHybrid_cen_%s", centrality.c_str()),
+                  Form("Mixed inv mass, hybrid, %s;M_{inv} (GeV/#it{c});p_{T} (GeV/#it{c})", centrality.c_str()),
+                  nMbins, 0., mMax, nPtbin, pTmin, pTmax)));
+      mhRealConv.push_back(addHist(
+         new TH2F(Form("hRealConv_cen_%s", centrality.c_str()),
+                  Form("Real inv mass, conversion, %s;M_{inv} (GeV/#it{c});p_{T} (GeV/#it{c})", centrality.c_str()),
+                  nMbins, 0., mMax, nPtbin, pTmin, pTmax)));
+      mhMixedConv.push_back(addHist(
+         new TH2F(Form("hMixedConv_cen_%s", centrality.c_str()),
+                  Form("Mixed inv mass, conversion, %s;M_{inv} (GeV/#it{c});p_{T} (GeV/#it{c})", centrality.c_str()),
+                  nMbins, 0., mMax, nPtbin, pTmin, pTmax)));
+
+      // flow
+      mp3V1etaPtMinvCalo.push_back(
+         addHist(new TProfile3D(Form("p3V1etaPtMinvCalo_cen_%s", centrality.c_str()),
+                                Form("V1, Calo, %s;#eta;p_{T} (GeV/#it{c});M_{inv} (GeV/#it{c}))", centrality.c_str()),
+                                15, -1.5, 1.5, 25, 0, 5, nMbins, 0., mMax)));
+      mp3V1etaPtMinvHybrid.push_back(addHist(
+         new TProfile3D(Form("p3V1etaPtMinvHybrid_cen_%s", centrality.c_str()),
+                        Form("V1, Hybrid, %s;#eta;p_{T} (GeV/#it{c});M_{inv} (GeV/#it{c}))", centrality.c_str()), 15,
+                        -1.5, 1.5, 25, 0, 5, nMbins, 0., mMax)));
+      mp3V1etaPtMinvConv.push_back(
+         addHist(new TProfile3D(Form("p3V1etaPtMinvConv_cen_%s", centrality.c_str()),
+                                Form("V1, Conv, %s;#eta;p_{T} (GeV/#it{c});M_{inv} (GeV/#it{c}))", centrality.c_str()),
+                                15, -1.5, 1.5, 25, 0, 5, nMbins, 0., mMax)));
+
       if (isMC) {
-         mhRealCaloTrue[cen] = new TH2F(Form("hRealCaloTrue_cen%d", cen), Form("Real inv mass, calorimeter"), nMbins,
-                                        0., mMax, nPtbin, pTmin, pTmax);
-         fOutputList->Add(mhRealCaloTrue[cen]);
-         mhRealHybridTrue[cen] = new TH2F(Form("hRealHybridTrue_cen%d", cen), Form("Real inv mass, hybrid"), nMbins, 0.,
-                                          mMax, nPtbin, pTmin, pTmax);
-         fOutputList->Add(mhRealHybridTrue[cen]);
-         mhRealConvTrue[cen] = new TH2F(Form("hRealConvTrue_cen%d", cen), Form("Real inv mass, conversion"), nMbins, 0.,
-                                        mMax, nPtbin, pTmin, pTmax);
-         fOutputList->Add(mhRealConvTrue[cen]);
-
-         mhRealCaloTrueEl[cen] = new TH2F(Form("hRealCaloTrueEl_cen%d", cen), Form("Real inv mass, calorimeter"),
-                                          nMbins, 0., mMax, nPtbin, pTmin, pTmax);
-         fOutputList->Add(mhRealCaloTrueEl[cen]);
-         mhRealHybridTrueEl[cen] = new TH2F(Form("hRealHybridTrueEl_cen%d", cen), Form("Real inv mass, hybrid"), nMbins,
-                                            0., mMax, nPtbin, pTmin, pTmax);
-         fOutputList->Add(mhRealHybridTrueEl[cen]);
-         mhRealConvTrueEl[cen] = new TH2F(Form("hRealConvTrueEl_cen%d", cen), Form("Real inv mass, conversion"), nMbins,
-                                          0., mMax, nPtbin, pTmin, pTmax);
-         fOutputList->Add(mhRealConvTrueEl[cen]);
-
-         mhRealCaloTrueAll[cen] = new TH2F(Form("hRealCaloTrueAll_cen%d", cen), Form("Real inv mass, calorimeter"),
-                                           nMbins, 0., mMax, nPtbin, pTmin, pTmax);
-         fOutputList->Add(mhRealCaloTrueAll[cen]);
-         mhRealHybridTrueAll[cen] = new TH2F(Form("hRealHybridTrueAll_cen%d", cen), Form("Real inv mass, hybrid"),
-                                             nMbins, 0., mMax, nPtbin, pTmin, pTmax);
-         fOutputList->Add(mhRealHybridTrueAll[cen]);
-         mhRealConvTrueAll[cen] = new TH2F(Form("hRealConvTrueAll_cen%d", cen), Form("Real inv mass, conversion"),
-                                           nMbins, 0., mMax, nPtbin, pTmin, pTmax);
-         fOutputList->Add(mhRealConvTrueAll[cen]);
+         mhRealCaloTruePi.push_back(addHistClone(mhRealCalo.back(), "TruePi"));
+         mhRealHybridTruePi.push_back(addHistClone(mhRealHybrid.back(), "TruePi"));
+         mhRealConvTruePi.push_back(addHistClone(mhRealConv.back(), "TruePi"));
+         mhRealCaloTruePh.push_back(addHistClone(mhRealCalo.back(), "TruePh"));
+         mhRealHybridTruePh.push_back(addHistClone(mhRealHybrid.back(), "TruePh"));
+         mhRealConvTruePh.push_back(addHistClone(mhRealConv.back(), "TruePh"));
+         mhRealCaloTrueAll.push_back(addHistClone(mhRealCalo.back(), "TrueAll"));
+         mhRealHybridTrueAll.push_back(addHistClone(mhRealHybrid.back(), "TrueAll"));
+         mhRealConvTrueAll.push_back(addHistClone(mhRealConv.back(), "TrueAll"));
+         hPrimPi.push_back(
+            addHist(new TH2F(Form("PrimaryPi0_cen_%s", centrality.c_str()),
+                             Form("Primary Pi0, centrality %s;#eta;p_{T} (GeV/#it{c})", centrality.c_str()), 100, -2.,
+                             2., nPtbin, pTmin, pTmax)));
+         hPrimPh.push_back(
+            addHist(new TH2F(Form("PrimaryPhoton_cen_%s", centrality.c_str()),
+                             Form("Primary Photon, centrality %s;#eta;p_{T} (GeV/#it{c})", centrality.c_str()), 100,
+                             -2., 2., nPtbin, pTmin, pTmax)));
+         mp3V1etaPtMinvCaloTruePi.push_back(addHistClone(mp3V1etaPtMinvCalo.back(), "TruePi"));
+         mp3V1etaPtMinvHybridTruePi.push_back(addHistClone(mp3V1etaPtMinvHybrid.back(), "TruePi"));
+         mp3V1etaPtMinvConvTruePi.push_back(addHistClone(mp3V1etaPtMinvConv.back(), "TruePi"));
+         mp3V1etaPtMinvCaloTruePh.push_back(addHistClone(mp3V1etaPtMinvCalo.back(), "TruePh"));
+         mp3V1etaPtMinvHybridTruePh.push_back(addHistClone(mp3V1etaPtMinvHybrid.back(), "TruePh"));
+         mp3V1etaPtMinvConvTruePh.push_back(addHistClone(mp3V1etaPtMinvConv.back(), "TruePh"));
+         mp2V1etaPtPrimPiEP.push_back(addHist(
+            new TProfile2D(Form("p2V1etaPt_cen_%s_PiEP", centrality.c_str()),
+                           Form("V1 Pi EP, True, %s;#eta;p_{T} (GeV/#it{c});M_{inv} (GeV/#it{c}))", centrality.c_str()),
+                           15, -1.5, 1.5, 25, 0, 5)));
+         mp2V1etaPtPrimPhEP.push_back(addHist(
+            new TProfile2D(Form("p2V1etaPt_cen_%s_PhEP", centrality.c_str()),
+                           Form("V1 Ph EP, True, %s;#eta;p_{T} (GeV/#it{c});M_{inv} (GeV/#it{c}))", centrality.c_str()),
+                           15, -1.5, 1.5, 25, 0, 5)));
+         mp2V1etaPtPrimPiRP.push_back(addHist(
+            new TProfile2D(Form("p2V1etaPt_cen_%s_PiRP", centrality.c_str()),
+                           Form("V1 Pi RP, True, %s;#eta;p_{T} (GeV/#it{c});M_{inv} (GeV/#it{c}))", centrality.c_str()),
+                           15, -1.5, 1.5, 25, 0, 5)));
+         mp2V1etaPtPrimPhRP.push_back(addHist(
+            new TProfile2D(Form("p2V1etaPt_cen_%s_PhRP", centrality.c_str()),
+                           Form("V1 Ph RP, True, %s;#eta;p_{T} (GeV/#it{c});M_{inv} (GeV/#it{c}))", centrality.c_str()),
+                           15, -1.5, 1.5, 25, 0, 5)));
       }
    }
-   if (isMC) {
-      // spectra of primary pi0.eta,...
-      for (int cen = 0; cen < mHistoCentBins; cen++) {
-         hPrimPi0[cen] = new TH2F(Form("PrimaryPi0_cen%d", cen), "Centrality", nPtbin, pTmin, pTmax, 100, -2., 2.);
-         fOutputList->Add(hPrimPi0[cen]);
-      }
-   }
+
+   cout << "MpdV0Maker::UserInit(): complete\n";
 }
 //--------------------------------------
 void MpdConvPi0::ProcessEvent(MpdAnalysisEvent &event)
 {
+   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
+   mKalmanTracks    = event.fTPCKalmanTrack;
+   mEMCClusters     = event.fEMCCluster;
+   mMCTracks        = event.fMCTrack;
+   psiRP            = event.fMCEventHeader->GetRotZ();
 
-   if (!isInitialized) {
-      mKF = MpdKalmanFilter::Instance();
-      mKHit.SetType(MpdKalmanHit::kFixedR);
-      mPID          = new MpdPid(mParams.mPIDsigM, mParams.mPIDsigE, mParams.mPIDenergy, mParams.mPIDkoeff,
-                                 mParams.mPIDgenerator, mParams.mPIDtracking, mParams.mPIDparticles);
-      isInitialized = true;
-   }
-
-   if (!selectEvent(event)) { ///
+   if (applySelection && !selectEvent(event)) {
       return;
    }
 
-   mEMCClusters  = event.fEMCCluster;
-   mKalmanTracks = event.fTPCKalmanTrack;
+   int nTracks = mMpdGlobalTracks->GetEntriesFast();
+   isGoodTrack.resize(nTracks, true);
+   for (int i = 0; i < nTracks; i++) {
+      auto *track = static_cast<MpdTrack *>(mMpdGlobalTracks->At(i));
+      if (!selectTrack(track)) isGoodTrack.at(i) = false;
+   }
+
    if (isMC) {
-      mMCTracks = event.fMCTrack;
       for (int i = 0; i < mMCTracks->GetEntriesFast(); i++) {
-         MpdMCTrack *pr = (static_cast<MpdMCTrack *>(mMCTracks->At(i)));
-         if (pr->GetPdgCode() == 111) {
-            if (pr->GetStartX() * pr->GetStartX() + pr->GetStartY() * pr->GetStartY() < 1.) {
-               TVector3 momentum;
-               pr->GetMomentum(momentum);
-               hPrimPi0[mCenBin]->Fill(momentum.Pt(), momentum.Y());
+         auto *p = static_cast<MpdMCTrack *>(mMCTracks->At(i));
+         if (p->GetStartX() * p->GetStartX() + p->GetStartY() * p->GetStartY() <
+             1.) { // make configurable??? what about StartZ?
+            TVector3 mom;
+            p->GetMomentum(mom);
+            float eta = mom.Eta(), pt = mom.Pt(), v1ep = cos(mom.Phi() - psiEP), v1rp = cos(mom.Phi() - psiRP);
+            if (p->GetPdgCode() == 111) {
+               hPrimPi.at(mCenBin)->Fill(eta, pt);
+               mp2V1etaPtPrimPiEP.at(mCenBin)->Fill(eta, pt, v1ep);
+               mp2V1etaPtPrimPiRP.at(mCenBin)->Fill(eta, pt, v1rp);
+            }
+            if (p->GetPdgCode() == 22) {
+               hPrimPh.at(mCenBin)->Fill(eta, pt);
+               mp2V1etaPtPrimPhEP.at(mCenBin)->Fill(eta, pt, v1ep);
+               mp2V1etaPtPrimPhRP.at(mCenBin)->Fill(eta, pt, v1rp);
             }
          }
       }
@@ -222,65 +261,58 @@ void MpdConvPi0::Finish()
 bool MpdConvPi0::selectEvent(MpdAnalysisEvent &event)
 {
 
-   mhEvents->Fill(0.5);
+   mhEventCutEff->Fill(eventCutId::kNone);
    // first test if event filled?
-   if (!event.fVertex) { // if even vertex not filled, skip event
-      return false;
-   }
+   if (!event.fVertex) return false;
+   mhEventCutEff->Fill(eventCutId::kVertexPresent);
+
    // Vertex z coordinate
    MpdVertex *vertex = (MpdVertex *)event.fVertex->First();
    vertex->Position(mPrimaryVertex);
    mhVertex->Fill(mPrimaryVertex.Z());
-   if (fabs(mPrimaryVertex.Z()) > mParams.mZvtxCut) {
-      return false;
-   }
-   mZvtxBin = 0.5 * (mPrimaryVertex.Z() / mParams.mZvtxCut + 1) * nMixEventZ;
-   if (mZvtxBin < 0) mZvtxBin = 0;
-   if (mZvtxBin >= nMixEventZ) mZvtxBin = nMixEventZ - 1;
-   mhEvents->Fill(1.5);
+   if (applySelection && fabs(mPrimaryVertex.Z()) > mParams.mZvtxCut) return false;
+   mhEventCutEff->Fill(eventCutId::kVertexZ);
 
    // Centrality
-   //  mhCentrality->Fill(cen) ;
-   mCenBin = 0;
-   mhEvents->Fill(2.5);
+   float centrality = event.getCentrTPC();
+   mhCentrality->Fill(centrality);
+   mCenBin = mAxCent->FindBin(centrality) - 1;
+   if (applySelection && !(mCenBin > 0 && mCenBin < mAxCent->GetNbins())) return false;
+   mhEventCutEff->Fill(eventCutId::kGoodCentrality);
 
-   // ZCD vs TPC (pileup?)
-   mhEvents->Fill(3.5);
+   // vtxZ
+   mZvtxBin = 0.5 * nMixEventZ * (1 + mPrimaryVertex.Z() / mParams.mZvtxCut);
+   if (mZvtxBin < 0) mZvtxBin = 0;
+   if (mZvtxBin >= nMixEventZ) mZvtxBin = nMixEventZ - 1;
 
-   // Eventplane  TODO
-   mRPBin = 0;
-   mhEvents->Fill(4.5);
+   // EP
+   psiEP  = event.fMpdEP.GetPhiEP_FHCal_F_all();
+   psiEPn = event.fMpdEP.GetPhiEP_FHCal_N_all();
+   psiEPs = event.fMpdEP.GetPhiEP_FHCal_S_all();
+   mEPBin = 0.5 * nMixEventEP * (1 + psiEP / TMath::Pi());
+   cout << psiEP << "\t" << mEPBin << endl;
 
    return true;
 }
 //--------------------------------------
 void MpdConvPi0::selectConversion(MpdAnalysisEvent &event)
 {
-
    // Select V0 in this event
    mV0.clear();
 
-   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
-   int       ntr    = mMpdGlobalTracks->GetEntriesFast();
-   MpdPhoton v;
-   for (long int i = 0; i < ntr - 1; i++) {
-      MpdTrack          *mpdtrack1 = (MpdTrack *)mMpdGlobalTracks->UncheckedAt(i);
-      MpdTpcKalmanTrack *tr1       = (MpdTpcKalmanTrack *)mKalmanTracks->UncheckedAt(i);
-      if (!selectTrack(mpdtrack1)) {
-         continue;
-      }
-      for (long int j = i + 1; j < ntr; j++) {
-         MpdTrack          *mpdtrack2 = (MpdTrack *)mMpdGlobalTracks->UncheckedAt(j);
-         MpdTpcKalmanTrack *tr2       = (MpdTpcKalmanTrack *)mKalmanTracks->UncheckedAt(j);
-         if (!selectTrack(mpdtrack2)) {
-            continue;
-         }
-         if (createSelectV0(mpdtrack1, tr1, mpdtrack2, tr2, v)) {
-            mV0.emplace_back(v.X(), v.Y(), v.Z(), v.T());
-            mV0.back().setPrimary(v.primary());
-            mV0.back().setTr1(i);
-            mV0.back().setTr2(j);
-         }
+   auto v0array = event.fV0;
+   if (!v0array) {
+      cout << "WARNING: MpdConvPi0::selectConversion: empty V0 array!\n";
+      return;
+   }
+   long int nv0 = v0array->GetEntriesFast();
+   for (long int i = 0; i < nv0; i++) {
+      auto v0 = (MpdV0 *)v0array->UncheckedAt(i);
+      if (selectV0(v0)) {
+         mV0.emplace_back(v0->Px(), v0->Py(), v0->Pz(), v0->E());
+         mV0.back().setPrimary(v0->getCommonParent());
+         mV0.back().setTr1(v0->getTr1());
+         mV0.back().setTr2(v0->getTr2());
       }
    }
 }
@@ -297,25 +329,32 @@ void MpdConvPi0::selectClusters(MpdAnalysisEvent &event)
       MpdEmcClusterKI *clu = (MpdEmcClusterKI *)mEMCClusters->At(i);
 
       float e = Nonlinearity(clu->GetE());
-      mhCluCutEff->Fill(0., e);
+      mhCluCutEff->Fill(clustCutId::kNone, e);
+
       if (e < mParams.mCluEmin) {
          continue;
       }
+      mhCluCutEff->Fill(clustCutId::kE, e);
 
-      if (clu->GetMultiplicity() < mParams.mCluMult) {
+      int cluMult = clu->GetMultiplicity();
+      mhCluMult->Fill(cluMult, e);
+      if (cluMult < mParams.mCluMult) {
          continue;
       }
-      mhCluCutEff->Fill(1., e);
+      mhCluCutEff->Fill(clustCutId::kMult, e);
 
       double dx   = clu->GetX() - mPrimaryVertex.X();
       double dy   = clu->GetY() - mPrimaryVertex.Y();
       double dz   = clu->GetZ() - mPrimaryVertex.Z();
       double r    = TMath::Sqrt(dx * dx + dy * dy + dz * dz);
       double time = clu->GetTime() - r / 29979245800. * 1.e+9; // Time in ns
-      if (fabs(tofCut(time, e)) > mParams.mCluTof) {
+
+      float cluTofSigma = tofCut(time, e);
+      mhCluTofSigma->Fill(cluTofSigma, e);
+      if (fabs(cluTofSigma) > mParams.mCluTof) {
          continue;
       }
-      mhCluCutEff->Fill(2., e);
+      mhCluCutEff->Fill(clustCutId::kTof, e);
 
       float l1, l2; // Dispersion axis
       clu->GetLambdas(l1, l2);
@@ -327,15 +366,18 @@ void MpdConvPi0::selectClusters(MpdAnalysisEvent &event)
       //    if(e>mParams.mCluDispEmin &&  lambdaCut(l1,l2,e) > mParams.mCluDisp){
       //      continue ;
       //    }
-      mhCluCutEff->Fill(3., e);
+      mhCluCutEff->Fill(clustCutId::kDisp, e);
 
       float pp0      = par0[0] + par0[1] * mPrimaryVertex.Z();
       float pp1      = par1[0] + par1[1] * mPrimaryVertex.Z();
       float z_shift1 = pp0 + pp1 * log(e);
-      if (distCPV(clu->GetDPhi(), clu->GetDZ() + z_shift1, e) < mParams.mCluCPV) {
+
+      float cluDistCPV = distCPV(clu->GetDPhi(), clu->GetDZ() + z_shift1, e);
+      mhCluDistCPV->Fill(cluDistCPV, e);
+      if (cluDistCPV < mParams.mCluCPV) {
          continue;
       }
-      mhCluCutEff->Fill(4., e);
+      mhCluCutEff->Fill(clustCutId::kCPV, e);
 
       mClusters.emplace_back(dx / r * e, dy / r * e, dz / r * e, e);
       mClusters.back().setTr1(i);
@@ -358,16 +400,20 @@ void MpdConvPi0::processHistograms(MpdAnalysisEvent &event)
    for (int i = 0; i < nClu - 1; i++) {
       for (int j = i + 1; j < nClu; j++) {
          TLorentzVector sum = mClusters[i] + mClusters[j];
-         mhRealCalo[mCenBin]->Fill(sum.M(), sum.Pt());
-         long int ip = IsSameParent(mClusters[i].primary(), mClusters[j].primary());
+         float          eta = sum.Eta(), pt = sum.Pt(), m = sum.M(), v1 = (sum.Phi() - psiEP);
+         mhRealCalo.at(mCenBin)->Fill(m, pt);
+         mp3V1etaPtMinvCalo.at(mCenBin)->Fill(eta, pt, m, v1);
+         long int ip = MpdV0Maker::FindCommonParent(mClusters[i].primary(), mClusters[j].primary(), mMCTracks);
          if (ip >= 0) {
-            mhRealCaloTrueAll[mCenBin]->Fill(sum.M(), sum.Pt());
-            if (static_cast<MpdMCTrack *>(mMCTracks->At(ip))->GetPdgCode() == 111) {
-               mhRealCaloTrue[mCenBin]->Fill(sum.M(), sum.Pt());
+            int pdg = abs(static_cast<MpdMCTrack *>(mMCTracks->At(ip))->GetPdgCode());
+            mhRealCaloTrueAll.at(mCenBin)->Fill(m, pt);
+            if (pdg == 111) {
+               mp3V1etaPtMinvCaloTruePi.at(mCenBin)->Fill(eta, pt, m, v1);
+               mhRealCaloTruePi.at(mCenBin)->Fill(m, pt);
             }
-            if (TMath::Abs(static_cast<MpdMCTrack *>(mMCTracks->At(ip))->GetPdgCode()) == 11 ||
-                static_cast<MpdMCTrack *>(mMCTracks->At(ip))->GetPdgCode() == 22) {
-               mhRealCaloTrueEl[mCenBin]->Fill(sum.M(), sum.Pt());
+            if (pdg == 22) {
+               mp3V1etaPtMinvCaloTruePh.at(mCenBin)->Fill(eta, pt, m, v1);
+               mhRealCaloTruePh.at(mCenBin)->Fill(m, pt);
             }
          }
       }
@@ -375,36 +421,44 @@ void MpdConvPi0::processHistograms(MpdAnalysisEvent &event)
 
    for (int i = 0; i < nClu; i++) {
       for (int j = 0; j < nV0; j++) {
-         if (TestHybrid(mClusters[i], mV0[j])) {
-            TLorentzVector sum = mClusters[i] + mV0[j];
-            mhRealHybrid[mCenBin]->Fill(sum.M(), sum.Pt());
-            long int ip = IsSameParent(mClusters[i].primary(), mV0[j].primary());
-            if (ip >= 0) {
-               mhRealHybridTrueAll[mCenBin]->Fill(sum.M(), sum.Pt());
-               if (static_cast<MpdMCTrack *>(mMCTracks->At(ip))->GetPdgCode() == 111) {
-                  mhRealHybridTrue[mCenBin]->Fill(sum.M(), sum.Pt());
-               }
-               if (TMath::Abs(static_cast<MpdMCTrack *>(mMCTracks->At(ip))->GetPdgCode()) == 11 ||
-                   static_cast<MpdMCTrack *>(mMCTracks->At(ip))->GetPdgCode() == 22) {
-                  mhRealHybridTrueEl[mCenBin]->Fill(sum.M(), sum.Pt());
-               }
+         if (!TestHybrid(mClusters[i], mV0[j])) continue;
+         TLorentzVector sum = mClusters[i] + mV0[j];
+         float          eta = sum.Eta(), pt = sum.Pt(), m = sum.M(), v1 = (sum.Phi() - psiEP);
+         mhRealHybrid.at(mCenBin)->Fill(m, pt);
+         mp3V1etaPtMinvHybrid.at(mCenBin)->Fill(eta, pt, m, v1);
+         long int ip = MpdV0Maker::FindCommonParent(mClusters[i].primary(), mV0[j].primary(), mMCTracks);
+         if (ip >= 0) {
+            int pdg = abs(static_cast<MpdMCTrack *>(mMCTracks->At(ip))->GetPdgCode());
+            mhRealHybridTrueAll.at(mCenBin)->Fill(m, pt);
+            if (pdg == 111) {
+               mp3V1etaPtMinvHybridTruePi.at(mCenBin)->Fill(eta, pt, m, v1);
+               mhRealHybridTruePi.at(mCenBin)->Fill(m, pt);
+            }
+            if (pdg == 22) {
+               mp3V1etaPtMinvHybridTruePh.at(mCenBin)->Fill(eta, pt, m, v1);
+               mhRealHybridTruePh.at(mCenBin)->Fill(m, pt);
             }
          }
       }
    }
+
    for (int i = 0; i < nV0 - 1; i++) {
       for (int j = i + 1; j < nV0; j++) {
          TLorentzVector sum = mV0[i] + mV0[j];
-         mhRealConv[mCenBin]->Fill(sum.M(), sum.Pt());
-         long int ip = IsSameParent(mV0[i].primary(), mV0[j].primary());
+         float          eta = sum.Eta(), pt = sum.Pt(), m = sum.M(), v1 = (sum.Phi() - psiEP);
+         mhRealConv.at(mCenBin)->Fill(m, pt);
+         mp3V1etaPtMinvConv.at(mCenBin)->Fill(eta, pt, m, v1);
+         long int ip = MpdV0Maker::FindCommonParent(mV0[i].primary(), mV0[j].primary(), mMCTracks);
          if (ip >= 0) {
-            mhRealConvTrueAll[mCenBin]->Fill(sum.M(), sum.Pt());
-            if (static_cast<MpdMCTrack *>(mMCTracks->At(ip))->GetPdgCode() == 111) {
-               mhRealConvTrue[mCenBin]->Fill(sum.M(), sum.Pt());
+            int pdg = abs(static_cast<MpdMCTrack *>(mMCTracks->At(ip))->GetPdgCode());
+            mhRealConvTrueAll.at(mCenBin)->Fill(m, pt);
+            if (pdg == 111) {
+               mp3V1etaPtMinvConvTruePi.at(mCenBin)->Fill(eta, pt, m, v1);
+               mhRealConvTruePi.at(mCenBin)->Fill(m, pt);
             }
-            if (TMath::Abs(static_cast<MpdMCTrack *>(mMCTracks->At(ip))->GetPdgCode()) == 11 ||
-                static_cast<MpdMCTrack *>(mMCTracks->At(ip))->GetPdgCode() == 22) {
-               mhRealConvTrueEl[mCenBin]->Fill(sum.M(), sum.Pt());
+            if (pdg == 22) {
+               mp3V1etaPtMinvConvTruePh.at(mCenBin)->Fill(eta, pt, m, v1);
+               mhRealConvTruePh.at(mCenBin)->Fill(m, pt);
             }
          }
       }
@@ -412,307 +466,221 @@ void MpdConvPi0::processHistograms(MpdAnalysisEvent &event)
 
    // Mixed
    // calculate bin from zVertex-centrality-reaction plane
-   int mixBin = mZvtxBin * nMixEventCent * nMixEventRP + mCenBin * nMixEventRP + mRPBin;
+   int mixBin = mZvtxBin * nMixEventCent * nMixEventEP + mCenBin * nMixEventEP + mEPBin;
+   // V cout << "mixBin = mZvtxBin * nMixEventCent * nMixEventEP + mCenBin * nMixEventEP + mEPBin" << endl;
+   // V cout << mixBin << "=" << mZvtxBin << "*" << nMixEventCent << "*" << nMixEventEP << "+" << mCenBin << "*"
+   // V     << nMixEventEP << "+" << mEPBin << endl;
 
-   for (auto &vm : mMixClu[mixBin]) {
+   for (auto &vm : mMixClu.at(mixBin)) {
       for (auto &v : mClusters) {
          TLorentzVector sum = v + vm;
-         mhMixedCalo[mCenBin]->Fill(sum.M(), sum.Pt());
+         mhMixedCalo.at(mCenBin)->Fill(sum.M(), sum.Pt());
       }
    }
-   for (auto &vm : mMixV0[mixBin]) {
+   for (auto &vm : mMixV0.at(mixBin)) {
       for (auto &v : mClusters) {
          TLorentzVector sum = v + vm;
-         mhMixedHybrid[mCenBin]->Fill(sum.M(), sum.Pt());
+         mhMixedHybrid.at(mCenBin)->Fill(sum.M(), sum.Pt());
       }
    }
-   for (auto &vm : mMixClu[mixBin]) {
+   for (auto &vm : mMixClu.at(mixBin)) {
       for (auto &v : mV0) {
          TLorentzVector sum = v + vm;
-         mhMixedHybrid[mCenBin]->Fill(sum.M(), sum.Pt());
+         mhMixedHybrid.at(mCenBin)->Fill(sum.M(), sum.Pt());
       }
    }
-   for (auto &vm : mMixV0[mixBin]) {
+   for (auto &vm : mMixV0.at(mixBin)) {
       for (auto &v : mV0) {
          TLorentzVector sum = v + vm;
-         mhMixedConv[mCenBin]->Fill(sum.M(), sum.Pt());
+         mhMixedConv.at(mCenBin)->Fill(sum.M(), sum.Pt());
       }
    }
 
    // Append new particles to queue and remove those at the beginning
    for (auto &v : mV0) {
-      mMixV0[mixBin].emplace_back(v);
+      mMixV0.at(mixBin).emplace_back(v);
    }
-   while (mMixV0[mixBin].size() > (UInt_t)mMaxMixSize) {
-      mMixV0[mixBin].pop_front();
+   while (mMixV0.at(mixBin).size() > (UInt_t)mMaxMixSize) {
+      mMixV0.at(mixBin).pop_front();
    }
    for (auto &v : mClusters) {
-      mMixClu[mCenBin].emplace_back(v);
+      mMixClu.at(mixBin).emplace_back(v);
    }
-   while (mMixClu[mixBin].size() > (UInt_t)mMaxMixSize) {
-      mMixClu[mixBin].pop_front();
+   while (mMixClu.at(mixBin).size() > (UInt_t)mMaxMixSize) {
+      mMixClu.at(mixBin).pop_front();
    }
 }
 
 bool MpdConvPi0::selectTrack(MpdTrack *mpdtrack)
 {
-
-   mhNhits->Fill(mpdtrack->GetNofHits());
-   float pt = TMath::Abs(mpdtrack->GetPt());
-   mhCutEff->Fill(0., pt);
-   if (mpdtrack->GetNofHits() < mParams.mNofHitsCut) return false; // nhits > 10
-   mhCutEff->Fill(1., pt);
-   mhTracks->Fill(pt, mpdtrack->GetEta());
-   if (fabs(mpdtrack->GetEta()) > mParams.mEtaCut) return false; //|eta| < 1.0
-   if (pt < mParams.mPtminCut) return false;                     // pT > 50 MeV/c
-   mhCutEff->Fill(2., pt);
-
-   int charge;
-   if (mpdtrack->GetPt() < 0)
-      charge = 1;
-   else
-      charge = -1;
-
-   bool isGoodPID;
-   if (mpdtrack->GetTofFlag() == 2 || mpdtrack->GetTofFlag() == 6) {
-      isGoodPID =
-         mPID->FillProbs(pt * TMath::CosH(mpdtrack->GetEta()), mpdtrack->GetdEdXTPC(), mpdtrack->GetTofMass2(), charge);
-   } else {
-      isGoodPID = mPID->FillProbs(pt * TMath::CosH(mpdtrack->GetEta()), mpdtrack->GetdEdXTPC(), charge);
-   }
-
-   mhProbEl->Fill(mPID->GetProbEl(), fabs(mpdtrack->GetPt()));
    bool isElectron = false;
    if (isMC) { // same for true electron tracks
-      long int prim1 = mpdtrack->GetID();
-      if (prim1 >= 0) {
-         isElectron = abs((static_cast<MpdMCTrack *>(mMCTracks->At(prim1)))->GetPdgCode()) == 11;
+      long int matchId = mpdtrack->GetID();
+      if (matchId >= 0) {
+         isElectron = abs((static_cast<MpdMCTrack *>(mMCTracks->At(matchId)))->GetPdgCode()) == 11;
       }
    }
-   if (isElectron) {
-      mhProbElTrue->Fill(mPID->GetProbEl(), pt);
-   }
+   float pt = mpdtrack->GetPt(), eta = mpdtrack->GetEta();
+   mhTrackCutEff->Fill(trackCutId::kNone, pt);
 
-   if (isGoodPID && mPID->GetProbEl() < mParams.mProbElCut) {
-      return false;
+   int nHits = mpdtrack->GetNofHits();
+   if (isElectron) mhTrackNhitsTrue->Fill(nHits, pt);
+   if (applySelection && nHits < mParams.mNofHitsCut) return false;
+   mhTrackNhits->Fill(nHits);
+   mhTrackCutEff->Fill(trackCutId::kNhits, pt);
+
+   if (isElectron) mhTrackEtaPtTrue->Fill(eta, pt);
+   if (applySelection && !(fabs(eta) < mParams.mEtaCut && pt > mParams.mPtminCut)) return false;
+   mhTrackEtaPt->Fill(eta, pt);
+   mhTrackCutEff->Fill(trackCutId::kEtaPt, pt);
+
+   float probEl = mpdtrack->GetPidProbElectron(); // TPC only or combined??? (actually none works)
+   if (isElectron) mhTrackProbElTrue->Fill(probEl, pt);
+   if (applySelection && probEl < mParams.mProbElCut) return false;
+   mhTrackProbEl->Fill(probEl, fabs(mpdtrack->GetPt()));
+   mhTrackCutEff->Fill(trackCutId::kProbElectron, pt);
+
+   bool  hasTofHit   = (fabs(mpdtrack->GetTofDphiSigma()) < 3.0 && fabs(mpdtrack->GetTofDzSigma()) < 3.0);
+   bool  tofElectron = false, dEdxElectron = false;
+   float nSigma_dEdx = mpdtrack->GetTPCNSigma(kEl);
+   float nSigma_beta = mpdtrack->GetTOFNSigma(kEl);
+   if (isElectron) { // same for true electron tracks
+      mhTrackNsigDEdxTrue->Fill(nSigma_dEdx, pt);
+      mhTrackNsigBetaTrue->Fill(nSigma_beta, pt);
+      mhTrackNsigDEdxNsigBetaTrue->Fill(nSigma_dEdx, nSigma_beta);
    }
-   mhCutEff->Fill(3., pt);
-   float dEdx = dEdx_sigma(mpdtrack->GetdEdXTPC(), sqrt(pow(pt, 2) + pow(mpdtrack->GetPz(), 2)));
-   mhdEdx->Fill(dEdx, pt);
-   if (isElectron) { // same for true electrontracks
-      mhdEdxTrue->Fill(dEdx, pt);
+   if (fabs(nSigma_dEdx) < mParams.mdEdxSigmaCut) {
+      dEdxElectron = true;
    }
-   if ((fabs(dEdx) < mParams.mdEdxSigmaCut) &&
-       (fabs(Beta_sigma(mpdtrack->GetTofBeta(), sqrt(pow(pt, 2) + pow(mpdtrack->GetPz(), 2)))) <
-           mParams.mBetaSigmaCut &&
-        (mpdtrack->GetTofFlag() == 2 || mpdtrack->GetTofFlag() == 6))) {
-      mhCutEff->Fill(4., pt);
-      return true;
-   } else {
-      return false;
+   if (hasTofHit && fabs(nSigma_beta) < mParams.mBetaSigmaCut) {
+      tofElectron = true;
    }
-   return false;
+   if (applySelection) {
+      if (!dEdxElectron) return false;
+      if (mParams.mRequireTOFpid && !tofElectron) return false;
+   }
+   mhTrackNsigDEdx->Fill(nSigma_dEdx, pt);
+   mhTrackNsigBeta->Fill(nSigma_beta, pt);
+   mhTrackNsigDEdxNsigBeta->Fill(nSigma_dEdx, nSigma_beta);
+   mhTrackCutEff->Fill(trackCutId::kTpcTofPid, pt);
+
+   return true;
 }
 
-bool MpdConvPi0::createSelectV0(MpdTrack *tr1, MpdTpcKalmanTrack *ktr1, MpdTrack *tr2, MpdTpcKalmanTrack *ktr2,
-                                MpdPhoton &v)
+bool MpdConvPi0::selectV0(MpdV0 *v0)
 {
-   // Construct and check V0
+   // Check V0
+   float pt = v0->Pt();
+   mhV0CutEff->Fill(V0CutId::kNone, pt);
 
-   // Use opposite charge tracks
-   int charge1, charge2;
-   if (tr1->GetPt() < 0)
-      charge1 = 1;
-   else
-      charge1 = -1;
-   if (tr2->GetPt() < 0)
-      charge2 = 1;
-   else
-      charge2 = -1;
+   if (applySelection && !(isGoodTrack.at(v0->getTr1()) && isGoodTrack.at(v0->getTr2()))) return false;
+   mhV0CutEff->Fill(V0CutId::kGoodTracks, pt);
 
-   // reject same sign pairs
-   if (charge1 * charge2 > 0) return false;
-
-   // Will be used for extrapolation
-   MpdTpcKalmanTrack trCorK1(*ktr1);
-   MpdHelix          helix1 = MakeHelix(trCorK1);
-   MpdParticle       el1(trCorK1, 0);
-   if (charge1 > 0) el1.SetPdg(-11);
-   if (charge1 < 0) el1.SetPdg(11);
-   el1.SetMass();
-
-   MpdTpcKalmanTrack trCorK2(*ktr2);
-   MpdHelix          helix2 = MakeHelix(trCorK2);
-   MpdParticle       el2(trCorK2, 0);
-
-   if (charge2 > 0) el2.SetPdg(-11);
-   if (charge2 < 0) el2.SetPdg(11);
-   el2.SetMass();
-
-   // pair
-   mPartK.clear();
-   mPartK.emplace_back(&el1);
-   mPartK.emplace_back(&el2);
-
-   MpdParticle gamEE;
-   float       chi2 = TMath::Abs(gamEE.BuildMother(mPartK));
-   float       pt   = gamEE.Pt();
-   mhChi2->Fill(chi2, pt);
-   mhCutEff->Fill(10., pt);
-
-   if (pt < 0.005) { // to avoid fpe
-      return false;
-   }
-   mhCutEff->Fill(11., pt);
+   if (applySelection && pt < 0.005) return false; // to avoid fpe
+   mhV0CutEff->Fill(V0CutId::kNonZeroPt, pt);
 
    bool     isTrue         = false; // is true conv pair?
    long int commonParentId = -1;
    if (isMC) { // same for true electrontracks
-      long int prim1 = tr1->GetID();
-      long int prim2 = tr2->GetID();
-      commonParentId = IsSameParent(prim1, prim2);
+      commonParentId = v0->getCommonParent();
       if (commonParentId >= 0) { // there is common parent
          isTrue = (static_cast<MpdMCTrack *>(mMCTracks->At(commonParentId))->GetPdgCode() == 22);
       }
    }
+
+   float chi2 = v0->getChi2();
    if (isTrue) {
       mhChi2True->Fill(chi2, pt);
    }
-   if (chi2 > mParams.mChi2Cut) {
-      return false;
-   }
-   mhCutEff->Fill(12., pt);
+   if (applySelection && chi2 > mParams.mChi2Cut) return false;
+   mhChi2->Fill(chi2, pt);
+   mhV0CutEff->Fill(V0CutId::kChi2, pt);
 
-   TVector3 v0(gamEE.Getx()(0, 0), gamEE.Getx()(1, 0), gamEE.Getx()(2, 0));
-   v0 -= mPrimaryVertex;
-   // float decay = v0.Mag();
+   float x, y, z;
+   v0->getVertex(x, y, z);
 
-   mhConvMap->Fill(gamEE.Getx()(0, 0), gamEE.Getx()(1, 0), gamEE.Getx()(2, 0));
+   mhConvMap->Fill(x, y, z);
    if (isTrue) {
-      mhConvMapTrue->Fill(gamEE.Getx()(0, 0), gamEE.Getx()(1, 0), gamEE.Getx()(2, 0));
+      mhConvMapTrue->Fill(x, y, z);
    }
 
-   float rConv = TMath::Sqrt(pow(gamEE.Getx()(0, 0), 2) + pow(gamEE.Getx()(1, 0), 2));
-   if (rConv < mParams.mMinR2Cut || rConv > mParams.mMaxR2Cut) {
-      return false;
-   }
-   mhCutEff->Fill(13., pt);
-
-   float angle; // disth,
-   angle = v0.Angle(gamEE.Momentum3());
-   mhAlpha->Fill(angle, pt);
+   float rConv = v0->getRconv();
    if (isTrue) { // same for true electrontracks
-      mhAlphaTrue->Fill(angle, pt);
+      mhV0rConvTrue->Fill(rConv, pt);
    }
-   if (angle > mParams.mAlphaCut) {
-      return false;
+   if (applySelection && (rConv < mParams.mMinR2Cut || rConv > mParams.mMaxR2Cut)) return false;
+   mhV0rConv->Fill(rConv, pt);
+   mhV0CutEff->Fill(V0CutId::kRconv, pt);
+
+   float alpha, qt;
+   v0->getArmenteros(alpha, qt);
+   if (isTrue) { // same for true electrontracks
+      mhAlphaTrue->Fill(alpha, pt);
    }
+   if (applySelection && alpha > mParams.mAlphaCut) return false;
+   mhAlpha->Fill(alpha, pt);
+   mhV0CutEff->Fill(V0CutId::kAlpha, pt);
 
-   mhCutEff->Fill(14., pt);
-
-   // if( ePos->R() <= ((TMath::Abs(ePos->Vz()) * fLineCutZRSlope) - fLineCutZValue)){
-   //   return kFALSE;  // line cut to exclude regions where we do not reconstruct
-   // } else if ( fEtaCutMin != -0.1 &&   ePos->R() >= ((TMath::Abs(ePos->Vz()) * fLineCutZRSlopeMin) -
-   // fLineCutZValueMin)){
-   //   return kFALSE;
+   // if(applySelection &&  ePos->R() <= ((TMath::Abs(ePos->Vz()) * fLineCutZRSlope) - fLineCutZValue)){
+   //   return false;  // line cut to exclude regions where we do not reconstruct
+   // } else if (applySelection &&  fEtaCutMin != -0.1 &&   ePos->R() >= ((TMath::Abs(ePos->Vz()) * fLineCutZRSlopeMin)
+   // - fLineCutZValueMin)){
+   //   return false;
    // }
 
-   std::pair<float, float> paths = helix1.pathLengths(helix2);
-   TVector3                p1    = helix1.at(paths.first);
-   TVector3                p2    = helix2.at(paths.second);
-   p1 -= p2;
-   float dist = p1.Mag(); // Closest distance between daughters
+   float dist = v0->getDaughterDCA();
 
-   mhDist->Fill(dist, pt);
    if (isTrue) { // same for true electrontracks
       mhDistTrue->Fill(dist, pt);
    }
-   if (dist > mParams.mDistCut) {
-      return false;
-   }
-   mhCutEff->Fill(15., pt);
+   if (applySelection && dist > mParams.mDistCut) return false;
+   mhDist->Fill(dist, pt);
+   mhV0CutEff->Fill(V0CutId::kDist, pt);
 
-   hmMassEE->Fill(gamEE.GetMass(), pt);
+   float mass = v0->getMass();
    if (isTrue) { // same for true electrontracks
-      hmMassEETrue->Fill(gamEE.GetMass(), pt);
+      mhMassEETrue->Fill(mass, pt);
    }
-   if (gamEE.GetMass() > mParams.mMassCut) {
-      return false;
-   }
-   mhCutEff->Fill(16., pt);
+   if (applySelection && mass > mParams.mMassCut) return false;
+   mhMassEE->Fill(mass, pt);
+   mhV0CutEff->Fill(V0CutId::kMass, pt);
 
-   // Pair_chi_1[n_ks] = el1.Chi2Vertex(vertex);
-   // Pair_chi_2[n_ks] = el2.Chi2Vertex(vertex);
-   // A-P cut
-   //  Gamma selection based on QT from Armenteros
-   // propagate trCorK1,trCorK2 to conversion point
-
-   MpdKalmanHit hitTmp;
-   hitTmp.SetType(MpdKalmanHit::kFixedR);
-   hitTmp.SetPos(trCorK1.GetPos());
-   trCorK1.SetParamNew(*trCorK1.GetParam());
-   trCorK1.SetPos(trCorK1.GetPosNew());
-   trCorK1.ReSetWeight();
-   //  TMatrixDSym w = *trCorK1.GetWeight(); // save current weight matrix
-   mKHit.SetPos(rConv);
-   if (!mKF->PropagateToHit(&trCorK1, &mKHit, kFALSE, kFALSE)) {
-      return false;
-   }
-   trCorK1.SetDirection(MpdKalmanTrack::kInward);
-   TVector3 m1 = trCorK1.Momentum3();
-
-   hitTmp.SetPos(trCorK2.GetPos());
-   trCorK2.SetParamNew(*trCorK2.GetParam());
-   trCorK2.SetPos(trCorK2.GetPosNew());
-   trCorK2.ReSetWeight();
-   TMatrixDSym w = *trCorK1.GetWeight(); // save current weight matrix
-   mKHit.SetPos(rConv);
-   if (!mKF->PropagateToHit(&trCorK2, &mKHit, kFALSE, kFALSE)) {
-      return false;
-   }
-   trCorK2.SetDirection(MpdKalmanTrack::kInward);
-   TVector3 m2 = trCorK2.Momentum3();
-
-   float qt, alpha;
-   ArmenterosPodolanski(m1, m2, qt, alpha);
-
-   mhArmPo->Fill(alpha, qt);
    if (isTrue) {
       mhArmPoTrue->Fill(alpha, qt);
    }
-   if (!ArmenterosQtCut(qt, alpha, gamEE)) {
+   if (applySelection && !ArmenterosQtCut(v0)) {
       // return false;
    }
-   mhCutEff->Fill(17., pt);
+   mhArmPo->Fill(alpha, qt);
+   mhV0CutEff->Fill(V0CutId::kQt, pt);
 
    // Asymmetry cut
-   float asym1 = m1.Mag() / gamEE.Momentum();
-   float asym2 = m2.Mag() / gamEE.Momentum();
-   mhAsym->Fill(asym1, pt);
-   mhAsym->Fill(asym2, pt);
+   float asym1, asym2;
+   v0->getAsymmetry(asym1, asym2);
    if (isTrue) {
       mhAsymTrue->Fill(asym1, pt);
       mhAsymTrue->Fill(asym2, pt);
    }
-   if (!(AsymmetryCut(asym1, pt) && AsymmetryCut(asym2, pt))) {
-      return kFALSE;
+   if (applySelection && !(AsymmetryCut(asym1, pt) && AsymmetryCut(asym2, pt))) {
+      return false;
    }
-   mhCutEff->Fill(18., pt);
+   mhAsym->Fill(asym1, pt);
+   mhAsym->Fill(asym2, pt);
+   mhV0CutEff->Fill(V0CutId::kAsymmetry, pt);
 
-   float cospsi = CosPsiPair(m1, m2);
-   mhCosPsi->Fill(cospsi, pt);
+   float cospsi = v0->getCospsi();
    if (isTrue) { // same for true electrontracks
       mhCosPsiTrue->Fill(cospsi, pt);
    }
-   if (cospsi < mParams.mCosPsiCut) {
-      return kFALSE;
-   }
-   mhCutEff->Fill(19., pt);
+   if (applySelection && cospsi < mParams.mCosPsiCut) return false;
+   mhCosPsi->Fill(cospsi, pt);
+   mhV0CutEff->Fill(V0CutId::kCosPsi, pt);
 
-   // if(TMath::Abs(photonAOD->GetDCAzToPrimVtx()) > fDCAZPrimVtxCut) { //DCA Z cut of photon to primary vertex
-   //   return kFALSE;
+   // if(applySelection && TMath::Abs(photonAOD->GetDCAzToPrimVtx()) > fDCAZPrimVtxCut) { //DCA Z cut of photon to
+   // primary vertex
+   //   return false;
    // }
-   mhCutEff->Fill(20., pt);
+   mhV0CutEff->Fill(V0CutId::kPhotonAOD, pt);
 
    // if(fHistoInvMassafter)fHistoInvMassafter->Fill(photon->GetMass());
    // if(fHistoArmenterosafter)fHistoArmenterosafter->Fill(photon->GetArmenterosAlpha(),photon->GetArmenterosQt());
@@ -723,17 +691,9 @@ bool MpdConvPi0::createSelectV0(MpdTrack *tr1, MpdTpcKalmanTrack *ktr1, MpdTrack
    //   electronCandidate->P()!=0)fHistoAsymmetryafter->Fill(photon->GetPhotonP(),electronCandidate->P()/photon->GetPhotonP());
    // }
 
-   mStorage.emplace_back(isTrue, pt, chi2, gamEE.GetMass(), rConv, angle, dist, qt, alpha, asym1, cospsi);
-
-   v.SetXYZT((gamEE.Pt()) * TMath::Cos(gamEE.Phi()), (gamEE.Pt()) * TMath::Sin(gamEE.Phi()),
-             TMath::Sign(TMath::Sqrt(gamEE.Momentum() * gamEE.Momentum() - gamEE.Pt() * gamEE.Pt()),
-                         TMath::Cos(gamEE.Theta())),
-             gamEE.Momentum());
-   v.setPrimary(commonParentId);
-
-   mhConvSp->Fill(v.Pt(), v.Eta());
+   mhConvSp->Fill(v0->Pt(), v0->Eta());
    if (isTrue) {
-      mhConvSpTrue->Fill(v.Pt(), v.Eta());
+      mhConvSpTrue->Fill(v0->Pt(), v0->Eta());
    }
 
    return true;
@@ -808,102 +768,9 @@ bool MpdConvPi0::TestHybrid(MpdPhoton &c, MpdPhoton &v0) const
 
    return (dphi * dphi / (25. * 25.) + dz * dz / (9. * 9.)) > 1.;
 }
-long int MpdConvPi0::IsSameParent(long int prim1, long int prim2) const
-{
-   // Looks through parents and finds if there was commont pi0 among ancestors
-
-   if (!isMC) return -1; // can not say anything
-
-   while (prim1 != -1) {
-      long int pr2 = prim2;
-
-      while (pr2 != -1) {
-         if (prim1 == pr2) {
-            return prim1;
-         }
-         pr2 = (static_cast<MpdMCTrack *>(mMCTracks->At(pr2)))->GetMotherId();
-      }
-      prim1 = (static_cast<MpdMCTrack *>(mMCTracks->At(prim1)))->GetMotherId();
-   }
-   return -1;
-}
-
-MpdHelix MpdConvPi0::MakeHelix(const MpdKalmanTrack &tr) const
-{
-   float r   = tr.GetPosNew();
-   float phi = tr.GetParam(0) / r;
-   float x   = r * TMath::Cos(phi);
-   float y   = r * TMath::Sin(phi);
-   float dip = tr.GetParam(3);
-   float cur = 0.3 * 0.01 * 5 / 10; // 5 kG
-   cur *= TMath::Abs(tr.GetParam(4));
-   TVector3 o(x, y, tr.GetParam(1));
-   Int_t    h = (Int_t)TMath::Sign(1.1, tr.GetParam(4));
-   MpdHelix helix(cur, dip, tr.GetParam(2) - TMath::PiOver2() * h, o, h);
-   return helix;
-}
-
-float MpdConvPi0::dEdx_sigma(float dEdx, float mom) const
-{
-   // To be moved to centralized class
-   if (mom < 0.05) mom = 0.05;
-
-   float mean[7]  = {9.793192e+002, -5.234570e-003, -3.178321e+000, -4.987832e-002,
-                    3.617478e-002, -1.021387e-001, 9.169614e+002};
-   float width[5] = {-1.589388e+003, 1.834372e+003, 4.125626e-003, 9.376418e-001, -1.466546e-001};
-
-   float mean_exp, width_exp;
-
-   mean_exp =
-      mean[0] / mom / mom *
-         (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
-      mean[6];
-   width_exp = width[0] + width[1] * pow(mom, width[2]) + width[3] / pow(mom - width[4], 3);
-
-   return (dEdx - mean_exp) / width_exp;
-}
-
-float MpdConvPi0::Beta_sigma(float beta, float mom) const
-{
-   // To be moved to centralized class
-   if (mom < 0.05) mom = 0.05;
-
-   float mean[7]  = {3.150000e+003, -4.833115e-008, 1.688117e+000, -7.840445e-007,
-                    3.034956e-007, -3.852622e-007, 5.318573e+003};
-   float width[5] = {5.854497e-003, 6.078866e-003, -1.174312e-001, 3.039271e-006, -8.370411e-002};
-
-   float mean_exp, width_exp;
-
-   mean_exp =
-      mean[0] / mom / mom *
-         (mean[1] * log(mom * mom) - mean[2] * mom * mom - mean[3] * mom - mean[4] - mean[5] * mom * mom * mom) +
-      mean[6] - 0.001;
-   width_exp = width[0] + width[1] * pow(mom, width[2]) + width[3] / pow(mom - width[4], 4);
-
-   return (beta - mean_exp) / width_exp;
-}
-
-void MpdConvPi0::ArmenterosPodolanski(TVector3 &m1, TVector3 &m2, float &qt, float &alpha) const
-{
-
-   alpha = 0., qt = 0.;
-
-   TVector3 s = m1 + m2;
-
-   float pn  = m1.Mag();
-   float pln = m1.Dot(s);
-   float plp = m2.Dot(s);
-
-   if (pn == 0.0) return;
-   alpha    = (plp - pln) / (plp + pln);
-   float sm = s.Mag();
-   if (sm > 0) {
-      qt = m1.Cross(s).Mag() / sm;
-   }
-}
 
 //________________________________________________________________________
-bool MpdConvPi0::ArmenterosQtCut(float qt, float alpha, MpdParticle &part) const
+bool MpdConvPi0::ArmenterosQtCut(MpdV0 *v0) const
 { // Armenteros Qt Cut
    // if(mParams.mDo2DQt){
    //   if(mParams.mDoQtGammaSelection==1){
@@ -956,7 +823,7 @@ bool MpdConvPi0::AsymmetryCut(float asym, float pt) const
 
    //     if( trackNegAsy > fFAsymmetryCut->Eval(photon->GetPhotonP()) || trackNegAsy
    //     < 1.-fFAsymmetryCut->Eval(photon->GetPhotonP()) ){
-   //       return kFALSE;
+   //       return false;
    //     }
 
    //   } else {
@@ -967,38 +834,13 @@ bool MpdConvPi0::AsymmetryCut(float asym, float pt) const
    //       }
 
    //       if( trackNegAsy<fMinPhotonAsymmetry ||trackNegAsy>(1.- fMinPhotonAsymmetry)){
-   //         return kFALSE;
+   //         return false;
    //       }
    //     }
    //   }
 
    // }
    return true;
-}
-///________________________________________________________________________
-float MpdConvPi0::CosPsiPair(TVector3 &p1, TVector3 &p2) const
-{
-
-   // float p1[3] = {tr1->GetPx(),tr1->GetPy(),tr1->GetPz()};
-   // float p2[3] = {tr2->GetPx(),tr2->GetPy(),tr2->GetPz()};
-   // float u[3] = {p1[0]+p2[0],p1[1]+p2[1],p1[2]+p2[2]};
-   TVector3 u = p1 + p2;
-
-   // float normp1 = sqrt( (p1[0]*p1[0]) + (p1[1]*p1[1]) + (p1[2]*p1[2]) );
-   // float normp2 = sqrt( (p2[0]*p2[0]) + (p2[1]*p2[1]) + (p2[2]*p2[2]) );
-   // float normu  = sqrt( (u[0]*u[0]) + (u[1]*u[1]) + (u[2]*u[2]) );
-
-   // for(int i=3; i--;){
-   //   p1[i] /= normp1;
-   //   p2[i] /= normp2;
-   //   u[i] /= normu;
-   // }
-
-   TVector3 v = p1.Cross(p2);
-   TVector3 w = u.Cross(v);
-   TVector3 z(0, 0, 1.);
-   TVector3 wc = u.Cross(z);
-   return wc.Angle(w);
 }
 
 float MpdConvPi0::distCPV(float dphi, float dz, float E) const
@@ -1026,7 +868,7 @@ float MpdConvPi0::lambdaCut(float l1, float l2, float E) const
 
 float MpdConvPi0::tofCut(float time, float E) const
 {
-   // return distance of time from expected photon arraival in sigma (with sign)
+   // return distance of time from expected photon arrival in sigma (with sign)
    float sigma = 1.86166 * TMath::Exp(-E / 0.0259728) + 0.347552; // resolution in ns
    return time / sigma;
 }

@@ -32,6 +32,8 @@ public:
    TClonesArray *fZDCEloss1Histo = nullptr; ///< ElossZDC1Histo
    TClonesArray *fZDCEloss2Histo = nullptr; ///< ElossZDC2Histo
 
+   TClonesArray *fV0 = nullptr; ///< list of V0s as TClonesArray("MpdV0",..)
+
    MpdAnalysisEventPlane fMpdEP; ///< Event plane info
 
    void  setCentrTPC(float cent) { centralityTPC = cent; }
@@ -40,7 +42,7 @@ public:
 private:
    float centralityTPC = 0; // V Centrality
 
-   ClassDef(MpdAnalysisEvent, 0);
+   ClassDef(MpdAnalysisEvent, 1);
 };
 
 #endif

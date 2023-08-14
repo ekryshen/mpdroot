@@ -30,11 +30,13 @@ link_directories(${LINK_DIRECTORIES})
 
 set(SRCS
   MpdTrackPidMaker.cxx
+  MpdV0.h
+  MpdV0Maker.cxx
 )
 
 Set(HEADERS)
 Set(LINKDEF MpdEvPIDAllLinkDef.h)
 Set(LIBRARY_NAME MpdPIDAll)
-Set(DEPENDENCIES Tof tpcGeometry)
+Set(DEPENDENCIES Tof tpcGeometry LHETrack)
 
 GENERATE_LIBRARY()

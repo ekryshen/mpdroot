@@ -1,22 +1,36 @@
-void ConversionPi0(){
+void ConversionPi0(int nEvents = -1)
+{
 
-   gSystem->Load("libEmc.so") ;
-   gSystem->Load("libMpdPhysics.so") ;
-   gSystem->Load("libMpdPhotons.so") ;
+   gSystem->Load("libZdc.so");
+   gSystem->Load("libMpdPhysics.so");
+   gSystem->Load("libEmc.so");
+   gSystem->Load("libMpdPhotons.so");
 
+   MpdAnalysisManager man("ManagerPi0", nEvents);
+   man.InputFileList("list.txt");
+   man.ReadBranches("*");
+   man.SetOutput("histos.root");
 
-   MpdAnalysisManager man("ManagerPi0") ;
-   man.InputFileList("list.txt") ;
-   man.ReadBranches("*") ; 
-   man.SetOutput("histos.root") ;
-   
-   
-   MpdConvPi0 pDef("pi0Def","ConvDef") ; //name, parametes file
-   man.AddTask(&pDef) ;
+   MpdCentralityAll pCentr("pCentr", "pCentr");
+   man.AddTask(&pCentr);
 
-   MpdConvPi0 pMinE("pi0MinE","ConvEmin") ;
-   man.AddTask(&pMinE) ;
+   MpdEventPlaneAll pEP("pEP", "pEP");
+   man.AddTask(&pEP);
 
-   man.Process() ;
+   MpdTrackPidMaker pPID("pPID", "pPID");
+   man.AddTask(&pPID);
 
+   MpdV0Maker pV0maker("pV0maker", "pV0maker");
+   man.AddTask(&pV0maker);
+
+   MpdConvPi0 pi0("pi0", "pi0");
+   man.AddTask(&pi0);
+
+   MpdConvPi0 pi0_TPConlyPID("pi0_TPConlyPID", "pi0_TPConlyPID");
+   man.AddTask(&pi0_TPConlyPID);
+
+   MpdConvPi0 pi0_no_selection("pi0_no_selection", "pi0_no_selection");
+   man.AddTask(&pi0_no_selection);
+
+   man.Process();
 }

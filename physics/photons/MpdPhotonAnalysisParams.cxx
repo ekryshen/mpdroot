@@ -14,12 +14,24 @@ void MpdPhotonAnalysisParams::ReadFromFile(std::string fname)
    //  varname  value
    //  comments start from #
 
-   if (fname.size() == 0) {
+   // V  if (fname.size() == 0) {
+   // V    return;
+   // V }
+
+   // V  std::ifstream ifs(fname);
+
+   std::string fInputFileTtx = fname;
+   fInputFileTtx             = fInputFileTtx + ".txt";
+   cout << "Read input text file: " << fInputFileTtx << endl;
+
+   std::ifstream ifs(fInputFileTtx);
+   if (!ifs) {
+      cout << "File " << fInputFileTtx << " can not be opened -> using input parameters from the header file instead"
+           << endl;
       return;
    }
 
-   std::ifstream ifs(fname);
-   std::string   a, b;
+   std::string a, b;
    while (ifs.good()) {
       ifs >> a;
       // if comment, skip to the enf of line
@@ -34,6 +46,7 @@ void MpdPhotonAnalysisParams::ReadFromFile(std::string fname)
    ifs.close();
 
    // Parse prepared map
+   read("mApplySelection", mApplySelection);
    read("mZvtxCut", mZvtxCut);
    read("mNhitsCut", mNhitsCut);
    // V0 cuts
@@ -52,6 +65,7 @@ void MpdPhotonAnalysisParams::ReadFromFile(std::string fname)
    read("mProbElCut", mProbElCut);
    read("mdEdxSigmaCut", mdEdxSigmaCut);
    read("mBetaSigmaCut", mBetaSigmaCut);
+   read("mRequireTOFpid", mRequireTOFpid);
    read("mMassCut", mMassCut);
    read("mDistCut", mDistCut);
    read("mCosPsiCut", mCosPsiCut);
@@ -69,6 +83,7 @@ void MpdPhotonAnalysisParams::Print() const
 {
    cout << "#-------Parameters used for analysis------" << endl;
    cout << "# Event selection: " << endl;
+   cout << "mApplySelection " << mApplySelection << " // apply event, track, V0 and EMC cluster selection" << endl;
    cout << "mZvtxCut " << mZvtxCut << " // cut on vertex z coordinate" << endl;
    cout << "mNhitsCut " << mNhitsCut << " //  number of hits in TPC tracks used for centrality" << endl;
 
@@ -92,6 +107,7 @@ void MpdPhotonAnalysisParams::Print() const
    cout << "mProbElCut  " << mProbElCut << "  // minimal dEdx probability for electrons" << endl;
    cout << "mdEdxSigmaCut  " << mdEdxSigmaCut << "  // dEdx cut in sigmas" << endl;
    cout << "mBetaSigmaCut  " << mBetaSigmaCut << "  // beta cut" << endl;
+   cout << "mRequireTOFpid  " << mRequireTOFpid << "  // mRequireTOFpid" << endl;
    cout << "mAlphaCut  " << mAlphaCut << "  // r vs p angle" << endl;
    cout << "mMassCut  " << mMassCut << "  // e+e- pair mass cut" << endl;
    cout << "mDistCut  " << mDistCut << "  // maximal closest distance between daughters" << endl;
