@@ -29,7 +29,7 @@ class FairPrimaryGenerator;
 class MpdUnigenGenerator : public FairGenerator {
 public:
    MpdUnigenGenerator();
-   MpdUnigenGenerator(TString fileName, Bool_t isSpectator = kFALSE);
+   MpdUnigenGenerator(TString fileName, Bool_t isSpectator = kFALSE, Bool_t isLabSystem = kFALSE);
    ~MpdUnigenGenerator();
 
    Bool_t ReadEvent(FairPrimaryGenerator *primGen);
@@ -46,10 +46,9 @@ public:
       fPhiMin        = phiMin;
       fPhiMax        = phiMax;
       fEventPlaneSet = kTRUE;
+      cout << "-I MpdUnigenGenerator: Event plane rotation is set." << endl;
    }
 
-   void SetLabSystem() { fIsLabSystem = true; }
-  
 private:
    Long64_t   fEventNumber; //!
    TFile     *fInFile;
@@ -71,7 +70,6 @@ private:
    Double_t fGammaCM;
    Double_t fBetaCM;
    Bool_t   fIsLabSystem;
-
 
    Int_t GetIonCharge(Int_t pdgCode) const { return (pdgCode % kPdgLambda) / kPdgCharge; }
    Int_t GetIonLambdas(Int_t pdgCode) { return (pdgCode % (10 * kPdgLambda)) / kPdgLambda; }
