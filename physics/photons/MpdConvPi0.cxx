@@ -78,7 +78,7 @@ void MpdConvPi0::UserInit()
    mhV0CutEff = addHist(new TH2F("hV0CutEff", "V0 cut efficiency;Cut ID;p_{T} (GeV/#it{c});Efficiency", V0CutId::kNcuts,
                                  0., V0CutId::kNcuts, nPtbin, pTmin, pTmax));
    mhAlpha    = addHist(
-         new TH2F("hAlpha", "#alpha distribution;#alpha (rad);p_{T} (GeV/#it{c})", 100, 0., 1., nPtbin, pTmin, pTmax));
+         new TH2F("hAlpha", "#alpha distribution;#alpha (rad);p_{T} (GeV/#it{c})", 100, 0., 3.14, nPtbin, pTmin, pTmax));
    mhChi2    = addHist(new TH2F("hChi2", "#chi^{2};#chi^{2};p_{T} (GeV/#it{c})", 100, 0., 10., nPtbin, pTmin, pTmax));
    mhConvMap = addHist(new TH3F("hConvMap", "Conversion map (r,phi,z);r (cm);#phi (rad);z (cm)", 100, 0., 280., 100, 0.,
                                 TMath::Pi(), 100, -200., 200.));
@@ -290,7 +290,6 @@ bool MpdConvPi0::selectEvent(MpdAnalysisEvent &event)
    psiEPn = event.fMpdEP.GetPhiEP_FHCal_N_all();
    psiEPs = event.fMpdEP.GetPhiEP_FHCal_S_all();
    mEPBin = 0.5 * nMixEventEP * (1 + psiEP / TMath::Pi());
-   cout << psiEP << "\t" << mEPBin << endl;
 
    return true;
 }
@@ -467,9 +466,6 @@ void MpdConvPi0::processHistograms(MpdAnalysisEvent &event)
    // Mixed
    // calculate bin from zVertex-centrality-reaction plane
    int mixBin = mZvtxBin * nMixEventCent * nMixEventEP + mCenBin * nMixEventEP + mEPBin;
-   // V cout << "mixBin = mZvtxBin * nMixEventCent * nMixEventEP + mCenBin * nMixEventEP + mEPBin" << endl;
-   // V cout << mixBin << "=" << mZvtxBin << "*" << nMixEventCent << "*" << nMixEventEP << "+" << mCenBin << "*"
-   // V     << nMixEventEP << "+" << mEPBin << endl;
 
    for (auto &vm : mMixClu.at(mixBin)) {
       for (auto &v : mClusters) {

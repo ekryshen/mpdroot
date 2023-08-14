@@ -41,8 +41,8 @@ void MpdV0Maker::UserInit()
       mhChi2 = addHist(new TH2F("hChi2", "#chi^{2};#chi^{2};p_{T} (GeV/#it{c})", 100, 0., 50., nPtbin, pTmin, pTmax));
       mhChi2True = addHist((TH2F *)mhChi2->Clone(Form("%sTrue", mhChi2->GetName())));
 
-      mhAlpha = addHist(
-         new TH2F("hAlpha", "#alpha distribution;#alpha (rad);p_{T} (GeV/#it{c})", 100, 0., 1., nPtbin, pTmin, pTmax));
+      mhAlpha = addHist(new TH2F("hAlpha", "#alpha distribution;#alpha (rad);p_{T} (GeV/#it{c})", 100, 0., 3.14, nPtbin,
+                                 pTmin, pTmax));
       mhAlphaTrue = addHist((TH2F *)mhAlpha->Clone(Form("%sTrue", mhAlpha->GetName())));
 
       mhDist = addHist(new TH2F("hDist", "track DCA;DCA (cm);p_{T} (GeV/#it{c})", 100, 0., 10., nPtbin, pTmin, pTmax));
@@ -71,7 +71,7 @@ void MpdV0Maker::UserInit()
 //--------------------------------------
 void MpdV0Maker::ProcessEvent(MpdAnalysisEvent &event)
 {
-   // conbine tracks and apply selection for V0
+   // combine tracks and apply selection for V0
    if (!mKF) { // not yet initialized
       mKF = MpdKalmanFilter::Instance();
       mKHit.SetType(MpdKalmanHit::kFixedR);
@@ -90,22 +90,25 @@ void MpdV0Maker::ProcessEvent(MpdAnalysisEvent &event)
    int           ntr              = mMpdGlobalTracks->GetEntriesFast();
    TClonesArray *mKalmanTracks    = event.fTPCKalmanTrack;
 
+   // select tracks
+   vector<bool> isGoodTrack(ntr, true);
+   for (int i = 0; i < ntr; i++) {
+      auto *track = static_cast<MpdTrack *>(mMpdGlobalTracks->At(i));
+      if (!selectTrack(track)) isGoodTrack.at(i) = false;
+   }
+
    // Clear or create container for output V0s
    TClonesArray *mV0 = new TClonesArray("MpdV0", ntr / 2);
    MpdV0         v;
    int           iv0 = 0;
    for (long int i = 0; i < ntr - 1; i++) {
+      if (!isGoodTrack.at(i)) continue;
       MpdTrack          *mpdtrack1 = (MpdTrack *)mMpdGlobalTracks->UncheckedAt(i);
       MpdTpcKalmanTrack *tr1       = (MpdTpcKalmanTrack *)mKalmanTracks->UncheckedAt(i);
-      if (!selectTrack(mpdtrack1)) {
-         continue;
-      }
       for (long int j = i + 1; j < ntr; j++) {
+         if (!isGoodTrack.at(j)) continue;
          MpdTrack          *mpdtrack2 = (MpdTrack *)mMpdGlobalTracks->UncheckedAt(j);
          MpdTpcKalmanTrack *tr2       = (MpdTpcKalmanTrack *)mKalmanTracks->UncheckedAt(j);
-         if (!selectTrack(mpdtrack2)) {
-            continue;
-         }
          if (createSelectV0(mpdtrack1, tr1, mpdtrack2, tr2, v)) {
             v.setTr1(i);
             v.setTr2(j);
@@ -114,7 +117,6 @@ void MpdV0Maker::ProcessEvent(MpdAnalysisEvent &event)
       }
    }
    event.fV0 = mV0;
-   // cout << event.fV0->GetEntries() << " V0-s!\n";
 }
 //===============================================
 void MpdV0Maker::Finish()
@@ -130,44 +132,18 @@ bool MpdV0Maker::selectTrack(MpdTrack *mpdtrack)
    if (fabs(mpdtrack->GetEta()) > mEtaCut) return false;   //|eta| < 1.0
    if (pt < mPtminCut) return false;                       // pT > 50 MeV/c
 
-   // PID selection??
-   // int charge;
-   // if (mpdtrack->GetPt() < 0)
-   //    charge = 1;
-   // else
-   //    charge = -1;
-
-   // bool isGoodPID;
-   // if (mpdtrack->GetTofFlag() == 2 || mpdtrack->GetTofFlag() == 6) {
-   //    isGoodPID =
-   //       mPID->FillProbs(pt * TMath::CosH(mpdtrack->GetEta()), mpdtrack->GetdEdXTPC(), mpdtrack->GetTofMass2(),
-   //       charge);
-   // } else {
-   //    isGoodPID = mPID->FillProbs(pt * TMath::CosH(mpdtrack->GetEta()), mpdtrack->GetdEdXTPC(), charge);
-   // }
-
-   // bool isElectron = false;
-   // if (mMC) { // same for true electron tracks
-   //    long int prim1 = mpdtrack->GetID();
-   //    if (prim1 >= 0) {
-   //       isElectron = abs((static_cast<MpdMCTrack *>(mMCTracks->At(prim1)))->GetPdgCode()) == 11;
-   //    }
-   // }
-
-   // if (isGoodPID && mPID->GetProbEl() < mParams.mProbElCut) {
-   //    return false;
-   // }
-
-   // float dEdx = dEdx_sigma(mpdtrack->GetdEdXTPC(), sqrt(pow(pt, 2) + pow(mpdtrack->GetPz(), 2)));
-   // if ((fabs(dEdx) < mParams.mdEdxSigmaCut) &&
-   //     (fabs(Beta_sigma(mpdtrack->GetTofBeta(), sqrt(pow(pt, 2) + pow(mpdtrack->GetPz(), 2)))) <
-   //         mParams.mBetaSigmaCut &&
-   //      (mpdtrack->GetTofFlag() == 2 || mpdtrack->GetTofFlag() == 6))) {
-   //    return true;
-   // } else {
-   //    return false;
-   // }
-   // return false;
+   bool  hasTofHit   = (fabs(mpdtrack->GetTofDphiSigma()) < 3.0 && fabs(mpdtrack->GetTofDzSigma()) < 3.0);
+   bool  tofElectron = false, dEdxElectron = false;
+   float nSigma_dEdx = mpdtrack->GetTPCNSigma(kEl);
+   float nSigma_beta = mpdtrack->GetTOFNSigma(kEl);
+   if (fabs(nSigma_dEdx) < mDedxSigmaCut) {
+      dEdxElectron = true;
+   }
+   if (hasTofHit && fabs(nSigma_beta) < mTofSigmaCut) {
+      tofElectron = true;
+   }
+   if (!dEdxElectron) return false;
+   if (mRequireTOFpid && !tofElectron) return false;
    return true;
 }
 //============================================================================================================

@@ -158,12 +158,12 @@ private:
    std::vector<MpdPhoton> mClusters; /// EMC clusters in this event
    std::vector<MpdPhoton> mV0;       /// V0 in this event
 
-   static constexpr short nMixEventZ    = 5; /// number of bins in z direction
-   static constexpr short nMixEventCent = 5; /// number of bins of centrality
-   static constexpr short nMixEventEP   = 5; /// number of bins of Reaction Plane orientation
+   static constexpr short nMixEventZ    = 10; /// number of bins in z direction
+   static constexpr short nMixEventCent = 5;  /// number of bins of centrality
+   static constexpr short nMixEventEP   = 5;  /// number of bins of Reaction Plane orientation
    static constexpr short nMixTot       = nMixEventZ * nMixEventCent * nMixEventEP;
 
-   int                                        mMaxMixSize = 10;
+   int                                        mMaxMixSize = 2;
    std::array<std::deque<MpdPhoton>, nMixTot> mMixClu;
    std::array<std::deque<MpdPhoton>, nMixTot> mMixV0;
    vector<bool>                               isGoodTrack;

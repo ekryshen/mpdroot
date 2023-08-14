@@ -35,9 +35,6 @@ void RunAnalyses(int nEvents = -1, TString inFileList = "list.txt"){
    MpdTrackPidMaker pPID("pPID","pPID") ;
    man.AddTask(&pPID) ;
    
-//   MpdConvPi0 pDef("pi0Def","ConvDef") ; //name, parametes file
-//   man.AddTask(&pDef) ;
-
 //   MpdGlobalPolarizationRECO pGlobalPol("pGlobalPolRECO","pGlobalPolRECO","selection","omega2") ;
 //   man.AddTask(&pGlobalPol) ;
 
@@ -68,8 +65,8 @@ void RunAnalyses(int nEvents = -1, TString inFileList = "list.txt"){
    MpdConvPi0 pi0_TPConlyPID("pi0_TPConlyPID", "pi0_TPConlyPID");
    man.AddTask(&pi0_TPConlyPID);
 
-   MpdConvPi0 pi0_no_selection("pi0_no_selection", "pi0_no_selection");
-   man.AddTask(&pi0_no_selection);
+//   MpdConvPi0 pi0_no_selection("pi0_no_selection", "pi0_no_selection");
+//   man.AddTask(&pi0_no_selection);
 
    man.Process() ;
 

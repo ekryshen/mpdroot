@@ -57,16 +57,19 @@ private:
    MpdKalmanHit          mKHit;
    MpdKalmanFilter      *mKF = nullptr;
 
-   int   mNofHitsCut = 10; // Minimal number of TPC hits per track
-   float mAlphaCut   = 3.1415;
-   float mCosPsiCut  = -1.;
-   float mDistCut    = 10.;
-   float mEtaCut     = 1.;    // Maximal track rapidity
-   float mMassCut    = 2.;    // 2 GeV?
-   float mPtminCut   = 0.050; // track pT min
-   float mChi2Cut    = 10.;   // Maximal Kalman chi2
-   float mMinR2Cut   = 1.;    // Minimal conv radius
-   float mMaxR2Cut   = 150.;  // Maximal conv. radius
+   int   mNofHitsCut    = 10; // Minimal number of TPC hits per track
+   float mAlphaCut      = 3.1415;
+   float mCosPsiCut     = -1.;
+   float mDistCut       = 10.;
+   float mDedxSigmaCut  = 5.;
+   float mTofSigmaCut   = 5.;
+   bool  mRequireTOFpid = false;
+   float mEtaCut        = 1.;    // Maximal track rapidity
+   float mMassCut       = 2.;    // 2 GeV?
+   float mPtminCut      = 0.050; // track pT min
+   float mChi2Cut       = 10.;   // Maximal Kalman chi2
+   float mMinR2Cut      = 1.;    // Minimal conv radius
+   float mMaxR2Cut      = 150.;  // Maximal conv. radius
 
    TH2F *mhCutEff = nullptr;
 
