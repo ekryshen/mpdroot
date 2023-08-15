@@ -134,7 +134,7 @@ void MpdAnaXiMix::UserInit()
    fTrC    = new MpdHelix(0, 0, 0, TVector3(0, 0, 0), 0);
    fMinuit = new TMinuit(2);
 
-   cout << "-- Successful start --" << endl;
+   cout << "[MpdAnaXiMix] -- Successful start --" << endl << endl;
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -146,8 +146,8 @@ void MpdAnaXiMix::ProcessEvent(MpdAnalysisEvent &event)
       // mKF = MpdKalmanFilter::Instance();
       // mKHit.SetType(MpdKalmanHit::kFixedR);
       // MpdKalmanFilter::Instance()->Init();
-      // TFile f("mc_0.root");
-      // f.Get("FairGeoParSet");
+      TFile f("sim_Geo.root"); // V
+      f.Get("FairGeoParSet");  // V
       /*
       FairRunAna &ana = *FairRunAna::Instance();
       //AZ-020822 - for magnetic field
@@ -160,7 +160,7 @@ void MpdAnaXiMix::ProcessEvent(MpdAnalysisEvent &event)
       ana.SetOutputFile("/dev/null"); //AZ-230323
       ana.Init();
       */
-      cout << " GeoMan: " << gGeoManager << endl;
+      cout << "[MpdAnaXiMix] GeoMan: " << gGeoManager << endl;
       // MpdKalmanFilter::Instance()->Init();
       BaseTpcSectorGeo *secGeo = new TpcSectorGeoAZ();
       fRecoTpc                 = new MpdTpcKalmanFilter(*secGeo, "Kalman filter");
@@ -397,7 +397,7 @@ void MpdAnaXiMix::SelectTracks(MpdAnalysisEvent &event)
    Int_t    nPrim = indxs->GetSize();
    set<int> indxVert;
    for (Int_t k = 0; k < nPrim; ++k) indxVert.insert((*indxs)[k]);
-   if (fEvNo % 100 == 0) {
+   if (fEvNo % 100 == -1) {
       cout << " *** Event No: " << fEvNo << ", reco tracks in TPC (ITS), global: "
            << " " << nITS << " " << nMpdTr << ", vertices: " << nVert << endl;
       cout << " Number of primary (used for vertex reco) tracks: " << indxVert.size() << endl;
@@ -569,7 +569,7 @@ void MpdAnaXiMix::SelectTracks(MpdAnalysisEvent &event)
       }
       if (nppi[0] != 1 || nppi[1] != 1) {
          // not p - p- decay
-         cout << " Wrong decay mode !!! " << endl;
+         // V cout << " Wrong decay mode !!! " << endl;
          mit = mapLamb.upper_bound(mothID);
          continue;
       }
@@ -663,10 +663,10 @@ void MpdAnaXiMix::SelectTracks(MpdAnalysisEvent &event)
          vecPi.push_back(j);
    }
 
-   if (fEvNo % 100 == 0) cout << " Number of protons, pi: " << vecP.size() << " " << vecPi.size() << endl;
+   // V if (fEvNo % 100 == 0) cout << " Number of protons, pi: " << vecP.size() << " " << vecPi.size() << endl;
    RecoEff(vecP, vecPi, 1);
    // RecoEff(vecP, vecPi, 0);
-   if (fEvNo % 100 == 0) cout << " Number of protons, pi: " << vecP.size() << " " << vecPi.size() << endl;
+   // V if (fEvNo % 100 == 0) cout << " Number of protons, pi: " << vecP.size() << " " << vecPi.size() << endl;
 
    // Apply PID
    // ApplyPid(newPid, vecP, vecPi);
@@ -899,7 +899,7 @@ void MpdAnaXiMix::ApplyPid(vector<Int_t> &vecP, vector<Int_t> &vecPi)
 
       MpdTrack *mpdTrack = (MpdTrack *)fMpdTracks->UncheckedAt(j);
       if (mpdTrack->GetID() != id) {
-         cout << id << " " << mpdTrack->GetID() << endl;
+         // V cout << id << " " << mpdTrack->GetID() << endl;
          Fatal("ApplyPid", " Different ID");
       }
       // if (tr->GetNofTrHits() < 20) continue; // !!!
@@ -1012,7 +1012,7 @@ void MpdAnaXiMix::ApplyPid(vector<Int_t> &vecP, vector<Int_t> &vecPi)
       }
       // GetProbKa(), GetProbEl(), GetProbPr(), GetProbDe(), GetProbHe3
    } // for (Int_t j = 0; j < nITS;
-   if (fEvNo % 100 == 0) cout << " Number of p, pi: " << vecP.size() << " " << vecPi.size() << endl;
+   // V if (fEvNo % 100 == 0) cout << " Number of p, pi: " << vecP.size() << " " << vecPi.size() << endl;
 
    //
    Int_t nLok = 0, nXiok = 0, nLok13 = 0, nXiok13 = 0;
