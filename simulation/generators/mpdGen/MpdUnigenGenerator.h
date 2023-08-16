@@ -1,4 +1,4 @@
-#ifndef MPDUNIGENGENERATOR_H
+1;95;0c#ifndef MPDUNIGENGENERATOR_H
 #define MPDUNIGENGENERATOR_H
 
 #include <iostream>
@@ -46,11 +46,12 @@ public:
       fPhiMin        = phiMin;
       fPhiMax        = phiMax;
       fEventPlaneSet = kTRUE;
-      cout << "-I MpdUnigenGenerator: Event plane rotation is set." << endl;
+      cout << "-I MpdUnigenGenerator: Reaction plane rotation is set." << endl;
    }
 
 private:
    Long64_t   fEventNumber; //!
+   Long64_t   fNEntries; //!
    TFile     *fInFile;
    TTree     *fInTree;
    URun      *fRun;
