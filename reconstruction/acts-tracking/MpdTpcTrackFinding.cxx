@@ -2,10 +2,10 @@
 //
 // Copyright (C) 2022 JINR
 
+#include "DumpUtils.h"
 #include "MpdTpcMagneticField.h"
 #include "MpdTpcTrackFinding.h"
 
-#include "ActsExamples/EventData/SimSpacePoint.hpp"
 #include "ActsExamples/Framework/WhiteBoard.hpp"
 
 #include <Acts/Definitions/Units.hpp>
@@ -96,6 +96,10 @@ ActsExamples::ProcessCode TrackFinding::execute(
   // Compute shared hits from all the reconstructed tracks.
   if (m_config.computeSharedHits) {
     computeSharedHits(sourceLinks, results);
+  }
+
+  if (m_config.dumpData) {
+    dumpTracks(context, results, m_config.spacePointsID, m_config.outPath);
   }
 
   // Performs post-processing (removes duplicates, etc.).
@@ -207,33 +211,9 @@ void TrackFinding::constructTrackCandidates(
     const Container &sourceLinks,
     Results &results) const {
   const auto nHits = sourceLinks.size();
-  const auto invalid = std::numeric_limits<size_t>::max();
 
   // Track candidates ordered by descending length.
   std::multimap<size_t, ProtoTrack> trackCandidates;
-
-  size_t eventNumber = context.eventNumber;
-  auto fname = m_config.outPath + "/" +
-      "event_" + std::to_string(eventNumber) + "_prototracks.txt";
-  std::ofstream fout;
-  SpacePointContainer spacePoints;
-
-  if (m_config.dumpData) {
-    fout.open(fname);
-    spacePoints = context.eventStore.get<SpacePointContainer>(
-        m_config.spacePointsID);
-    std::sort(spacePoints.begin(), spacePoints.end(),
-        [](ActsExamples::SimSpacePoint a,
-           ActsExamples::SimSpacePoint b) {
-          return a.measurementIndex() <
-                 b.measurementIndex();
-        }
-    );
-    fout << "# format: "
-        "(x, y, z, hit-index, phi, theta, q/p, t, chi2, seed-index)+" <<
-        std::endl;
-    std::cout << fname << " has been created" << std::endl;
-  }
 
   // Iterate over the seeds.
   for (size_t itrack = 0; itrack < results.size(); itrack++) {
@@ -254,7 +234,6 @@ void TrackFinding::constructTrackCandidates(
       ProtoTrack trackCandidate;
       trackCandidate.reserve(fittedStates.size());
 
-      auto firstPass = true;
       fittedStates.visitBackwards(lastIndex, [&](const auto &state) {
         // Do nothing unless the state is a real measurement.
         if (!state.typeFlags().test(Acts::TrackStateFlag::MeasurementFlag)) {
@@ -263,50 +242,8 @@ void TrackFinding::constructTrackCandidates(
 
         auto &sourceLink = static_cast<const SourceLink&>(state.uncalibrated());
         auto hitIndex = sourceLink.index();
-        if (m_config.dumpData) {
-          auto spacePoint = spacePoints.at(hitIndex);
-          Double_t x = 0.;
-          Double_t y = 0.;
-          Double_t z = 0.;
-          if (hitIndex != spacePoint.measurementIndex()) {
-            ACTS_ERROR("Dump prototracks: "
-                "can't find space point corresponding to hit " << hitIndex);
-          } else {
-            x = spacePoint.x();
-            y = spacePoint.y();
-            z = spacePoint.z();
-          }
-          auto params = state.parameters();
-
-          size_t hitIdx   = hitIndex;
-          Double_t phi    = params[2];
-          Double_t theta  = params[3];
-          Double_t qOverP = params[4];
-          Double_t t      = params[5];
-          Double_t chi2   = state.chi2();
-          size_t seedIdx  = itrack;
-
-          if (!firstPass) {
-            fout << ", ";
-          }
-          firstPass = false;
-          fout << x        << ", " <<
-                  y        << ", " <<
-                  z        << ", " <<
-                  hitIdx   << ", " <<
-                  phi      << ", " <<
-                  theta    << ", " <<
-                  qOverP   << ", " <<
-                  t        << ", " <<
-                  chi2     << ", " <<
-                  seedIdx;
-        }
         trackCandidate.push_back(hitIndex);
       });
-
-      if (m_config.dumpData) {
-        fout << std::endl;
-      }
 
       // Ignore short tracks.
       if (trackCandidate.size() < m_config.trackMinLength) {

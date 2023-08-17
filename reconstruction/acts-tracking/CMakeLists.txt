@@ -46,6 +46,7 @@ set(SRCS
   ActsExamples/Io/Performance/CKFPerformanceWriter.cxx
   ActsExamples/TGeoDetector/TGeoDetector.cxx
   ActsExamples/TGeoDetector/TGeoITkModuleSplitter.cxx
+  DumpUtils.cxx
   MpdTpcConfig.cxx
   MpdTpcDetector.cxx
   MpdTpcDigitization.cxx
@@ -97,6 +98,7 @@ Set(HEADERS
   ActsExamples/Validation/ResPlotTool.hpp
   ActsExamples/Validation/TrackClassification.hpp
   ActsExamples/Validation/TrackSummaryPlotTool.hpp
+  DumpUtils.h
   MpdTpcAlgorithm.h
   MpdTpcConfig.h
   MpdTpcDetector.h

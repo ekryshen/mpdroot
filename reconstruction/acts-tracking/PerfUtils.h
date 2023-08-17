@@ -92,6 +92,3 @@ void printEff(const std::map<Int_t, Bool_t> &trackIdToRecoMap,
 void printEff(std::string prefix,
               TEfficiency *tEff);
 
-std::unordered_map<Int_t, Mpd::Tpc::ProtoTrack> calcRealTracks(
-    const Mpd::Tpc::InputHitContainer &hits);
-

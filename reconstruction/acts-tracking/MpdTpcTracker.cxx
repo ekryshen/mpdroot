@@ -9,6 +9,7 @@
 #include "ActsExamples/EventData/Index.hpp"
 #include "ActsExamples/Framework/WhiteBoard.hpp"
 
+#include "DumpUtils.h"
 #include "MpdCodeTimer.h"
 #include "MpdKalmanHit.h"
 #include "MpdMCTrack.h"
@@ -329,27 +330,6 @@ ActsExamples::IndexMultimap<ActsFatras::Barcode> createHitToParticlesMap(
 }
 
 //===----------------------------------------------------------------------===//
-// Dump hits to file in Acts units.
-//===----------------------------------------------------------------------===//
-
-void dumpData(const Mpd::Tpc::InputHitContainer &hits,
-              Int_t eventNumber,
-              std::string outPath) {
-  auto fname = outPath + "/event_" + std::to_string(eventNumber) + "_hits.txt";
-  std::ofstream fout(fname);
-  fout << "# format: x, y, z, (trackId)+" << std::endl;
-  std::cout << fname << " has been created" << std::endl;
-
-  for (const auto &hit : hits) {
-    fout << hit.position[0] << ", " <<
-            hit.position[1] << ", " <<
-            hit.position[2] << ", " <<
-            hit.trackId <<
-            std::endl;
-  }
-}
-
-//===----------------------------------------------------------------------===//
 // Init / ReInit Tasks
 //===----------------------------------------------------------------------===//
 
@@ -442,13 +422,9 @@ void MpdTpcTracker::Exec(Option_t *option) {
       context.eventStore.get<Mpd::Tpc::InputHitContainer>(
           config.particleSelector.outputSimHits);
 
-  // Dump hits to file.
+  // Dump hits to a file.
   if (config.DumpData) {
-    const auto &selectedHits =
-        context.eventStore.get<Mpd::Tpc::InputHitContainer>(
-            config.particleSelector.outputSimHits);
-
-    dumpData(selectedHits, eventCounter, fOutPath);
+    dumpHits(selectedHits, eventCounter, fOutPath);
   }
 
   // Convert the found track to to the MpdRoot representation.
