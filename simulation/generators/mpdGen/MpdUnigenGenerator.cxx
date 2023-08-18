@@ -131,7 +131,7 @@ Bool_t MpdUnigenGenerator::ReadEvent(FairPrimaryGenerator *primGen)
       }
 
       if (fParticle->GetPdg() < 1e9) {
-         primGen->AddTrack(fParticle->GetPdg(), px, py, fParticle->Pz(), 0., 0., 0.);
+         primGen->AddTrack(fParticle->GetPdg(), px, py, pz, 0., 0., 0.);
       } else {
          // Since hyper-nuclei are not (yet) supported by FairRoot, their PDG
          // is replaced by that of the non-strange analogue.
@@ -143,7 +143,7 @@ Bool_t MpdUnigenGenerator::ReadEvent(FairPrimaryGenerator *primGen)
          }
          // Charged ions can be registered
          if (GetIonCharge(ionPdg)) {
-            primGen->AddTrack(ionPdg, px, py, fParticle->Pz(), 0., 0., 0.);
+            primGen->AddTrack(ionPdg, px, py, pz, 0., 0., 0.);
          } else {
             // Neutral ions are not supported by GEANT4.
             // They are thus decomposed into neutrons (as an approximation)
@@ -151,8 +151,7 @@ Bool_t MpdUnigenGenerator::ReadEvent(FairPrimaryGenerator *primGen)
             for (Int_t iNeutron = 0; iNeutron < mass; iNeutron++) {
                Double_t pxNeutron = px / (Double_t)mass;
                Double_t pyNeutron = py / (Double_t)mass;
-               Double_t pzNeutron = fParticle->Pz() / (Double_t)mass;
-               Double_t eNeutron  = fParticle->E() / (Double_t)mass;
+               Double_t pzNeutron = pz / (Double_t)mass;
 
                primGen->AddTrack(2112, pxNeutron, pyNeutron, pzNeutron, 0., 0., 0.);
             }
