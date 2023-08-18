@@ -34,7 +34,7 @@ void dumpTracks(
   }
 
   fout << "# format: "
-      "(x, y, z, hit-index, phi, theta, q/p, t, chi2, seed-index)+" <<
+      "(space-point-index, phi, theta, q/p, t, chi2, seed-index)+" <<
       std::endl;
   std::cout << fname << " has been created" << std::endl;
 
@@ -66,10 +66,6 @@ void dumpTracks(
         Int_t iSpacePoint = hitIndexToSpIndexMap.at(ihit);
         auto spacePoint = spacePoints.at(iSpacePoint);
 
-        Double_t x = spacePoint.x();
-        Double_t y = spacePoint.y();
-        Double_t z = spacePoint.z();
-
         auto params = state.parameters();
 
         Double_t phi    = params[2];
@@ -83,18 +79,14 @@ void dumpTracks(
           fout << ", ";
         }
         firstPass = false;
-        fout << x        << ", " <<
-                y        << ", " <<
-                z        << ", " <<
-                ihit     << ", " <<
-                phi      << ", " <<
-                theta    << ", " <<
-                qOverP   << ", " <<
-                t        << ", " <<
-                chi2     << ", " <<
+        fout << iSpacePoint << ", " <<
+                phi         << ", " <<
+                theta       << ", " <<
+                qOverP      << ", " <<
+                t           << ", " <<
+                chi2        << ", " <<
                 seedIdx;
       });
-
       fout << std::endl;
     }
   }
@@ -114,6 +106,39 @@ void dumpHits(
             hit.position[1] << ", " <<
             hit.position[2] << ", " <<
             hit.trackId <<
+            std::endl;
+  }
+}
+
+void dumpSpacePoints(
+    const ActsExamples::AlgorithmContext &context,
+    std::string spacePointsID,
+    std::string hitsID,
+    std::string outPath) {
+
+  size_t eventNumber = context.eventNumber;
+  auto fname = outPath + "/" +
+      "event_" + std::to_string(eventNumber) + "_space_points.txt";
+  std::ofstream fout(fname);
+  fout << "# format: x, y, z, (trackId)+" << std::endl;
+  std::cout << fname << " has been created" << std::endl;
+
+  const auto &spacePoints = context.eventStore.get<SpacePointContainer>(
+      spacePointsID);
+  const auto &hits = context.eventStore.get<InputHitContainer>(hitsID);
+
+  for (const auto &spacePoint : spacePoints) {
+    Double_t x = spacePoint.x();
+    Double_t y = spacePoint.y();
+    Double_t z = spacePoint.z();
+    Int_t ihit = spacePoint.measurementIndex();
+    auto &hit = hits.at(ihit);
+    Int_t trackId = hit.trackId;
+
+    fout << x       << ", " <<
+            y       << ", " <<
+            z       << ", " <<
+            trackId <<
             std::endl;
   }
 }

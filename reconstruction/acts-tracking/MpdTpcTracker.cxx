@@ -422,11 +422,6 @@ void MpdTpcTracker::Exec(Option_t *option) {
       context.eventStore.get<Mpd::Tpc::InputHitContainer>(
           config.particleSelector.outputSimHits);
 
-  // Dump hits to a file.
-  if (config.DumpData) {
-    dumpHits(selectedHits, eventCounter, fOutPath);
-  }
-
   // Convert the found track to to the MpdRoot representation.
   const auto &trajectories =
       context.eventStore.get<Mpd::Tpc::ProtoTrackContainer>(

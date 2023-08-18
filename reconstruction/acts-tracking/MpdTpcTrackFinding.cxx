@@ -100,6 +100,8 @@ ActsExamples::ProcessCode TrackFinding::execute(
 
   if (m_config.dumpData) {
     dumpTracks(context, results, m_config.spacePointsID, m_config.outPath);
+    dumpSpacePoints(context, m_config.spacePointsID, m_config.simHitsID,
+        m_config.outPath);
   }
 
   // Performs post-processing (removes duplicates, etc.).

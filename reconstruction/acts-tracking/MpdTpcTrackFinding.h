@@ -83,15 +83,18 @@ public:
     /// Coverage ratio (new hits in a track / track size).
     Double_t newHitsRatio;
 
-    /// Whether to dump prototracks to file.
-    Bool_t dumpData;
-
     /// Whether to run post-processing of found tracks to filter them.
     Bool_t postProcess;
 
     /// Storage ID for SpacePoints.
     std::string spacePointsID;
     std::string outPath;
+
+    // Options for dump
+    /// Whether to dump prototracks to file.
+    Bool_t dumpData;
+    /// Storage ID for hits.
+    std::string simHitsID;
   };
 
   TrackFinding(Config config, Acts::Logging::Level level);

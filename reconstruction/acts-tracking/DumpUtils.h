@@ -29,4 +29,10 @@ void dumpHits(const Mpd::Tpc::InputHitContainer &hits,
               Int_t eventNumber,
               std::string outPath);
 
+void dumpSpacePoints(
+    const ActsExamples::AlgorithmContext &context,
+    std::string spacePointsID,
+    std::string hitsID,
+    std::string outPath);
+
 } // namespace Mpd::Tpc
