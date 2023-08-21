@@ -8,6 +8,8 @@
 
 #include <Acts/Surfaces/PerigeeSurface.hpp>
 
+#include <cmath>
+
 namespace Mpd::Tpc {
 
 Config::Config(const BaseTpcSectorGeo &secGeo,
@@ -71,6 +73,8 @@ Config::Config(const BaseTpcSectorGeo &secGeo,
   spacePointMaking.geometrySelection = {Acts::GeometryIdentifier().setVolume(0)};
 
   // Track seeding.
+  Double_t etaMaxWithMargin = 1.3 * EtaMax;
+  CotThetaMax = 0.5 * (exp(etaMaxWithMargin) - exp(-etaMaxWithMargin));
   trackSeeding.inputSpacePoints = SpacePointsID;
   trackSeeding.outputSeeds = SeedsID;
   trackSeeding.outputProtoTracks = ProtoTracksID;
@@ -182,89 +186,89 @@ ActsExamples::CKFPerformanceWriter::Config Config::perfWriterCfg(
 
   ActsExamples::EffPlotTool::Config effConfig;
   effConfig.varBinning["Eta"] = ActsExamples::PlotHelpers::Binning(
-      PerfPlotToolEtaName,
-      PerfPlotToolEtaNBins,
+      EtaName,
+      EtaNBins,
       PerfPlotToolEtaMin,
       PerfPlotToolEtaMax);
   effConfig.varBinning["Phi"] = ActsExamples::PlotHelpers::Binning(
-      PerfPlotToolPhiName,
-      PerfPlotToolPhiNBins,
+      PhiName,
+      PhiNBins,
       PerfPlotToolPhiMin,
       PerfPlotToolPhiMax);
   effConfig.varBinning["Pt"]  = ActsExamples::PlotHelpers::Binning(
-      PerfPlotToolPtName,
-      PerfPlotToolPtNBins,
+      PtName,
+      PtNBins,
       PerfPlotToolPtMin,
       PerfPlotToolPtMax);
   result.effPlotToolConfig = effConfig;
 
   ActsExamples::FakeRatePlotTool::Config fakeConfig;
   fakeConfig.varBinning["Eta"] = ActsExamples::PlotHelpers::Binning(
-      PerfPlotToolEtaName,
-      PerfPlotToolEtaNBins,
+      EtaName,
+      EtaNBins,
       PerfPlotToolEtaMin,
       PerfPlotToolEtaMax);
   fakeConfig.varBinning["Phi"] = ActsExamples::PlotHelpers::Binning(
-      PerfPlotToolPhiName,
-      PerfPlotToolPhiNBins,
+      PhiName,
+      PhiNBins,
       PerfPlotToolPhiMin,
       PerfPlotToolPhiMax);
   fakeConfig.varBinning["Pt"]  = ActsExamples::PlotHelpers::Binning(
-      PerfPlotToolPtName,
-      PerfPlotToolPtNBins,
+      PtName,
+      PtNBins,
       PerfPlotToolPtMin,
       PerfPlotToolPtMax);
   fakeConfig.varBinning["Num"] = ActsExamples::PlotHelpers::Binning(
-      PerfPlotToolNumName,
-      PerfPlotToolNumNBins,
-      PerfPlotToolNumMin,
-      PerfPlotToolNumMax);
+      NumName,
+      NumNBins,
+      NumMin,
+      NumMax);
   result.fakeRatePlotToolConfig = fakeConfig;
 
   ActsExamples::DuplicationPlotTool::Config duplicationConfig;
   duplicationConfig.varBinning["Eta"] = ActsExamples::PlotHelpers::Binning(
-      PerfPlotToolEtaName,
-      PerfPlotToolEtaNBins,
+      EtaName,
+      EtaNBins,
       PerfPlotToolEtaMin,
       PerfPlotToolEtaMax);
   duplicationConfig.varBinning["Phi"] = ActsExamples::PlotHelpers::Binning(
-      PerfPlotToolPhiName,
-      PerfPlotToolPhiNBins,
+      PhiName,
+      PhiNBins,
       PerfPlotToolPhiMin,
       PerfPlotToolPhiMax);
   duplicationConfig.varBinning["Pt"] = ActsExamples::PlotHelpers::Binning(
-      PerfPlotToolPtName,
-      PerfPlotToolPtNBins,
+      PtName,
+      PtNBins,
       PerfPlotToolPtMin,
       PerfPlotToolPtMax);
   duplicationConfig.varBinning["Num"] = ActsExamples::PlotHelpers::Binning(
-      PerfPlotToolNumName,
-      PerfPlotToolNumNBins,
-      PerfPlotToolNumMin,
-      PerfPlotToolNumMax);
+      NumName,
+      NumNBins,
+      NumMin,
+      NumMax);
   result.duplicationPlotToolConfig = duplicationConfig;
 
   ActsExamples::TrackSummaryPlotTool::Config trackSummaryConfig;
   trackSummaryConfig.varBinning["Eta"] = ActsExamples::PlotHelpers::Binning(
-      PerfPlotToolEtaName,
-      PerfPlotToolEtaNBins,
+      EtaName,
+      EtaNBins,
       PerfPlotToolEtaMin,
       PerfPlotToolEtaMax);
   trackSummaryConfig.varBinning["Phi"] = ActsExamples::PlotHelpers::Binning(
-      PerfPlotToolPhiName,
-      PerfPlotToolPhiNBins,
+      PhiName,
+      PhiNBins,
       PerfPlotToolPhiMin,
       PerfPlotToolPhiMax);
   trackSummaryConfig.varBinning["Pt"] = ActsExamples::PlotHelpers::Binning(
-      PerfPlotToolPtName,
-      PerfPlotToolPtNBins,
+      PtName,
+      PtNBins,
       PerfPlotToolPtMin,
       PerfPlotToolPtMax);
   trackSummaryConfig.varBinning["Num"] = ActsExamples::PlotHelpers::Binning(
-      PerfPlotToolNumName,
-      PerfPlotToolNumNBins,
-      PerfPlotToolNumMin,
-      PerfPlotToolNumMax);
+      NumName,
+      NumNBins,
+      NumMin,
+      NumMax);
   result.trackSummaryPlotToolConfig = trackSummaryConfig;
   result.filePath = outPath + "/" + Config::ActsPerfFilePath;
 
