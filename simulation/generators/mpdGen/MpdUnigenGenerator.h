@@ -51,7 +51,7 @@ public:
 
 private:
    Long64_t   fEventNumber; //!
-   Long64_t   fNEntries; //!
+   Long64_t   fNEntries;    //!
    TFile     *fInFile;
    TTree     *fInTree;
    URun      *fRun;
