@@ -126,7 +126,7 @@ void MpdPairPiKs::UserInit()
       mixedEvents[i] = new TList();
    }
 
-   cout << "[MpdPairPiKs]: Reading Geo from sim_1.root for track refit ... " << endl;
+   cout << "[MpdPairPiKs]: Reading Geo from sim_Geo.root for track refit ... " << endl;
 
    // Read-out TPC Geo for track Refit
    inFileSim = new TFile("sim_Geo.root", "READ");
@@ -161,8 +161,8 @@ void MpdPairPiKs::ProcessEvent(MpdAnalysisEvent &event)
       return;
    }
 
-   mKalmanTracks  = event.fTPCKalmanTrack;
-   mpdTofMatching = event.fTOFMatching;
+   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
+   mKalmanTracks    = event.fTPCKalmanTrack;
 
    if (isMC) {
       mMCTracks = event.fMCTrack;
@@ -270,8 +270,7 @@ void MpdPairPiKs::selectPionTrack(MpdAnalysisEvent &event)
    // h+/-
    mP1.clear();
 
-   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
-   int ntr          = mMpdGlobalTracks->GetEntriesFast();
+   int ntr = mMpdGlobalTracks->GetEntriesFast();
 
    for (long int i = 0; i < ntr; i++) {
       MpdTrack          *mpdtrack = (MpdTrack *)mMpdGlobalTracks->UncheckedAt(i);
@@ -330,12 +329,10 @@ void MpdPairPiKs::selectKsTrack(MpdAnalysisEvent &event)
    int iv = 0;
 
    mP2.clear();
-   vector<MpdParticle *> vPartK;
 
    MpdVertex *vertex = (MpdVertex *)event.fVertex->First();
 
-   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
-   int ntr          = mMpdGlobalTracks->GetEntriesFast();
+   int ntr = mMpdGlobalTracks->GetEntriesFast();
 
    for (long int i = 0; i < ntr; i++) {
       MpdTrack          *mpdtrack1 = (MpdTrack *)mMpdGlobalTracks->UncheckedAt(i);
@@ -427,8 +424,10 @@ void MpdPairPiKs::selectKsTrack(MpdAnalysisEvent &event)
 
          // Build Ks
          vPartK.clear();
-         vPartK.push_back(new MpdParticle(pion1));
-         vPartK.push_back(new MpdParticle(pion2));
+         // vPartK.push_back(new MpdParticle(pion1));
+         // vPartK.push_back(new MpdParticle(pion2));
+         vPartK.push_back(&pion1);
+         vPartK.push_back(&pion2);
 
          MpdParticle KsPiPi;
          double      chi2 = TMath::Abs(KsPiPi.BuildMother(vPartK));

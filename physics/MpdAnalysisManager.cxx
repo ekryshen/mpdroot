@@ -28,6 +28,23 @@ void MpdAnalysisManager::Process()
    //  write outputs
    int nTasks = 0;
 
+   // Open output files (for trees if needed)
+   nTasks = fTasks.size(); // AZ-170823
+   std::cout << "Counted " << nTasks << " tasks to process" << std::endl;
+   TFile *output[nTasks];
+   nTasks = 0; // AZ-170823
+
+   for (MpdAnalysisTask *task : fTasks) {
+
+      fOutFileRoot = task->GetOutputName();
+      fOutFileRoot = fOutFileRoot + ".root";
+      std::cout << "Opening output file for writing " << fOutFileRoot << std::endl;
+
+      output[nTasks] = new TFile(fOutFileRoot, "recreate");
+      nTasks++;
+   }
+   nTasks = 0;
+
    for (MpdAnalysisTask *task : fTasks) {
       task->UserInit();
       nTasks++;
@@ -46,26 +63,10 @@ void MpdAnalysisManager::Process()
    fKF = MpdKalmanFilter::Instance();
    fKF->Init();
 
-   // Open output files (for trees if needed)
-   std::cout << "Counted " << nTasks << " tasks to process" << std::endl;
-   TFile *output[nTasks];
-
-   nTasks = 0;
-   for (MpdAnalysisTask *task : fTasks) {
-
-      fOutFileRoot = task->GetOutputName();
-      fOutFileRoot = fOutFileRoot + ".root";
-      std::cout << "Opening output file for writing " << fOutFileRoot << std::endl;
-
-      output[nTasks] = new TFile(fOutFileRoot, "recreate");
-      nTasks++;
-   }
-
    // Scan data
    int n = fChain->GetEntries();
    if (fEvents != -1 && fEvents < n) n = fEvents;
    std::cout << "MpdAnalysisManager: number of events to process " << n << std::endl;
-
 
    for (int iEvent = 0; iEvent < n; iEvent++) {
       if (iEvent % 100 == 0) {
@@ -73,11 +74,10 @@ void MpdAnalysisManager::Process()
       }
       fEvent.Clear();
       if (fChain->GetEvent(iEvent)) {
-	fChain->GetEvent(iEvent);
-	for (MpdAnalysisTask *task : fTasks) {
-	  task->ProcessEvent(fEvent);
-	}
-      }//not broken
+         for (MpdAnalysisTask *task : fTasks) {
+            task->ProcessEvent(fEvent);
+         }
+      } // not broken
    }
 
    for (MpdAnalysisTask *task : fTasks) {
@@ -122,24 +122,14 @@ bool MpdAnalysisManager::CreateChain()
    if (fBranchList == "*" || fBranchList.Contains("EventHeader")) {
       fChain->SetBranchAddress("EventHeader.", &(fEvent.fEventHeader));
    }
+   if (fBranchList == "*" || fBranchList.Contains("TpcKalmanTrack")) {
+      fChain->SetBranchAddress("TpcKalmanTrack", &(fEvent.fTPCKalmanTrack));
+   }
    if (fBranchList == "*" || fBranchList.Contains("Vertex")) {
       fChain->SetBranchAddress("Vertex", &(fEvent.fVertex));
    }
-   if (fBranchList == "*" || fBranchList.Contains("MPDEvent")) {
-      fChain->SetBranchAddress("MPDEvent.", &(fEvent.fMPDEvent));
-      std::cout << "Reading MPDEvent=" << fEvent.fMPDEvent << std::endl;
-   }
-   if (fBranchList == "*" || fBranchList.Contains("MCEventHeader")) {
-      fChain->SetBranchAddress("MCEventHeader.", &(fEvent.fMCEventHeader));
-   }
-   if (fBranchList == "*" || fBranchList.Contains("MCTrack")) {
-      fChain->SetBranchAddress("MCTrack", &(fEvent.fMCTrack));
-   }
-   if (fBranchList == "*" || fBranchList.Contains("EmcCluster")) {
-      fChain->SetBranchAddress("EmcCluster", &(fEvent.fEMCCluster));
-   }
-   if (fBranchList == "*" || fBranchList.Contains("TpcKalmanTrack")) {
-      fChain->SetBranchAddress("TpcKalmanTrack", &(fEvent.fTPCKalmanTrack));
+   if (fBranchList == "*" || fBranchList.Contains("FfdHit")) {
+      fChain->SetBranchAddress("FfdHit", &(fEvent.fFfdHit));
    }
    if (fBranchList == "*" || fBranchList.Contains("TOFHit")) {
       fChain->SetBranchAddress("TOFHit", &(fEvent.fTOFHit));
@@ -147,8 +137,24 @@ bool MpdAnalysisManager::CreateChain()
    if (fBranchList == "*" || fBranchList.Contains("TOFMatching")) {
       fChain->SetBranchAddress("TOFMatching", &(fEvent.fTOFMatching));
    }
+   if (fBranchList == "*" || fBranchList.Contains("EmcDigit")) {
+      fChain->SetBranchAddress("EmcDigit", &(fEvent.fEmcDigit));
+   }
+   if (fBranchList == "*" || fBranchList.Contains("EmcCluster")) {
+      fChain->SetBranchAddress("EmcCluster", &(fEvent.fEMCCluster));
+   }
    if (fBranchList == "*" || fBranchList.Contains("ZdcDigi")) {
       fChain->SetBranchAddress("ZdcDigi", &(fEvent.fZDCDigit));
+   }
+   if (fBranchList == "*" || fBranchList.Contains("MCEventHeader")) {
+      fChain->SetBranchAddress("MCEventHeader.", &(fEvent.fMCEventHeader));
+   }
+   if (fBranchList == "*" || fBranchList.Contains("MCTrack")) {
+      fChain->SetBranchAddress("MCTrack", &(fEvent.fMCTrack));
+   }
+   if (fBranchList == "*" || fBranchList.Contains("MPDEvent")) {
+      fChain->SetBranchAddress("MPDEvent.", &(fEvent.fMPDEvent));
+      std::cout << "Reading MPDEvent=" << fEvent.fMPDEvent << std::endl;
    }
 
    std::cout << "Chain created" << std::endl;

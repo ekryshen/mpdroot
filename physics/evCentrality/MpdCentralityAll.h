@@ -60,14 +60,12 @@ private:
 
    std::string mOutFile = "histos.root";
 
-   FairMCEventHeader    *mMCHeader        = nullptr;
-   MpdKalmanFilter      *mKF              = nullptr;
-   TClonesArray         *mMCTracks        = nullptr;
-   TObjArray            *mEMCClusters     = nullptr;
-   TClonesArray         *mKalmanTracks    = nullptr;
-   TClonesArray         *mMpdGlobalTracks = nullptr;
-   vector<MpdParticle *> mPartK;
-   MpdKalmanHit          mKHit;
+   FairMCEventHeader *mMCHeader = nullptr;
+   //   MpdKalmanFilter      *mKF              = nullptr;
+   TClonesArray *mMCTracks        = nullptr;
+   TClonesArray *mKalmanTracks    = nullptr;
+   TClonesArray *mMpdGlobalTracks = nullptr;
+   //   MpdKalmanHit          mKHit;
 
    // Histograms
    TList mHistoList;

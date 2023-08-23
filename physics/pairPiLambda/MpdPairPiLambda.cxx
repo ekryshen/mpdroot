@@ -132,7 +132,7 @@ void MpdPairPiLambda::UserInit()
       mixedEvents[i] = new TList();
    }
 
-   cout << "[MpdPairPiLambda]: Reading Geo from sim_1.root for track refit ... " << endl;
+   cout << "[MpdPairPiLambda]: Reading Geo from sim_Geo.root for track refit ... " << endl;
 
    // Read-out TPC Geo for track Refit
    inFileSim = new TFile("sim_Geo.root", "READ");
@@ -167,8 +167,8 @@ void MpdPairPiLambda::ProcessEvent(MpdAnalysisEvent &event)
       return;
    }
 
-   mKalmanTracks  = event.fTPCKalmanTrack;
-   mpdTofMatching = event.fTOFMatching;
+   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
+   mKalmanTracks    = event.fTPCKalmanTrack;
 
    if (isMC) {
       mMCTracks = event.fMCTrack;
@@ -276,8 +276,7 @@ void MpdPairPiLambda::selectPionTrack(MpdAnalysisEvent &event)
    // h+/-
    mP1.clear();
 
-   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
-   int ntr          = mMpdGlobalTracks->GetEntriesFast();
+   int ntr = mMpdGlobalTracks->GetEntriesFast();
 
    for (long int i = 0; i < ntr; i++) {
       MpdTrack          *mpdtrack = (MpdTrack *)mMpdGlobalTracks->UncheckedAt(i);
@@ -336,12 +335,10 @@ void MpdPairPiLambda::selectLambdaTrack(MpdAnalysisEvent &event)
    int iv = 0;
 
    mP2.clear();
-   vector<MpdParticle *> vPartK;
 
    MpdVertex *vertex = (MpdVertex *)event.fVertex->First();
 
-   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
-   int ntr          = mMpdGlobalTracks->GetEntriesFast();
+   int ntr = mMpdGlobalTracks->GetEntriesFast();
 
    for (long int i = 0; i < ntr; i++) {
       MpdTrack          *mpdtrack1 = (MpdTrack *)mMpdGlobalTracks->UncheckedAt(i);
@@ -441,8 +438,8 @@ void MpdPairPiLambda::selectLambdaTrack(MpdAnalysisEvent &event)
 
          // Build Lambda
          vPartK.clear();
-         vPartK.push_back(new MpdParticle(proton));
-         vPartK.push_back(new MpdParticle(pion));
+         vPartK.push_back(&proton);
+         vPartK.push_back(&pion);
 
          MpdParticle LamPPi;
          double      chi2 = TMath::Abs(LamPPi.BuildMother(vPartK));

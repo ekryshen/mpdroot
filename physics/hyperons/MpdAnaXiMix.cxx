@@ -30,6 +30,7 @@
 #include "TFile.h"
 #include "TGeoManager.h"
 #include <TMinuit.h>
+#include <TROOT.h> //AZ-170823
 
 #include <iostream>
 #include <fstream> // std::ifstream
@@ -61,7 +62,10 @@ void MpdAnaXiMix::UserInit()
 
    fOutputList = new TList();
    fOutputList->SetOwner(kTRUE);
-   TH1F *hp = nullptr;
+   TH1F       *hp     = nullptr;
+   TDirectory *curDir = gDirectory; // AZ-170823
+   // cout << " --- file --- " << fOutputName << " " << gROOT->GetFile(fOutputName+".root") << endl; //AZ-170823
+   gROOT->GetFile(fOutputName + ".root")->cd(); // AZ-170823
 
    hp                      = new TH1F("hLambFlag", "Flags for lambda", 14, 0, 14);
    fHistosF[hp->GetName()] = hp;
@@ -134,6 +138,7 @@ void MpdAnaXiMix::UserInit()
    fTrC    = new MpdHelix(0, 0, 0, TVector3(0, 0, 0), 0);
    fMinuit = new TMinuit(2);
 
+   curDir->cd(); // AZ-170823
    cout << "[MpdAnaXiMix] -- Successful start --" << endl << endl;
 }
 
@@ -220,6 +225,7 @@ void MpdAnaXiMix::ProcessEvent(MpdAnalysisEvent &event)
    // fvLambdas.push_back(l0);
    // gDirectory->Print();
 
+   gROOT->GetFile(fOutputName + ".root")->cd(); // AZ-170823
    fTree->Fill();
 }
 

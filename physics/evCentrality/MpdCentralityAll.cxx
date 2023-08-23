@@ -100,10 +100,13 @@ void MpdCentralityAll::ProcessEvent(MpdAnalysisEvent &event)
    event.setCentrTPC(-1);
 
    if (!isInitialized) {
-      mKF = MpdKalmanFilter::Instance();
-      mKHit.SetType(MpdKalmanHit::kFixedR);
+      // mKF = MpdKalmanFilter::Instance();
+      // mKHit.SetType(MpdKalmanHit::kFixedR);
       isInitialized = true;
    }
+
+   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
+   mMCTracks        = event.fMCTrack;
 
    if (!selectEvent(event)) {
       return;
@@ -111,8 +114,6 @@ void MpdCentralityAll::ProcessEvent(MpdAnalysisEvent &event)
 
    int   nTrTPC    = 0;
    float nTrTPCEff = 0;
-
-   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
 
    for (long int i = 0; i < mMpdGlobalTracks->GetEntriesFast(); i++) {
       MpdTrack          *mpdtrack = (MpdTrack *)mMpdGlobalTracks->UncheckedAt(i);
@@ -158,8 +159,6 @@ bool MpdCentralityAll::selectEvent(MpdAnalysisEvent &event)
    mhEvents->Fill(0.5);
 
    // Reject empty events (UrQMD, PHSD)
-   mMCTracks = event.fMCTrack;
-
    int nTrMc = 0;
    for (int i = 0; i < mMCTracks->GetEntriesFast(); i++) {
       MpdMCTrack *pr = (static_cast<MpdMCTrack *>(mMCTracks->At(i)));
@@ -220,8 +219,6 @@ bool MpdCentralityAll::selectEvent(MpdAnalysisEvent &event)
 
    // Reject broken events (VHLLE)
    float nTrTPCEff = 0;
-
-   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
 
    for (long int i = 0; i < mMpdGlobalTracks->GetEntriesFast(); i++) {
       MpdTrack *mpdtrack = (MpdTrack *)mMpdGlobalTracks->UncheckedAt(i);

@@ -7,25 +7,17 @@ MpdAnalysisEvent::~MpdAnalysisEvent()
       delete fEventHeader;
       fEventHeader = nullptr;
    }
+   if (fTPCKalmanTrack) {
+      delete fTPCKalmanTrack;
+      fTPCKalmanTrack = nullptr;
+   }
    if (fVertex) {
       delete fVertex;
       fVertex = nullptr;
    }
-   if (fMPDEvent) {
-      delete fMPDEvent;
-      fMPDEvent = nullptr;
-   }
-   if (fMCEventHeader) {
-      delete fMCEventHeader;
-      fMCEventHeader = nullptr;
-   }
-   if (fMCTrack) {
-      delete fMCTrack;
-      fMCTrack = nullptr;
-   }
-   if (fTPCKalmanTrack) {
-      delete fTPCKalmanTrack;
-      fTPCKalmanTrack = nullptr;
+   if (fFfdHit) {
+      delete fFfdHit;
+      fFfdHit = nullptr;
    }
    if (fTOFHit) {
       delete fTOFHit;
@@ -35,25 +27,29 @@ MpdAnalysisEvent::~MpdAnalysisEvent()
       delete fTOFMatching;
       fTOFMatching = nullptr;
    }
+   if (fEmcDigit) {
+      delete fEmcDigit;
+      fEmcDigit = nullptr;
+   }
+   if (fEMCCluster) {
+      delete fEMCCluster;
+      fEMCCluster = nullptr;
+   }
    if (fZDCDigit) {
       delete fZDCDigit;
       fZDCDigit = nullptr;
    }
-   if (fZDCEloss1Value) {
-      delete fZDCEloss1Value;
-      fZDCEloss1Value = nullptr;
+   if (fMCEventHeader) {
+      delete fMCEventHeader;
+      fMCEventHeader = nullptr;
    }
-   if (fZDCEloss2Value) {
-      delete fZDCEloss2Value;
-      fZDCEloss2Value = nullptr;
+   if (fMCTrack) {
+      delete fMCTrack;
+      fMCTrack = nullptr;
    }
-   if (fZDCEloss1Histo) {
-      delete fZDCEloss1Histo;
-      fZDCEloss1Histo = nullptr;
-   }
-   if (fZDCEloss2Histo) {
-      delete fZDCEloss2Histo;
-      fZDCEloss2Histo = nullptr;
+   if (fMPDEvent) {
+      delete fMPDEvent;
+      fMPDEvent = nullptr;
    }
    if (fV0) {
       delete fV0;
@@ -64,17 +60,16 @@ void MpdAnalysisEvent::Clear()
 {
 
    if (fEventHeader) fEventHeader->Clear();
-   if (fVertex) fVertex->Clear();
-   if (fMPDEvent) fMPDEvent->Clear();
-   if (fMCEventHeader) fMCEventHeader->Clear();
-   if (fMCTrack) fMCTrack->Clear();
    if (fTPCKalmanTrack) fTPCKalmanTrack->Clear();
+   if (fVertex) fVertex->Clear();
+   if (fFfdHit) fFfdHit->Clear();
    if (fTOFHit) fTOFHit->Clear();
    if (fTOFMatching) fTOFMatching->Clear();
+   if (fEmcDigit) fEmcDigit->Clear();
+   if (fEMCCluster) fEMCCluster->Clear();
    if (fZDCDigit) fZDCDigit->Clear();
-   if (fZDCEloss1Value) fZDCEloss1Value->Clear();
-   if (fZDCEloss2Value) fZDCEloss2Value->Clear();
-   if (fZDCEloss1Histo) fZDCEloss1Histo->Clear();
-   if (fZDCEloss2Histo) fZDCEloss2Histo->Clear();
+   if (fMCEventHeader) fMCEventHeader->Clear();
+   if (fMCTrack) fMCTrack->Clear();
+   if (fMPDEvent) fMPDEvent->Clear();
    if (fV0) fV0->Clear();
 }

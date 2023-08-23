@@ -25,12 +25,10 @@ public:
    TObjArray    *fEMCCluster     = nullptr; ///< List of EMC clusters
    TClonesArray *fTPCKalmanTrack = nullptr; ///< TPCKalmanTrack
    TClonesArray *fTOFHit         = nullptr; ///< TOFHit
+   TClonesArray *fFfdHit         = nullptr; ///< FfdHit
    TClonesArray *fTOFMatching    = nullptr; ///< TOFMatching
    TClonesArray *fZDCDigit       = nullptr; ///< ZDCDigi
-   TClonesArray *fZDCEloss1Value = nullptr; ///< ElossZDC1Value
-   TClonesArray *fZDCEloss2Value = nullptr; ///< ElossZDC2Value
-   TClonesArray *fZDCEloss1Histo = nullptr; ///< ElossZDC1Histo
-   TClonesArray *fZDCEloss2Histo = nullptr; ///< ElossZDC2Histo
+   TClonesArray *fEmcDigit       = nullptr; ///< EmcDigi
 
    TClonesArray *fV0 = nullptr; ///< list of V0s as TClonesArray("MpdV0",..)
 

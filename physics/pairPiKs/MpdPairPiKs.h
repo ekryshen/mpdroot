@@ -73,18 +73,15 @@ private:
 
    std::string mOutFile = "histos.root";
 
-   BaseTpcSectorGeo     *secGeo           = nullptr;
-   MpdTpcKalmanFilter   *recoTpc          = nullptr;
-   MpdKalmanFilter      *mKF              = nullptr;
-   MpdPid               *mPID             = nullptr;
-   TClonesArray         *mMCTracks        = nullptr;
-   TObjArray            *mEMCClusters     = nullptr;
-   TClonesArray         *mKalmanTracks    = nullptr;
-   TClonesArray         *mMpdGlobalTracks = nullptr;
-   TClonesArray         *mpdTofMatching   = nullptr;
-   TClonesArray         *eventM           = nullptr; // (V)
-   vector<MpdParticle *> mPartK;
-   MpdKalmanHit          mKHit;
+   BaseTpcSectorGeo   *secGeo  = nullptr;
+   MpdTpcKalmanFilter *recoTpc = nullptr;
+   //   MpdKalmanFilter      *mKF              = nullptr;
+   TClonesArray *mMCTracks        = nullptr;
+   TClonesArray *mKalmanTracks    = nullptr;
+   TClonesArray *mMpdGlobalTracks = nullptr;
+   TClonesArray *eventM           = nullptr; // (V)
+                                             //   MpdKalmanHit          mKHit;
+   vector<MpdParticle *> vPartK;
 
    std::vector<MpdPairPiKsTrack> mP2; // (V) Negative tracks
    std::vector<MpdPairPiKsTrack> mP1; // (V) Positive tracks

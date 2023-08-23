@@ -133,7 +133,7 @@ void MpdPairKK::UserInit()
       mixedEvents[i] = new TList();
    }
 
-   cout << "[MpdPairKK]: Reading Geo from sim_1.root for track refit ... " << endl;
+   cout << "[MpdPairKK]: Reading Geo from sim_Geo.root for track refit ... " << endl;
 
    // Read-out TPC Geo for track Refit
    inFileSim = new TFile("sim_Geo.root", "READ");
@@ -168,8 +168,8 @@ void MpdPairKK::ProcessEvent(MpdAnalysisEvent &event)
       return;
    }
 
-   mKalmanTracks  = event.fTPCKalmanTrack;
-   mpdTofMatching = event.fTOFMatching;
+   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
+   mKalmanTracks    = event.fTPCKalmanTrack;
 
    if (isMC) {
       mMCTracks = event.fMCTrack;
@@ -271,8 +271,7 @@ void MpdPairKK::selectPosTrack(MpdAnalysisEvent &event)
    // h+
    mP1.clear();
 
-   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
-   int ntr          = mMpdGlobalTracks->GetEntriesFast();
+   int ntr = mMpdGlobalTracks->GetEntriesFast();
 
    for (long int i = 0; i < ntr; i++) {
       MpdTrack          *mpdtrack = (MpdTrack *)mMpdGlobalTracks->UncheckedAt(i);
@@ -306,7 +305,7 @@ void MpdPairKK::selectPosTrack(MpdAnalysisEvent &event)
       if (isK_TPC == 1 && isK_TOF == 1) pid = 4;
       if ((isTOF != 1 && isK_TPC == 1) || (isTOF == 1 && isK_TPC == 1 && isK_TOF == 1)) pid = 5;
 
-      if (pid < 0) continue;
+      if (pid != 5) continue;
 
       float mK = 0.493677;
 
@@ -341,8 +340,7 @@ void MpdPairKK::selectNegTrack(MpdAnalysisEvent &event)
 
    mP2.clear();
 
-   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
-   int ntr          = mMpdGlobalTracks->GetEntriesFast();
+   int ntr = mMpdGlobalTracks->GetEntriesFast();
 
    for (long int i = 0; i < ntr; i++) {
       MpdTrack          *mpdtrack = (MpdTrack *)mMpdGlobalTracks->UncheckedAt(i);
@@ -376,13 +374,13 @@ void MpdPairKK::selectNegTrack(MpdAnalysisEvent &event)
       if (isK_TPC == 1 && isK_TOF == 1) pid = 4;
       if ((isTOF != 1 && isK_TPC == 1) || (isTOF == 1 && isK_TPC == 1 && isK_TOF == 1)) pid = 5;
 
-      if (pid < 0) continue;
+      if (pid != 5) continue;
 
       float mK = 0.493677;
 
       MpdTpcKalmanTrack trCorK = *tr;
       trCorK.SetDirection(MpdKalmanTrack::kInward);
-      int ok = recoTpc->Refit(&trCorK, mK, 1); // refit, sign seems to be not important ???
+      int ok = recoTpc->Refit(&trCorK, mK, -1); // refit, sign seems to be not important ???
       if (ok) {
          MpdParticle kaon(trCorK, i);
          kaon.SetPdg(-321);

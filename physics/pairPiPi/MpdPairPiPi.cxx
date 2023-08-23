@@ -184,43 +184,17 @@ void MpdPairPiPi::UserInit()
       mixedEvents[i] = new TList();
    }
 
-   cout << "[MpdPairPiPi]: Reading Geo from sim_1.root for track refit ... " << endl;
-
-   // Read-out TPC Geo for track Refit
-   inFileSim = new TFile("sim_Geo.root", "READ");
-   inTreeSim = (TTree *)inFileSim->Get("mpdsim");
-   inTreeSim->SetName("mpdsim1");
-
-   inFileSim->Get("FairGeoParSet");
-
-   tpcPoints = (TClonesArray *)inFileSim->FindObjectAny("TpcPoint");
-
-   inTreeSim->SetBranchAddress("TpcPoint", &tpcPoints);
-   TBranch *tpcSimB = inTreeSim->GetBranch("TpcPoint");
-
-   secGeo  = new TpcSectorGeoAZ();
-   recoTpc = new MpdTpcKalmanFilter(*secGeo, "TPC Kalman filter");
-   recoTpc->SetSectorGeo(*secGeo);
-   recoTpc->FillGeoScheme();
-
    cout << "[MpdPairPiPi]: Initialization done " << endl << endl;
 }
 //--------------------------------------
 void MpdPairPiPi::ProcessEvent(MpdAnalysisEvent &event)
 {
-
-   if (!isInitialized) {
-      // mKF = MpdKalmanFilter::Instance();
-      // mKHit.SetType(MpdKalmanHit::kFixedR);
-      isInitialized = true;
-   }
-
    if (!selectEvent(event)) {
       return;
    }
 
-   mKalmanTracks  = event.fTPCKalmanTrack;
-   mpdTofMatching = event.fTOFMatching;
+   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
+   mKalmanTracks    = event.fTPCKalmanTrack;
 
    if (isMC) {
       mMCTracks = event.fMCTrack;
@@ -322,8 +296,7 @@ void MpdPairPiPi::selectPosTrack(MpdAnalysisEvent &event)
    // h+
    mP1.clear();
 
-   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
-   int ntr          = mMpdGlobalTracks->GetEntriesFast();
+   int ntr = mMpdGlobalTracks->GetEntriesFast();
 
    for (long int i = 0; i < ntr; i++) {
       MpdTrack          *mpdtrack = (MpdTrack *)mMpdGlobalTracks->UncheckedAt(i);
@@ -378,8 +351,7 @@ void MpdPairPiPi::selectNegTrack(MpdAnalysisEvent &event)
 
    mP2.clear();
 
-   mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
-   int ntr          = mMpdGlobalTracks->GetEntriesFast();
+   int ntr = mMpdGlobalTracks->GetEntriesFast();
 
    for (long int i = 0; i < ntr; i++) {
       MpdTrack          *mpdtrack = (MpdTrack *)mMpdGlobalTracks->UncheckedAt(i);
