@@ -49,6 +49,9 @@ private:
    void     FillTrackTpcHits(Int_t index, MpdTrack *track);
    void     CalculateSharedArrayMap();
 
+   // collects data to localQAptr for QA
+   void GatherQAData();
+
 public:
    MpdFillDstTask(BaseQA *qaObject = nullptr, const char *name = "MpdFillDstTask", const char *title = "MPD Task");
    virtual ~MpdFillDstTask(); // Destructor

@@ -46,6 +46,9 @@ public:
    std::vector<int> eventNumber;
    TString          moduleNameSuffix;
 
+   std::vector<TClonesArray *> eventMCTracksArray;
+   std::vector<TClonesArray *> eventTpcTracksArray;
+
 protected:
    void WriteBaseQA(TString suffix = TString(""));
 

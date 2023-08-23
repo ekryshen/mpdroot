@@ -299,6 +299,8 @@ void MpdFillDstTask::Exec(Option_t *option)
       FillTrackDCA(track, &recoVertex, &mcVertex);
       FillTrackPID(track);
    }
+
+   if (localQAptr) GatherQAData();
 }
 
 // -------------------------------------------------------------------
@@ -518,4 +520,19 @@ void MpdFillDstTask::FillTrackPID(MpdTrack *track)
 }
 
 // -------------------------------------------------------------------
+
+void MpdFillDstTask::GatherQAData()
+{
+   if (localQAptr->moduleNameSuffix.IsNull()) {
+      int currentEvent = FairRootManager::Instance()->GetEntryNr();
+      localQAptr->eventNumber.push_back(currentEvent);
+   }
+   localQAptr->eventMCTracksArray.push_back(new TClonesArray());
+   localQAptr->eventMCTracksArray.back() = (TClonesArray *)fMCTracks->Clone();
+   localQAptr->eventTpcTracksArray.push_back(new TClonesArray());
+   localQAptr->eventTpcTracksArray.back() = (TClonesArray *)fKFTracks->Clone();
+}
+
+// -------------------------------------------------------------------
+
 ClassImp(MpdFillDstTask);
