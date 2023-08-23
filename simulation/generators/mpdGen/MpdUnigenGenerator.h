@@ -11,6 +11,7 @@
 
 #include <UParticle.h>
 #include <UEvent.h>
+#include <URun.h>
 #include <MpdGenTrackTask.h>
 #include <MpdGenTrack.h>
 
@@ -28,7 +29,7 @@ class FairPrimaryGenerator;
 class MpdUnigenGenerator : public FairGenerator {
 public:
    MpdUnigenGenerator();
-   MpdUnigenGenerator(TString fileName, Bool_t isSpectator = kFALSE);
+   MpdUnigenGenerator(TString fileName, Bool_t isSpectator = kFALSE, Bool_t isLabSystem = kFALSE);
    ~MpdUnigenGenerator();
 
    Bool_t ReadEvent(FairPrimaryGenerator *primGen);
@@ -45,12 +46,15 @@ public:
       fPhiMin        = phiMin;
       fPhiMax        = phiMax;
       fEventPlaneSet = kTRUE;
+      cout << "-I MpdUnigenGenerator: Reaction plane rotation is set." << endl;
    }
 
 private:
    Long64_t   fEventNumber; //!
+   Long64_t   fNEntries;    //!
    TFile     *fInFile;
    TTree     *fInTree;
+   URun      *fRun;
    UEvent    *fEvent;
    UParticle *fParticle;
    Bool_t     fSpectatorsON;
@@ -63,6 +67,10 @@ private:
    static const Int_t kPdgLambda = 10000000;
    static const Int_t kPdgCharge = 10000;
    static const Int_t kPdgMass   = 10;
+
+   Double_t fGammaCM;
+   Double_t fBetaCM;
+   Bool_t   fIsLabSystem;
 
    Int_t GetIonCharge(Int_t pdgCode) const { return (pdgCode % kPdgLambda) / kPdgCharge; }
    Int_t GetIonLambdas(Int_t pdgCode) { return (pdgCode % (10 * kPdgLambda)) / kPdgLambda; }

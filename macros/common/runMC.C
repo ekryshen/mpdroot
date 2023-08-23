@@ -99,10 +99,10 @@ void runMC(EGenerators generator = EGenerators::BOX, EVMCType vmc = EVMCType::GE
    fRun->SetGenerator(primGen);
 
    // smearing of beam interaction point
-   primGen->SetBeam(0.0, 0.0, 0.1, 0.1);
-   primGen->SetTarget(0.0, 24.0);
-   primGen->SmearGausVertexZ(kTRUE);
-   primGen->SmearVertexXY(kTRUE);
+   primGen->SetBeam(0.0, 0.0, 0.1, 0.1); // for fix-target set all to 0.0
+   primGen->SetTarget(0.0, 24.0); // for fix-target set (-115.0, 0.0)
+   primGen->SmearGausVertexZ(kTRUE); // for fix-target set kFALSE
+   primGen->SmearVertexXY(kTRUE); // for fix-target set kFALSE
 
    // Use user defined decays https://fairroot.gsi.de/?q=node/57
    fRun->SetUserDecay(kTRUE);
@@ -201,8 +201,9 @@ void runMC(EGenerators generator = EGenerators::BOX, EVMCType vmc = EVMCType::GE
       if (!CheckFileExist(inFile))
          return;
       Bool_t isSpectatorON = kTRUE; // Does unigen tree have fragments (depends on model)?
-      MpdUnigenGenerator *uniGen = new MpdUnigenGenerator(inFile, isSpectatorON);
-      // uniGen->SetEventPlane(0., 2.*TMath::Pi());
+      Bool_t isLabSystemON = kFALSE; // kFALSE - collider mode (default), kTRUE - fixed-target mode (boost: emc from model -> lab in reco)
+      MpdUnigenGenerator *uniGen = new MpdUnigenGenerator(inFile, isSpectatorON, isLabSystemON);
+      uniGen->SetEventPlane(0., 2.*TMath::Pi());
       primGen->AddGenerator(uniGen);
       break;
    }
