@@ -37,12 +37,14 @@
 
 #include <iostream>
 
-// Choose: UseMlem (MLEM clusterhitfinder)
-//         UseHitProducer (simple hit producer without digitizer)
-//         comment out the line for Fast clusterhitfinder
-#define UseMlem
-
 #include "commonFunctions.C"
+
+// available clustering / hit finder modules for TPC
+enum ETpcClustering {
+   HITPRODUCER, // simple hit producer without digitizer
+   MLEM,        // default Mlem module (AZ)
+   FAST
+};
 
 // Macro for running reconstruction:
 // inFile - input file with MC data, default: evetest.root
@@ -51,7 +53,8 @@
 // nEvents - number of events to process, 0 - all events of given file will be proccessed, default: 1
 // qaSetting - enum variable defining which QA data are collected
 void runReco(TString inFile = "evetest.root", TString outFile = "mpddst.root", Int_t nStartEvent = 0,
-             Int_t nEvents = 10, EQAMode qaSetting = EQAMode::OFF)
+             Int_t nEvents = 10, ETpcClustering tpcClusteringModule = ETpcClustering::MLEM,
+             EQAMode qaSetting = EQAMode::OFF)
 {
 
    if (!CheckFileExist(inFile)) return;
@@ -115,29 +118,40 @@ void runReco(TString inFile = "evetest.root", TString outFile = "mpddst.root", I
    MpdKalmanFilter *kalman = MpdKalmanFilter::Instance("KF");
    fRun->AddTask(kalman);
 
-#ifdef UseHitProducer
-   MpdTpcHitProducer *hitPr = new MpdTpcHitProducer(*secGeo);
-   hitPr->SetModular(0);
-   fRun->AddTask(hitPr);
-#else
-   MpdTpcDigitizerAZlt *tpcDigitizer = new MpdTpcDigitizerAZlt(*secGeo);
-   tpcDigitizer->SetPersistence(kTRUE);
-   fRun->AddTask(tpcDigitizer);
-#ifdef UseMlem
-   TpcClusterHitFinderMlem *tpcClus = new TpcClusterHitFinderMlem(*secGeo, qaObject);
-#else
-   TpcClusterHitFinderFast *tpcClus = new TpcClusterHitFinderFast(*secGeo, qaObject);
-#endif
-   fRun->AddTask(tpcClus);
-#endif
+   if (tpcClusteringModule == ETpcClustering::HITPRODUCER) {
+      MpdTpcHitProducer *hitPr = new MpdTpcHitProducer(*secGeo);
+      hitPr->SetModular(0);
+      fRun->AddTask(hitPr);
+   } else {
+      MpdTpcDigitizerAZlt *tpcDigitizer = new MpdTpcDigitizerAZlt(*secGeo);
+      tpcDigitizer->SetPersistence(kTRUE);
+      fRun->AddTask(tpcDigitizer);
+
+      AbstractTpcClusterHitFinder *tpcClus;
+      switch (tpcClusteringModule) {
+      case ETpcClustering::MLEM: {
+         tpcClus = new TpcClusterHitFinderMlem(*secGeo, qaObject);
+         break;
+      }
+      case ETpcClustering::FAST: {
+         tpcClus = new TpcClusterHitFinderFast(*secGeo, qaObject);
+         break;
+      }
+      default: {
+         std::cerr << "Error. You've set the non-existing Tpc Clustering Module.\n";
+         return;
+      }
+      }
+      fRun->AddTask(tpcClus);
+   }
 
    FairTask *vertZ = new MpdVertexZfinder(*secGeo);
    fRun->AddTask(vertZ);
 
    MpdTpcKalmanFilter *recoKF = new MpdTpcKalmanFilter(*secGeo, "Kalman filter");
-#ifndef UseHitProducer
-   recoKF->UseTpcHit(kFALSE); // do not use hits from the hit producer
-#endif
+   if (tpcClusteringModule != ETpcClustering::HITPRODUCER)
+      recoKF->UseTpcHit(kFALSE); // do not use hits from the Tpc hit producer
+
    fRun->AddTask(recoKF);
 
    FairTask *findVtx = new MpdKfPrimaryVertexFinder("Vertex finder");
