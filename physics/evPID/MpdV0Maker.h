@@ -61,11 +61,11 @@ private:
    float mAlphaCut      = 3.1415;
    float mCosPsiCut     = -1.;
    float mDistCut       = 10.;
-   float mDedxSigmaCut  = 5.;
-   float mTofSigmaCut   = 5.;
+   float mDedxSigmaCut  = 3.;
+   float mTofSigmaCut   = 3.;
    bool  mRequireTOFpid = false;
    float mEtaCut        = 1.;    // Maximal track rapidity
-   float mMassCut       = 2.;    // 2 GeV?
+   float mMassCut       = 0.2;   // 2 GeV?
    float mPtminCut      = 0.050; // track pT min
    float mChi2Cut       = 10.;   // Maximal Kalman chi2
    float mMinR2Cut      = 1.;    // Minimal conv radius

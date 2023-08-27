@@ -331,7 +331,10 @@ void MpdPairPiLambda::selectLambdaTrack(MpdAnalysisEvent &event)
 {
    // Lambda ->p+pi-
 
-   eventM = new TClonesArray("MpdPairPiLambdaTrack", mMpdGlobalTracks->GetEntriesFast());
+   if (!eventM)
+      eventM = new TClonesArray("MpdPairPiLambdaTrack", mMpdGlobalTracks->GetEntriesFast());
+   else
+      eventM->Clear();
    int iv = 0;
 
    mP2.clear();
@@ -438,8 +441,8 @@ void MpdPairPiLambda::selectLambdaTrack(MpdAnalysisEvent &event)
 
          // Build Lambda
          vPartK.clear();
-         vPartK.push_back(&proton);
-         vPartK.push_back(&pion);
+         vPartK.emplace_back(&proton);
+         vPartK.emplace_back(&pion);
 
          MpdParticle LamPPi;
          double      chi2 = TMath::Abs(LamPPi.BuildMother(vPartK));
@@ -489,7 +492,7 @@ void MpdPairPiLambda::selectLambdaTrack(MpdAnalysisEvent &event)
          mP2.back().setCh1(1);
          mP2.back().setCh2(-1);
 
-         new ((*eventM)[iv++]) MpdPairPiLambdaTrack(mP2[mP2.size() - 1]);
+         new ((*eventM)[iv++]) MpdPairPiLambdaTrack(mP2.back());
 
       } // j
    }    // i
@@ -635,6 +638,7 @@ void MpdPairPiLambda::processHistograms(MpdAnalysisEvent &event)
       delete tmp;
    }
    mixedEvents[mixBin]->AddFirst(eventM);
+   eventM = nullptr;
 
 } // histos
 

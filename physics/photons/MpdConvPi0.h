@@ -141,6 +141,7 @@ private:
    bool     isMC           = true;
    bool     applySelection = true;
    int      mCenBin        = 0;
+   float    mCentrality    = 0.;
    int      mZvtxBin       = 0;
    int      mEPBin         = 0;
    TVector3 mPrimaryVertex;

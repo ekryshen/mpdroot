@@ -54,7 +54,6 @@ public:
       const Int_t    pdgCodeOm  = 3334; // Omega- (1.67245 GeV)
       const Int_t    pdgCodeKm  = -321; // K- (0.4937 GeV)
       const Int_t    pdgCodeK0  = 310;  // K0 (0.4976 GeV)
-      const int      nMix       = 5;    // number of events to mix
       const Double_t gC2p       = 3.;   // 4.; //9.;           //chi2 of p to PV
       const Double_t gC2pi      = 5.;   // 5.; //11.;          //chi2 of pion to PV
       const Double_t gPathL     = 0.0;  // cm - path to Lambda decay
@@ -62,6 +61,7 @@ public:
       const Double_t gC2L       = 25.;  // 9999.;  //chi2 between pion & p in V0
       const Double_t gC2Xi      = 25.;  // 16.;//9999.;  //chi2 between pion & L in Xi
       const Double_t gDecayOm   = 0.;   // 1.0;
+      int            nMix       = 5;    // number of events to mix
    };
 
    MpdAnaXiMix();
@@ -73,6 +73,10 @@ public:
    void Finish();
 
    void SetOutFile(std::string filename = "histos.root"){}; // mOutFile = filename; }
+
+   void                              SetPrevWagon(MpdAnalysisTask *prevWagon) { fPrevWagon = prevWagon; } // AZ-200823
+   vector<MpdParticle *>            &GetLambdas() { return fVecL; }                                       // AZ-200823
+   vector<pair<Double_t, Double_t>> &GetVecL12(int isel = 0) { return (isel) ? fVecL2 : fVecL1; }         // AZ-200823
 
 protected:
    bool        SelectEvent(MpdAnalysisEvent &event);
@@ -124,6 +128,7 @@ private:
    multimap<Int_t, AzTrack>                      fMapPiEvent;     // for event mixing
    vector<pair<Double_t, Double_t>>              fVecL1, fVecL2;
    map<int, int>                                 fLays;
+   vector<MpdParticle *>                         fVecL; // AZ-200823
 
    TTree     *fTree;
    Float_t    fB0, fCentr, fZv, fZvgen;
@@ -134,6 +139,8 @@ private:
    TMinuit   *fMinuit;
    // static TVector3 fVtxN, fMomN;
    // static MpdHelix *fTrC;
+   int              fCascade;   //! AZ-200823
+   MpdAnalysisTask *fPrevWagon; // AZ-200823
 
    std::unordered_map<string, TH1F *> fHistosF;
 

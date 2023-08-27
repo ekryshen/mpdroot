@@ -19,35 +19,11 @@ class MpdPidQA : public MpdPid {
 public:
    MpdPidQA(); /// default ctor
 
-   /*!
-     \param sigmaTof
-     \param sigmaEloss
-     \param sqrts
-     \param EnLossCoef
-     \param Generator <table>
-   <tr><td>"URQMD"</td></tr>
-   <tr><td>"LAQGSM" ("QGSM")</td></tr>
-   <tr><td>"DEFAULT"</td></tr>
-   <tr><td>"NSIG" (for n-sigma method)</td></tr>
-   </table>
-     \param Tracking <table>
-   <tr><td>"HP" (Hit Producer)</td></tr>
-   <tr><td>"CF" (Cluster Finder)</td></tr>
-   </table>
-     \param NSigPart <table>
-   <tr><td>pi</td></tr>
-   <tr><td>ka</td></tr>
-   <tr><td>pr</td></tr>
-   <tr><td>el</td></tr>
-   <tr><td>mu</td></tr>
-   <tr><td>de</td></tr>
-   <tr><td>tr</td></tr>
-   <tr><td>he3</td></tr>
-   <tr><td>he4</td></tr>
-   </table>
-   */
-   MpdPidQA(Double_t sigmaTof, Double_t sigmaEloss, Double_t sqrts, Double_t EnLossCoef = 1.,
-            TString Generator = "DEFAULT", TString Tracking = "CFHM", TString NSigPart = "pikapr");
+   MpdPidQA(Double_t sigmaTof, Double_t sigmaEloss,
+            Double_t sqrts, /// generators: "URQMD", "LAQGSM" ("QGSM"), "DEFAULT", "NSIG" (for n-sigma method)
+            Double_t EnLossCoef = 1., TString Generator = "DEFAULT",
+            TString Tracking = "CFHM",    /// tracking: "HP" (Hit Producer), "CF" (Cluster Finder)
+            TString NSigPart = "pikapr"); /// possible expressions: el, mu, pi, ka, pr, de, tr, he3, he4
 
    virtual ~MpdPidQA(); /// destructor
 
@@ -60,6 +36,7 @@ public:
    void                   Getm2QA(TString);
    void                   GetAmplQA(TString);
    void                   GetEffContQA(TString);
+   void                   GetEffContQA_Raw(TString);
    MpdPidUtils::ePartType GetPartType(Int_t);
 
 private:

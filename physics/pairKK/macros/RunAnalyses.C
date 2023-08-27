@@ -23,9 +23,11 @@ void RunAnalyses(int nEvents = -1, TString inFileList = "list.txt"){
    MpdAnalysisManager man("ManagerAnal", nEvents) ;
    if (!CheckFileExist(inFileList)) return;
    man.InputFileList(inFileList) ;
-   man.ReadBranches("*") ; 
+//   man.ReadBranches("*") ; //All
+   man.ReadBranches("MCTrack,TpcKalmanTrack,Vertex,MPDEvent,ZdcDigi,TOFMatching,EmcCluster,MCEventHeader") ; //for centrality, PID, EP, V0, pi0
+
    man.SetOutput("histos.root") ;
-   
+
    MpdCentralityAll pCentr("pCentr","pCentr") ;
    man.AddTask(&pCentr) ;
 
@@ -35,8 +37,12 @@ void RunAnalyses(int nEvents = -1, TString inFileList = "list.txt"){
    MpdTrackPidMaker pPID("pPID","pPID") ;
    man.AddTask(&pPID) ;
    
-//   MpdGlobalPolarizationRECO pGlobalPol("pGlobalPolRECO","pGlobalPolRECO","selection","omega2") ;
-//   man.AddTask(&pGlobalPol) ;
+   MpdAnaXiMix xiMix("XiMix","XiMix"); // Lambda wagon
+   man.AddTask(&xiMix);
+
+   MpdAnaXiMix xiMix9("XiMix99","XiMix9"); // second wagon #9 - for Xi-
+   xiMix9.SetPrevWagon(&xiMix);
+   man.AddTask(&xiMix9);
 
    MpdPairKK pKK("pKK","pKK") ;
    man.AddTask(&pKK) ;
@@ -67,6 +73,10 @@ void RunAnalyses(int nEvents = -1, TString inFileList = "list.txt"){
 
 //   MpdConvPi0 pi0_no_selection("pi0_no_selection", "pi0_no_selection");
 //   man.AddTask(&pi0_no_selection);
+//   MpdGlobalPolarizationRECO pGlobalPol("pGlobalPolRECO","pGlobalPolRECO","selection","omega2") ;
+//   man.AddTask(&pGlobalPol) ;
+
+
 
    man.Process() ;
 

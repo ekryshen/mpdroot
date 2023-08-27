@@ -325,7 +325,10 @@ void MpdPairPiKs::selectKsTrack(MpdAnalysisEvent &event)
 {
    // Ks ->pi+pi-
 
-   eventM = new TClonesArray("MpdPairPiKsTrack", mMpdGlobalTracks->GetEntriesFast());
+   if (eventM)
+      eventM->Clear();
+   else
+      eventM = new TClonesArray("MpdPairPiKsTrack", mMpdGlobalTracks->GetEntriesFast());
    int iv = 0;
 
    mP2.clear();
@@ -424,8 +427,6 @@ void MpdPairPiKs::selectKsTrack(MpdAnalysisEvent &event)
 
          // Build Ks
          vPartK.clear();
-         // vPartK.push_back(new MpdParticle(pion1));
-         // vPartK.push_back(new MpdParticle(pion2));
          vPartK.push_back(&pion1);
          vPartK.push_back(&pion2);
 
@@ -482,7 +483,7 @@ void MpdPairPiKs::selectKsTrack(MpdAnalysisEvent &event)
          mP2.back().setCh1(1);
          mP2.back().setCh2(-1);
 
-         new ((*eventM)[iv++]) MpdPairPiKsTrack(mP2[mP2.size() - 1]);
+         new ((*eventM)[iv++]) MpdPairPiKsTrack(mP2.back());
 
       } // j
    }    // i
@@ -626,6 +627,7 @@ void MpdPairPiKs::processHistograms(MpdAnalysisEvent &event)
       delete tmp;
    }
    mixedEvents[mixBin]->AddFirst(eventM);
+   eventM = nullptr;
 
 } // histos
 

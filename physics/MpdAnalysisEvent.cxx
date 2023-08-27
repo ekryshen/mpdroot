@@ -59,17 +59,19 @@ MpdAnalysisEvent::~MpdAnalysisEvent()
 void MpdAnalysisEvent::Clear()
 {
 
-   if (fEventHeader) fEventHeader->Clear();
-   if (fTPCKalmanTrack) fTPCKalmanTrack->Clear();
-   if (fVertex) fVertex->Clear();
-   if (fFfdHit) fFfdHit->Clear();
-   if (fTOFHit) fTOFHit->Clear();
-   if (fTOFMatching) fTOFMatching->Clear();
-   if (fEmcDigit) fEmcDigit->Clear();
-   if (fEMCCluster) fEMCCluster->Clear();
-   if (fZDCDigit) fZDCDigit->Clear();
-   if (fMCEventHeader) fMCEventHeader->Clear();
-   if (fMCTrack) fMCTrack->Clear();
-   if (fMPDEvent) fMPDEvent->Clear();
-   if (fV0) fV0->Clear();
+   if (fEventHeader) fEventHeader->Clear("C");
+   if (fTPCKalmanTrack) fTPCKalmanTrack->Delete();
+   if (fVertex) fVertex->Clear("C");
+   if (fFfdHit) fFfdHit->Clear("C");
+   if (fTOFHit) fTOFHit->Clear("C");
+   if (fTOFMatching) fTOFMatching->Clear("C");
+   if (fEmcDigit) fEmcDigit->Clear("C");
+   if (fEMCCluster) { // otherwise memry leaks
+      fEMCCluster->Delete();
+   }
+   if (fZDCDigit) fZDCDigit->Delete();
+   if (fMCEventHeader) fMCEventHeader->Clear("C");
+   if (fMCTrack) fMCTrack->Clear("C");
+   if (fMPDEvent) fMPDEvent->Clear("C");
+   if (fV0) fV0->Clear("C");
 }

@@ -27,37 +27,12 @@ public:
 
    MpdPid(); /// default ctor
 
-   /*!
-    \param sigmaTof
-    \param sigmaEloss
-    \param sqrts
-    \param EnLossCoef
-    \param Generator <table>
-   <tr><td>"PHSD"</td></tr>
-   <tr><td>"URQMD"</td></tr>
-   <tr><td>"LAQGSM" ("QGSM")</td></tr>
-   <tr><td>"DEFAULT"</td></tr>
-   <tr><td>"EPOS" (for pp collisions)</td></tr>
-   <tr><td>"NSIG" (for n-sigma method)</td></tr>
-   </table>
-    \param Tracking  <table>
-   <tr><td>"HP" (Hit Producer)</td></tr>
-   <tr><td>"CF" (Cluster Finder)</td></tr>
-   </table>
-    \param NSigPart  <table>
-   <tr><td>pi</td></tr>
-   <tr><td>ka</td></tr>
-   <tr><td>pr</td></tr>
-   <tr><td>el</td></tr>
-   <tr><td>mu</td></tr>
-   <tr><td>de</td></tr>
-   <tr><td>tr</td></tr>
-   <tr><td>he3</td></tr>
-   <tr><td>he4</td></tr>
-   </table>
-   */
-   MpdPid(Double_t sigmaTof, Double_t sigmaEloss, Double_t sqrts, Double_t EnLossCoef = 1.,
-          TString Generator = "DEFAULT", TString Tracking = "CFHM", TString NSigPart = "pikapr");
+   MpdPid(Double_t sigmaTof, Double_t sigmaEloss,
+          Double_t sqrts, /// generators: "PHSD", "URQMD", "LAQGSM" ("QGSM"), "DEFAULT", "EPOS" (for pp collisions),
+                          /// "NSIG" (for n-sigma method)
+          Double_t EnLossCoef = 1., TString Generator = "DEFAULT",
+          TString Tracking = "CFHM",    /// tracking: "HP" (Hit Producer), "CF" (Cluster Finder)
+          TString NSigPart = "pikapr"); /// possible expressions: pi, ka, pr, el, mu, de, tr, he3, he4
 
    virtual ~MpdPid(); /// destructor
 
@@ -106,6 +81,11 @@ public:
    /// Returns expected asymmetry value delta (variables: full momentum, species)
    Double_t GetTailValue(Double_t, MpdPidUtils::ePartType);
 
+   Double_t GetdEdxBottomBound(MpdPidUtils::ePartType iType) { return fdEdxBottomBound[iType]; }
+   Double_t GetdEdxTopBound(MpdPidUtils::ePartType iType) { return fdEdxTopBound[iType]; }
+   void     SetdEdxBottomBound(Double_t nsig, MpdPidUtils::ePartType iType) { fdEdxBottomBound[iType] = nsig; }
+   void     SetdEdxTopBound(Double_t nsig, MpdPidUtils::ePartType iType) { fdEdxTopBound[iType] = nsig; }
+
    /// Returns expexted <dE/dx>, dE/dx width and asymmetry parameterizations as vectors of TF1*
    vecTF1ptrs GetVecdEdxMean(MpdPidUtils::ePartType);
    vecTF1ptrs GetVecdEdxWidth(MpdPidUtils::ePartType);
@@ -120,6 +100,11 @@ public:
 
    /// Returns expected m^2 width parameterization as vector of TF1*
    vecTF1ptrs GetVecm2Width(MpdPidUtils::ePartType);
+
+   Double_t Getm2BottomBound(MpdPidUtils::ePartType iType) { return fm2BottomBound[iType]; }
+   Double_t Getm2TopBound(MpdPidUtils::ePartType iType) { return fm2TopBound[iType]; }
+   void     Setm2BottomBound(Double_t nsig, MpdPidUtils::ePartType iType) { fm2BottomBound[iType] = nsig; }
+   void     Setm2TopBound(Double_t nsig, MpdPidUtils::ePartType iType) { fm2TopBound[iType] = nsig; }
 
    //--------------------------------------------------------------------//
    //----------------------------- Yileds -------------------------------//
@@ -189,17 +174,19 @@ protected:
    TF2 *fGaus2;
    TF2 *fAsymGaus2;
 
-   Double_t fProb[MpdPidUtils::kNSpecies + 1]; ///< the probability to identify track as a species <|>
+   Double_t fProb[MpdPidUtils::kNSpecies + 1]; ///< the probability to identify track as a species <i>
    Double_t
       fEnLossSigmasArray[MpdPidUtils::kNSpecies]; ///< the deviation of the measured energy loss from that expected for
-                                                  ///< the species <|>, in terms of the detector resolution
+                                                  ///< the species <i>, in terms of the detector resolution
    Double_t
-      fMSquaredSigmasArray[MpdPidUtils::kNSpecies]; ///< the deviation of the measured mass squared from that expected
-                                                    ///< for the species <|>, in terms of the detector resolution
-   Double_t fPrRatio;                               ///< proton ratio is pos./neg.
-   Double_t fEnergy;                                ///< collision energy
-   Double_t fSigmaTof;   ///< non-zero distance from the average mass-squared value (in terms of standard deviations)
-   Double_t fSigmaEloss; ///< non-zero distance from the average dE/dx value (in terms of standard deviations)
+      fMSquaredSigmasArray[MpdPidUtils::kNSpecies];   ///< the deviation of the measured mass squared from that expected
+                                                      ///< for the species <i>, in terms of the detector resolution
+   Double_t fdEdxBottomBound[MpdPidUtils::kNSpecies]; ///< dE/dx bottom bound ( dE/dx < <dE/dx> ) in terms of sigmas
+   Double_t fdEdxTopBound[MpdPidUtils::kNSpecies];    ///< dE/dx top bound ( dE/dx > <dE/dx> ) in terms of sigmas
+   Double_t fm2BottomBound[MpdPidUtils::kNSpecies];   ///< m^2 bottom bound ( dE/dx < <dE/dx> ) in terms of sigmas
+   Double_t fm2TopBound[MpdPidUtils::kNSpecies];      ///< m^2 top bound ( dE/dx > <dE/dx> ) in terms of sigmas
+   Double_t fPrRatio;                                 ///< proton ratio is pos./neg.
+   Double_t fEnergy;                                  ///< collision energy
    MpdPidUtils::eTrackingState fTrackingState;
    Bool_t                      fMethod; ///< PID method, kTRUE - Bayesian approach, kFALSE - n-sigma method
    MpdPidUtils::ePartCharge    fCharge; ///< track charge

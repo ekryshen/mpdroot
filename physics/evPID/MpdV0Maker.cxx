@@ -184,14 +184,12 @@ bool MpdV0Maker::createSelectV0(MpdTrack *tr1, MpdTpcKalmanTrack *ktr1, MpdTrack
       mhChi2->Fill(chi2, pt);
       mhCutEff->Fill(0., pt);
    }
-
    if (pt < 0.005) { // to avoid fpe
       return false;
    }
    if (mFillEff) {
       mhCutEff->Fill(1., pt);
    }
-
    bool isTrue = false; // is true conv pair?
    if (mMC) {           // same for true electrontracks
       long int matched1       = tr1->GetID();
@@ -283,6 +281,7 @@ bool MpdV0Maker::createSelectV0(MpdTrack *tr1, MpdTpcKalmanTrack *ktr1, MpdTrack
    if (mFillEff) {
       mhCutEff->Fill(6., pt);
    }
+
    // Pair_chi_1[n_ks] = el1.Chi2Vertex(vertex);
    // Pair_chi_2[n_ks] = el2.Chi2Vertex(vertex);
    // A-P cut

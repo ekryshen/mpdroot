@@ -27,7 +27,7 @@ MpdConvPi0::MpdConvPi0(const char *name, const char *outputName) : MpdAnalysisTa
 
 void MpdConvPi0::UserInit()
 {
-   cout << "MpdV0Maker::UserInit():\n";
+   cout << "MpdConvPi0::UserInit():\n";
    mParams.ReadFromFile(mParamConfig);
    mParams.Print();
    applySelection = mParams.mApplySelection;
@@ -53,56 +53,52 @@ void MpdConvPi0::UserInit()
    const double pTmax  = 5.;
    mhTrackCutEff       = addHist(new TH2F("hTrackCutEff", "track cut efficiency;Cut ID;p_{T} (GeV/#it{c});Efficiency",
                                           trackCutId::kNcuts, 0., trackCutId::kNcuts, nPtbin, pTmin, pTmax));
-   mhTrackNhits  = addHist(new TH1F("hTrackNhits", "Number of hits per track;N_{hits};N_{tracks}", 100, 0., 100.));
-   mhTrackEtaPt  = addHist(new TH2F("hTrackEtaPt", "track occupancy pt vs eta;p_{T} (GeV/#it{c});#eta;N_{tracks}",
-                                    nPtbin, pTmin, pTmax, 100, -1.5, 1.5));
+   mhTrackNhits = addHist(new TH1F("hTrackNhits", "Number of hits per track;N_{hits};N_{tracks}", 100, 0., 100.));
+   if (isMC) mhTrackNhitsTrue = addHistClone(mhTrackNhits, "True");
+   mhTrackEtaPt = addHist(new TH2F("hTrackEtaPt", "track occupancy pt vs eta;#eta;N_{tracks};p_{T} (GeV/#it{c})", 100,
+                                   -1.5, 1.5, nPtbin, pTmin, pTmax));
+   if (isMC) mhTrackEtaPtTrue = addHistClone(mhTrackEtaPt, "True");
    mhTrackProbEl = addHist(
       new TH2F("hTrackProbEl", "Electron probability;p (e^{-});p_{T} (GeV/#it{c})", 100, 0., 1., nPtbin, pTmin, pTmax));
+   if (isMC) mhTrackProbElTrue = addHistClone(mhTrackProbEl, "True");
    mhTrackNsigDEdx = addHist(new TH2F("hTrackNsigDEdx", "N#sigma(dE/dx);N#sigma(dE/dx);p_{T} (GeV/#it{c})", 100, -10,
                                       10., nPtbin, pTmin, pTmax));
+   if (isMC) mhTrackNsigDEdxTrue = addHistClone(mhTrackNsigDEdx, "True");
    mhTrackNsigBeta = addHist(new TH2F("hTrackNsigBeta", "N#sigma(#beta);N#sigma(#beta);p_{T} (GeV/#it{c})", 100, -10,
                                       10., nPtbin, pTmin, pTmax));
+   if (isMC) mhTrackNsigBetaTrue = addHistClone(mhTrackNsigBeta, "True");
    mhTrackNsigDEdxNsigBeta = addHist(
       new TH2F("hTrackNsigDEdxNsigBeta", "N#sigma(beta):N#sigma(dE/dx);N#sigma(dE/dx);N#sigma(beta);p_{T} (GeV/#it{c})",
                100, -10, 10., 100, -10, 10.));
-   if (isMC) {
-      mhTrackNhitsTrue            = addHistClone(mhTrackNhits, "True");
-      mhTrackEtaPtTrue            = addHistClone(mhTrackEtaPt, "True");
-      mhTrackProbElTrue           = addHistClone(mhTrackProbEl, "True");
-      mhTrackNsigDEdxTrue         = addHistClone(mhTrackNsigDEdx, "True");
-      mhTrackNsigBetaTrue         = addHistClone(mhTrackNsigBeta, "True");
-      mhTrackNsigDEdxNsigBetaTrue = addHistClone(mhTrackNsigDEdxNsigBeta, "True");
-   }
+   if (isMC) mhTrackNsigDEdxNsigBetaTrue = addHistClone(mhTrackNsigDEdxNsigBeta, "True");
 
    // V0 selection
    mhV0CutEff = addHist(new TH2F("hV0CutEff", "V0 cut efficiency;Cut ID;p_{T} (GeV/#it{c});Efficiency", V0CutId::kNcuts,
                                  0., V0CutId::kNcuts, nPtbin, pTmin, pTmax));
-   mhAlpha    = addHist(
-         new TH2F("hAlpha", "#alpha distribution;#alpha (rad);p_{T} (GeV/#it{c})", 100, 0., 3.14, nPtbin, pTmin, pTmax));
-   mhChi2    = addHist(new TH2F("hChi2", "#chi^{2};#chi^{2};p_{T} (GeV/#it{c})", 100, 0., 10., nPtbin, pTmin, pTmax));
-   mhConvMap = addHist(new TH3F("hConvMap", "Conversion map (r,phi,z);r (cm);#phi (rad);z (cm)", 100, 0., 280., 100, 0.,
-                                TMath::Pi(), 100, -200., 200.));
+   mhChi2     = addHist(new TH2F("hChi2", "#chi^{2};#chi^{2};p_{T} (GeV/#it{c})", 100, 0., 10., nPtbin, pTmin, pTmax));
+   if (isMC) mhChi2True = addHistClone(mhChi2, "True");
    mhV0rConv =
       addHist(new TH2F("hV0rConv", "R^{conv};R^{conv} (cm);p_{T} (GeV/#it{c})", 200, 0., 200., nPtbin, pTmin, pTmax));
-   mhDist   = addHist(new TH2F("hDist", "track DCA;DCA (cm);p_{T} (GeV/#it{c})", 100, 0., 10., nPtbin, pTmin, pTmax));
+   if (isMC) mhV0rConvTrue = addHistClone(mhV0rConv, "True");
+   mhAlpha = addHist(
+      new TH2F("hAlpha", "#alpha distribution;#alpha (rad);p_{T} (GeV/#it{c})", 100, 0., 3.14, nPtbin, pTmin, pTmax));
+   if (isMC) mhAlphaTrue = addHistClone(mhAlpha, "True");
+   mhDist = addHist(new TH2F("hDist", "track DCA;DCA (cm);p_{T} (GeV/#it{c})", 100, 0., 10., nPtbin, pTmin, pTmax));
+   if (isMC) mhDistTrue = addHistClone(mhDist, "True");
    mhMassEE = addHist(
       new TH2F("hMassEE", "m_{ee};m_{ee} (GeV/#it{c}^{2});p_{T} (GeV/#it{c})", 100, 0., 0.3, nPtbin, pTmin, pTmax));
+   if (isMC) mhMassEETrue = addHistClone(mhMassEE, "True");
+   mhArmPo = addHist(new TH2F("Armenteros", "Armenteros", 100, -1, 1, 100, 0, 0.3));
+   if (isMC) mhArmPoTrue = addHistClone(mhArmPo, "True");
+   mhAsym = addHist(new TH2F("Asymmetry", "Asymmetry;Asymmetry;p_{T} (GeV/#it{c})", 200, 0, 1, nPtbin, pTmin, pTmax));
+   if (isMC) mhAsymTrue = addHistClone(mhAsym, "True");
    mhCosPsi = addHist(new TH2F("cosPsi", "cos(#psi);cos(#psi);p_{T} (GeV/#it{c})", 100, -1., 1., nPtbin, pTmin, pTmax));
-   mhArmPo  = addHist(new TH2F("Armenteros", "Armenteros", 100, -1, 1, 100, 0, 0.3));
-   mhAsym   = addHist(new TH2F("Asymetry", "Asymmetry;Asymmetry;p_{T} (GeV/#it{c})", 200, 0, 1, nPtbin, pTmin, pTmax));
+   if (isMC) mhCosPsiTrue = addHistClone(mhCosPsi, "True");
    mhConvSp = addHist(new TH2F("ConvSp", "Conv Sp;p_{T} (GeV/#it{c});#eta", nPtbin, pTmin, pTmax, 100, -1.5, 1.5));
-   if (isMC) {
-      mhConvMapTrue = addHistClone(mhConvMap, "True");
-      mhAlphaTrue   = addHistClone(mhAlpha, "True");
-      mhChi2True    = addHistClone(mhChi2, "True");
-      mhV0rConvTrue = addHistClone(mhV0rConv, "True");
-      mhDistTrue    = addHistClone(mhDist, "True");
-      mhMassEETrue  = addHistClone(mhMassEE, "True");
-      mhCosPsiTrue  = addHistClone(mhCosPsi, "True");
-      mhArmPoTrue   = addHistClone(mhArmPo, "True");
-      mhAsymTrue    = addHistClone(mhAsym, "True");
-      mhConvSpTrue  = addHistClone(mhConvSp, "True");
-   }
+   if (isMC) mhConvSpTrue = addHistClone(mhConvSp, "True");
+   mhConvMap = addHist(new TH3F("hConvMap", "Conversion map (x,y,z);x (cm);y (cm);z (cm)", 100, -20, 20., 100, -20, 20,
+                                100, -200., 200.));
+   if (isMC) mhConvMapTrue = addHistClone(mhConvMap, "True");
 
    // Cluster selection
    int   nBinsE = 100;
@@ -123,6 +119,11 @@ void MpdConvPi0::UserInit()
          new TH2F(Form("hRealCalo_cen_%s", centrality.c_str()),
                   Form("Real inv mass, calorimeter, %s;M_{inv} (GeV/#it{c}));p_{T} (GeV/#it{c})", centrality.c_str()),
                   nMbins, 0., mMax, nPtbin, pTmin, pTmax)));
+      if (isMC) {
+         mhRealCaloTrueAll.push_back(addHistClone(mhRealCalo.back(), "TrueAll"));
+         mhRealCaloTruePi.push_back(addHistClone(mhRealCalo.back(), "TruePi"));
+         mhRealCaloTruePh.push_back(addHistClone(mhRealCalo.back(), "TruePh"));
+      }
       mhMixedCalo.push_back(addHist(
          new TH2F(Form("hMixedCalo_cen_%s", centrality.c_str()),
                   Form("Mixed inv mass, calorimeter, %s;M_{inv} (GeV/#it{c});p_{T} (GeV/#it{c})", centrality.c_str()),
@@ -131,6 +132,11 @@ void MpdConvPi0::UserInit()
          addHist(new TH2F(Form("hRealHybrid_cen_%s", centrality.c_str()),
                           Form("Real inv mass, hybrid, %s;M_{inv} (GeV/#it{c});p_{T} (GeV/#it{c})", centrality.c_str()),
                           nMbins, 0., mMax, nPtbin, pTmin, pTmax)));
+      if (isMC) {
+         mhRealHybridTrueAll.push_back(addHistClone(mhRealHybrid.back(), "TrueAll"));
+         mhRealHybridTruePi.push_back(addHistClone(mhRealHybrid.back(), "TruePi"));
+         mhRealHybridTruePh.push_back(addHistClone(mhRealHybrid.back(), "TruePh"));
+      }
       mhMixedHybrid.push_back(addHist(
          new TH2F(Form("hMixedHybrid_cen_%s", centrality.c_str()),
                   Form("Mixed inv mass, hybrid, %s;M_{inv} (GeV/#it{c});p_{T} (GeV/#it{c})", centrality.c_str()),
@@ -139,6 +145,11 @@ void MpdConvPi0::UserInit()
          new TH2F(Form("hRealConv_cen_%s", centrality.c_str()),
                   Form("Real inv mass, conversion, %s;M_{inv} (GeV/#it{c});p_{T} (GeV/#it{c})", centrality.c_str()),
                   nMbins, 0., mMax, nPtbin, pTmin, pTmax)));
+      if (isMC) {
+         mhRealConvTrueAll.push_back(addHistClone(mhRealConv.back(), "TrueAll"));
+         mhRealConvTruePi.push_back(addHistClone(mhRealConv.back(), "TruePi"));
+         mhRealConvTruePh.push_back(addHistClone(mhRealConv.back(), "TruePh"));
+      }
       mhMixedConv.push_back(addHist(
          new TH2F(Form("hMixedConv_cen_%s", centrality.c_str()),
                   Form("Mixed inv mass, conversion, %s;M_{inv} (GeV/#it{c});p_{T} (GeV/#it{c})", centrality.c_str()),
@@ -159,15 +170,6 @@ void MpdConvPi0::UserInit()
                                 15, -1.5, 1.5, 25, 0, 5, nMbins, 0., mMax)));
 
       if (isMC) {
-         mhRealCaloTruePi.push_back(addHistClone(mhRealCalo.back(), "TruePi"));
-         mhRealHybridTruePi.push_back(addHistClone(mhRealHybrid.back(), "TruePi"));
-         mhRealConvTruePi.push_back(addHistClone(mhRealConv.back(), "TruePi"));
-         mhRealCaloTruePh.push_back(addHistClone(mhRealCalo.back(), "TruePh"));
-         mhRealHybridTruePh.push_back(addHistClone(mhRealHybrid.back(), "TruePh"));
-         mhRealConvTruePh.push_back(addHistClone(mhRealConv.back(), "TruePh"));
-         mhRealCaloTrueAll.push_back(addHistClone(mhRealCalo.back(), "TrueAll"));
-         mhRealHybridTrueAll.push_back(addHistClone(mhRealHybrid.back(), "TrueAll"));
-         mhRealConvTrueAll.push_back(addHistClone(mhRealConv.back(), "TrueAll"));
          hPrimPi.push_back(
             addHist(new TH2F(Form("PrimaryPi0_cen_%s", centrality.c_str()),
                              Form("Primary Pi0, centrality %s;#eta;p_{T} (GeV/#it{c})", centrality.c_str()), 100, -2.,
@@ -201,19 +203,38 @@ void MpdConvPi0::UserInit()
       }
    }
 
-   cout << "MpdV0Maker::UserInit(): complete\n";
+   cout << "MpdConvPi0::UserInit(): complete\n";
 }
 //--------------------------------------
 void MpdConvPi0::ProcessEvent(MpdAnalysisEvent &event)
 {
+   // Centrality
+   mCentrality = event.getCentrTPC();
+   mCenBin     = mAxCent->FindBin(mCentrality) - 1;
+
+   if (!selectEvent(event)) return;
+
+   if (!(mCenBin >= 0 && mCenBin < mAxCent->GetNbins())) mCenBin = mHistoCentBins - 1;
+
    mMpdGlobalTracks = event.fMPDEvent->GetGlobalTracks();
    mKalmanTracks    = event.fTPCKalmanTrack;
    mEMCClusters     = event.fEMCCluster;
    mMCTracks        = event.fMCTrack;
    psiRP            = event.fMCEventHeader->GetRotZ();
 
-   if (applySelection && !selectEvent(event)) {
-      return;
+   // vtxZ
+   mZvtxBin = 0.5 * nMixEventZ * (1 + mPrimaryVertex.Z() / mParams.mZvtxCut);
+   if (mZvtxBin < 0) mZvtxBin = 0;
+   if (mZvtxBin >= nMixEventZ) mZvtxBin = nMixEventZ - 1;
+
+   // EP
+   psiEP  = event.fMpdEP.GetPhiEP_FHCal_F_all();
+   psiEPn = event.fMpdEP.GetPhiEP_FHCal_N_all();
+   psiEPs = event.fMpdEP.GetPhiEP_FHCal_S_all();
+   if (psiEP > -TMath::Pi() && psiEP < TMath::Pi()) {
+      mEPBin = 0.5 * nMixEventEP * (1 + psiEP / TMath::Pi());
+   } else {
+      mEPBin = 0;
    }
 
    int nTracks = mMpdGlobalTracks->GetEntriesFast();
@@ -269,27 +290,13 @@ bool MpdConvPi0::selectEvent(MpdAnalysisEvent &event)
    // Vertex z coordinate
    MpdVertex *vertex = (MpdVertex *)event.fVertex->First();
    vertex->Position(mPrimaryVertex);
-   mhVertex->Fill(mPrimaryVertex.Z());
    if (applySelection && fabs(mPrimaryVertex.Z()) > mParams.mZvtxCut) return false;
+   mhVertex->Fill(mPrimaryVertex.Z());
    mhEventCutEff->Fill(eventCutId::kVertexZ);
 
-   // Centrality
-   float centrality = event.getCentrTPC();
-   mhCentrality->Fill(centrality);
-   mCenBin = mAxCent->FindBin(centrality) - 1;
-   if (applySelection && !(mCenBin > 0 && mCenBin < mAxCent->GetNbins())) return false;
+   if (applySelection && !(mCenBin >= 0 && mCenBin < mAxCent->GetNbins())) return false;
+   mhCentrality->Fill(mCentrality);
    mhEventCutEff->Fill(eventCutId::kGoodCentrality);
-
-   // vtxZ
-   mZvtxBin = 0.5 * nMixEventZ * (1 + mPrimaryVertex.Z() / mParams.mZvtxCut);
-   if (mZvtxBin < 0) mZvtxBin = 0;
-   if (mZvtxBin >= nMixEventZ) mZvtxBin = nMixEventZ - 1;
-
-   // EP
-   psiEP  = event.fMpdEP.GetPhiEP_FHCal_F_all();
-   psiEPn = event.fMpdEP.GetPhiEP_FHCal_N_all();
-   psiEPs = event.fMpdEP.GetPhiEP_FHCal_S_all();
-   mEPBin = 0.5 * nMixEventEP * (1 + psiEP / TMath::Pi());
 
    return true;
 }
@@ -608,13 +615,12 @@ bool MpdConvPi0::selectV0(MpdV0 *v0)
    mhV0rConv->Fill(rConv, pt);
    mhV0CutEff->Fill(V0CutId::kRconv, pt);
 
-   float alpha, qt;
-   v0->getArmenteros(alpha, qt);
+   float angle = v0->getPA();
    if (isTrue) { // same for true electrontracks
-      mhAlphaTrue->Fill(alpha, pt);
+      mhAlphaTrue->Fill(angle, pt);
    }
-   if (applySelection && alpha > mParams.mAlphaCut) return false;
-   mhAlpha->Fill(alpha, pt);
+   if (applySelection && angle > mParams.mAlphaCut) return false;
+   mhAlpha->Fill(angle, pt);
    mhV0CutEff->Fill(V0CutId::kAlpha, pt);
 
    // if(applySelection &&  ePos->R() <= ((TMath::Abs(ePos->Vz()) * fLineCutZRSlope) - fLineCutZValue)){
@@ -641,6 +647,8 @@ bool MpdConvPi0::selectV0(MpdV0 *v0)
    mhMassEE->Fill(mass, pt);
    mhV0CutEff->Fill(V0CutId::kMass, pt);
 
+   float alpha, qt;
+   v0->getArmenteros(alpha, qt);
    if (isTrue) {
       mhArmPoTrue->Fill(alpha, qt);
    }
@@ -668,7 +676,7 @@ bool MpdConvPi0::selectV0(MpdV0 *v0)
    if (isTrue) { // same for true electrontracks
       mhCosPsiTrue->Fill(cospsi, pt);
    }
-   if (applySelection && cospsi < mParams.mCosPsiCut) return false;
+   if (applySelection && 1 - fabs(cospsi) > mParams.mCosPsiCut) return false;
    mhCosPsi->Fill(cospsi, pt);
    mhV0CutEff->Fill(V0CutId::kCosPsi, pt);
 

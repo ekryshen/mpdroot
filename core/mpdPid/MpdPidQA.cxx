@@ -1048,7 +1048,7 @@ void MpdPidQA::Init(TString Particles)
       fEnLossMap.insert(pair<MpdPidUtils::ePartType, MpdPidUtils::dEdXStruct_t>(MpdPidUtils::kHe3, SHe3));
 
       /// m-squared
-      TH2D *mass2He3 = new TH2D("mass2He3", "", nbins, 0., 4., nbins, -0.5, 6.);
+      TH2D *mass2He3 = new TH2D("mass2He3", "", nbins, 0., 4., nbins, -0.5, 12.);
       fMSquaredMap.insert(pair<MpdPidUtils::ePartType, TH2D *>(MpdPidUtils::kHe3, mass2He3));
 
       /// Abundance
@@ -1188,7 +1188,7 @@ void MpdPidQA::Init(TString Particles)
       fEnLossMap.insert(pair<MpdPidUtils::ePartType, MpdPidUtils::dEdXStruct_t>(MpdPidUtils::kHe4, SHe4));
 
       /// m-squared
-      TH2D *mass2He4 = new TH2D("mass2He4", "", nbins, 0., 4., nbins, -0.5, 8.);
+      TH2D *mass2He4 = new TH2D("mass2He4", "", nbins, 0., 4., nbins, -0.5, 12.);
       fMSquaredMap.insert(pair<MpdPidUtils::ePartType, TH2D *>(MpdPidUtils::kHe4, mass2He4));
 
       /// Abundance
@@ -1218,10 +1218,10 @@ void MpdPidQA::Init(TString Particles)
    else
       MaxEnLoss = 60.e-06;
 
-   fSumBetheBlochHists = new TH2D("fSumBetheBlochHists", "", 300, 0.05, 1.5, 300, MinEnLoss, MaxEnLoss);
+   fSumBetheBlochHists = new TH2D("fSumBetheBlochHists", "", 300, 0.05, 3.0, 300, MinEnLoss, MaxEnLoss);
    fChBetheBlochHists  = new TH2D("fChBetheBlochHists", "", 600, -1.5, 1.5, 600, MinEnLoss, MaxEnLoss);
    fm2LightHist        = new TH2D("fm2LightHist", "", 200, 0.0, 3.0, 200, -0.5, 1.5);
-   fm2HeavyHist        = new TH2D("fm2HeavyHist", "", 200, 0.0, 5.0, 200, 1.0, 12.0);
+   fm2HeavyHist        = new TH2D("fm2HeavyHist", "", 200, 0.0, 5.0, 200, -0.5, 12.0);
    for (Int_t i = 0; i < (MpdPidUtils::nQAHists - 8); i++) Xlow[i] = 0.05 * (1. + i);
    Xlow[32] = 1.7;
    Xlow[33] = 1.8;
@@ -1354,125 +1354,93 @@ void MpdPidQA::GetDedxQA(TString dir)
    map<MpdPidUtils::ePartType, TGraphAsymmErrors *>  graphs;
    map<MpdPidUtils::ePartType, vecTF1ptrs>::iterator it_parBB;
    vecTF1ptrs                                        vecParBB, vecParBBMultX;
+   /*
+   for ( auto it = fEnLossMap.begin(); it != fEnLossMap.end(); ++it ) {
+      ibegloc = it->second.ibeg; iendloc = it->second.iend; nQAHistsloc = iendloc - ibegloc + 1;
+      it_parBB = fdEdxBBMap.find( it->first );
+      vecParBB = it_parBB->second;
 
-   for (auto it = fEnLossMap.begin(); it != fEnLossMap.end(); ++it) {
-      ibegloc     = it->second.ibeg;
-      iendloc     = it->second.iend;
-      nQAHistsloc = iendloc - ibegloc + 1;
-      it_parBB    = fdEdxBBMap.find(it->first);
-      vecParBB    = it_parBB->second;
-
-      for (TF1 *BBF : vecParBB) {
-         FName = BBF->GetName();
-         FName.Append("_MultX");
-         TF1 *parBBMultX = new TF1(
-            FName, [&](Double_t *x, Double_t *p) { return p[0] * x[0] * BBF->Eval(x[0]); }, BBF->GetXmin(),
-            BBF->GetXmax(), 1);
-         parBBMultX->SetParameter(0, 1.0);
-         vecParBBMultX.push_back(parBBMultX);
+      for ( TF1* BBF : vecParBB ) {
+         FName = BBF->GetName(); FName.Append("_MultX");
+         TF1* parBBMultX = new TF1( FName,[&](Double_t *x, Double_t *p){ return p[0] * x[0] * BBF->Eval(x[0]);
+   },BBF->GetXmin(),BBF->GetXmax(),1); parBBMultX->SetParameter(0, 1.0); vecParBBMultX.push_back(parBBMultX);
       }
 
-      Double_t *Xgraph    = new Double_t[nQAHistsloc];
-      Double_t *Xerrgraph = new Double_t[nQAHistsloc];
-      Double_t *Ygraph    = new Double_t[nQAHistsloc];
-      Double_t *sigma     = new Double_t[nQAHistsloc];
-      Double_t *sigma1    = new Double_t[nQAHistsloc];
-      Double_t *sigma2    = new Double_t[nQAHistsloc];
-      for (Int_t k = 0; k < nQAHistsloc; k++) {
-         Xgraph[k]    = X[k + ibegloc];
-         Xerrgraph[k] = 0.;
-      }
+      Double_t *Xgraph = new Double_t[nQAHistsloc]; Double_t *Xerrgraph = new Double_t[nQAHistsloc];
+      Double_t *Ygraph = new Double_t[nQAHistsloc]; Double_t *sigma = new Double_t[nQAHistsloc];
+      Double_t *sigma1 = new Double_t[nQAHistsloc]; Double_t *sigma2 = new Double_t[nQAHistsloc];
+      for ( Int_t k = 0; k < nQAHistsloc; k++ ) { Xgraph[k] = X[k + ibegloc]; Xerrgraph[k] = 0.; }
 
-      for (Int_t i = 0; i < nQAHistsloc; i++) {
-         XFUNCMIN  = it->second.dEdXPart[i]->GetXaxis()->GetXmin(),
-         XFUNCMAX  = it->second.dEdXPart[i]->GetXaxis()->GetXmax();
-         TF1 *Gaus = new TF1("Gaus", "gaus", XFUNCMIN, XFUNCMAX);
+      for ( Int_t i = 0; i < nQAHistsloc; i++ ) {
+         XFUNCMIN = it->second.dEdXPart[i]->GetXaxis()->GetXmin(), XFUNCMAX =
+   it->second.dEdXPart[i]->GetXaxis()->GetXmax(); TF1* Gaus = new TF1("Gaus", "gaus", XFUNCMIN, XFUNCMAX);
          it->second.dEdXPart[i]->Fit(Gaus, "Q0R");
-         TF1 *AGaus = new TF1("AGaus", this, &MpdPid::AsymGaus, XFUNCMIN, XFUNCMAX, 4, "MpdPid", "AsymGaus");
+         TF1* AGaus = new TF1("AGaus", this, &MpdPid::AsymGaus, XFUNCMIN, XFUNCMAX, 4, "MpdPid", "AsymGaus");
          AGaus->SetParameters(Gaus->GetParameter(0), Gaus->GetParameter(1), Gaus->GetParameter(2), 0.01);
-         it->second.dEdXPart[i]->Fit("AGaus", "Q0RW");
-         TF1 *Novosib =
-            new TF1("Novosib", this, &MpdPidQA::Novosibirsk, XFUNCMIN, XFUNCMAX, 4, "MpdPidQA", "Novosibirsk");
-         Novosib->SetParameters(Gaus->GetParameter(0), 0.01, Gaus->GetParameter(2), Gaus->GetParameter(1));
-         it->second.dEdXPart[i]->Fit("Novosib", "Q0RW");
+         it->second.dEdXPart[i]->Fit("AGaus","Q0RW");
+         TF1 *Novosib = new TF1("Novosib", this, &MpdPidQA::Novosibirsk, XFUNCMIN, XFUNCMAX, 4, "MpdPidQA",
+   "Novosibirsk"); Novosib->SetParameters(Gaus->GetParameter(0), 0.01, Gaus->GetParameter(2), Gaus->GetParameter(1));
+         it->second.dEdXPart[i]->Fit("Novosib","Q0RW");
 
-         intF_MultX = 0.0;
-         intF       = 0.0;
-         for (TF1 *BBF : vecParBB) {
+         intF_MultX = 0.0; intF = 0.0;
+         for ( TF1* BBF : vecParBB ) {
             /// Xlow and Xhigh are within one Bethe-Bloch function
-            if ((BBF->GetXmin() <= Xlow[i + ibegloc]) && (BBF->GetXmax() > Xlow[i + ibegloc]) &&
-                (BBF->GetXmin() <= Xhigh[i + ibegloc]) && (BBF->GetXmax() > Xhigh[i + ibegloc])) {
-               for (TF1 *BBF_MultX : vecParBBMultX) {
-                  FName = BBF->GetName();
-                  FName.Append("_MultX");
-                  FMXName = BBF_MultX->GetName();
-                  if (FMXName == FName) {
-                     intF_MultX = BBF_MultX->Integral(Xlow[i + ibegloc], Xhigh[i + ibegloc]);
-                     intF       = BBF->Integral(Xlow[i + ibegloc], Xhigh[i + ibegloc]);
-                     mom        = intF_MultX / intF;
+            if ( ( BBF->GetXmin() <= Xlow[i+ibegloc] ) && ( BBF->GetXmax() > Xlow[i+ibegloc] ) && ( BBF->GetXmin() <=
+   Xhigh[i+ibegloc] ) && ( BBF->GetXmax() > Xhigh[i+ibegloc] ) ) { for ( TF1* BBF_MultX : vecParBBMultX ) { FName =
+   BBF->GetName(); FName.Append("_MultX"); FMXName = BBF_MultX->GetName(); if ( FMXName == FName ) { intF_MultX =
+   BBF_MultX->Integral( Xlow[i+ibegloc], Xhigh[i+ibegloc] ); intF = BBF->Integral( Xlow[i+ibegloc], Xhigh[i+ibegloc] );
+                     mom = intF_MultX / intF;
                   }
                }
-               /// Xlow and Xhigh are within two functions
-            } else if ((BBF->GetXmin() <= Xlow[i + ibegloc]) && (BBF->GetXmax() > Xlow[i + ibegloc])) {
-               intF += BBF->Integral(Xlow[i + ibegloc], BBF->GetXmax());
-               for (TF1 *BBF_MultX : vecParBBMultX) {
-                  FName = BBF->GetName();
-                  FName.Append("_MultX");
+            /// Xlow and Xhigh are within two functions
+            } else if ( ( BBF->GetXmin() <= Xlow[i+ibegloc] ) && ( BBF->GetXmax() > Xlow[i+ibegloc] ) ) {
+               intF += BBF->Integral( Xlow[i+ibegloc], BBF->GetXmax() );
+               for ( TF1* BBF_MultX : vecParBBMultX ) {
+                  FName = BBF->GetName(); FName.Append("_MultX");
                   FMXName = BBF_MultX->GetName();
-                  if (FMXName == FName) {
-                     intF_MultX += BBF_MultX->Integral(Xlow[i + ibegloc], BBF_MultX->GetXmax());
+                  if ( FMXName == FName ) {
+                     intF_MultX += BBF_MultX->Integral( Xlow[i+ibegloc], BBF_MultX->GetXmax() );
                   }
                }
-            } else if ((BBF->GetXmin() > Xlow[i + ibegloc]) && (BBF->GetXmax() < Xhigh[i + ibegloc])) {
-               if (intF != 0.0) {
-                  intF += BBF->Integral(BBF->GetXmin(), BBF->GetXmax());
-                  for (TF1 *BBF_MultX : vecParBBMultX) {
-                     FName = BBF->GetName();
-                     FName.Append("_MultX");
+            } else if ( ( BBF->GetXmin() > Xlow[i+ibegloc] ) && ( BBF->GetXmax() < Xhigh[i+ibegloc] ) ) {
+               if ( intF != 0.0 ) {
+                  intF += BBF->Integral( BBF->GetXmin(), BBF->GetXmax() );
+                  for ( TF1* BBF_MultX : vecParBBMultX ) {
+                     FName = BBF->GetName(); FName.Append("_MultX");
                      FMXName = BBF_MultX->GetName();
-                     if (FMXName == FName) {
-                        intF_MultX += BBF_MultX->Integral(BBF->GetXmin(), BBF->GetXmax());
+                     if ( FMXName == FName ) {
+                        intF_MultX += BBF_MultX->Integral( BBF->GetXmin(), BBF->GetXmax() );
                      }
                   }
                }
-            } else if ((BBF->GetXmin() <= Xhigh[i + ibegloc]) && (BBF->GetXmax() > Xhigh[i + ibegloc])) {
-               if (intF != 0.0) {
-                  intF += BBF->Integral(BBF->GetXmin(), Xhigh[i + ibegloc]);
-                  for (TF1 *BBF_MultX : vecParBBMultX) {
-                     FName = BBF->GetName();
-                     FName.Append("_MultX");
+            } else if ( ( BBF->GetXmin() <= Xhigh[i+ibegloc] ) && ( BBF->GetXmax() > Xhigh[i+ibegloc] ) ) {
+               if ( intF != 0.0 ) {
+                  intF += BBF->Integral( BBF->GetXmin(), Xhigh[i+ibegloc] );
+                  for ( TF1* BBF_MultX : vecParBBMultX ) {
+                     FName = BBF->GetName(); FName.Append("_MultX");
                      FMXName = BBF_MultX->GetName();
-                     if (FMXName == FName) {
-                        intF_MultX += BBF_MultX->Integral(BBF->GetXmin(), Xhigh[i + ibegloc]);
+                     if ( FMXName == FName ) {
+                        intF_MultX += BBF_MultX->Integral( BBF->GetXmin(), Xhigh[i+ibegloc] );
                         mom = intF_MultX / intF;
                      }
                   }
                }
-            } else
-               mom = -999.0;
+            } else mom = -999.0;
          }
 
-         Ygraph[i] = (fTrackingState == MpdPidUtils::kCFHM) ? AGaus->GetParameter(1) : Novosib->GetParameter(3);
-         Ygraph[i] /= GetDedxParam(mom, it->first);
-         sigma1[i] = AGaus->GetParameter(2);
-         sigma2[i] = (1. + AGaus->GetParameter(3)) * AGaus->GetParameter(2);
-         sigma1[i] /= GetDedxParam(mom, it->first);
-         sigma2[i] /= GetDedxParam(mom, it->first);
-         delete Gaus;
-         delete AGaus;
-         delete Novosib;
+         Ygraph[i] = ( fTrackingState == MpdPidUtils::kCFHM ) ? AGaus->GetParameter(1) : Novosib->GetParameter(3);
+         Ygraph[i] /= GetDedxParam(mom,it->first);
+         sigma1[i] = AGaus->GetParameter(2); sigma2[i] = (1. + AGaus->GetParameter(3)) * AGaus->GetParameter(2);
+         sigma1[i] /= GetDedxParam(mom,it->first); sigma2[i] /= GetDedxParam(mom,it->first);
+         delete Gaus; delete AGaus; delete Novosib;
       }
-      TGraphAsymmErrors *gr = new TGraphAsymmErrors(nQAHistsloc, Xgraph, Ygraph, Xerrgraph, Xerrgraph, sigma1, sigma2);
-      FName                 = "Graph_";
-      FName.Append(MpdPidUtils::cParticleShortName[it->first]);
+      TGraphAsymmErrors *gr = new TGraphAsymmErrors(nQAHistsloc,Xgraph,Ygraph,Xerrgraph,Xerrgraph,sigma1,sigma2);
+      FName = "Graph_"; FName.Append( MpdPidUtils::cParticleShortName[it->first] );
       gr->SetName(FName);
-      graphs.insert(pair<MpdPidUtils::ePartType, TGraphAsymmErrors *>(it->first, gr));
-      delete Xgraph;
-      delete Ygraph;
-      delete Xerrgraph;
-      delete sigma;
+      graphs.insert( pair<MpdPidUtils::ePartType,TGraphAsymmErrors*>(it->first,gr) );
+      delete Xgraph; delete Ygraph; delete Xerrgraph; delete sigma;
    }
-
+*/
    if (!dir.EndsWith("/")) dir.Append("/");
    TFile *fFile = new TFile(dir + "dEdxHists.root", "RECREATE");
 
@@ -1482,9 +1450,9 @@ void MpdPidQA::GetDedxQA(TString dir)
       }
       it->second.BetheBlochHist->Write();
    }
-   for (auto it = graphs.begin(); it != graphs.end(); ++it) {
-      it->second->Write();
-   }
+   // for ( auto it = graphs.begin(); it != graphs.end(); ++it ) {
+   //	it->second->Write();
+   // }
    fSumBetheBlochHists->Write();
    fChBetheBlochHists->Write();
    fFile->Close();
@@ -1525,6 +1493,22 @@ void MpdPidQA::GetEffContQA(TString dir)
       for (vecTH1Dptrs vecEC : it->second) {
          vecEC[2]->Divide(vecEC[0]);
          vecEC[3]->Divide(vecEC[1]);
+         vecEC[2]->Write();
+         vecEC[3]->Write();
+      }
+   }
+   fFile->Close();
+}
+
+void MpdPidQA::GetEffContQA_Raw(TString dir)
+{
+   if (!dir.EndsWith("/")) dir.Append("/");
+   TFile *fFile = new TFile(dir + "EffCont.root", "RECREATE");
+
+   for (auto it = fEffContMap.begin(); it != fEffContMap.end(); ++it) {
+      for (vecTH1Dptrs vecEC : it->second) {
+         vecEC[0]->Write();
+         vecEC[1]->Write();
          vecEC[2]->Write();
          vecEC[3]->Write();
       }

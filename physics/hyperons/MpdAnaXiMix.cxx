@@ -44,12 +44,12 @@ ClassImp(MpdAnaXiMix);
 
 //-----------------------------------------------------------------------------------------------
 
-MpdAnaXiMix::MpdAnaXiMix() : MpdAnalysisTask(), fRecoIts(nullptr) {}
+MpdAnaXiMix::MpdAnaXiMix() : MpdAnalysisTask(), fRecoIts(nullptr), fCascade(0), fPrevWagon(nullptr) {}
 
 //-----------------------------------------------------------------------------------------------
 
 MpdAnaXiMix::MpdAnaXiMix(const char *name, const char *outputName)
-   : MpdAnalysisTask(name, outputName), fRecoIts(nullptr)
+   : MpdAnalysisTask(name, outputName), fRecoIts(nullptr), fCascade(0), fPrevWagon(nullptr)
 {
    // mParamConfig = outputName;
 }
@@ -137,6 +137,13 @@ void MpdAnaXiMix::UserInit()
 
    fTrC    = new MpdHelix(0, 0, 0, TVector3(0, 0, 0), 0);
    fMinuit = new TMinuit(2);
+
+   if (fTaskName.Contains("9")) {
+      // AZ-200823 - build cascade
+      fCascade = 1;
+      if (fPrevWagon) fCascade = 2; // use lambdas from previous wagon
+      fParams.nMix = 0;             // no mixing for cascades for now
+   }
 
    curDir->cd(); // AZ-170823
    cout << "[MpdAnaXiMix] -- Successful start --" << endl << endl;
@@ -678,16 +685,27 @@ void MpdAnaXiMix::SelectTracks(MpdAnalysisEvent &event)
    // ApplyPid(newPid, vecP, vecPi);
    ApplyPid(vecP, vecPi);
 
-   vector<MpdParticle *> vecL;
-   vecL.clear();
-   fvLambdas.clear();
-   BuildLambda(vecP, vecPi, vecL);
-   fvXis.clear();
-   // if (vecL.size()) BuildCascade(vecK, vecPi, vecL);
-   // vLambdas.clear(); // do not store lambda tree
+   // AZ-200823 vector<MpdParticle *> vecL;
+   // AZ-200823 BuildLambda(vecP, vecPi, vecL);
 
-   Int_t nLamb = vecL.size();
-   for (Int_t ipart = 0; ipart < nLamb; ++ipart) delete vecL[ipart];
+   if (fCascade == 0) {
+      BuildLambda(vecP, vecPi, fVecL); // AZ-200823
+   } else {
+      // AZ-200823 Build cascade
+      fvXis.clear();
+      // Get lambdas from the previous wagon (if it is there)
+      if (fCascade == 2) {
+         // Take lambdas from previous wagon
+         vector<MpdParticle *> &vecL = ((MpdAnaXiMix *)fPrevWagon)->GetLambdas();
+         fVecL                       = vecL;
+         fVecL1                      = ((MpdAnaXiMix *)fPrevWagon)->GetVecL12(0);
+         fVecL2                      = ((MpdAnaXiMix *)fPrevWagon)->GetVecL12(1);
+      } else
+         BuildLambda(vecP, vecPi, fVecL); // AZ-200823 - build lambda and cascade in one task
+      // AZ-200823 if (vecL.size()) BuildCascade(vecK, vecPi, vecL);
+      if (fVecL.size()) BuildCascade(vecK, vecPi, fVecL); // AZ-200823
+      fvLambdas.clear();                                  // do not store lambda tree
+   }
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -1049,16 +1067,21 @@ void MpdAnaXiMix::BuildLambda(vector<Int_t> &vecP, vector<Int_t> &vecPi, vector<
 {
    // Make antilambdas
 
-   int                   qs[2] = {0}, origs[2] = {0}, layMx[2] = {0}, dstNo[2] = {0};
-   Float_t               etas[2] = {0}, ps[2] = {0}, pts[2] = {0}, chi2s[2] = {0}, dcas[2] = {0}, c2s[2] = {0};
-   Float_t               path = 0, massh = 0, chi2h = 0, angle = 0, pth = 0, ph = 0, etah = 0, disth = 0, yh = 0;
-   TClonesArray         *itsTracks = fItsTracks, *mcTracks = fMcTracks;
-   Int_t                 nPi = vecPi.size(), nP = vecP.size(), saveMix = 0, mpdg = 0;
+   int           qs[2] = {0}, origs[2] = {0}, layMx[2] = {0}, dstNo[2] = {0};
+   Float_t       etas[2] = {0}, ps[2] = {0}, pts[2] = {0}, chi2s[2] = {0}, dcas[2] = {0}, c2s[2] = {0};
+   Float_t       path = 0, massh = 0, chi2h = 0, angle = 0, pth = 0, pthgen = 0, ph = 0, etah = 0, disth = 0, yh = 0;
+   TClonesArray *itsTracks = fItsTracks, *mcTracks = fMcTracks;
+   Int_t         nPi = vecPi.size(), nP = vecP.size(), saveMix = 0, mpdg = 0;
    vector<MpdParticle *> vPart;
    fVecL1.clear();
    fVecL2.clear();
    TVector3 primVert;
    fMpdVert->Position(primVert);
+
+   Int_t nLamb = fVecL.size();
+   for (Int_t ipart = 0; ipart < nLamb; ++ipart) delete fVecL[ipart];
+   fVecL.clear();
+   fvLambdas.clear();
 
    for (Int_t ip = 0; ip < nP; ++ip) {
       // Proton
@@ -1157,8 +1180,8 @@ void MpdAnaXiMix::BuildLambda(vector<Int_t> &vecP, vector<Int_t> &vecPi, vector<
 
             chi2h = chi2;
             angle = v0.Angle(lambPart.Momentum3());
-            pth   = lambPart.Pt();       // reconstructed
-            ph    = lambPart.Momentum(); // reconstructed
+            pth = pthgen = lambPart.Pt();       // reconstructed
+            ph           = lambPart.Momentum(); // reconstructed
             if (pth > 0.001)
                etah = lambPart.Momentum3().Eta();
             else
@@ -1189,7 +1212,7 @@ void MpdAnaXiMix::BuildLambda(vector<Int_t> &vecP, vector<Int_t> &vecPi, vector<
             mpdg = -1;
             if (origs[0] == 1) {
                // True lambda
-               // pth = moth->GetPt();
+               pthgen = moth->GetPt();
                // yh = moth->GetRapidity();
                // Check mother of lambda
                Int_t gMothId = moth->GetMotherId();
@@ -1200,8 +1223,8 @@ void MpdAnaXiMix::BuildLambda(vector<Int_t> &vecP, vector<Int_t> &vecPi, vector<
             }
             //((TTree*)gROOT->FindObjectAny("hypers"))->Fill();
 
-            MpdLambda l0(massh, pth, ph, etah, yh, chi2h, disth, path, angle, etas, ps, pts, chi2s, dcas, c2s, origs,
-                         qs, layMx, mpdg);
+            MpdLambda l0(massh, pth, pthgen, ph, etah, yh, chi2h, disth, path, angle, etas, ps, pts, chi2s, dcas, c2s,
+                         origs, qs, layMx, mpdg);
             fvLambdas.push_back(l0);
          } // if (chi2 >= 0 && chi2 < gC2L
 
@@ -1276,8 +1299,8 @@ void MpdAnaXiMix::BuildLambda(vector<Int_t> &vecP, vector<Int_t> &vecPi, vector<
 
                chi2h = chi2;
                angle = v0.Angle(lambPart.Momentum3());
-               pth   = lambPart.Pt();       // reconstructed
-               ph    = lambPart.Momentum(); // reconstructed
+               pth = pthgen = lambPart.Pt();       // reconstructed
+               ph           = lambPart.Momentum(); // reconstructed
                if (pth > 0.001)
                   etah = lambPart.Momentum3().Eta();
                else
@@ -1291,8 +1314,8 @@ void MpdAnaXiMix::BuildLambda(vector<Int_t> &vecP, vector<Int_t> &vecPi, vector<
                disth = p1.Mag(); // closest distance between daughters
                mpdg  = -9;       // mixing
 
-               MpdLambda l0(massh, pth, ph, etah, yh, chi2h, disth, path, angle, etas, ps, pts, chi2s, dcas, c2s, origs,
-                            qs, layMx, mpdg);
+               MpdLambda l0(massh, pth, pthgen, ph, etah, yh, chi2h, disth, path, angle, etas, ps, pts, chi2s, dcas,
+                            c2s, origs, qs, layMx, mpdg);
                fvLambdas.push_back(l0);
             } // if (chi2 >= 0 && chi2 < gC2L
 
@@ -1347,10 +1370,10 @@ void MpdAnaXiMix::BuildCascade(vector<Int_t> &vecK, vector<Int_t> &vecPi, vector
    TClonesArray         *itsTracks = fItsTracks, *mcTracks = fMcTracks;
    int                   qs[2] = {0}, origs[2] = {0}, layMx[2] = {0}, mpdg = 0;
    Float_t               etas[2] = {0}, ps[2] = {0}, pts[2] = {0}, chi2s[2] = {0}, dcas[2] = {0}, chi2sL[2] = {0};
-   Float_t               path = 0, massh = 0, chi2h = 0, angle = 0, pth = 0, ph = 0, etah = 0, disth = 0, yh = 0;
-   Float_t               masshL = 0, disthL = 0, angL = 0, chi2hL = 0, pathL = 0, c2pv = 0, d2pv = 0;
-   Float_t               chi2hL1 = 0, masshL1 = 0, c2s[2] = {0};
-   TVector3              primVert;
+   Float_t  path = 0, massh = 0, chi2h = 0, angle = 0, pth = 0, pthgen = 0, ph = 0, etah = 0, disth = 0, yh = 0;
+   Float_t  masshL = 0, disthL = 0, angL = 0, chi2hL = 0, pathL = 0, c2pv = 0, d2pv = 0;
+   Float_t  chi2hL1 = 0, masshL1 = 0, c2s[2] = {0};
+   TVector3 primVert;
    fMpdVert->Position(primVert);
 
    // cout << " Cascade: " << nL << endl;
@@ -1516,8 +1539,8 @@ void MpdAnaXiMix::BuildCascade(vector<Int_t> &vecK, vector<Int_t> &vecPi, vector
             chi2h = chi2;
             path  = TMath::Sign(decay, v0 * xiPart.Momentum3());
             angle = v0.Angle(xiPart.Momentum3());
-            pth   = xiPart.Pt(); // reconstructed
-            ph    = xiPart.Momentum();
+            pth = pthgen = xiPart.Pt(); // reconstructed
+            ph           = xiPart.Momentum();
             if (pth > 0.001)
                etah = xiPart.Momentum3().Eta();
             else
@@ -1536,7 +1559,7 @@ void MpdAnaXiMix::BuildCascade(vector<Int_t> &vecK, vector<Int_t> &vecPi, vector
             mpdg = -1;
             if (origs[0] == 1) {
                // True Xi
-               // pth = moth->GetPt();
+               pthgen = moth->GetPt();
                // yh = moth->GetRapidity();
                // Check mother of Xi
                Int_t gMothId = moth->GetMotherId();
@@ -1557,8 +1580,8 @@ void MpdAnaXiMix::BuildCascade(vector<Int_t> &vecK, vector<Int_t> &vecPi, vector
 
             //((TTree*)gROOT->FindObjectAny("Xi"))->Fill();
 
-            MpdXi xi(massh, pth, ph, etah, yh, chi2h, disth, path, angle, c2pv, d2pv, etas, ps, pts, chi2s, dcas, c2s,
-                     masshL, chi2hL, disthL, pathL, angL, chi2sL, masshL1, origs, qs, layMx, mpdg);
+            MpdXi xi(massh, pth, pthgen, ph, etah, yh, chi2h, disth, path, angle, c2pv, d2pv, etas, ps, pts, chi2s,
+                     dcas, c2s, masshL, chi2hL, disthL, pathL, angL, chi2sL, masshL1, origs, qs, layMx, mpdg);
             fvXis.push_back(xi);
          } else
             delete pion;

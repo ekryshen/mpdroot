@@ -13,20 +13,28 @@ MpdPid::MpdPid() : TObject()
       fMSquaredSigmasArray[iType] = 0.0;
       fBayesCoefficients[iType]   = 0.0;
       fNSigSpecies[iType]         = kFALSE;
+      fdEdxBottomBound[iType]     = 0.0;
+      fdEdxTopBound[iType]        = 0.0;
+      fm2BottomBound[iType]       = 0.0;
+      fm2TopBound[iType]          = 0.0;
    }
    fMethod        = kTRUE;
    fPrRatio       = 1.0;
    fEnergy        = 4.0;
-   fSigmaTof      = 0.0;
-   fSigmaEloss    = 0.0;
    fTrackingState = MpdPidUtils::kCFHM;
    fCharge        = MpdPidUtils::kPos;
 }
 
 MpdPid::MpdPid(Double_t sigmaTof, Double_t sigmaEloss, Double_t sqrts, Double_t EnLossCoef, TString Generator,
                TString Tracking, TString NSigPart)
-   : TObject(), fSigmaTof(sigmaTof), fSigmaEloss(sigmaEloss), fCharge(MpdPidUtils::kPos), fEnergy(sqrts)
+   : TObject(), fCharge(MpdPidUtils::kPos), fEnergy(sqrts)
 {
+   for (Int_t iType = 0; iType < MpdPidUtils::kNSpecies; iType++) {
+      fdEdxBottomBound[iType] = sigmaEloss;
+      fdEdxTopBound[iType]    = sigmaEloss;
+      fm2BottomBound[iType]   = sigmaTof;
+      fm2TopBound[iType]      = sigmaTof;
+   }
    Init(Generator, Tracking, NSigPart, EnLossCoef);
 }
 
@@ -91,8 +99,9 @@ Double_t MpdPid::parPiBB(Double_t *x, Double_t *par)
    Double_t x3  = TMath::Log(par[2] + TMath::Power(1.0 / (x[0] / 0.1396), par[4]));
    Double_t ans = x1 * (x2 - x3);
    if (fTrackingState == MpdPidUtils::kCFHM) {
-      if ((x[0] >= 0.05) && (x[0] < 0.10)) ans *= 1.025;
-      if ((x[0] >= 0.10) && (x[0] < 0.15)) ans *= 0.970;
+      // if ( ( x[0] >= 0.05 ) && ( x[0] < 0.10 ) ) ans *= 1.025;
+      // if ( ( x[0] >= 0.10 ) && ( x[0] < 0.15 ) ) ans *= 0.970;
+      if ((x[0] >= 0.05) && (x[0] < 0.10)) ans *= 0.98;
    } else if (fTrackingState == MpdPidUtils::kCF) {
       if ((x[0] > 0.05) && (x[0] < 0.10)) ans *= 0.830;
       if ((x[0] > 0.10) && (x[0] < 0.15)) ans *= 0.978;
@@ -112,22 +121,26 @@ Double_t MpdPid::parPiBB(Double_t *x, Double_t *par)
 
 Double_t MpdPid::parKaBB(Double_t *x, Double_t *par)
 {
-   Double_t x1, x2, x3, p[5], xint = 0.50918408, ans;
+   Double_t x1, x2, x3, p[5], xint = 0.50933974, ans;
    for (Int_t k = 0; k < 5; k++) p[k] = x[0] < xint ? par[k] : par[k + 5];
    x1  = p[0] / TMath::Power(x[0] / TMath::Sqrt(x[0] * x[0] + 0.2437), p[3]);
    x2  = p[1] - TMath::Power(x[0] / TMath::Sqrt(x[0] * x[0] + 0.2437), p[3]);
    x3  = TMath::Log(p[2] + TMath::Power(1.0 / (x[0] / 0.4937), p[4]));
    ans = x1 * (x2 - x3);
    if (fTrackingState == MpdPidUtils::kCFHM) {
-      if ((x[0] >= 0.05) && (x[0] < 0.10)) ans *= 0.960;
-      if ((x[0] >= 0.10) && (x[0] < 0.15)) ans *= 0.930;
-      if ((x[0] >= 0.15) && (x[0] < 0.20)) ans *= 0.970;
-      if ((x[0] >= 0.20) && (x[0] < 0.25)) ans *= 0.990;
-      if ((x[0] >= 1.90) && (x[0] < 2.10)) ans *= 0.990;
-      if ((x[0] >= 2.10) && (x[0] < 2.20)) ans *= 0.985;
-      if ((x[0] >= 2.20) && (x[0] < 2.40)) ans *= 0.980;
-      if ((x[0] >= 2.40) && (x[0] < 2.60)) ans *= 0.975;
-      if ((x[0] >= 2.60) && (x[0] < 3.00)) ans *= 0.960;
+      if ((x[0] >= 0.05) && (x[0] < 0.15)) ans *= 0.88;
+      if ((x[0] >= 0.15) && (x[0] < 0.20)) ans *= 0.95;
+      if ((x[0] >= 0.20) && (x[0] < 0.25)) ans *= 0.99;
+      if ((x[0] >= 2.60) && (x[0] < 3.00)) ans *= 0.99;
+      // if ( ( x[0] >= 0.05 ) && ( x[0] < 0.10 ) ) ans *= 0.945;
+      // if ( ( x[0] >= 0.10 ) && ( x[0] < 0.15 ) ) ans *= 0.930;
+      // if ( ( x[0] >= 0.15 ) && ( x[0] < 0.20 ) ) ans *= 0.970;
+      // if ( ( x[0] >= 0.20 ) && ( x[0] < 0.25 ) ) ans *= 0.990;
+      // if ( ( x[0] >= 1.90 ) && ( x[0] < 2.10 ) ) ans *= 0.990;
+      // if ( ( x[0] >= 2.10 ) && ( x[0] < 2.20 ) ) ans *= 0.985;
+      // if ( ( x[0] >= 2.20 ) && ( x[0] < 2.40 ) ) ans *= 0.980;
+      // if ( ( x[0] >= 2.40 ) && ( x[0] < 2.60 ) ) ans *= 0.965;
+      // if ( ( x[0] >= 2.60 ) && ( x[0] < 3.00 ) ) ans *= 0.950;
    } else if (fTrackingState == MpdPidUtils::kCF) {
       if ((x[0] > 0.10) && (x[0] < 0.15)) ans *= 1.044;
       if ((x[0] > 0.15) && (x[0] < 0.20)) ans *= 1.065;
@@ -163,7 +176,7 @@ Double_t MpdPid::parKaBB(Double_t *x, Double_t *par)
 
 Double_t MpdPid::parPrBB(Double_t *x, Double_t *par)
 {
-   Double_t x1, x2, x3, p[5], xint = fTrackingState != MpdPidUtils::kCFHM ? 0.384089 : 0.34173458, ans;
+   Double_t x1, x2, x3, p[5], xint = fTrackingState != MpdPidUtils::kCFHM ? 0.384089 : 0.325918, ans;
    for (Int_t k = 0; k < 5; k++) p[k] = x[0] < xint ? par[k] : par[k + 5];
    x1  = p[0] / TMath::Power(x[0] / TMath::Sqrt(x[0] * x[0] + 0.88), p[3]);
    x2  = p[1] - TMath::Power(x[0] / TMath::Sqrt(x[0] * x[0] + 0.88), p[3]);
@@ -171,16 +184,21 @@ Double_t MpdPid::parPrBB(Double_t *x, Double_t *par)
    ans = x1 * (x2 - x3);
 
    if (fTrackingState == MpdPidUtils::kCFHM) {
-      if ((x[0] >= 0.05) && (x[0] < 0.10)) ans *= 0.780;
-      if ((x[0] >= 0.10) && (x[0] < 0.15)) ans *= 0.925;
-      if ((x[0] >= 0.15) && (x[0] < 0.20)) ans *= 1.015;
-      if ((x[0] >= 0.20) && (x[0] < 0.25)) ans *= 0.985;
-      if ((x[0] >= 0.25) && (x[0] < 0.30)) ans *= 0.945;
-      if ((x[0] >= 0.30) && (x[0] < 0.35)) ans *= 0.970;
-      if ((x[0] >= 0.35) && (x[0] < 0.40)) ans *= 0.995;
-      if ((x[0] >= 2.20) && (x[0] < 2.40)) ans *= 0.995;
-      if ((x[0] >= 2.40) && (x[0] < 2.60)) ans *= 0.990;
-      if ((x[0] >= 2.60) && (x[0] < 3.00)) ans *= 0.975;
+      if ((x[0] >= 0.05) && (x[0] < 0.10)) ans *= 0.86;
+      if ((x[0] >= 0.10) && (x[0] < 0.15)) ans *= 0.975;
+      if ((x[0] >= 0.15) && (x[0] < 0.20)) ans *= 1.04;
+      if ((x[0] >= 0.20) && (x[0] < 0.25)) ans *= 1.015;
+      if ((x[0] >= 0.30) && (x[0] < 0.40)) ans *= 0.98;
+      // if ( ( x[0] >= 0.05 ) && ( x[0] < 0.10 ) ) ans *= 0.780;
+      // if ( ( x[0] >= 0.10 ) && ( x[0] < 0.15 ) ) ans *= 0.925;
+      // if ( ( x[0] >= 0.15 ) && ( x[0] < 0.20 ) ) ans *= 1.015;
+      // if ( ( x[0] >= 0.20 ) && ( x[0] < 0.25 ) ) ans *= 0.985;
+      // if ( ( x[0] >= 0.25 ) && ( x[0] < 0.30 ) ) ans *= 0.945;
+      // if ( ( x[0] >= 0.30 ) && ( x[0] < 0.35 ) ) ans *= 0.970;
+      // if ( ( x[0] >= 0.35 ) && ( x[0] < 0.40 ) ) ans *= 0.995;
+      // if ( ( x[0] >= 2.20 ) && ( x[0] < 2.40 ) ) ans *= 0.995;
+      // if ( ( x[0] >= 2.40 ) && ( x[0] < 2.60 ) ) ans *= 0.990;
+      // if ( ( x[0] >= 2.60 ) && ( x[0] < 3.00 ) ) ans *= 0.975;
    } else if (fTrackingState == MpdPidUtils::kCF) {
       if ((x[0] > 0.05) && (x[0] < 0.10)) ans *= 0.891;
       if ((x[0] > 0.10) && (x[0] < 0.15)) ans *= 0.946;
@@ -266,14 +284,18 @@ Double_t MpdPid::parHe3BB(Double_t *x, Double_t *par)
    ans = p[0] * (x1 / x2 * x3 - 1.0);
 
    if (fTrackingState == MpdPidUtils::kCFHM) {
-      if ((x[0] >= 0.20) && (x[0] < 0.25)) ans *= 0.955;
-      if ((x[0] >= 0.25) && (x[0] < 0.30)) ans *= 0.985;
-      if ((x[0] >= 0.70) && (x[0] < 0.95)) ans *= 1.015;
+      if ((x[0] >= 0.10) && (x[0] < 0.15)) ans *= 0.865;
+      if ((x[0] >= 0.15) && (x[0] < 0.20)) ans *= 0.965;
+      if ((x[0] >= 0.20) && (x[0] < 0.25)) ans *= 0.980;
+      if ((x[0] >= 0.25) && (x[0] < 0.30)) ans *= 1.010;
+      if ((x[0] >= 0.30) && (x[0] < 0.35)) ans *= 0.990;
+      if ((x[0] >= 0.45) && (x[0] < 0.50)) ans *= 1.010;
+      if ((x[0] >= 0.70) && (x[0] < 0.75)) ans *= 1.005;
+      if ((x[0] >= 0.75) && (x[0] < 0.95)) ans *= 1.015;
+      if ((x[0] >= 0.95) && (x[0] < 1.05)) ans *= 1.010;
       if ((x[0] >= 1.10) && (x[0] < 1.25)) ans *= 0.995;
       if ((x[0] >= 1.40) && (x[0] < 1.45)) ans *= 1.010;
-      if ((x[0] >= 1.45) && (x[0] < 1.50)) ans *= 1.025;
-      if ((x[0] >= 1.50) && (x[0] < 1.55)) ans *= 1.065;
-      if ((x[0] >= 1.55) && (x[0] < 1.60)) ans *= 1.115;
+      if ((x[0] >= 2.40) && (x[0] < 2.60)) ans *= 1.015;
    }
    return ans;
 }
@@ -288,15 +310,22 @@ Double_t MpdPid::parHe4BB(Double_t *x, Double_t *par)
    ans = p[0] * (x1 / x2 * x3 - 1.0);
 
    if (fTrackingState == MpdPidUtils::kCFHM) {
-      if ((x[0] >= 0.20) && (x[0] < 0.25)) ans *= 0.980;
-      if ((x[0] >= 0.70) && (x[0] < 0.90)) ans *= 1.015;
-      if ((x[0] >= 0.90) && (x[0] < 0.95)) ans *= 1.010;
-      if ((x[0] >= 1.05) && (x[0] < 1.10)) ans *= 0.990;
-      if ((x[0] >= 1.10) && (x[0] < 1.35)) ans *= 0.985;
-      if ((x[0] >= 1.40) && (x[0] < 1.45)) ans *= 1.020;
-      if ((x[0] >= 1.45) && (x[0] < 1.50)) ans *= 1.053;
-      if ((x[0] >= 1.50) && (x[0] < 1.55)) ans *= 1.125;
-      if ((x[0] >= 1.55) && (x[0] < 1.60)) ans *= 1.238;
+      if ((x[0] >= 0.10) && (x[0] < 0.15)) ans *= 0.755;
+      if ((x[0] >= 0.15) && (x[0] < 0.20)) ans *= 0.850;
+      if ((x[0] >= 0.20) && (x[0] < 0.25)) ans *= 0.950;
+      if ((x[0] >= 0.30) && (x[0] < 0.35)) ans *= 1.015;
+      if ((x[0] >= 0.65) && (x[0] < 0.70)) ans *= 1.010;
+      if ((x[0] >= 0.70) && (x[0] < 0.75)) ans *= 1.015;
+      if ((x[0] >= 0.75) && (x[0] < 0.80)) ans *= 1.040;
+      if ((x[0] >= 0.80) && (x[0] < 0.85)) ans *= 1.065;
+      if ((x[0] >= 0.85) && (x[0] < 1.05)) ans *= 1.080;
+      if ((x[0] >= 1.05) && (x[0] < 1.10)) ans *= 1.065;
+      if ((x[0] >= 1.10) && (x[0] < 1.20)) ans *= 1.050;
+      if ((x[0] >= 1.20) && (x[0] < 1.25)) ans *= 1.040;
+      if ((x[0] >= 1.25) && (x[0] < 1.30)) ans *= 1.030;
+      if ((x[0] >= 1.30) && (x[0] < 1.40)) ans *= 1.015;
+      if ((x[0] >= 1.60) && (x[0] < 2.20)) ans *= 0.995;
+      if ((x[0] >= 2.40) && (x[0] < 2.60)) ans *= 1.030;
    }
    return ans;
 }
@@ -468,13 +497,13 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
    fBB[MpdPidUtils::kKaon].push_back(fParKaBB);
    fdEdxBBMap.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kKaon, fBB[MpdPidUtils::kKaon]));
 
-   xint          = fTrackingState == MpdPidUtils::kCFHM ? 4.8 : 5.0;
-   TF1 *fParPrBB = new TF1("fParPrBB", this, &MpdPid::parPrBB, PMIN, xint, 10, "MpdPid", "parPrBB");
+   // xint = fTrackingState == MpdPidUtils::kCFHM ? 5.0 : 5.0;
+   TF1 *fParPrBB = new TF1("fParPrBB", this, &MpdPid::parPrBB, PMIN, PMAX, 10, "MpdPid", "parPrBB");
    fBB[MpdPidUtils::kProton].push_back(fParPrBB);
-   if (fTrackingState == MpdPidUtils::kCFHM) {
-      TF1 *fParPrP1 = new TF1("fParPrP1", "[0]", xint, 5.0);
-      fBB[MpdPidUtils::kProton].push_back(fParPrP1);
-   }
+   // if ( fTrackingState == MpdPidUtils::kCFHM ) {
+   //	TF1* fParPrP1 = new TF1("fParPrP1","[0]",xint,5.0);
+   //	fBB[MpdPidUtils::kProton].push_back(fParPrP1);
+   // }
    fdEdxBBMap.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kProton, fBB[MpdPidUtils::kProton]));
 
    if (fTrackingState == MpdPidUtils::kCF) {
@@ -512,12 +541,12 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
       fBB[MpdPidUtils::kHe3].push_back(fParHe3P3);
    } else
       xint = PMIN;
-   PMAX           = fTrackingState == MpdPidUtils::kCFHM ? 2.1 : 5.0;
+   PMAX           = fTrackingState == MpdPidUtils::kCFHM ? 2.6 : 5.0;
    TF1 *fParHe3BB = new TF1("fParHe3BB", this, &MpdPid::parHe3BB, xint, PMAX, 8, "MpdPid", "parHe3BB");
    fBB[MpdPidUtils::kHe3].push_back(fParHe3BB);
    PMAX = 5.0;
    if (fTrackingState == MpdPidUtils::kCFHM) {
-      TF1 *fParHe3P4 = new TF1("fParHe3P4", "[0]", 2.1, PMAX);
+      TF1 *fParHe3P4 = new TF1("fParHe3P4", "[0]", 2.6, PMAX);
       fBB[MpdPidUtils::kHe3].push_back(fParHe3P4);
    }
    fdEdxBBMap.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kHe3, fBB[MpdPidUtils::kHe3]));
@@ -530,8 +559,14 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
       fBB[MpdPidUtils::kHe4].push_back(fParHe4P2);
    } else
       xint = PMIN;
+   PMAX           = fTrackingState == MpdPidUtils::kCFHM ? 2.6 : 5.0;
    TF1 *fParHe4BB = new TF1("fParHe4BB", this, &MpdPid::parHe4BB, xint, PMAX, 8, "MpdPid", "parHe4BB");
    fBB[MpdPidUtils::kHe4].push_back(fParHe4BB);
+   PMAX = 5.0;
+   if (fTrackingState == MpdPidUtils::kCFHM) {
+      TF1 *fParHe4P3 = new TF1("fParHe4P3", "[0]", 2.6, PMAX);
+      fBB[MpdPidUtils::kHe4].push_back(fParHe4P3);
+   }
    fdEdxBBMap.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kHe4, fBB[MpdPidUtils::kHe4]));
 
    ///
@@ -546,51 +581,91 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
    fm2[MpdPidUtils::kMuon].push_back(fParMuM2);
    fParM2Map.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kMuon, fm2[MpdPidUtils::kMuon]));
 
-   xint            = fTrackingState != MpdPidUtils::kCFHM ? 1.4 : 0.650314;
-   TF1 *fParPiM2P1 = new TF1("fParPiM2P1", "pol2(0)", PMIN, xint);
-   fm2[MpdPidUtils::kPion].push_back(fParPiM2P1);
-   TF1 *fParPiM2P2 = new TF1("fParPiM2P2", "pol2(0)", xint, PMAX);
+   if (fTrackingState == MpdPidUtils::kCFHM) {
+      TF1 *fParPiM2P1 = new TF1("fParPiM2P1", "[0]", PMIN, 0.5);
+      fm2[MpdPidUtils::kPion].push_back(fParPiM2P1);
+      PMIN = 0.5;
+   }
+   xint            = fTrackingState != MpdPidUtils::kCFHM ? 1.4 : 1.59086;
+   TF1 *fParPiM2P2 = new TF1("fParPiM2P2", "pol2(0)", PMIN, xint);
    fm2[MpdPidUtils::kPion].push_back(fParPiM2P2);
+   TF1 *fParPiM2P3 = new TF1("fParPiM2P3", "pol2(0)", xint, PMAX);
+   fm2[MpdPidUtils::kPion].push_back(fParPiM2P3);
    fParM2Map.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kPion, fm2[MpdPidUtils::kPion]));
+   PMIN = 0.0;
 
    if (fTrackingState != MpdPidUtils::kCFHM) {
       TF1 *fParKaM2P1 = new TF1("fParKaM2P1", "pol2(0)", PMIN, PMAX);
       fm2[MpdPidUtils::kKaon].push_back(fParKaM2P1);
    } else {
-      TF1 *fParKaM2P1 = new TF1("fParKaM2P1", "pol2(0)", PMIN, 0.705661);
+      TF1 *fParKaM2P1 = new TF1("fParKaM2P1", "pol3(0)", PMIN, PMAX);
       fm2[MpdPidUtils::kKaon].push_back(fParKaM2P1);
-      TF1 *fParKaM2P2 = new TF1("fParKaM2P2", "pol2(0)", 0.705661, PMAX);
-      fm2[MpdPidUtils::kKaon].push_back(fParKaM2P2);
+      // TF1* fParKaM2P1 = new TF1("fParKaM2P1","[0]",PMIN,0.2);
+      // fm2[MpdPidUtils::kKaon].push_back(fParKaM2P1);
+      // TF1* fParKaM2P2 = new TF1("fParKaM2P2","pol2(0)",0.2,0.705661);
+      // fm2[MpdPidUtils::kKaon].push_back(fParKaM2P2);
+      // TF1* fParKaM2P3 = new TF1("fParKaM2P3","pol2(0)",0.705661,PMAX);
+      // fm2[MpdPidUtils::kKaon].push_back(fParKaM2P3);
    }
    fParM2Map.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kKaon, fm2[MpdPidUtils::kKaon]));
 
+   if (fTrackingState == MpdPidUtils::kCFHM) {
+      TF1 *fParPrM2P1 = new TF1("fParPrM2P1", "[0]", PMIN, 0.3);
+      fm2[MpdPidUtils::kProton].push_back(fParPrM2P1);
+      PMIN = 0.3;
+   }
    xint            = fTrackingState != MpdPidUtils::kCFHM ? 1.4 : 0.930546;
    sFunc           = fTrackingState != MpdPidUtils::kCFHM ? "pol3(0)" : "pol2(0)";
-   TF1 *fParPrM2P1 = new TF1("fParPrM2P1", sFunc, PMIN, xint);
-   fm2[MpdPidUtils::kProton].push_back(fParPrM2P1);
-   TF1 *fParPrM2P2 = new TF1("fParPrM2P2", "pol2(0)", xint, PMAX);
+   TF1 *fParPrM2P2 = new TF1("fParPrM2P2", sFunc, PMIN, xint);
    fm2[MpdPidUtils::kProton].push_back(fParPrM2P2);
+   TF1 *fParPrM2P3 = new TF1("fParPrM2P3", "pol2(0)", xint, PMAX);
+   fm2[MpdPidUtils::kProton].push_back(fParPrM2P3);
    fParM2Map.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kProton, fm2[MpdPidUtils::kProton]));
+   PMIN = 0.0;
 
+   if (fTrackingState == MpdPidUtils::kCFHM) {
+      TF1 *fParDeM2P1 = new TF1("fParDeM2P1", "[0]", PMIN, 0.5);
+      fm2[MpdPidUtils::kDeuteron].push_back(fParDeM2P1);
+      PMIN = 0.5;
+   }
    sFunc         = fTrackingState != MpdPidUtils::kCFHM ? "pol3(0)" : "pol2(0)";
    TF1 *fParDeM2 = new TF1("fParDeM2", sFunc, PMIN, PMAX);
    fm2[MpdPidUtils::kDeuteron].push_back(fParDeM2);
    fParM2Map.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kDeuteron, fm2[MpdPidUtils::kDeuteron]));
+   PMIN = 0.0;
 
+   if (fTrackingState == MpdPidUtils::kCFHM) {
+      TF1 *fParTrM2P1 = new TF1("fParTrM2P1", "[0]", PMIN, 0.7);
+      fm2[MpdPidUtils::kTriton].push_back(fParTrM2P1);
+      PMIN = 0.7;
+   }
    sFunc         = fTrackingState == MpdPidUtils::kHP ? "pol3(0)" : "pol2(0)";
    TF1 *fParTrM2 = new TF1("fParTrM2", sFunc, PMIN, PMAX);
    fm2[MpdPidUtils::kTriton].push_back(fParTrM2);
    fParM2Map.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kTriton, fm2[MpdPidUtils::kTriton]));
+   PMIN = 0.0;
 
+   if (fTrackingState == MpdPidUtils::kCFHM) {
+      TF1 *fParHe3M2P1 = new TF1("fParHe3M2P1", "[0]", PMIN, 0.55);
+      fm2[MpdPidUtils::kHe3].push_back(fParHe3M2P1);
+      PMIN = 0.55;
+   }
    sFunc          = fTrackingState != MpdPidUtils::kCFHM ? "[0]" : "pol2(0)";
    TF1 *fParHe3M2 = new TF1("fParHe3M2", sFunc, PMIN, PMAX);
    fm2[MpdPidUtils::kHe3].push_back(fParHe3M2);
    fParM2Map.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kHe3, fm2[MpdPidUtils::kHe3]));
+   PMIN = 0.0;
 
-   sFunc          = fTrackingState != MpdPidUtils::kCFHM ? "[0]" : "pol3(0)";
+   if (fTrackingState == MpdPidUtils::kCFHM) {
+      TF1 *fParHe4M2P1 = new TF1("fParHe4M2P1", "[0]", PMIN, 0.65);
+      fm2[MpdPidUtils::kHe4].push_back(fParHe4M2P1);
+      PMIN = 0.65;
+   }
+   sFunc          = fTrackingState != MpdPidUtils::kCFHM ? "[0]" : "pol2(0)";
    TF1 *fParHe4M2 = new TF1("fParHe4M2", sFunc, PMIN, PMAX);
    fm2[MpdPidUtils::kHe4].push_back(fParHe4M2);
    fParM2Map.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kHe4, fm2[MpdPidUtils::kHe4]));
+   PMIN = 0.0;
 
    map<MpdPidUtils::ePartType, vecTF1ptrs>::iterator it;
    if (fTrackingState == MpdPidUtils::kHP) {
@@ -821,7 +896,7 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
       it = fdEdxBBMap.find(MpdPidUtils::kHe4);
       it->second[0]->SetParameters(fCoef * (3.243636e+06), fCoef * (-8.636364e+06));
       it->second[1]->SetParameters(fCoef * (1.100082e+06), fCoef * (-1.937756e+06));
-      it->second[1]->SetParameters(fCoef * (-16150.2), -0.0645649, -0.0213786, 3.61265, fCoef * (-16150.2), -0.0645649,
+      it->second[2]->SetParameters(fCoef * (-16150.2), -0.0645649, -0.0213786, 3.61265, fCoef * (-16150.2), -0.0645649,
                                    -0.0213786, 3.61265);
 
       /// m2
@@ -1048,15 +1123,19 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
          pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kProton, fAsymDedx[MpdPidUtils::kProton]));
    } else {
       /// dE/dx Bethe-Bloch
+      it = fdEdxBBMap.find(MpdPidUtils::kElectron);
+      it->second[0]->SetParameters(fCoef * (-0.019326681), fCoef * (1.9201386));
+      it = fdEdxBBMap.find(MpdPidUtils::kMuon);
+      it->second[0]->SetParameters(fCoef * (0.18313862), 5.8679075, -0.0056352172, 1.9553629, 0.90609069);
       it = fdEdxBBMap.find(MpdPidUtils::kPion);
       it->second[0]->SetParameters(fCoef * (6.6409779), -1.1578231, -0.89821579, 0.39576895, 0.0030161715);
       it = fdEdxBBMap.find(MpdPidUtils::kKaon);
-      it->second[0]->SetParameters(fCoef * (1.0779842), -1.8890881, -0.96881438, 1.7614218, 0.0097918706,
-                                   fCoef * (0.40714716), -1.0797026, -0.98546413, 1.8773068, 0.0052661566);
+      it->second[0]->SetParameters(fCoef * (0.333125), 1.06618, -0.925413, 1.89814, 0.0278704, fCoef * (0.333125),
+                                   1.06618, -0.925413, 1.89814, 0.0278704);
       it = fdEdxBBMap.find(MpdPidUtils::kProton);
-      it->second[0]->SetParameters(fCoef * (10.097455), 3.9118115, 27.918783, 1.0980692, -3.2202531,
-                                   fCoef * (0.2204469), 0.51729011, -0.98983046, 2.047551, 0.0061174674);
-      it->second[1]->SetParameter(0, fCoef * (1.81344));
+      it->second[0]->SetParameters(fCoef * (7.2974), 3.56915, 17.0147, 1.01921, -7.75154, fCoef * (0.208992), 1.35048,
+                                   -0.980985, 2.01922, 0.0106046);
+      // it->second[1]->SetParameter( 0, fCoef*(1.81344) );
       it = fdEdxBBMap.find(MpdPidUtils::kDeuteron);
       it->second[0]->SetParameters(fCoef * (21.479608), 3.3186673, 16.269037, 0.890677, -4.2241652,
                                    fCoef * (0.20764449), 0.48498402, -0.99221832, 2.0873096, 0.0063239652);
@@ -1064,118 +1143,115 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
       it->second[0]->SetParameters(fCoef * (2.9608171), 7.5586606, 181.76905, 0.94955581, -15.689995,
                                    fCoef * (0.43139727), -1.1708504, -0.97933102, 2.2046764, 0.017628675);
       it = fdEdxBBMap.find(MpdPidUtils::kHe3);
-      it->second[0]->SetParameters(fCoef * (-32.557409), -0.20640164, 1.2041051, 1.3280685, fCoef * (-9.0106592),
-                                   -0.44985727, 0.58537297, 2.2634325);
-      it->second[1]->SetParameter(0, fCoef * (6.43563));
+      it->second[0]->SetParameters(fCoef * (-20.795432), -0.47384471, 1.7198872, 1.1896359, fCoef * (-6.6117106),
+                                   -0.46247527, 0.33893895, 2.632457);
+      it->second[1]->SetParameter(0, it->second[0]->Eval(2.6));
       it = fdEdxBBMap.find(MpdPidUtils::kHe4);
-      it->second[0]->SetParameters(fCoef * (-28.632092), -0.33744378, 1.7965949, 1.1225621, fCoef * (-9.2874351),
-                                   -0.82028253, 1.3750019, 1.4904775);
+      it->second[0]->SetParameters(fCoef * (-21.022252), -0.49777446, 1.868153, 1.1551161, fCoef * (-2.9013868),
+                                   -1.3956671, 0.32487842, 2.1497518);
+      it->second[1]->SetParameter(0, it->second[0]->Eval(2.6));
       /// m2
       it = fParM2Map.find(MpdPidUtils::kElectron);
       it->second[0]->SetParameters(0.001227, -0.000973509, 0.0314155);
       it = fParM2Map.find(MpdPidUtils::kMuon);
       it->second[0]->SetParameters(0.00166279, -0.00131341, 0.0311028);
       it = fParM2Map.find(MpdPidUtils::kPion);
-      it->second[0]->SetParameters(0.00720016, -0.0221267, 0.0440498);
-      it->second[1]->SetParameters(-0.00642527, 0.0155077, 0.0151141);
+      it->second[1]->SetParameters(-0.000480833, 0.00274342, 0.0205474);
+      it->second[2]->SetParameters(-0.0307661, 0.0404203, 0.00870571);
+      it->second[0]->SetParameter(0, it->second[1]->Eval(it->second[1]->GetXmin()));
       it = fParM2Map.find(MpdPidUtils::kKaon);
-      it->second[0]->SetParameters(0.022164, -0.0466916, 0.0616221);
-      it->second[1]->SetParameters(-0.00354366, 0.0211465, 0.013555);
+      it->second[0]->SetParameters(0.00780637, -0.00395721, 0.029572, -0.00282261);
       it = fParM2Map.find(MpdPidUtils::kProton);
-      it->second[0]->SetParameters(0.086827, -0.116522, 0.0874504);
-      it->second[1]->SetParameters(0.0240519, 0.0166668, 0.0158857);
+      it->second[1]->SetParameters(0.086827, -0.116522, 0.0874504);
+      it->second[2]->SetParameters(0.0240519, 0.0166668, 0.0158857);
+      it->second[0]->SetParameter(0, it->second[1]->Eval(it->second[1]->GetXmin()));
       it = fParM2Map.find(MpdPidUtils::kDeuteron);
-      it->second[0]->SetParameters(0.200874, -0.163555, 0.0883628);
+      it->second[1]->SetParameters(0.200874, -0.163555, 0.0883628);
+      it->second[0]->SetParameter(0, it->second[1]->Eval(it->second[1]->GetXmin()));
       it = fParM2Map.find(MpdPidUtils::kTriton);
-      it->second[0]->SetParameters(0.948708, -0.474263, 0.151498);
+      it->second[1]->SetParameters(0.948708, -0.474263, 0.151498);
+      it->second[0]->SetParameter(0, it->second[1]->Eval(it->second[1]->GetXmin()));
       it = fParM2Map.find(MpdPidUtils::kHe3);
-      it->second[0]->SetParameters(0.200874, -0.163555, 0.0883628);
+      it->second[1]->SetParameters(0.176375, -0.0917918, 0.0429879);
+      it->second[0]->SetParameter(0, it->second[1]->Eval(it->second[1]->GetXmin()));
       it = fParM2Map.find(MpdPidUtils::kHe4);
-      it->second[0]->SetParameters(0.593194, -0.938302, 0.864070, -0.276790);
+      it->second[1]->SetParameters(0.379548, -0.195864, 0.061286);
+      it->second[0]->SetParameter(0, it->second[1]->Eval(it->second[1]->GetXmin()));
 
       /// dE/dx width
-      TF1 *fEnLossSigmaElP1 = new TF1("fEnLossSigmaElP1", "pol1(0)", PMIN, 0.55);
-      fEnLossSigmaElP1->SetParameters(0.0747217, -0.0308101);
-      TF1 *fEnLossSigmaElP2 = new TF1("fEnLossSigmaElP2", "pol1(0)", 0.55, 2.0);
-      fEnLossSigmaElP2->SetParameters(0.0653074, -0.00546004);
-      TF1 *fEnLossSigmaElP3 = new TF1("fEnLossSigmaElP3", "pol1(0)", 2.0, 3.0);
-      fEnLossSigmaElP3->SetParameters(0.0572145, -0.00104922);
-      TF1 *fEnLossSigmaElP4 = new TF1("fEnLossSigmaElP4", "[0]", 3.0, PMAX);
-      fEnLossSigmaElP4->SetParameter(0, fEnLossSigmaElP3->Eval(3.0));
+      TF1 *fEnLossSigmaElP1 = new TF1("fEnLossSigmaElP1", "pol1(0)", PMIN, 1.2667232);
+      fEnLossSigmaElP1->SetParameters(0.065546253, -0.00653691);
+      TF1 *fEnLossSigmaElP2 = new TF1("fEnLossSigmaElP2", "pol1(0)", 1.2667232, PMAX);
+      fEnLossSigmaElP2->SetParameters(0.056658487, 0.00047943452);
       fSigDedx[MpdPidUtils::kElectron].push_back(fEnLossSigmaElP1);
       fSigDedx[MpdPidUtils::kElectron].push_back(fEnLossSigmaElP2);
-      fSigDedx[MpdPidUtils::kElectron].push_back(fEnLossSigmaElP3);
-      fSigDedx[MpdPidUtils::kElectron].push_back(fEnLossSigmaElP4);
       fdEdxSigmaMap.insert(
          pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kElectron, fSigDedx[MpdPidUtils::kElectron]));
 
-      TF1 *fEnLossSigmaMuP1 = new TF1("fEnLossSigmaMuP1", "pol1(0)", PMIN, 0.3);
-      fEnLossSigmaMuP1->SetParameters(0.115611, -0.179933);
-      TF1 *fEnLossSigmaMuP2 = new TF1("fEnLossSigmaMuP2", "pol1(0)", 0.3, 1.05);
-      fEnLossSigmaMuP2->SetParameters(0.0583018, 0.00140717);
-      TF1 *fEnLossSigmaMuP3 = new TF1("fEnLossSigmaMuP3", "pol1(0)", 1.05, 3.0);
-      fEnLossSigmaMuP3->SetParameters(0.0570477, -8.02801e-05);
-      TF1 *fEnLossSigmaMuP4 = new TF1("fEnLossSigmaMuP4", "[0]", 3.0, PMAX);
-      fEnLossSigmaMuP4->SetParameter(0, fEnLossSigmaMuP3->Eval(3.0));
+      TF1 *fEnLossSigmaMuP1 = new TF1("fEnLossSigmaMuP1", "pol1(0)", PMIN, 0.23238453);
+      fEnLossSigmaMuP1->SetParameters(0.096834625, -0.088311039);
+      TF1 *fEnLossSigmaMuP2 = new TF1("fEnLossSigmaMuP2", "pol1(0)", 0.23238453, 1.0873775);
+      fEnLossSigmaMuP2->SetParameters(0.078958282, -0.011385339);
+      TF1 *fEnLossSigmaMuP3 = new TF1("fEnLossSigmaMuP3", "pol1(0)", 1.0873775, 1.7854915);
+      fEnLossSigmaMuP3->SetParameters(0.070961629, -0.004031266);
+      TF1 *fEnLossSigmaMuP4 = new TF1("fEnLossSigmaMuP4", "pol1(0)", 1.7854915, PMAX);
+      fEnLossSigmaMuP4->SetParameters(0.065691429, -0.0010795862);
       fSigDedx[MpdPidUtils::kMuon].push_back(fEnLossSigmaMuP1);
       fSigDedx[MpdPidUtils::kMuon].push_back(fEnLossSigmaMuP2);
       fSigDedx[MpdPidUtils::kMuon].push_back(fEnLossSigmaMuP3);
       fSigDedx[MpdPidUtils::kMuon].push_back(fEnLossSigmaMuP4);
       fdEdxSigmaMap.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kMuon, fSigDedx[MpdPidUtils::kMuon]));
 
-      TF1 *fEnLossSigmaPiP1 = new TF1("fEnLossSigmaPiP1", "pol1(0)", PMIN, 0.2688734);
-      fEnLossSigmaPiP1->SetParameters(0.10398002, -0.10199579);
-      TF1 *fEnLossSigmaPiP2 = new TF1("fEnLossSigmaPiP2", "pol1(0)", 0.2688734, 0.49397765);
-      fEnLossSigmaPiP2->SetParameters(0.077284183, -0.0027080125);
-      TF1 *fEnLossSigmaPiP3 = new TF1("fEnLossSigmaPiP3", "pol1(0)", 0.49397765, 1.0971911);
-      fEnLossSigmaPiP3->SetParameters(0.080134745, -0.0084786422);
-      TF1 *fEnLossSigmaPiP4 = new TF1("fEnLossSigmaPiP4", "pol1(0)", 1.0971911, 2.1724992);
-      fEnLossSigmaPiP4->SetParameters(0.076484001, -0.0051512878);
-      TF1 *fEnLossSigmaPiP5 = new TF1("fEnLossSigmaPiP5", "pol1(0)", 2.1724992, 3.0);
-      fEnLossSigmaPiP5->SetParameters(0.061593305, 0.0017028902);
-      TF1 *fEnLossSigmaPiP6 = new TF1("fEnLossSigmaPiP6", "[0]", 3.0, PMAX);
-      fEnLossSigmaPiP6->SetParameter(0, fEnLossSigmaPiP5->Eval(3.0));
+      TF1 *fEnLossSigmaPiP1 = new TF1("fEnLossSigmaPiP1", "pol1(0)", PMIN, 0.135226);
+      fEnLossSigmaPiP1->SetParameters(0.0978523, -0.0468431);
+      TF1 *fEnLossSigmaPiP2 = new TF1("fEnLossSigmaPiP2", "pol1(0)", 0.135226, 0.270254);
+      fEnLossSigmaPiP2->SetParameters(0.112118, -0.152342);
+      TF1 *fEnLossSigmaPiP3 = new TF1("fEnLossSigmaPiP3", "pol1(0)", 0.270254, 1.96711);
+      fEnLossSigmaPiP3->SetParameters(0.0717427, -0.00294257);
+      TF1 *fEnLossSigmaPiP4 = new TF1("fEnLossSigmaPiP4", "pol1(0)", 1.96711, 3.0);
+      fEnLossSigmaPiP4->SetParameters(0.0567998, 0.00465381);
+      TF1 *fEnLossSigmaPiP5 = new TF1("fEnLossSigmaPiP5", "[0]", 3.0, PMAX);
+      fEnLossSigmaPiP5->SetParameter(0, fEnLossSigmaPiP4->Eval(3.0));
       fSigDedx[MpdPidUtils::kPion].push_back(fEnLossSigmaPiP1);
       fSigDedx[MpdPidUtils::kPion].push_back(fEnLossSigmaPiP2);
       fSigDedx[MpdPidUtils::kPion].push_back(fEnLossSigmaPiP3);
       fSigDedx[MpdPidUtils::kPion].push_back(fEnLossSigmaPiP4);
       fSigDedx[MpdPidUtils::kPion].push_back(fEnLossSigmaPiP5);
-      fSigDedx[MpdPidUtils::kPion].push_back(fEnLossSigmaPiP6);
       fdEdxSigmaMap.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kPion, fSigDedx[MpdPidUtils::kPion]));
 
-      TF1 *fEnLossSigmaKaP1 = new TF1("fEnLossSigmaKaP1", "pol1(0)", PMIN, 0.21747029);
-      fEnLossSigmaKaP1->SetParameters(0.10629765, -0.038213911);
-      TF1 *fEnLossSigmaKaP2 = new TF1("fEnLossSigmaKaP2", "pol1(0)", 0.21747029, 0.49430427);
-      fEnLossSigmaKaP2->SetParameters(0.11680119, -0.086512631);
-      TF1 *fEnLossSigmaKaP3 = new TF1("fEnLossSigmaKaP3", "pol1(0)", 0.49430427, 3.0);
-      fEnLossSigmaKaP3->SetParameters(0.074836561, -0.0016162851);
-      TF1 *fEnLossSigmaKaP4 = new TF1("fEnLossSigmaKaP4", "[0]", 3.0, PMAX);
-      fEnLossSigmaKaP4->SetParameter(0, fEnLossSigmaKaP3->Eval(3.0));
+      TF1 *fEnLossSigmaKaP1 = new TF1("fEnLossSigmaKaP1", "pol1(0)", PMIN, 0.52439);
+      fEnLossSigmaKaP1->SetParameters(0.114346, -0.0814144);
+      TF1 *fEnLossSigmaKaP2 = new TF1("fEnLossSigmaKaP2", "pol1(0)", 0.52439, 3.0);
+      fEnLossSigmaKaP2->SetParameters(0.0728159, -0.00221717);
+      TF1 *fEnLossSigmaKaP3 = new TF1("fEnLossSigmaKaP3", "[0]", 3.0, PMAX);
+      fEnLossSigmaKaP3->SetParameter(0, fEnLossSigmaKaP2->Eval(3.0));
       fSigDedx[MpdPidUtils::kKaon].push_back(fEnLossSigmaKaP1);
       fSigDedx[MpdPidUtils::kKaon].push_back(fEnLossSigmaKaP2);
       fSigDedx[MpdPidUtils::kKaon].push_back(fEnLossSigmaKaP3);
-      fSigDedx[MpdPidUtils::kKaon].push_back(fEnLossSigmaKaP4);
       fdEdxSigmaMap.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kKaon, fSigDedx[MpdPidUtils::kKaon]));
 
-      TF1 *fEnLossSigmaPrP1 = new TF1("fEnLossSigmaPrP1", "pol1(0)", PMIN, 0.32931261);
-      fEnLossSigmaPrP1->SetParameters(0.18061292, -0.26546851);
-      TF1 *fEnLossSigmaPrP2 = new TF1("fEnLossSigmaPrP2", "pol1(0)", 0.32931261, 0.61837676);
-      fEnLossSigmaPrP2->SetParameters(0.11996127, -0.081291993);
-      TF1 *fEnLossSigmaPrP3 = new TF1("fEnLossSigmaPrP3", "pol1(0)", 0.61837676, 3.0);
-      fEnLossSigmaPrP3->SetParameters(0.070310332, -0.00099961267);
-      TF1 *fEnLossSigmaPrP4 = new TF1("fEnLossSigmaPrP4", "[0]", 3.0, PMAX);
-      fEnLossSigmaPrP4->SetParameter(0, fEnLossSigmaPrP3->Eval(3.0));
+      TF1 *fEnLossSigmaPrP1 = new TF1("fEnLossSigmaPrP1", "[0]", PMIN, 0.1);
+      fEnLossSigmaPrP1->SetParameters(0, 0.21297);
+      TF1 *fEnLossSigmaPrP2 = new TF1("fEnLossSigmaPrP2", "pol1(0)", 0.1, 0.246866);
+      fEnLossSigmaPrP2->SetParameters(0.291244, -0.782737);
+      TF1 *fEnLossSigmaPrP3 = new TF1("fEnLossSigmaPrP3", "pol1(0)", 0.246866, 0.903752);
+      fEnLossSigmaPrP3->SetParameters(0.108798, -0.0436887);
+      TF1 *fEnLossSigmaPrP4 = new TF1("fEnLossSigmaPrP4", "pol1(0)", 0.903752, 3.0);
+      fEnLossSigmaPrP4->SetParameters(0.0714059, -0.00231462);
+      TF1 *fEnLossSigmaPrP5 = new TF1("fEnLossSigmaPrP5", "[0]", 3.0, PMAX);
+      fEnLossSigmaPrP5->SetParameter(0, fEnLossSigmaPrP4->Eval(3.0));
       fSigDedx[MpdPidUtils::kProton].push_back(fEnLossSigmaPrP1);
       fSigDedx[MpdPidUtils::kProton].push_back(fEnLossSigmaPrP2);
       fSigDedx[MpdPidUtils::kProton].push_back(fEnLossSigmaPrP3);
       fSigDedx[MpdPidUtils::kProton].push_back(fEnLossSigmaPrP4);
+      fSigDedx[MpdPidUtils::kProton].push_back(fEnLossSigmaPrP5);
       fdEdxSigmaMap.insert(
          pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kProton, fSigDedx[MpdPidUtils::kProton]));
 
-      TF1 *fEnLossSigmaDeP1 = new TF1("fEnLossSigmaDeP1", "pol1(0)", PMIN, 0.76311362);
-      fEnLossSigmaDeP1->SetParameters(0.15548636, -0.10127273);
       TF1 *fEnLossSigmaDeP2 = new TF1("fEnLossSigmaDeP2", "pol1(0)", 0.76311362, 1.1312292);
       fEnLossSigmaDeP2->SetParameters(0.091285714, -0.017142857);
+      TF1 *fEnLossSigmaDeP1 = new TF1("fEnLossSigmaDeP1", "[0]", PMIN, 0.76311362);
+      fEnLossSigmaDeP1->SetParameter(0, fEnLossSigmaDeP2->Eval(fEnLossSigmaDeP2->GetXmin()));
       TF1 *fEnLossSigmaDeP3 = new TF1("fEnLossSigmaDeP3", "pol1(0)", 1.1312292, 3.0);
       fEnLossSigmaDeP3->SetParameters(0.070917901, 0.00086217052);
       TF1 *fEnLossSigmaDeP4 = new TF1("fEnLossSigmaDeP4", "[0]", 3.0, PMAX);
@@ -1187,122 +1263,104 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
       fdEdxSigmaMap.insert(
          pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kDeuteron, fSigDedx[MpdPidUtils::kDeuteron]));
 
-      TF1 *fEnLossSigmaTrP1 = new TF1("fEnLossSigmaTrP1", "pol1(0)", PMIN, 0.33138201);
-      fEnLossSigmaTrP1->SetParameters(0.18504055, -0.21598167);
-      TF1 *fEnLossSigmaTrP2 = new TF1("fEnLossSigmaTrP2", "pol1(0)", 0.33138201, 1.3184028);
-      fEnLossSigmaTrP2->SetParameters(0.1271025, -0.041144002);
-      TF1 *fEnLossSigmaTrP3 = new TF1("fEnLossSigmaTrP3", "pol1(0)", 1.3184028, 1.6844853);
-      fEnLossSigmaTrP3->SetParameters(0.058605403, 0.010810599);
-      TF1 *fEnLossSigmaTrP4 = new TF1("fEnLossSigmaTrP4", "pol1(0)", 1.6844853, 3.0);
-      fEnLossSigmaTrP4->SetParameters(0.079593779, -0.0016492155);
-      TF1 *fEnLossSigmaTrP5 = new TF1("fEnLossSigmaTrP5", "[0]", 3.0, PMAX);
-      fEnLossSigmaTrP5->SetParameter(0, fEnLossSigmaTrP4->Eval(3.0));
+      TF1 *fEnLossSigmaTrP1 = new TF1("fEnLossSigmaTrP1", "pol1(0)", PMIN, 3.0);
+      fEnLossSigmaTrP1->SetParameters(0.079593779, -0.0016492155);
+      TF1 *fEnLossSigmaTrP2 = new TF1("fEnLossSigmaTrP2", "[0]", 3.0, PMAX);
+      fEnLossSigmaTrP2->SetParameter(0, fEnLossSigmaTrP1->Eval(3.0));
       fSigDedx[MpdPidUtils::kTriton].push_back(fEnLossSigmaTrP1);
       fSigDedx[MpdPidUtils::kTriton].push_back(fEnLossSigmaTrP2);
-      fSigDedx[MpdPidUtils::kTriton].push_back(fEnLossSigmaTrP3);
-      fSigDedx[MpdPidUtils::kTriton].push_back(fEnLossSigmaTrP4);
-      fSigDedx[MpdPidUtils::kTriton].push_back(fEnLossSigmaTrP5);
       fdEdxSigmaMap.insert(
          pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kTriton, fSigDedx[MpdPidUtils::kTriton]));
 
-      TF1 *fEnLossSigmaHe3P1 = new TF1("fEnLossSigmaHe3P1", "pol1(0)", PMIN, 0.57767997);
-      fEnLossSigmaHe3P1->SetParameters(0.13595673, -0.09501415);
-      TF1 *fEnLossSigmaHe3P2 = new TF1("fEnLossSigmaHe3P2", "pol1(0)", 0.57767997, 0.83108376);
-      fEnLossSigmaHe3P2->SetParameters(0.087834092, -0.011710864);
-      TF1 *fEnLossSigmaHe3P3 = new TF1("fEnLossSigmaHe3P3", "pol1(0)", 0.83108376, 1.6);
-      fEnLossSigmaHe3P3->SetParameters(0.11349599, -0.042588492);
-      TF1 *fEnLossSigmaHe3P4 = new TF1("fEnLossSigmaHe3P4", "[0]", 1.6, PMAX);
-      fEnLossSigmaHe3P4->SetParameter(0, fEnLossSigmaHe3P3->Eval(1.6));
+      TF1 *fEnLossSigmaHe3P1 = new TF1("fEnLossSigmaHe3P1", "pol1(0)", PMIN, 1.5222468);
+      fEnLossSigmaHe3P1->SetParameters(0.084763216, -0.022888375);
+      TF1 *fEnLossSigmaHe3P2 = new TF1("fEnLossSigmaHe3P2", "pol1(0)", 1.5222468, 2.6);
+      fEnLossSigmaHe3P2->SetParameters(0.059599353, -0.006357636);
+      TF1 *fEnLossSigmaHe3P3 = new TF1("fEnLossSigmaHe3P3", "[0]", 2.6, PMAX);
+      fEnLossSigmaHe3P3->SetParameter(0, fEnLossSigmaHe3P2->Eval(2.6));
       fSigDedx[MpdPidUtils::kHe3].push_back(fEnLossSigmaHe3P1);
       fSigDedx[MpdPidUtils::kHe3].push_back(fEnLossSigmaHe3P2);
       fSigDedx[MpdPidUtils::kHe3].push_back(fEnLossSigmaHe3P3);
-      fSigDedx[MpdPidUtils::kHe3].push_back(fEnLossSigmaHe3P4);
       fdEdxSigmaMap.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kHe3, fSigDedx[MpdPidUtils::kHe3]));
 
-      TF1 *fEnLossSigmaHe4P1 = new TF1("fEnLossSigmaHe4P1", "pol1(0)", PMIN, 0.43111078);
-      fEnLossSigmaHe4P1->SetParameters(0.26892942, -0.41394235);
-      TF1 *fEnLossSigmaHe4P2 = new TF1("fEnLossSigmaHe4P2", "pol1(0)", 0.43111078, 1.6);
-      fEnLossSigmaHe4P2->SetParameters(0.10132884, -0.025177813);
-      TF1 *fEnLossSigmaHe4P3 = new TF1("fEnLossSigmaHe4P3", "[0]", 1.6, PMAX);
-      fEnLossSigmaHe4P3->SetParameter(0, fEnLossSigmaHe4P2->Eval(1.6));
+      TF1 *fEnLossSigmaHe4P1 = new TF1("fEnLossSigmaHe4P1", "pol1(0)", PMIN, 2.6);
+      fEnLossSigmaHe4P1->SetParameters(0.067640377, -0.0090089899);
+      TF1 *fEnLossSigmaHe4P2 = new TF1("fEnLossSigmaHe4P2", "[0]", 2.6, PMAX);
+      fEnLossSigmaHe4P2->SetParameter(0, fEnLossSigmaHe4P1->Eval(2.6));
       fSigDedx[MpdPidUtils::kHe4].push_back(fEnLossSigmaHe4P1);
       fSigDedx[MpdPidUtils::kHe4].push_back(fEnLossSigmaHe4P2);
-      fSigDedx[MpdPidUtils::kHe4].push_back(fEnLossSigmaHe4P3);
       fdEdxSigmaMap.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kHe4, fSigDedx[MpdPidUtils::kHe4]));
 
       /// Asymmetry parameter of dE/dx
-      TF1 *fAsymElP1 = new TF1("fAsymElP1", "pol1(0)", PMIN, 0.5);
-      fAsymElP1->SetParameters(-0.340074, 1.04407);
-      TF1 *fAsymElP2 = new TF1("fAsymElP2", "pol1(0)", 0.5, 0.85);
-      fAsymElP2->SetParameters(0.291559, -0.306138);
-      TF1 *fAsymElP3 = new TF1("fAsymElP3", "pol1(0)", 0.85, 3.0);
-      fAsymElP3->SetParameters(0.0915437, 0.0467649);
-      TF1 *fAsymElP4 = new TF1("fAsymElP4", "[0]", 3.0, PMAX);
-      fAsymElP4->SetParameter(0, fAsymElP3->Eval(3.0));
+      TF1 *fAsymElP1 = new TF1("fAsymElP1", "[0]", PMIN, 2.3676103);
+      fAsymElP1->SetParameter(0, 0.5);
+      TF1 *fAsymElP2 = new TF1("fAsymElP2", "pol1(0)", 2.3676103, PMAX);
+      fAsymElP2->SetParameters(0.68870097, -0.079701026);
       fAsymDedx[MpdPidUtils::kElectron].push_back(fAsymElP1);
       fAsymDedx[MpdPidUtils::kElectron].push_back(fAsymElP2);
-      fAsymDedx[MpdPidUtils::kElectron].push_back(fAsymElP3);
-      fAsymDedx[MpdPidUtils::kElectron].push_back(fAsymElP4);
       fdEdxDeltaMap.insert(
          pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kElectron, fAsymDedx[MpdPidUtils::kElectron]));
 
-      TF1 *fAsymMuP1 = new TF1("fAsymMuP1", "pol1(0)", PMIN, 0.125);
-      fAsymMuP1->SetParameters(2.5656, -14.391);
-      TF1 *fAsymMuP2 = new TF1("fAsymMuP2", "pol1(0)", 0.125, 0.5);
-      fAsymMuP2->SetParameters(-0.0467746, 0.496758);
-      TF1 *fAsymMuP3 = new TF1("fAsymMuP3", "pol1(0)", 0.5, 3.0);
-      fAsymMuP3->SetParameters(0.196422, 0.0117276);
-      TF1 *fAsymMuP4 = new TF1("fAsymMuP4", "[0]", 3.0, PMAX);
-      fAsymMuP4->SetParameter(0, fAsymMuP3->Eval(3.0));
+      TF1 *fAsymMuP1 = new TF1("fAsymMuP1", "pol1(0)", PMIN, 0.17693005);
+      fAsymMuP1->SetParameters(4.3617776, -21.934439);
+      TF1 *fAsymMuP2 = new TF1("fAsymMuP2", "pol1(0)", 0.17693005, 1.0495326);
+      fAsymMuP2->SetParameters(0.47825147, 0.015061837);
+      TF1 *fAsymMuP3 = new TF1("fAsymMuP3", "pol1(0)", 1.0495326, PMAX);
+      fAsymMuP3->SetParameters(0.54616505, -0.049646561);
       fAsymDedx[MpdPidUtils::kMuon].push_back(fAsymMuP1);
       fAsymDedx[MpdPidUtils::kMuon].push_back(fAsymMuP2);
       fAsymDedx[MpdPidUtils::kMuon].push_back(fAsymMuP3);
-      fAsymDedx[MpdPidUtils::kMuon].push_back(fAsymMuP4);
       fdEdxDeltaMap.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kMuon, fAsymDedx[MpdPidUtils::kMuon]));
 
-      TF1 *fAsymPiP1 = new TF1("fAsymPiP1", "pol1(0)", PMIN, 0.21734774);
-      fAsymPiP1->SetParameters(2.039118, -6.8874236);
-      TF1 *fAsymPiP2 = new TF1("fAsymPiP2", "pol1(0)", 0.21734774, 0.44744793);
-      fAsymPiP2->SetParameters(0.61574221, -0.33858234);
-      TF1 *fAsymPiP3 = new TF1("fAsymPiP3", "pol1(0)", 0.44744793, 1.0179262);
-      fAsymPiP3->SetParameters(0.44321431, 0.046999724);
-      TF1 *fAsymPiP4 = new TF1("fAsymPiP4", "pol1(0)", 1.0179262, 3.0);
-      fAsymPiP4->SetParameters(0.51997558, -0.02840974);
-      TF1 *fAsymPiP5 = new TF1("fAsymPiP5", "[0]", 3.0, PMAX);
-      fAsymPiP5->SetParameter(0, fAsymPiP4->Eval(3.0));
+      TF1 *fAsymPiP1 = new TF1("fAsymPiP1", "pol1(0)", PMIN, 0.183903);
+      fAsymPiP1->SetParameters(4.573, -22.8192);
+      TF1 *fAsymPiP2 = new TF1("fAsymPiP2", "pol1(0)", 0.183903, 0.559408);
+      fAsymPiP2->SetParameters(0.405159, -0.155943);
+      TF1 *fAsymPiP3 = new TF1("fAsymPiP3", "pol1(0)", 0.559408, 3.0);
+      fAsymPiP3->SetParameters(0.351838, -0.0606272);
+      TF1 *fAsymPiP4 = new TF1("fAsymPiP4", "[0]", 3.0, PMAX);
+      fAsymPiP4->SetParameter(0, fAsymPiP3->Eval(3.0));
       fAsymDedx[MpdPidUtils::kPion].push_back(fAsymPiP1);
       fAsymDedx[MpdPidUtils::kPion].push_back(fAsymPiP2);
       fAsymDedx[MpdPidUtils::kPion].push_back(fAsymPiP3);
       fAsymDedx[MpdPidUtils::kPion].push_back(fAsymPiP4);
-      fAsymDedx[MpdPidUtils::kPion].push_back(fAsymPiP5);
       fdEdxDeltaMap.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kPion, fAsymDedx[MpdPidUtils::kPion]));
 
-      TF1 *fAsymKaP1 = new TF1("fAsymKaP1", "pol1(0)", PMIN, 0.29786956);
-      fAsymKaP1->SetParameters(4.1300984, -12.078456);
-      TF1 *fAsymKaP2 = new TF1("fAsymKaP2", "pol1(0)", 0.29786956, 3.0);
-      fAsymKaP2->SetParameters(0.53887837, -0.02210481);
-      TF1 *fAsymKaP3 = new TF1("fAsymKaP3", "[0]", 3.0, PMAX);
-      fAsymKaP3->SetParameter(0, fAsymKaP2->Eval(3.0));
+      TF1 *fAsymKaP1 = new TF1("fAsymKaP1", "[0]", PMIN, 0.176873);
+      fAsymKaP1->SetParameters(0, 2.0);
+      TF1 *fAsymKaP2 = new TF1("fAsymKaP2", "pol1(0)", 0.176873, 0.292257);
+      fAsymKaP2->SetParameters(4.42093, -13.6874);
+      TF1 *fAsymKaP3 = new TF1("fAsymKaP3", "pol1(0)", 0.292257, 0.457227);
+      fAsymKaP3->SetParameters(0.623815, -0.694969);
+      TF1 *fAsymKaP4 = new TF1("fAsymKaP4", "pol1(0)", 0.457227, 3.0);
+      fAsymKaP4->SetParameters(0.296643, 0.0205892);
+      TF1 *fAsymKaP5 = new TF1("fAsymKaP5", "[0]", 3.0, PMAX);
+      fAsymKaP5->SetParameter(0, fAsymKaP4->Eval(3.0));
       fAsymDedx[MpdPidUtils::kKaon].push_back(fAsymKaP1);
       fAsymDedx[MpdPidUtils::kKaon].push_back(fAsymKaP2);
       fAsymDedx[MpdPidUtils::kKaon].push_back(fAsymKaP3);
+      fAsymDedx[MpdPidUtils::kKaon].push_back(fAsymKaP4);
+      fAsymDedx[MpdPidUtils::kKaon].push_back(fAsymKaP5);
       fdEdxDeltaMap.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kKaon, fAsymDedx[MpdPidUtils::kKaon]));
 
-      TF1 *fAsymPrP1 = new TF1("fAsymPrP1", "[0]", PMIN, 0.15958801);
-      fAsymPrP1->SetParameter(0, 0.84733839); /// <...>P2.Eval(0.15958801)
-      TF1 *fAsymPrP2 = new TF1("fAsymPrP2", "pol1(0)", 0.15958801, 0.26986452);
-      fAsymPrP2->SetParameters(0.44179229, 2.5412067);
-      TF1 *fAsymPrP3 = new TF1("fAsymPrP3", "pol1(0)", 0.26986452, 0.3902664);
-      fAsymPrP3->SetParameters(2.4116168, -4.7581024);
-      TF1 *fAsymPrP4 = new TF1("fAsymPrP4", "pol1(0)", 0.3902664, 3.0);
-      fAsymPrP4->SetParameters(0.55387387, 0.0020895347);
-      TF1 *fAsymPrP5 = new TF1("fAsymPrP5", "[0]", 3.0, PMAX);
-      fAsymPrP5->SetParameter(0, fAsymPrP4->Eval(3.0));
+      TF1 *fAsymPrP1 = new TF1("fAsymPrP1", "[0]", PMIN, 0.2);
+      fAsymPrP1->SetParameter(0, 0.858727); /// <...>P2.Eval(0.15958801)
+      TF1 *fAsymPrP2 = new TF1("fAsymPrP2", "pol1(0)", 0.2, 0.487588);
+      fAsymPrP2->SetParameters(1.3097, -2.25487);
+      TF1 *fAsymPrP3 = new TF1("fAsymPrP3", "pol1(0)", 0.487588, 0.664107);
+      fAsymPrP3->SetParameters(0.264705, -0.111677);
+      TF1 *fAsymPrP4 = new TF1("fAsymPrP4", "pol1(0)", 0.664107, 1.38463);
+      fAsymPrP4->SetParameters(0.0612819, 0.194634);
+      TF1 *fAsymPrP5 = new TF1("fAsymPrP5", "pol1(0)", 1.38463, 3.0);
+      fAsymPrP5->SetParameters(0.253465, 0.0558374);
+      TF1 *fAsymPrP6 = new TF1("fAsymPrP6", "[0]", 3.0, PMAX);
+      fAsymPrP6->SetParameter(0, fAsymPrP4->Eval(3.0));
       fAsymDedx[MpdPidUtils::kProton].push_back(fAsymPrP1);
       fAsymDedx[MpdPidUtils::kProton].push_back(fAsymPrP2);
       fAsymDedx[MpdPidUtils::kProton].push_back(fAsymPrP3);
       fAsymDedx[MpdPidUtils::kProton].push_back(fAsymPrP4);
       fAsymDedx[MpdPidUtils::kProton].push_back(fAsymPrP5);
+      fAsymDedx[MpdPidUtils::kProton].push_back(fAsymPrP6);
       fdEdxDeltaMap.insert(
          pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kProton, fAsymDedx[MpdPidUtils::kProton]));
 
@@ -1327,26 +1385,35 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
       fdEdxDeltaMap.insert(
          pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kTriton, fAsymDedx[MpdPidUtils::kTriton]));
 
-      TF1 *fAsymHe3P1 = new TF1("fAsymHe3P1", "pol1(0)", PMIN, 1.6);
-      fAsymHe3P1->SetParameters(-0.20580778, 0.71928838);
-      TF1 *fAsymHe3P2 = new TF1("fAsymHe3P2", "[0]", 1.6, PMAX);
-      fAsymHe3P2->SetParameter(0, fAsymHe3P1->Eval(1.6));
+      TF1 *fAsymHe3P1 = new TF1("fAsymHe3P1", "pol1(0)", PMIN, 0.47973371);
+      fAsymHe3P1->SetParameters(-0.51177512, 0.7596956);
+      TF1 *fAsymHe3P2 = new TF1("fAsymHe3P2", "pol1(0)", 0.47973371, 1.0043019);
+      fAsymHe3P2->SetParameters(-0.67019153, 1.089913);
+      TF1 *fAsymHe3P3 = new TF1("fAsymHe3P3", "pol1(0)", 1.0043019, 2.6);
+      fAsymHe3P3->SetParameters(0.33736312, 0.086674133);
+      TF1 *fAsymHe3P4 = new TF1("fAsymHe3P4", "[0]", 2.6, PMAX);
+      fAsymHe3P4->SetParameter(0, fAsymHe3P3->Eval(2.6));
       fAsymDedx[MpdPidUtils::kHe3].push_back(fAsymHe3P1);
       fAsymDedx[MpdPidUtils::kHe3].push_back(fAsymHe3P2);
+      fAsymDedx[MpdPidUtils::kHe3].push_back(fAsymHe3P3);
+      fAsymDedx[MpdPidUtils::kHe3].push_back(fAsymHe3P4);
       fdEdxDeltaMap.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kHe3, fAsymDedx[MpdPidUtils::kHe3]));
 
-      TF1 *fAsymHe4P1 = new TF1("fAsymHe4P1", "pol1(0)", PMIN, 0.3334044);
-      fAsymHe4P1->SetParameters(-1.0041691, 3.1063592);
-      TF1 *fAsymHe4P2 = new TF1("fAsymHe4P2", "pol1(0)", 0.3334044, 1.2256613);
-      fAsymHe4P2->SetParameters(-0.13764555, 0.50734285);
-      TF1 *fAsymHe4P3 = new TF1("fAsymHe4P3", "pol1(0)", 1.2256613, 1.6);
-      fAsymHe4P3->SetParameters(-1.4373775, 1.567776);
-      TF1 *fAsymHe4P4 = new TF1("fAsymHe4P4", "[0]", 1.6, PMAX);
-      fAsymHe4P4->SetParameter(0, fAsymHe4P3->Eval(1.6));
+      TF1 *fAsymHe4P1 = new TF1("fAsymHe4P1", "pol1(0)", PMIN, 0.6096774);
+      fAsymHe4P1->SetParameters(-0.36658037, 0.18506071);
+      TF1 *fAsymHe4P2 = new TF1("fAsymHe4P2", "pol1(0)", 0.6096774, 1.0146462);
+      fAsymHe4P2->SetParameters(-0.91671437, 1.087397);
+      TF1 *fAsymHe4P3 = new TF1("fAsymHe4P3", "pol1(0)", 1.0146462, 1.4051261);
+      fAsymHe4P3->SetParameters(-0.68765897, 0.86164797);
+      TF1 *fAsymHe4P4 = new TF1("fAsymHe4P4", "pol1(0)", 1.4051261, 2.6);
+      fAsymHe4P4->SetParameters(0.53212178, -0.0064454674);
+      TF1 *fAsymHe4P5 = new TF1("fAsymHe4P5", "[0]", 2.6, PMAX);
+      fAsymHe4P5->SetParameter(0, fAsymHe4P4->Eval(2.6));
       fAsymDedx[MpdPidUtils::kHe4].push_back(fAsymHe4P1);
       fAsymDedx[MpdPidUtils::kHe4].push_back(fAsymHe4P2);
       fAsymDedx[MpdPidUtils::kHe4].push_back(fAsymHe4P3);
       fAsymDedx[MpdPidUtils::kHe4].push_back(fAsymHe4P4);
+      fAsymDedx[MpdPidUtils::kHe4].push_back(fAsymHe4P5);
       fdEdxDeltaMap.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kHe4, fAsymDedx[MpdPidUtils::kHe4]));
    }
 
@@ -1447,8 +1514,29 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
    if (!((Generator == "LAQGSM") || (Generator == "QGSM") || (Generator == "URQMD") || (Generator == "NSIG") ||
          (Generator == "PHSD") || (Generator == "EPOS") || (Generator == "PHSD_CENT") || (Generator == "PHSD_CSR") ||
          (Generator == "PHSD_NOCSR") || (Generator == "PHQMD"))) {
-      cout << "Incorrect generator string (" << Generator << ")! Switching to DEFAULT..." << endl;
+      cout << "Incorrect generator string! Switching to DEFAULT..." << endl;
       Generator = "DEFAULT";
+   }
+
+   if (Generator == "REQ25") {
+      fParPiPosMom->SetParameters(315296, 1.26945, 0.155599, 0.331509, 0.238229);
+      fPartYield[MpdPidUtils::kPion].push_back(fParPiPosMom);
+      fParPiNegMom->SetParameters(45212.8, 7.02777, 0.348156, 0.17387, -0.153182);
+      fPartYield[MpdPidUtils::kPion].push_back(fParPiNegMom);
+      fPartYieldMap.insert(
+         pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kPion, fPartYield[MpdPidUtils::kPion]));
+      fParKaPosMom->SetParameters(111833, 0.27357, 0.347375, 0.11195, 0.30159);
+      fPartYield[MpdPidUtils::kKaon].push_back(fParKaPosMom);
+      fParKaNegMom->SetParameters(62516, 0.252819, 0.301713, 0.0847874, 0.382075);
+      fPartYield[MpdPidUtils::kKaon].push_back(fParKaNegMom);
+      fPartYieldMap.insert(
+         pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kKaon, fPartYield[MpdPidUtils::kKaon]));
+      fParPrPosMom->SetParameters(588372, 1.30255, 0.372303, 0.250823, 0.354083);
+      fPartYield[MpdPidUtils::kProton].push_back(fParPrPosMom);
+      fParPrNegMom->SetParameters(6604.83, 0.594007, 0.301938, 0.13116, 0.992751);
+      fPartYield[MpdPidUtils::kProton].push_back(fParPrNegMom);
+      fPartYieldMap.insert(
+         pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kProton, fPartYield[MpdPidUtils::kProton]));
    }
 
    if (Generator == "EPOS") { /// for p + p collisions
@@ -2239,26 +2327,38 @@ void MpdPid::Init(TString Generator, TString Tracking, TString NSigPart, Double_
       }
    }
    if (Generator == "DEFAULT") { /// Generator == "DEFAULT", average 9 gev
-      fParPiPosMom->SetParameters(503., 0.035, 0.203, 0.668, 0.139);
+      fParPiPosMom->SetParameters(685611., 3.51782, 0.285718, 0.187528, -0.141523);
       fPartYield[MpdPidUtils::kPion].push_back(fParPiPosMom);
-      fParPiNegMom->SetParameters(533.4, 0.035, 0.203, 0.668, 0.139);
+      fParPiNegMom->SetParameters(427660., 8.83294, 0.281264, 0.194373, 0.0985359);
       fPartYield[MpdPidUtils::kPion].push_back(fParPiNegMom);
       fPartYieldMap.insert(
          pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kPion, fPartYield[MpdPidUtils::kPion]));
-      fParKaPosMom->SetParameters(29.3, 0.17, 0.27, 0.06, 0.494);
+      fParKaPosMom->SetParameters(901126., 0.415003, 0.275805, 0.106005, 0.368604);
       fPartYield[MpdPidUtils::kKaon].push_back(fParKaPosMom);
-      fParKaNegMom->SetParameters(17., 0.17, 0.27, 0.06, 0.494);
+      fParKaNegMom->SetParameters(398572., 0.409362, 0.261435, 0.0963171, 0.431606);
       fPartYield[MpdPidUtils::kKaon].push_back(fParKaNegMom);
       fPartYieldMap.insert(
          pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kKaon, fPartYield[MpdPidUtils::kKaon]));
-      amplParam = 88.;
-      fParPrPosMom->SetParameters(amplParam, 0.18, 0.37, 0.15, 0.938);
+      fParPrPosMom->SetParameters(1.92016e+06, 1.67276, 0.340098, 0.242819, 0.413844);
       fPartYield[MpdPidUtils::kProton].push_back(fParPrPosMom);
-      amplParam /= fPrRatio;
-      fParPrNegMom->SetParameters(amplParam, 0.18, 0.37, 0.15, 0.938);
+      fParPrNegMom->SetParameters(36391.7, 0.66405, 0.226386, 0.0955507, 1.41773);
       fPartYield[MpdPidUtils::kProton].push_back(fParPrNegMom);
       fPartYieldMap.insert(
          pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kProton, fPartYield[MpdPidUtils::kProton]));
+      fParDeMom->SetParameters(38040.5, 0.129626, 0.078869, 0.0090554, 26.8717);
+      fPartYield[MpdPidUtils::kDeuteron].push_back(fParDeMom);
+      fPartYieldMap.insert(
+         pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kDeuteron, fPartYield[MpdPidUtils::kDeuteron]));
+      fParTrMom->SetParameters(855.693, 22.3505, 0.00224959, 0.00215819, 848.013);
+      fPartYield[MpdPidUtils::kTriton].push_back(fParTrMom);
+      fPartYieldMap.insert(
+         pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kTriton, fPartYield[MpdPidUtils::kTriton]));
+      fParHe3Mom->SetParameters(2705.9, -0.0458695, 0.469374, 0.455931, -0.456531);
+      fPartYield[MpdPidUtils::kHe3].push_back(fParHe3Mom);
+      fPartYieldMap.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kHe3, fPartYield[MpdPidUtils::kHe3]));
+      fParHe4Mom->SetParameters(58.7835, 2.6726, 0.467089, 0.360178, 2.63697);
+      fPartYield[MpdPidUtils::kHe4].push_back(fParHe4Mom);
+      fPartYieldMap.insert(pair<MpdPidUtils::ePartType, vecTF1ptrs>(MpdPidUtils::kHe4, fPartYield[MpdPidUtils::kHe4]));
    }
 
    fGaus      = new TF1("fGaus", "gaus(0)", -1., 5.);
@@ -2380,6 +2480,7 @@ void MpdPid::ComputeBayesCoefficients(Double_t p)
 
 Bool_t MpdPid::FillProbs(MpdTrack *track)
 {
+   for (Int_t iType = 0; iType < MpdPidUtils::kNSpecies; iType++) fProb[iType] = 0.0;
    if (track == 0) return (kFALSE);
    Double_t px = track->GetPx(), py = track->GetPy(), pz = track->GetPz();
    Double_t p = TMath::Sqrt(px * px + py * py + pz * pz);
@@ -2410,15 +2511,15 @@ Bool_t MpdPid::FillProbs(Double_t p, Double_t dedx, Int_t charge)
    ///
    Double_t emean[MpdPidUtils::kNSpecies], sige[MpdPidUtils::kNSpecies], probs[MpdPidUtils::kNSpecies], fsum = 0.0, cut;
 
+   for (Int_t iType = 0; iType < MpdPidUtils::kNSpecies; iType++) fProb[iType] = 0.0;
+
    if (p > 5.0) return kFALSE;
    if (charge == 0) return kFALSE;
 
    fCharge = charge > 0 ? MpdPidUtils::kPos : MpdPidUtils::kNeg;
 
-   if (fSigmaEloss > 0.1)
-      cut = fSigmaEloss;
-   else
-      return kFALSE;
+   // if ( fSigmaEloss > 0.1 ) cut = fSigmaEloss;
+   // else return kFALSE;
 
    Int_t nSigFlag = 0;
 
@@ -2441,8 +2542,15 @@ Bool_t MpdPid::FillProbs(Double_t p, Double_t dedx, Int_t charge)
       ///
 
       for (Int_t iType = 0; iType < MpdPidUtils::kNSpecies; iType++) {
-         probs[iType] = ComputeDedxProb_asym(cut, p, dedx, fBayesCoefficients[iType], emean[iType], sige[iType],
-                                             static_cast<MpdPidUtils::ePartType>(iType));
+         if (dedx < emean[iType])
+            cut = fdEdxBottomBound[iType];
+         else
+            cut = fdEdxTopBound[iType];
+         if (cut > 0.1)
+            probs[iType] = ComputeDedxProb_asym(cut, p, dedx, fBayesCoefficients[iType], emean[iType], sige[iType],
+                                                static_cast<MpdPidUtils::ePartType>(iType));
+         else
+            probs[iType] = 0.0;
          fsum += probs[iType];
       }
 
@@ -2459,6 +2567,10 @@ Bool_t MpdPid::FillProbs(Double_t p, Double_t dedx, Int_t charge)
    } else { /// n-sigma method
       for (Int_t iType = 0; iType < MpdPidUtils::kNSpecies; iType++) {
          ComputeEnLossSigma(p, dedx, emean[iType], sige[iType], static_cast<MpdPidUtils::ePartType>(iType));
+         if (dedx < emean[iType])
+            cut = fdEdxBottomBound[iType];
+         else
+            cut = fdEdxTopBound[iType];
          if ((fEnLossSigmasArray[iType] < cut) && (fNSigSpecies[iType])) {
             fProb[iType] = 1.0;
             nSigFlag++;
@@ -2484,14 +2596,14 @@ Bool_t MpdPid::FillProbs(Double_t p, Double_t dedx, Double_t m2, Int_t charge)
    Double_t emean[MpdPidUtils::kNSpecies], sige[MpdPidUtils::kNSpecies], sigm[MpdPidUtils::kNSpecies],
       probs[MpdPidUtils::kNSpecies], fsum = 0.0, cut_dedx, cut_m2;
 
+   for (Int_t iType = 0; iType < MpdPidUtils::kNSpecies; iType++) fProb[iType] = 0.0;
+
    if (p > 5.0) return kFALSE;
    if (charge == 0) return kFALSE;
 
-   if ((fSigmaEloss > 0.1) && (fSigmaTof > 0.1)) {
-      cut_dedx = fSigmaEloss;
-      cut_m2   = fSigmaTof;
-   } else
-      return kFALSE;
+   // if ( (fSigmaEloss > 0.1) && (fSigmaTof > 0.1) )
+   //{ cut_dedx = fSigmaEloss; cut_m2 = fSigmaTof; }
+   // else return kFALSE;
 
    fCharge = charge > 0 ? MpdPidUtils::kPos : MpdPidUtils::kNeg;
 
@@ -2519,18 +2631,17 @@ Bool_t MpdPid::FillProbs(Double_t p, Double_t dedx, Double_t m2, Int_t charge)
    if (fMethod) { /// bayesian approach
       ComputeBayesCoefficients(p);
       for (Int_t iType = 0; iType < MpdPidUtils::kNSpecies; iType++) {
+         if (dedx < emean[iType])
+            cut_dedx = fdEdxBottomBound[iType];
+         else
+            cut_dedx = fdEdxTopBound[iType];
+         if (m2 < aMass[iType])
+            cut_m2 = fm2BottomBound[iType];
+         else
+            cut_m2 = fm2TopBound[iType];
          probs[iType] =
             ComputeCombProb_asym(cut_dedx, cut_m2, p, dedx, m2, fBayesCoefficients[iType], emean[iType], aMass[iType],
                                  sige[iType], sigm[iType], static_cast<MpdPidUtils::ePartType>(iType));
-         if (fTrackingState == MpdPidUtils::kCFHM) {
-            if ((p < 0.1) && (iType == MpdPidUtils::kPion)) probs[iType] = 0.0;
-            if ((p < 0.2) && (iType == MpdPidUtils::kKaon)) probs[iType] = 0.0;
-            if ((p < 0.3) && (iType == MpdPidUtils::kProton)) probs[iType] = 0.0;
-            if ((p < 0.5) && (iType == MpdPidUtils::kDeuteron)) probs[iType] = 0.0;
-            if ((p < 0.7) && (iType == MpdPidUtils::kTriton)) probs[iType] = 0.0;
-            if ((p < 0.55) && (iType == MpdPidUtils::kHe3)) probs[iType] = 0.0;
-            if ((p < 0.65) && (iType == MpdPidUtils::kHe4)) probs[iType] = 0.0;
-         }
          fsum += probs[iType];
       }
 
@@ -2548,15 +2659,18 @@ Bool_t MpdPid::FillProbs(Double_t p, Double_t dedx, Double_t m2, Int_t charge)
       for (Int_t iType = 0; iType < MpdPidUtils::kNSpecies; iType++) {
          ComputeEnLossSigma(p, dedx, emean[iType], sige[iType], static_cast<MpdPidUtils::ePartType>(iType));
          ComputeMSquaredSigma(m2, aMass[iType], sigm[iType], static_cast<MpdPidUtils::ePartType>(iType));
-         if ((iType == MpdPidUtils::kPion) && (p < 0.1)) fMSquaredSigmasArray[iType] = 999.;
-         if ((iType == MpdPidUtils::kKaon) && (p < 0.2)) fMSquaredSigmasArray[iType] = 999.;
-         if ((iType == MpdPidUtils::kProton) && (p < 0.3)) fMSquaredSigmasArray[iType] = 999.;
-         if ((iType == MpdPidUtils::kDeuteron) && (p < 0.5)) fMSquaredSigmasArray[iType] = 999.;
-         if ((iType == MpdPidUtils::kTriton) && (p < 0.7)) fMSquaredSigmasArray[iType] = 999.;
-         if ((iType == MpdPidUtils::kHe3) && (p < 0.55)) fMSquaredSigmasArray[iType] = 999.;
-         if ((iType == MpdPidUtils::kHe4) && (p < 0.65)) fMSquaredSigmasArray[iType] = 999.;
-         if ((TMath::Sqrt(TMath::Power(fEnLossSigmasArray[iType], 2) + TMath::Power(fMSquaredSigmasArray[iType], 2)) <=
-              TMath::Sqrt(TMath::Power(cut_dedx, 2) + TMath::Power(cut_m2, 2))) &&
+         if (dedx < emean[iType])
+            cut_dedx = fdEdxBottomBound[iType];
+         else
+            cut_dedx = fdEdxTopBound[iType];
+         if (m2 < aMass[iType])
+            cut_m2 = fm2BottomBound[iType];
+         else
+            cut_m2 = fm2TopBound[iType];
+
+         // if ( ( TMath::Sqrt( TMath::Power( fEnLossSigmasArray[iType], 2) + TMath::Power( fMSquaredSigmasArray[iType],
+         // 2) ) <= TMath::Sqrt( TMath::Power( cut_dedx, 2 ) + TMath::Power( cut_m2, 2 )) ) && (fNSigSpecies[iType]) ) {
+         if ((fEnLossSigmasArray[iType] <= cut_dedx) && (fMSquaredSigmasArray[iType] < cut_m2) &&
              (fNSigSpecies[iType])) {
             fProb[iType] = 1.0;
             nSigFlag++;
