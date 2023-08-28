@@ -361,14 +361,14 @@ InitStatus MpdTpcTracker::Init() {
   fEffPt = new TEfficiency(
       "trackeff_vs_pT",
       "Tracking efficiency;Truth pT [GeV/c];Efficiency",
-      config.PerfPlotToolPtNBins,
+      config.PtNBins,
       config.PerfPlotToolPtMin,
       config.PerfPlotToolPtMax);
 
   fEffEta = new TEfficiency(
       "trackeff_vs_eta",
       "Tracking efficiency;Truth #eta;Efficiency",
-      config.PerfPlotToolEtaNBins,
+      config.EtaNBins,
       config.PerfPlotToolEtaMin,
       config.PerfPlotToolEtaMax);
 
@@ -439,6 +439,10 @@ void MpdTpcTracker::Exec(Option_t *option) {
       config.OMeasurementsMin, config.OTruthMatchProbMin,
       config.OnlyCertainTracks,
       config.OPerfFilePath);
+
+  if (config.DumpData) {
+    Mpd::Tpc::dumpTrackIds(fMCTracks, eventCounter, fOutPath);
+  }
 
   // Plot graphs if required.
   if constexpr(PlotGraphs) {

@@ -8,6 +8,7 @@
 #include <Acts/TrackFinding/CombinatorialKalmanFilter.hpp>
 
 #include <Rtypes.h>
+#include <TClonesArray.h>
 
 namespace Mpd::Tpc {
 
@@ -35,4 +36,8 @@ void dumpSpacePoints(
     std::string hitsID,
     std::string outPath);
 
+void dumpTrackIds(
+    TClonesArray *mcTracks,
+    Int_t eventNumber,
+    std::string outPath);
 } // namespace Mpd::Tpc

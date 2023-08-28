@@ -3,6 +3,7 @@
 // Copyright (C) 2022 JINR
 
 #include "DumpUtils.h"
+#include "MpdMCTrack.h"
 
 #include "ActsExamples/Framework/WhiteBoard.hpp"
 
@@ -140,6 +141,27 @@ void dumpSpacePoints(
             z       << ", " <<
             trackId <<
             std::endl;
+  }
+}
+
+void dumpTrackIds(
+    TClonesArray *mcTracks,
+    Int_t eventNumber,
+    std::string outPath) {
+
+  auto fname = outPath + "/" +
+      "event_" + std::to_string(eventNumber) + "_trackIds.txt";
+  std::ofstream fout(fname);
+
+  fout << "# format: trackId, whether the particle is primary" << std::endl;
+  std::cout << fname << " has been created" << std::endl;
+
+  Int_t nMC = mcTracks->GetEntriesFast();
+  for (size_t trackId = 0; trackId < nMC; trackId++) {
+    auto track = static_cast<MpdMCTrack*>(mcTracks->UncheckedAt(trackId));
+    Int_t motherId = track->GetMotherId();
+    Bool_t isPrimary = (motherId == -1) ? 1 : 0;
+    fout << trackId << ", " << isPrimary << std::endl;
   }
 }
 
