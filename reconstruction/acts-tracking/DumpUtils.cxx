@@ -1,6 +1,6 @@
 // This file is a part of the NICA project.
 //
-// Copyright (C) 2022 JINR
+// Copyright (C) 2023 JINR
 
 #include "DumpUtils.h"
 #include "MpdMCTrack.h"
@@ -34,8 +34,7 @@ void dumpTracks(
     hitIndexToSpIndexMap[hitIndex] = spacePointIndex++;
   }
 
-  fout << "# format: "
-      "(space-point-index, phi, theta, q/p, t, chi2, seed-index)+" <<
+  fout << "# format: (space-point-index, phi, theta, q/p, t, chi2)+" <<
       std::endl;
   std::cout << fname << " has been created" << std::endl;
 
@@ -74,7 +73,6 @@ void dumpTracks(
         Double_t qOverP = params[4];
         Double_t t      = params[5];
         Double_t chi2   = state.chi2();
-        size_t seedIdx  = itrack;
 
         if (!firstPass) {
           fout << ", ";
@@ -85,8 +83,7 @@ void dumpTracks(
                 theta       << ", " <<
                 qOverP      << ", " <<
                 t           << ", " <<
-                chi2        << ", " <<
-                seedIdx;
+                chi2;
       });
       fout << std::endl;
     }
@@ -153,7 +150,7 @@ void dumpTrackIds(
       "event_" + std::to_string(eventNumber) + "_trackIds.txt";
   std::ofstream fout(fname);
 
-  fout << "# format: trackId, whether the particle is primary" << std::endl;
+  fout << "# format: trackId, primary-1-secondary-0" << std::endl;
   std::cout << fname << " has been created" << std::endl;
 
   Int_t nMC = mcTracks->GetEntriesFast();
