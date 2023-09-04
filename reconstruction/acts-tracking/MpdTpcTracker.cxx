@@ -464,13 +464,33 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
     auto lineWidth = 3;
     auto color     = true;
+    auto grid      = true;
+    auto realAspectRatio = true;
 
     auto MChits = convertTpcPoints(fPoints);
     plotRealTracks(6000, 6000, geometry, MChits, eventCounter,
-        fOutPath, color, lineWidth, Projection::XY, "_MC_input_XY");
+        fOutPath, color, lineWidth, Projection::XY,
+        config.Zmin, config.Zmax, config.Rmax,
+         "_MC_XY",
+        grid, realAspectRatio);
+
+    plotRealTracks(6000, 6000, geometry, MChits, eventCounter,
+        fOutPath, color, lineWidth, Projection::ZY,
+        config.Zmin, config.Zmax, config.Rmax,
+        "_MC_ZY",
+        grid, realAspectRatio);
 
     plotRealTracks(6000, 6000, geometry, selectedHits, eventCounter,
-        fOutPath, color, lineWidth, Projection::XY, "_hits_input_XY");
+        fOutPath, color, lineWidth, Projection::XY,
+        config.Zmin, config.Zmax, config.Rmax,
+        "_hits_XY",
+        grid, realAspectRatio);
+
+    plotRealTracks(6000, 6000, geometry, selectedHits, eventCounter,
+        fOutPath, color, lineWidth, Projection::ZY,
+        config.Zmin, config.Zmax, config.Rmax,
+        "_hits_ZY",
+        grid, realAspectRatio);
 
     plotOutputTracks(6000, 6000, geometry, spacePoints, selectedHits,
         trajectories, eventCounter, fOutPath,

@@ -447,12 +447,21 @@ void plotRealTracks(
     Bool_t multicoloured,
     Int_t lineWidth,
     Projection projection,
+    Double_t zmin,
+    Double_t zmax,
+    Double_t rmax,
     std::string namePostfix,
+    Bool_t grid,
+    Bool_t realAspectRatio,
     Int_t txtSize,
     Int_t txtStep) {
 
   TCanvas canvas("inputTrajectories", "Input trajectories", canvasX, canvasY);
   TMultiGraph multiGraph;
+
+  if (grid) {
+    canvas.SetGrid();
+  }
 
   // Detector's sensitive surfaces graph
   std::vector<TGraph*> surfGraphs;
@@ -596,6 +605,11 @@ void plotRealTracks(
     multiGraph.Add(&hitsGraph, "P");
   }
 
+  if (projection == Projection::ZY) {
+    multiGraph.GetXaxis()->SetLimits(zmin, zmax);
+    multiGraph.SetMinimum(-rmax);
+    multiGraph.SetMaximum( rmax);
+  }
   multiGraph.Draw("A");
 
   for (const auto txt : labels) {
@@ -604,6 +618,9 @@ void plotRealTracks(
 
   auto fname = outPath + "/event_" + std::to_string(eventCounter) +
       namePostfix + ".png";
+  if (realAspectRatio) {
+    canvas.SetRealAspectRatio();
+  }
   canvas.Print(fname.c_str());
   for (auto item : inputTrajectoriesGraph) {
     delete item;
