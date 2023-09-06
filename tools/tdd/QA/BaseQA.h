@@ -15,7 +15,7 @@
 //
 // Authors:
 //      Slavomir Hnatic
-//      JINR, August, 2023
+//      JINR, September, 2023
 //--------------------------------------------------------------------
 
 #ifndef BASEQA_HH
@@ -42,6 +42,7 @@ public:
    virtual ~BaseQA() {}
 
    virtual void WriteToFile() { return WriteBaseQA(); }
+   virtual void ReadFromFile(TString directory = TString("")) { return ReadBaseQA(TString(""), directory); }
 
    std::vector<int> eventNumber;
    TString          moduleNameSuffix;
@@ -51,6 +52,7 @@ public:
 
 protected:
    void WriteBaseQA(TString suffix = TString(""));
+   void ReadBaseQA(TString suffix = TString(""), TString dir = TString(""));
 
 private:
    ClassDef(BaseQA, 1);

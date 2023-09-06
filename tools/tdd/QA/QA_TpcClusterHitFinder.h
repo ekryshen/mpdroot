@@ -12,12 +12,14 @@ public:
    virtual ~QA_TpcClusterHitFinder() {}
 
    void WriteToFile();
+   void ReadFromFile(TString moduleSuffix, TString directory = TString(""));
 
    std::vector<TClonesArray *> eventClusArray;
    std::vector<TClonesArray *> eventHitArray;
 
 private:
    void WriteTpcClusterHitFinderQA();
+   void ReadTpcClusterHitFinderQA(TString moduleSuffix, TString directory = TString(""));
 
    ClassDef(QA_TpcClusterHitFinder, 1);
 };

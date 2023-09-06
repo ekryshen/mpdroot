@@ -39,3 +39,41 @@ void QA_TpcClusterHitFinder::WriteTpcClusterHitFinderQA()
    tree.Write();
    outputFile.Close();
 }
+
+void QA_TpcClusterHitFinder::ReadFromFile(TString suffix, TString directory)
+{
+   ReadBaseQA(suffix, directory);
+   ReadTpcClusterHitFinderQA(suffix, directory);
+}
+
+void QA_TpcClusterHitFinder::ReadTpcClusterHitFinderQA(TString suffix, TString directory)
+{
+   TString inputFilename("");
+   if (directory.Length() > 0) inputFilename = directory + TString("/");
+   inputFilename += TString("QA_TpcClusterHitFinder_") + suffix + TString(".root");
+   LOG(info) << " Reading QA file: " << inputFilename;
+
+   TFile *f    = new TFile(inputFilename);
+   TTree *tree = (TTree *)f->Get("QA");
+
+   TClonesArray *clusters =
+      (suffix.EqualTo(TString("Mlem"))) ? new TClonesArray("MpdTpc2dCluster") : new TClonesArray("Tpc2dClusterFast");
+   tree->GetBranch("Clusters")->SetAutoDelete(kFALSE);
+   tree->SetBranchAddress("Clusters", &clusters);
+
+   TClonesArray *hits = new TClonesArray("MpdTpcHit");
+   tree->GetBranch("Hits")->SetAutoDelete(kFALSE);
+   tree->SetBranchAddress("Hits", &hits);
+
+   int nEvents = tree->GetEntries();
+   for (int i = 0; i < nEvents; ++i) {
+      clusters->Clear();
+      hits->Clear();
+
+      tree->GetEntry(i);
+      eventClusArray.push_back(new TClonesArray());
+      eventClusArray.back() = (TClonesArray *)clusters->Clone();
+      eventHitArray.push_back(new TClonesArray());
+      eventHitArray.back() = (TClonesArray *)hits->Clone();
+   }
+}

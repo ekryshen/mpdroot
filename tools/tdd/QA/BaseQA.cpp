@@ -33,3 +33,37 @@ void BaseQA::WriteBaseQA(TString suffix)
    tree.Write();
    outputFile.Close();
 }
+
+void BaseQA::ReadBaseQA(TString suffix, TString dir)
+{
+   TString inputFilename("");
+   if (dir.Length() > 0) inputFilename = dir + TString("/");
+   if (suffix.Length() > 0)
+      inputFilename += TString("BaseQA_") + suffix + TString(".root");
+   else
+      inputFilename += TString("BaseQA.root");
+   LOG(info) << " Reading QA file: " << inputFilename;
+
+   TFile *f    = new TFile(inputFilename);
+   TTree *tree = (TTree *)f->Get("QA");
+
+   TClonesArray *mcTracks = new TClonesArray("MpdMCTrack");
+   tree->GetBranch("MC_Tracks")->SetAutoDelete(kFALSE);
+   tree->SetBranchAddress("MC_Tracks", &mcTracks);
+
+   TClonesArray *tpcTracks = new TClonesArray("MpdTpcKalmanTrack");
+   tree->GetBranch("TPC_Tracks")->SetAutoDelete(kFALSE);
+   tree->SetBranchAddress("TPC_Tracks", &tpcTracks);
+
+   int nEvents = tree->GetEntries();
+   for (int i = 0; i < nEvents; ++i) {
+      mcTracks->Clear();
+      tpcTracks->Clear();
+
+      tree->GetEntry(i);
+      eventMCTracksArray.push_back(new TClonesArray());
+      eventMCTracksArray.back() = (TClonesArray *)mcTracks->Clone();
+      eventTpcTracksArray.push_back(new TClonesArray());
+      eventTpcTracksArray.back() = (TClonesArray *)tpcTracks->Clone();
+   }
+}
