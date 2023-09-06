@@ -21,10 +21,9 @@
 #include <fstream>
 
 // Dump trackIds to file.
-void uploadTrackIds(
-    const std::vector<Int_t> &trackIds,
-    Int_t eventNumber,
-    std::string path) {
+void uploadTrackIds(const std::vector<Int_t> &trackIds,
+                    Int_t eventNumber,
+                    std::string path) {
   auto fname = path + "/"
       "event_" + std::to_string(eventNumber) + "_trackIds.txt";
   std::ofstream fout(fname);
@@ -34,9 +33,8 @@ void uploadTrackIds(
 }
 
 // Read trackIds from file
-std::vector<Int_t> downloadTrackIds(
-    Int_t eventNumber,
-    std::string path) {
+std::vector<Int_t> downloadTrackIds(Int_t eventNumber,
+                                    std::string path) {
   std::string fname = path + "/"
         "event_" + std::to_string(eventNumber) + "_trackIds.txt";
   std::ifstream f(fname);
@@ -86,22 +84,9 @@ Double_t eta(MpdMCTrack *mcTrack, TVector3 &v) {
   return v.PseudoRapidity();
 }
 
-void printEff(const std::map<Int_t, Bool_t> &trackIdToRecoMap,
-              std::string prefix) {
-  Int_t total = trackIdToRecoMap.size();
-  Int_t passed = 0;
-  for (auto &[trackId, isReco] : trackIdToRecoMap) {
-    if (isReco) {
-      passed++;
-    }
-  }
-  Double_t eff = total == 0 ? 0 : 1.*passed / total;
-  std::cout << prefix << " efficiency: " <<
-      passed << " / " << total << " = " << eff << std::endl;
-}
-
-void printEff(std::string prefix,
-              TEfficiency *tEff) {
+/// Calculates and prints efficiency based on TEfficiency object.
+void printEfficiency(std::string prefix,
+                     TEfficiency *tEff) {
   const TH1 *passedH = tEff->GetPassedHistogram();
   const TH1 *totalH  = tEff->GetTotalHistogram();
 
@@ -118,6 +103,44 @@ void printEff(std::string prefix,
   std::cout << prefix << passed << " / " << total << " = " << eff << std::endl;
 }
 
+/// Calculates and prints efficiency based on map trackId -> isReco.
+void printEfficiency(std::string prefix,
+                     const std::map<Int_t, Bool_t> &trackIdToRecoMap) {
+  Int_t total = trackIdToRecoMap.size();
+  Int_t passed = 0;
+  for (auto &[trackId, isReco] : trackIdToRecoMap) {
+    if (isReco) {
+      passed++;
+    }
+  }
+  Double_t eff = total == 0 ? 0 : 1.*passed / total;
+  std::cout << prefix << " efficiency: " <<
+      passed << " / " << total << " = " << eff << std::endl;
+}
+
+/// Calculates and prints total efficiency based on
+/// map trackId -> (n truth prototracks, n fake prototracks).
+void printEfficiency(
+    std::string prefix,
+    const std::map<Int_t, std::pair<Int_t, Int_t>> &trackIdToTruthFakeMap) {
+  size_t nReco = 0;
+  for (auto [trackId, truthFakePair] : trackIdToTruthFakeMap) {
+    Bool_t isReco = (truthFakePair.first == 0) ? false : true;
+    if (isReco) {
+      nReco++;
+    }
+  }
+  static size_t nRecoG = 0;
+  nRecoG += nReco;
+  static size_t nTotalG = 0;
+  nTotalG += trackIdToTruthFakeMap.size();
+  std::cout << prefix                         << ", "  <<
+               "reco global "  << nRecoG      << " / " <<
+                                  nTotalG     << ": "  <<
+               1.* nRecoG / nTotalG           <<
+               std::endl;
+}
+
 void updateTEffPt(const std::map<Int_t, Bool_t> &trackIdToRecoMap,
                   TEfficiency *eff,
                   TClonesArray *mcTracks) {
@@ -129,8 +152,8 @@ void updateTEffPt(const std::map<Int_t, Bool_t> &trackIdToRecoMap,
 }
 
 void updateTEffEta(const std::map<Int_t, Bool_t> &trackIdToRecoMap,
-                               TEfficiency *eff,
-                               TClonesArray *mcTracks) {
+                   TEfficiency *eff,
+                   TClonesArray *mcTracks) {
   TVector3 v;
   for (auto &[trackId, isReco] : trackIdToRecoMap) {
     auto mcTrack = static_cast<MpdMCTrack*>(mcTracks->UncheckedAt(trackId));
@@ -235,7 +258,7 @@ void printFake(Int_t nTruth,
       "    fake / truth:          " << 1.*nFake / nTruth      << std::endl;
 }
 
-void runPerformance(
+std::map<Int_t, Bool_t> runPerformance(
     TEfficiency *effPt,
     TEfficiency *effEta,
     Int_t &nTruthT,
@@ -299,9 +322,8 @@ void runPerformance(
       trackIdToTruthFakeMap[majTrackId].second++;
     }
   }
-
-  printEff(trackIdToRecoMap,
-      "local efficiency for event " + std::to_string(eventNumber) + ": ");
+  std::string postfix = " event " + std::to_string(eventNumber);
+  printEfficiency("Local efficiency "  + postfix, trackIdToRecoMap);
 
   updateTEffPt(trackIdToRecoMap,
                effPt,
@@ -311,8 +333,10 @@ void runPerformance(
                 effEta,
                 mcTracks);
 
-  printEff("Total efficiency (effPt): ",  effPt);
-  printEff("Total efficiency (effEta): ", effEta);
+  std::string prefix  = "Total efficiency ";
+  printEfficiency(prefix + "(effPt):"  + postfix, effPt);
+  printEfficiency(prefix + "(effEta):" + postfix, effEta);
+  printEfficiency(prefix + "(nReco):"  + postfix, trackIdToTruthFakeMap);
 
   auto [nTruth, nFake, nRealTracks] =
       changeTotalNFake(trackIdToTruthFakeMap, nTruthT, nFakeT, nRealTracksT);
@@ -322,5 +346,85 @@ void runPerformance(
       "Fake stat for all events: ");
 
   saveToRoot(effPt, effEta, outPath + "/" + outFile);
+  return trackIdToRecoMap;
 }
 
+/// Prints information about MC tracks based on
+/// MC inforation, also whether track is reconstructed and some others.
+void printMcTracks(
+    TClonesArray *mcTracks,
+    const std::set<Int_t> &trackIds,
+    const Mpd::Tpc::InputHitContainer &hits,        // all hits. Not selected
+    const std::map<size_t, ActsFatras::Barcode> &trackIdToBarcodeMap,
+    Bool_t printReco,
+    const std::map<Int_t, Bool_t> &trackIdToRecoMap,
+    std::string prefix,
+    Bool_t allTracks) {
+  std::map<Int_t, Int_t> trackIdToNhits;
+
+  Int_t nMcTracks = mcTracks->GetEntriesFast();
+  for (size_t trackId = 0; trackId < nMcTracks; trackId++) {
+    trackIdToNhits[trackId] = 0;
+  }
+  Int_t ihit = -1;
+  for (const auto &hit : hits) {
+    ihit++;
+    Int_t trackId = hit.trackId;
+    if (trackIdToNhits.find(trackId) == trackIdToNhits.end()) {
+      std::cout << "printMcTracks(): "
+          "unknown trackId " << trackId << " "
+          "for hit #"        << ihit    <<
+          std::endl;
+      trackIdToNhits[trackId] = 0;
+    }
+    trackIdToNhits.at(trackId)++;
+  }
+
+  size_t counter = 0;
+  for (size_t trackId = 0; trackId < nMcTracks; trackId++) {
+    auto mcTrack = static_cast<MpdMCTrack*>(mcTracks->UncheckedAt(trackId));
+    if (!allTracks) {
+      if (trackIds.find(trackId) == trackIds.end()) {
+        continue;
+      }
+    }
+    ActsFatras::Barcode barcode;
+    auto findBarcode = trackIdToBarcodeMap.find(trackId);
+    std::string localPrefix;
+    if (findBarcode == trackIdToBarcodeMap.end()) {
+       localPrefix = prefix +
+           std::string("can't find barcode for trackId ") +
+           std::to_string(trackId) + "\n";
+       barcode = ActsFatras::Barcode();
+    } else {
+      barcode = findBarcode->second;
+    }
+
+    TVector3 v;
+
+    std::cout << localPrefix;
+    std::cout << prefix     <<
+        "#"                 << counter++              << "; " <<
+        "MC info: {"        <<
+        "trackId: "         << trackId                << "; " <<
+        "motherId: "        << mcTrack->GetMotherId() << "; " <<
+        "p: "               << mcTrack->GetP()        << "; " <<
+        "pt: "              << mcTrack->GetPt()       << "; " <<
+        "pdg: "             << mcTrack->GetPdgCode()  <<
+        "}; "
+        "eta: "             << eta(mcTrack, v)        << "; " <<
+        "barcode: "         << barcode                << "; " <<
+        "nHits: "           << trackIdToNhits.at(trackId);
+    if (printReco) {
+      std::string isReco;
+      if (trackIdToRecoMap.find(trackId) == trackIdToRecoMap.end()) {
+        isReco = "key-not-found";
+      } else {
+        isReco = trackIdToRecoMap.at(trackId) ? "1" : "0";
+      }
+      std::cout << "; " <<
+          "isReco: "    << isReco;
+    }
+    std::cout << std::endl;
+  }
+}

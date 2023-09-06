@@ -429,7 +429,7 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
   convertTracks(fHits, fTracks, trajectories);
 
-  runPerformance(
+  std::map<Int_t, Bool_t> trackIdToRecoMap = runPerformance(
       fEffPt, fEffEta,
       fNTruth, fNFake, fNRealTracks,
       config.PathWithTrackIds,
@@ -439,6 +439,20 @@ void MpdTpcTracker::Exec(Option_t *option) {
       config.OMeasurementsMin, config.OTruthMatchProbMin,
       config.OnlyCertainTracks,
       config.OPerfFilePath);
+
+// Debug print MC tracks info.
+  std::set<Int_t> trackIds;
+  auto allTracks   = true;
+  auto printIsReco = true;
+  printMcTracks(
+      fMCTracks,
+      trackIds,
+      hits,
+      trackIdToBarcodeMap,
+      printIsReco,
+      trackIdToRecoMap,
+      "mc tracks " + std::to_string(eventCounter) + " ",
+      allTracks);
 
   if (config.DumpData) {
     Mpd::Tpc::dumpTrackIds(fMCTracks, eventCounter, fOutPath);
@@ -494,7 +508,8 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
     plotOutputTracks(6000, 6000, geometry, spacePoints, selectedHits,
         trajectories, eventCounter, fOutPath,
-        color, lineWidth, Projection::XY);
+        color, lineWidth, Projection::XY,
+        "_reco");
   }
 
   if (MpdCodeTimer::Active()) {

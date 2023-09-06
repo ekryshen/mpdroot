@@ -13,9 +13,10 @@
 #include <TEfficiency.h>
 
 #include <map>
+#include <set>
 
 /// Run hand-made efficiencies and fake rate calculations.
-void runPerformance(
+std::map<Int_t, Bool_t> runPerformance(
     TEfficiency *effPt,
     TEfficiency *effEta,
     Int_t &nTruth,
@@ -85,10 +86,25 @@ std::unordered_map<Int_t, Mpd::Tpc::ProtoTrack> calcRealTracks(
 
 // Prints efficiency with map trackId -> is reco or not
 // at the input
-void printEff(const std::map<Int_t, Bool_t> &trackIdToRecoMap,
-              std::string prefix = "");
+void printEfficiency(
+    std::string prefix,
+    const std::map<Int_t, Bool_t> &trackIdToRecoMap);
 
 // Prints TEfficiency
-void printEff(std::string prefix,
-              TEfficiency *tEff);
+void printEfficiency(std::string prefix,
+                     TEfficiency *tEff);
+
+void printEfficiency(
+  std::map<Int_t, std::pair<Int_t, Int_t>> trackIdToTruthFakeMap,
+  Int_t eventNumber);
+
+void printMcTracks(
+    TClonesArray *mcTracks,
+    const std::set<Int_t> &trackIds,
+    const Mpd::Tpc::InputHitContainer &hits,        // all hits. Not selected
+    const std::map<size_t, ActsFatras::Barcode> &trackIdToBarcodeMap,
+    Bool_t printReco,
+    const std::map<Int_t, Bool_t> &trackIdToRecoMap,
+    std::string prefix,
+    Bool_t allTracks);
 
