@@ -4,6 +4,10 @@ set(INCLUDE_DIRECTORIES
   ${BASE_INCLUDE_DIRECTORIES}
   ${CMAKE_CURRENT_LIST_DIR}
   ${CMAKE_SOURCE_DIR}/detectors/tpc
+  ${CMAKE_SOURCE_DIR}/detectors/tpc/digitizer/AZlt
+  ${CMAKE_SOURCE_DIR}/detectors/tpc/clusterHitFinder/mlem
+  ${CMAKE_SOURCE_DIR}/detectors/tpc/clusterHitFinder/fast
+  ${CMAKE_SOURCE_DIR}/reconstruction/tracking/kalman
 )
 
 Set(SYSTEM_INCLUDE_DIRECTORIES

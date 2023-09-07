@@ -29,6 +29,10 @@
 
 #include <vector>
 
+#include "MpdTpcKalmanTrack.h"
+#include "Tpc2dClusterFast.h"
+#include "MpdTpc2dCluster.h"
+
 enum EQAMode {
    OFF = 0, // QA turned off by default
    BASIC,   // QA's from this class only

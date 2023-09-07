@@ -17,6 +17,8 @@ public:
    std::vector<TClonesArray *> eventClusArray;
    std::vector<TClonesArray *> eventHitArray;
 
+   std::map<int, std::vector<int>> MCTracksFromTpcTracks(int event);
+
 private:
    void WriteTpcClusterHitFinderQA();
    void ReadTpcClusterHitFinderQA(TString moduleSuffix, TString directory = TString(""));

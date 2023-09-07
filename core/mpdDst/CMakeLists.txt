@@ -12,6 +12,9 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_SOURCE_DIR}/detectors/emc/emcKI
   ${CMAKE_SOURCE_DIR}/detectors/multi
   ${CMAKE_SOURCE_DIR}/detectors/tpc
+  ${CMAKE_SOURCE_DIR}/detectors/tpc/digitizer/AZlt
+  ${CMAKE_SOURCE_DIR}/detectors/tpc/clusterHitFinder/mlem
+  ${CMAKE_SOURCE_DIR}/detectors/tpc/clusterHitFinder/fast
   ${CMAKE_SOURCE_DIR}/detectors/tpc/pid
   ${CMAKE_SOURCE_DIR}/detectors/tof
   ${CMAKE_SOURCE_DIR}/detectors/zdc
