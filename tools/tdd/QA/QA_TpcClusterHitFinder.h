@@ -4,6 +4,7 @@
 #include "BaseQA.h"
 
 #include "AbstractTpcHit.h"
+#include "TVector3.h"
 
 class QA_TpcClusterHitFinder : public BaseQA {
 
@@ -18,6 +19,10 @@ public:
    std::vector<TClonesArray *> eventHitArray;
 
    std::map<int, std::vector<int>> MCTracksFromTpcTracks(int event);
+
+   TH2F                 *GenerateSingleCluster(int event, int clusterIndex);
+   std::vector<TVector3> GetClusterHits(int event, int clusterIndex);
+   std::vector<int>      GetTrackHitsIndices(int event, int tpcTrackIndex);
 
 private:
    void WriteTpcClusterHitFinderQA();

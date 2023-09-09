@@ -140,3 +140,85 @@ std::map<int, std::vector<int>> QA_TpcClusterHitFinder::MCTracksFromTpcTracks(in
 }
 
 //-------------------------------------------------------------------------------------------------
+// Returns TH2F histogram, which can be then used as input for jupyter-lab generated UI
+
+TH2F *QA_TpcClusterHitFinder::GenerateSingleCluster(int event, int clusterIndex)
+{
+   AbstractTpc2dCluster *cluster = (AbstractTpc2dCluster *)eventClusArray[event]->UncheckedAt(clusterIndex);
+   int                   padMin  = cluster->GetPadMin() - 1;
+   int                   padMax  = cluster->GetPadMax() + 2;
+   if (moduleNameSuffix == TString("Mlem")) {
+      padMin -= 2;
+      padMax -= 2;
+   }
+   int nPad       = padMax - padMin;
+   int timeBinMin = cluster->GetTimeBinMin() - 1;
+   int timeBinMax = cluster->GetTimeBinMax() + 2;
+   int nTimeBin   = timeBinMax - timeBinMin;
+   int sector     = cluster->GetSector();
+   int row        = cluster->GetRow();
+
+   TString plotName = "Cluster " + std::to_string(clusterIndex) + ", sector " + std::to_string(sector) + ", padrow " +
+                      std::to_string(row);
+   TString plotTitle = "Cluster Map: " + moduleNameSuffix;
+
+   TH2F *clusterPlot = new TH2F(plotName, plotTitle, nPad, padMin, padMax, nTimeBin, timeBinMin, timeBinMax);
+   clusterPlot->SetMaximum(100);
+
+   // fill cluster with digits
+   std::vector<AbstractTpcDigit *> clusterDigits = cluster->GetClusterDigits();
+   for (int j = 0; j < clusterDigits.size(); ++j) {
+      double digitPad = clusterDigits[j]->GetPad();
+      if (moduleNameSuffix == TString("Mlem")) digitPad -= 2;
+      double digitTimeBin = clusterDigits[j]->GetTimeBin();
+      double digitSignal  = clusterDigits[j]->GetSignal();
+
+      clusterPlot->Fill(digitPad, digitTimeBin, digitSignal);
+   }
+   return clusterPlot;
+}
+
+//-------------------------------------------------------------------------------------------------
+// Returns vector of hits in a cluster.
+// Each hit stored in TVector3(localPadCoordinate, localTimeBinCoordinate, totalCharge)
+// and can be directly placed on its cluster's TH2F histogram from GenerateSingleCluster
+
+std::vector<TVector3> QA_TpcClusterHitFinder::GetClusterHits(int event, int clusterIndex)
+{
+   std::vector<TVector3> hits;
+   if (moduleNameSuffix == TString("Fast")) {
+      AbstractTpcHit *hit = (AbstractTpcHit *)eventHitArray[event]->UncheckedAt(clusterIndex);
+      hits.push_back(TVector3(hit->GetPadCoordinate(), hit->GetTimeBinCoordinate(), hit->GetTotalSignal()));
+   } else {
+      // find MLEM hits as there can be more of them per cluster (poor class design)
+      for (int i = clusterIndex; i < eventHitArray[event]->GetEntriesFast(); ++i) {
+         AbstractTpcHit *hit = (AbstractTpcHit *)eventHitArray[event]->UncheckedAt(i);
+         if (clusterIndex > hit->GetClusterID())
+            continue;
+         else {
+            if (clusterIndex == hit->GetClusterID())
+               hits.push_back(TVector3(hit->GetPadCoordinate(), hit->GetTimeBinCoordinate(), hit->GetTotalSignal()));
+            else
+               break;
+         }
+      }
+   }
+   return hits;
+}
+
+//-------------------------------------------------------------------------------------------------
+// Returns vector of hits indices for a TPC Track with index tpcTrackIndex.
+
+std::vector<int> QA_TpcClusterHitFinder::GetTrackHitsIndices(int event, int tpcTrackIndex)
+{
+   std::vector<int>   hitsIndices;
+   MpdTpcKalmanTrack *tpcTrack   = (MpdTpcKalmanTrack *)eventTpcTracksArray[event]->UncheckedAt(tpcTrackIndex);
+   int                nTrackHits = tpcTrack->GetNofTrHits();
+   TClonesArray      *trackHits  = tpcTrack->GetTrHits();
+   for (int h = 0; h < nTrackHits; ++h) {
+      int hitIndex = ((MpdKalmanHit *)trackHits->UncheckedAt(h))->GetIndex();
+      hitsIndices.push_back(hitIndex);
+   }
+
+   return hitsIndices;
+}
