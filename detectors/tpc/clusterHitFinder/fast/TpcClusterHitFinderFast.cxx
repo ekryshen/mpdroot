@@ -122,6 +122,7 @@ void TpcClusterHitFinderFast::TransformOutput(const EventClusters *pEventCluster
             int        padID = (nSector % secGeo->GetSectorCountHalf()) | (nRow << 5);
             MpdTpcHit *hit = new ((*hitArray)[nHits]) MpdTpcHit(padID, p3glob, TVector3(0.05, 0.0, 0.2), nClusters - 1);
             hit->SetLayer(nRow);
+            hit->SetSector(nSector);
             hit->SetLocalPosition(p3loc);
             hit->SetEnergyLoss(pCluster->getAdcSum());
             hit->SetModular(1);

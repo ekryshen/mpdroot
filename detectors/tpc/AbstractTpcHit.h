@@ -27,6 +27,7 @@ public:
    virtual ~AbstractTpcHit() {}
 
    virtual int    GetClusterID() const         = 0;
+   virtual int    GetSector() const            = 0;
    virtual double GetPadCoordinate() const     = 0;
    virtual double GetTimeBinCoordinate() const = 0;
    virtual double GetDriftTime() const         = 0;

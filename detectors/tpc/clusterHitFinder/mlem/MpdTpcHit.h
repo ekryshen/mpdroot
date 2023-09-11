@@ -48,6 +48,7 @@ public:
 
    /* Interface implementation */
    int    GetClusterID() const { return GetRefIndex(); }
+   int    GetSector() const { return fSector; }
    double GetPadCoordinate() const { return fLocalX; }
    double GetTimeBinCoordinate() const { return fLocalZ; }
    double GetDriftTime() const { return fDriftTime; }
@@ -93,6 +94,7 @@ public:
    void SetModular(Int_t imod) { SetUniqueID(imod); }
    void SetPad(Int_t ipad) { fiPad = ipad; }
    void SetBin(Int_t ibin) { fiBin = ibin; }
+   void SetSector(int sector) { fSector = sector; }
    void SetDriftTime(double driftTime) { fDriftTime = driftTime; }
    void SetLayer(Int_t lay) { fLayer = lay; }
    void SetQ(Double_t q) { fQ = q; }
@@ -136,6 +138,7 @@ private:
    Int_t                              fNdigits; // number of digits in the hit
    Int_t                              fFlag;
    double                             fDriftTime; // physical drift time of electron to pad area
+   int                                fSector;
    std::vector<Int_t>                 fIDs;       // track IDs with the highest charge contribution
    std::vector<std::pair<int, float>> vpTrackIDs; // track IDs with its' charge contribution
 
