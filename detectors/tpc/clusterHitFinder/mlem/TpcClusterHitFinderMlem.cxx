@@ -404,6 +404,10 @@ void TpcClusterHitFinderMlem::findHits()
       hit->SetModular(1); // modular geometry flag
       hit->SetPad(Int_t(padMean));
       hit->SetBin(Int_t(timeMean));
+      float qaPad  = hit->GetLocalX() / secGeo->GetPadWidth()[1] + secGeo->GetPadCount()[clus->Row()];
+      float qaTime = secGeo->GetTimeBinCount() - hit->GetLocalZ() / 0.55;
+      hit->SetPadCoordinate(qaPad);
+      hit->SetTimeBinCoordinate(qaTime);
       hit->SetRMS(rmsX, 0);
       hit->SetRMS(rmsZ, 1);
       hit->SetNdigits(nDigis);
@@ -1340,6 +1344,10 @@ void TpcClusterHitFinderMlem::CreateHits(const vector<pixel> &pixels, multimap<D
       hit->SetModular(1); // modular geometry flag
       hit->SetPad(Int_t(padMean - 0.5 + hMlem->GetYaxis()->GetXmin()));
       hit->SetBin(Int_t(timeMean - 0.5 + hMlem->GetXaxis()->GetXmin()));
+      float qaPad  = hit->GetLocalX() / secGeo->GetPadWidth()[1] + secGeo->GetPadCount()[clus->Row()];
+      float qaTime = secGeo->GetTimeBinCount() - hit->GetLocalZ() / 0.55;
+      hit->SetPadCoordinate(qaPad);
+      hit->SetTimeBinCoordinate(qaTime);
       hit->SetRMS(rmsX, 0);
       hit->SetRMS(rmsZ, 1);
       hit->SetNdigits(-selPix.size()); // negative value

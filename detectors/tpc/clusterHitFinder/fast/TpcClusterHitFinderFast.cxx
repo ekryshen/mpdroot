@@ -111,7 +111,7 @@ void TpcClusterHitFinderFast::TransformOutput(const EventClusters *pEventCluster
             //  AZ expression for zloc = TimeBin2Z(ftime) is equivalent to the one below
             double zloc = 170 + (0.037 - 0.5 - fTime) * secGeo->GetTimeBinLength() * fV_DRIFT;
             if (nSector >= secGeo->GetSectorCountHalf()) zloc = -zloc;
-            TVector2 p2loc(secGeo->PadRow2Local(0.5 + fPad, 0.5 + nRow));
+            TVector2 p2loc(secGeo->PadRow2Local(fPad, 0.5 + nRow));
             TVector3 p3loc(p2loc.X(), p2loc.Y(), zloc);
 
             TVector3 p3glob(p3loc.Y() + secGeo->GetYPadAreaLowerEdge(), p3loc.X(), p3loc.Z());
@@ -128,6 +128,8 @@ void TpcClusterHitFinderFast::TransformOutput(const EventClusters *pEventCluster
             hit->SetModular(1);
             hit->SetPad(int(fPad));
             hit->SetBin(int(fTime));
+            hit->SetPadCoordinate(fPad);
+            hit->SetTimeBinCoordinate(fTime);
             hit->SetNdigits(rlstPadClusters.size());
             hit->SetStep(secGeo->GetPadHeight()[currentPadArea]);
             for (vector<pair<int, float>>::const_iterator i5 = vnTrackId.begin(); i5 != vnTrackId.end(); ++i5)

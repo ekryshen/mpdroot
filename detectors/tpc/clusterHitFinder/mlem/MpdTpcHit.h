@@ -49,10 +49,13 @@ public:
    /* Interface implementation */
    int    GetClusterID() const { return GetRefIndex(); }
    int    GetSector() const { return fSector; }
-   double GetPadCoordinate() const { return fLocalX; }
-   double GetTimeBinCoordinate() const { return fLocalZ; }
+   double GetPadCoordinate() const { return padCoordinate; }
+   double GetTimeBinCoordinate() const { return timeBinCoordinate; }
    double GetDriftTime() const { return fDriftTime; }
    float  GetTotalSignal() const { return (float)fQ; }
+
+   void SetPadCoordinate(double newPadCoordinate) { padCoordinate = newPadCoordinate; }
+   void SetTimeBinCoordinate(double newTimeBinCoordinate) { timeBinCoordinate = newTimeBinCoordinate; }
 
    /** Accessors **/
    Int_t    GetModular() const { return GetUniqueID(); }
@@ -139,8 +142,10 @@ private:
    Int_t                              fFlag;
    double                             fDriftTime; // physical drift time of electron to pad area
    int                                fSector;
-   std::vector<Int_t>                 fIDs;       // track IDs with the highest charge contribution
-   std::vector<std::pair<int, float>> vpTrackIDs; // track IDs with its' charge contribution
+   std::vector<Int_t>                 fIDs;              // track IDs with the highest charge contribution
+   std::vector<std::pair<int, float>> vpTrackIDs;        // track IDs with its' charge contribution
+   double                             padCoordinate;     // coordinates for QA
+   double                             timeBinCoordinate; // coordinates for QA
 
    Double32_t fQ;
    Double32_t fStep;
