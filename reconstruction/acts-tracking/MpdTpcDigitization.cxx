@@ -63,7 +63,7 @@ ActsExamples::ProcessCode Digitization::execute(
     ACTS_VERBOSE("Module identifier is " << moduleGeoId);
 
     Double_t deltaR;
-    if (Detector::geometryType == Detector::sectorBased) {
+    if (Detector::GeometryType == Detector::SectorBased) {
       BaseTpcSectorGeo sectorGeo = BaseTpcSectorGeo();
       Double_t maxPadHeight = std::max(sectorGeo.PAD_HEIGHT[0],
                                        sectorGeo.PAD_HEIGHT[1]);

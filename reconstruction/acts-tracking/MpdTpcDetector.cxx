@@ -156,15 +156,37 @@ inline Acts::ActsScalar getPhi(Acts::ActsScalar x,
   return phi;
 }
 
-inline uint64_t toBitsForCylinder(const Acts::Vector3 &position,
-                                  Acts::ActsScalar deltaPhi) {
-  const auto x = position[0];
-  const auto y = position[1];
-  const auto z = position[2];
-  assert(Detector::Zmin <= z && z <= Detector::Zmax);
+inline uint64_t toBitsCylinder(const Acts::Vector3 &position,
+                               Acts::ActsScalar deltaPhi,
+                               Bool_t assertOutOfGeometry) {
+  auto x = position[0];
+  auto y = position[1];
+  auto z = position[2];
 
-  const auto r = std::hypot(x, y);
-  assert(Detector::Rmin <= r && r <= Detector::Rmax);
+  std::string prefix  = "Error: The point ";
+  std::string postfix = " goes beyond the detector by ";
+
+  if (assertOutOfGeometry) {
+    assert(Detector::Zmin <= z && z <= Detector::Zmax);
+  } else if (z < Detector::Zmin) {
+    z = Detector::Zmin;
+    std::cout << prefix << position << postfix << "Z" << std::endl;
+  } else if (z > Detector::Zmax) {
+    z = Detector::Zmax;
+    std::cout << prefix << position << postfix << "Z" << std::endl;
+  }
+
+  auto r = std::hypot(x, y);
+
+  if (assertOutOfGeometry) {
+    assert(Detector::Rmin <= r && r <= Detector::Rmax);
+  } else if (r < Detector::Rmin) {
+    r = Detector::Rmin;
+    std::cout << prefix << position << postfix << "R" << std::endl;
+  } else if (r > Detector::Rmax) {
+    r = Detector::Rmax;
+    std::cout << prefix << position << postfix << "R" << std::endl;
+  }
 
   const auto eps = 0.001;
   const auto epsGetPhi = 0.001;
@@ -308,9 +330,10 @@ void checkAndFixSecRowPad(const BaseTpcSectorGeo &secGeo,
   }
 }
 
-inline uint64_t toBitsForSector(const BaseTpcSectorGeo &secGeo,
-                                const Acts::Vector3 &position,
-                                Acts::ActsScalar deltaPhi) {
+inline uint64_t toBitsSector(const BaseTpcSectorGeo &secGeo,
+                             const Acts::Vector3 &position,
+                             Acts::ActsScalar deltaPhi,
+                             Bool_t assertOutOfGeometry) {
   // From mm to cm
   Double_t x = toRootLength(position[0]);
   Double_t y = toRootLength(position[1]);
@@ -322,7 +345,21 @@ inline uint64_t toBitsForSector(const BaseTpcSectorGeo &secGeo,
     assert(-secGeo.Z_MAX <= z && z <= secGeo.Z_MAX);
   } else {
     z = position[2];
-    assert(Detector::Zmin <= z && z <= Detector::Zmax);
+
+    std::stringstream message;
+    message << "Error: " <<
+        "The point " << position << " goes beyond the detector by Z";
+
+    if (assertOutOfGeometry) {
+      assert(Detector::Zmin <= z && z <= Detector::Zmax);
+    } else if (z < Detector::Zmin) {
+      z = Detector::Zmin;
+      std::cout << message.str() << std::endl;
+    } else if (z > Detector::Zmax) {
+      z = Detector::Zmax;
+      std::cout << message.str() << std::endl;
+    }
+
   }
   auto [iSector, iRow, iPad] = getSectorRowPad(secGeo, x, y, deltaPhi);
 
@@ -453,10 +490,22 @@ void addSectorSensors(const BaseTpcSectorGeo &secGeo,
 //===----------------------------------------------------------------------===//
 
 inline uint64_t toBits(const BaseTpcSectorGeo &secGeo,
-                       const Acts::Vector3 &position) {
-  auto bits = (Detector::geometryType == Detector::sectorBased) ?
-      toBitsForSector(secGeo, position, halfPhiSector(secGeo)) :
-      toBitsForCylinder(position, 0.5 * Detector::DeltaPhi);
+                       const Acts::Vector3 &position,
+                       Bool_t assertOutOfGeometry = false) {
+  uint64_t bits;
+  switch (Detector::GeometryType) {
+    case Detector::SectorBased:
+      bits = toBitsSector(secGeo, position,
+                          halfPhiSector(secGeo), assertOutOfGeometry);
+      break;
+    case Detector::CylinderBased:
+      bits = toBitsCylinder(position, 0.5 * Detector::DeltaPhi,
+                            assertOutOfGeometry);
+      break;
+    default:
+      assert (false && "Unknown geometry type");
+      break;
+  }
   return bits;
 }
 
@@ -493,6 +542,9 @@ void fillSurfaces(
   auto tpcVolume = findVolume(topVolume, tpcVolumeName);
   assert(tpcVolume);
 
+  // When filling surfaces, theirs center should not be out of detector
+  auto assertOutOfGeo = false;
+
   auto tpcLayerVector = tpcVolume->confinedLayers()->arrayObjects();
   for(size_t i = 0; i < tpcLayerVector.size(); i++) {
     auto surfaceArray = tpcLayerVector.at(i)->surfaceArray();
@@ -504,7 +556,7 @@ void fillSurfaces(
     for(size_t j = 0; j < surfaceVector.size(); j++) {
       auto surface = surfaceVector.at(j)->getSharedPtr();
       auto center = surface->center(context);
-      auto bits = toBits(secGeo, center);
+      auto bits = toBits(secGeo, center, assertOutOfGeo);
       assert(surfaces.find(bits) == surfaces.end()
           && "There are surfaces with the same bit keys");
       surfaces.insert({bits, surface});
@@ -538,7 +590,7 @@ Bool_t Detector::editGeometry(TGeoManager *geoManager) {
   ACTS_DEBUG("TPC gas volume: ");
   gasVolume->Print();
 
-  if (Detector::geometryType == Detector::sectorBased) {
+  if (Detector::GeometryType == Detector::SectorBased) {
     addSectorSensors(m_secGeo, geoManager, gasVolume);
   } else {
     addCylinderSensors(geoManager, gasVolume);
@@ -591,7 +643,7 @@ std::shared_ptr<const Acts::Surface> Detector::getSurface(
 
   ACTS_VERBOSE("Finding a surface for " << position);
 
-  auto bits = toBits(m_secGeo, position);
+  auto bits = toBits(m_secGeo, position, AssertOutOfGeometry);
   auto iter = m_surfaces.find(bits);
   assert(iter != m_surfaces.end() && "Surface not found");
 

@@ -32,14 +32,17 @@ public:
   static constexpr auto GasVolume = "tpc01sv";
 
   // Sector-based geometry: virtual surfaces based real geometry
-  enum GeometryType {cylinderBased, sectorBased};
-  static constexpr GeometryType geometryType = cylinderBased;
+  enum GeometryType {CylinderBased, SectorBased};
+  static constexpr GeometryType GeometryType = CylinderBased;
 
   /// If true use Z dimensions from BaseTpcSectorGeo
   /// else use numerical values from MpdTpcDetector.h
   /// it is used as points are outside the detector
   /// when Z dimensions is taken from BaseTpcSectorGeo
   static constexpr auto getZFromSectorGeo = false;
+
+  // Whether to assert ( ZMin <= z <= ZMax) and (RMin <= r <= RMax)
+  static constexpr auto AssertOutOfGeometry = false;
 
   /// TPC is represented as two symmetric nodes.
   static constexpr auto HasTwoNodes = true;
