@@ -58,7 +58,7 @@ struct Config final {
   static constexpr auto Rmax                =  Detector::Rmax;      // ~ 1.4 m
   static constexpr auto Zmin                =  Detector::Zmin;      // ~-1.7 m
   static constexpr auto Zmax                =  Detector::Zmax;      // ~ 1.7 m
-  static constexpr auto EtaMax              =  std::numeric_limits<Double_t>::max();
+  static constexpr auto EtaMax              =  2.5;
   static constexpr auto PtMin               =  0._GeV;              // 0.02 < Pt < 10 GeV
 
   //===--------------------------------------------------------------------===//
@@ -98,10 +98,10 @@ struct Config final {
   static constexpr auto CollisionZmax       =  30._cm;              // Close to 0
   Double_t CotThetaMax;                                             // = 1/2 * (e^eta - e^(-eta)); eta = EtaMax
                                                                     // CotThetaMax = max(dZ/dR)=1.7 ~ 1.3 eta (eta < 1.2)
-  static constexpr auto SeedBinSizeR        =  20._mm;              // 10._mm for MC (pads are ~12-18 mm)
+  static constexpr auto SeedBinSizeR        =  10._mm;              // 10._mm for MC (pads are ~12-18 mm)
   static constexpr auto SeedDeltaRmin       =  10._mm;              // 02._mm for MC
   static constexpr auto SeedDeltaRmax       =  60._mm;              // 20._mm for MC
-  static constexpr auto SeedDeltaZmax       =  10._cm;              // FIXME 10._cm for MC
+  static constexpr auto SeedDeltaZmax       =  20._cm;              // FIXME 10._cm for MC
   static constexpr auto MaxSeedsPerSpM      =  3;                   // FIXME
   static constexpr auto SigmaScattering     =  5;                   // FIXME
   static constexpr auto MaxPtScattering     =  5._GeV;              // Max Pt for scattering
@@ -168,8 +168,8 @@ struct Config final {
 
   static constexpr auto EtaName             = "#eta";
   static constexpr auto EtaNBins            =  40;
-  static constexpr auto PerfPlotToolEtaMin  = -std::min(1.2, EtaMax);
-  static constexpr auto PerfPlotToolEtaMax  =  std::min(1.2, EtaMax);
+  static constexpr auto PerfPlotToolEtaMin  = -EtaMax;
+  static constexpr auto PerfPlotToolEtaMax  =  EtaMax;
 
   static constexpr auto PhiName             = "#phi";
   static constexpr auto PhiNBins            =  100;
