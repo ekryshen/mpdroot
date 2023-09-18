@@ -166,13 +166,14 @@ inline uint64_t toBitsCylinder(const Acts::Vector3 &position,
   std::string prefix  = "Error: The point ";
   std::string postfix = " goes beyond the detector by ";
 
+  Double_t epsOutOfGeo = 1.e-10;
   if (assertOutOfGeometry) {
     assert(Detector::Zmin <= z && z <= Detector::Zmax);
   } else if (z < Detector::Zmin) {
-    z = Detector::Zmin;
+    z = Detector::Zmin + epsOutOfGeo;
     std::cout << prefix << position << postfix << "Z" << std::endl;
   } else if (z > Detector::Zmax) {
-    z = Detector::Zmax;
+    z = Detector::Zmax - epsOutOfGeo;
     std::cout << prefix << position << postfix << "Z" << std::endl;
   }
 
@@ -181,10 +182,10 @@ inline uint64_t toBitsCylinder(const Acts::Vector3 &position,
   if (assertOutOfGeometry) {
     assert(Detector::Rmin <= r && r <= Detector::Rmax);
   } else if (r < Detector::Rmin) {
-    r = Detector::Rmin;
+    r = Detector::Rmin + epsOutOfGeo;
     std::cout << prefix << position << postfix << "R" << std::endl;
   } else if (r > Detector::Rmax) {
-    r = Detector::Rmax;
+    r = Detector::Rmax - epsOutOfGeo;
     std::cout << prefix << position << postfix << "R" << std::endl;
   }
 
@@ -350,16 +351,16 @@ inline uint64_t toBitsSector(const BaseTpcSectorGeo &secGeo,
     message << "Error: " <<
         "The point " << position << " goes beyond the detector by Z";
 
+    Double_t eps = 1.e-10;
     if (assertOutOfGeometry) {
       assert(Detector::Zmin <= z && z <= Detector::Zmax);
     } else if (z < Detector::Zmin) {
-      z = Detector::Zmin;
+      z = Detector::Zmin + eps;
       std::cout << message.str() << std::endl;
     } else if (z > Detector::Zmax) {
-      z = Detector::Zmax;
+      z = Detector::Zmax - eps;
       std::cout << message.str() << std::endl;
     }
-
   }
   auto [iSector, iRow, iPad] = getSectorRowPad(secGeo, x, y, deltaPhi);
 
