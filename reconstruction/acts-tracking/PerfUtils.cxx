@@ -114,7 +114,7 @@ void printEfficiency(std::string prefix,
     }
   }
   Double_t eff = total == 0 ? 0 : 1.*passed / total;
-  std::cout << prefix << " efficiency: " <<
+  std::cout << prefix <<
       passed << " / " << total << " = " << eff << std::endl;
 }
 
@@ -134,11 +134,9 @@ void printEfficiency(
   nRecoG += nReco;
   static size_t nTotalG = 0;
   nTotalG += trackIdToTruthFakeMap.size();
-  std::cout << prefix                         << ", "  <<
-               "reco global "  << nRecoG      << " / " <<
-                                  nTotalG     << ": "  <<
-               1.* nRecoG / nTotalG           <<
-               std::endl;
+  Double_t eff = nTotalG == 0 ? 0 : 1. * nRecoG / nTotalG;
+  std::cout << prefix <<
+      nRecoG << " / " << nTotalG << " = " << eff << std::endl;
 }
 
 void updateTEffPt(const std::map<Int_t, Bool_t> &trackIdToRecoMap,
@@ -322,7 +320,7 @@ std::map<Int_t, Bool_t> runPerformance(
       trackIdToTruthFakeMap[majTrackId].second++;
     }
   }
-  std::string postfix = " event " + std::to_string(eventNumber);
+  std::string postfix = "event " + std::to_string(eventNumber) + ": ";
   printEfficiency("Local efficiency "  + postfix, trackIdToRecoMap);
 
   updateTEffPt(trackIdToRecoMap,
@@ -334,9 +332,9 @@ std::map<Int_t, Bool_t> runPerformance(
                 mcTracks);
 
   std::string prefix  = "Total efficiency ";
-  printEfficiency(prefix + "(effPt):"  + postfix, effPt);
-  printEfficiency(prefix + "(effEta):" + postfix, effEta);
-  printEfficiency(prefix + "(nReco):"  + postfix, trackIdToTruthFakeMap);
+  printEfficiency(prefix + "(effPt) "  + postfix, effPt);
+  printEfficiency(prefix + "(effEta) " + postfix, effEta);
+  printEfficiency(prefix + "(nReco) "  + postfix, trackIdToTruthFakeMap);
 
   auto [nTruth, nFake, nRealTracks] =
       changeTotalNFake(trackIdToTruthFakeMap, nTruthT, nFakeT, nRealTracksT);
