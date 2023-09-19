@@ -23,10 +23,6 @@ public:
   struct Config final {
     ActsExamples::TruthSeedSelector::Config truthSeedSelectorConfig;
 
-    std::string inputSimHits;
-    std::string outputSimHits;
-    std::string outputHitsParticlesMap;
-
     Bool_t selectorEnabled;
     Bool_t primaryParticlesOnly;
   };

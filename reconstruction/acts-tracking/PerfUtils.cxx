@@ -289,9 +289,7 @@ std::map<Int_t, Bool_t> runPerformance(
       trackIsSelected = false;
     }
 
-    Bool_t lenOk = (hitsV.size() >= measurementsMin);
-    Bool_t needStoreTrack = trackIsSelected && lenOk;
-    if (needStoreTrack) {
+    if (!onlySelectedTracks || trackIsSelected) {
       trackIdToRecoMap[trackId] = false;
       trackIdToTruthFakeMap[trackId] = std::make_pair(0, 0);
     }
@@ -306,7 +304,7 @@ std::map<Int_t, Bool_t> runPerformance(
                    trackIds.end(), majTrackId) == trackIds.end())) {
       continue;
     }
-    // Skip short tracks.
+    // Skip short track candidates.
     if (track.size() < measurementsMin) {
       continue;
     }

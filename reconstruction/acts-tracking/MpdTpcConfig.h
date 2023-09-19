@@ -35,7 +35,6 @@ struct Config final {
   //===--------------------------------------------------------------------===//
 
   static constexpr auto SimHitsID           = "simhits";
-  static constexpr auto SelectedSimHitsID   = "selectedsimhits";
   static constexpr auto SourceLinksID       = "sourcelinks";
   static constexpr auto MeasurementsID      = "measurements";
   static constexpr auto SpacePointsID       = "spacepoints";
@@ -48,7 +47,6 @@ struct Config final {
   static constexpr auto ParticlesID         = "inputparticles";
   static constexpr auto SelectedParticlesID = "selectedparticles";
   static constexpr auto HitParticlesMapID   = "hitparticlesmap";
-  static constexpr auto SelectedHitParticlesMapID = "selectedhitparticlesmap";
 
   //===--------------------------------------------------------------------===//
   // Common options (for selector and for seeding)
@@ -60,31 +58,6 @@ struct Config final {
   static constexpr auto Zmax                =  Detector::Zmax;      // ~ 1.7 m
   static constexpr auto EtaMax              =  2.5;
   static constexpr auto PtMin               =  0._GeV;              // 0.02 < Pt < 10 GeV
-
-  //===--------------------------------------------------------------------===//
-  // Particle selector
-  //===--------------------------------------------------------------------===//
-
-  static constexpr auto SelectorEnabled     =  false;
-  static constexpr auto PrimaryParticlesOnly = false;
-  // Truth particle kinematic cuts.
-  static constexpr auto SelectorRmin        =  Rmin;
-  static constexpr auto SelectorRmax        =  Rmax;
-  static constexpr auto SelectorZmin        =  Zmin;
-  static constexpr auto SelectorZmax        =  Zmax;
-  static constexpr auto SelectorPhiMin      = -3.15;
-  static constexpr auto SelectorPhiMax      =  3.15;
-  static constexpr auto SelectorEtaMin      =  std::numeric_limits<Double_t>::lowest();
-  static constexpr auto SelectorEtaMax      =  std::numeric_limits<Double_t>::max();
-  static constexpr auto AbsEtaMin           =  0;
-  static constexpr auto AbsEtaMax           =  EtaMax;
-  static constexpr auto SelectorPtMin       =  PtMin;
-  static constexpr auto SelectorPtMax       =  10._GeV;
-  static constexpr auto KeepNeutral         =  false;
-
-  /// Requirement on number of recorded hits.
-  static constexpr auto NHitsMin            =  9;
-  static constexpr auto NHitsMax            =  std::numeric_limits<size_t>::max();
 
   //===--------------------------------------------------------------------===//
   // Track seeding
@@ -154,14 +127,47 @@ struct Config final {
   static constexpr auto PostProcess         = false;
 
   //===--------------------------------------------------------------------===//
-  // Performance writer Acts implementation
+  // Particle selector for performance calculations
+  //===--------------------------------------------------------------------===//
+
+  static constexpr auto SelectorEnabled     =  true;
+  static constexpr auto PrimaryParticlesOnly = true;
+  // Truth particle kinematic cuts.
+  static constexpr auto SelectorRmin        =  Rmin;
+  static constexpr auto SelectorRmax        =  Rmax;
+  static constexpr auto SelectorZmin        =  Zmin;
+  static constexpr auto SelectorZmax        =  Zmax;
+  static constexpr auto SelectorPhiMin      = -3.15;
+  static constexpr auto SelectorPhiMax      =  3.15;
+  static constexpr auto SelectorEtaMin      =  std::numeric_limits<Double_t>::lowest();
+  static constexpr auto SelectorEtaMax      =  std::numeric_limits<Double_t>::max();
+  static constexpr auto AbsEtaMin           =  0;
+  static constexpr auto AbsEtaMax           =  EtaMax;
+  static constexpr auto SelectorPtMin       =  PtMin;
+  static constexpr auto SelectorPtMax       =  10._GeV;
+  static constexpr auto KeepNeutral         =  false;
+
+  /// Requirement on number of recorded hits.
+  static constexpr auto NHitsMin            =  3;
+  static constexpr auto NHitsMax            =  std::numeric_limits<size_t>::max();
+
+  //===--------------------------------------------------------------------===//
+  // Performance calculation
+  //===--------------------------------------------------------------------===//
+
+  static constexpr auto TruthMatchProbMin   =  0.5;
+  static constexpr auto MeasurementsMin     =  9;
+  static constexpr auto PerfPtMin           =  PtMin;
+
+  //===--------------------------------------------------------------------===//
+  // Performance by Acts
   //===--------------------------------------------------------------------===//
 
   static constexpr auto ActsPerfFilePath    = "performance_ckf.root";
   /// Min reco-truth matching probability.
-  static constexpr auto ActsTruthMatchProbMin = 0.5;
-  static constexpr auto ActsMeasurementsMin = NHitsMin;
-  static constexpr auto PerfPtMin           = PtMin;
+  static constexpr auto ActsTruthMatchProbMin = TruthMatchProbMin;
+  static constexpr auto ActsMeasurementsMin =  MeasurementsMin;
+  static constexpr auto ActsPerfPtMin       =  PerfPtMin;
 
   // Parameters for EffPlotTool, FakeRatePlotTool,
   // DuplicationPlotTool, TrackSummaryPlotTool.
@@ -187,25 +193,24 @@ struct Config final {
   static constexpr auto NumMax              =  29.5;
 
   //===--------------------------------------------------------------------===//
-  // Performance writer own implementation
+  // Performance by ours
   //===--------------------------------------------------------------------===//
 
   static constexpr auto OPerfFilePath       = "eff.root";
-  ///Whether calculate efficiency only for certain trackIds.
-  static constexpr auto OnlyCertainTracks   = false;
+  static constexpr auto OTruthMatchProbMin  =  TruthMatchProbMin;
+  static constexpr auto OMeasurementsMin    =  MeasurementsMin;
+  ///Whether calculate efficiency for certain tracks only.
+  static constexpr auto OnlyCertainTracks   =  false;
   /// Path to files with saved trackIds.
-  /// Used for calculation efficiency for tracks with certain trackIds only.
+  /// Used for calculation efficiency for tracks with certain tracks only.
   static constexpr auto PathWithTrackIds    = "";
-  /// Min reco-truth matching probability.
-  static constexpr auto OTruthMatchProbMin  = ActsTruthMatchProbMin;
-  static constexpr auto OMeasurementsMin    = ActsMeasurementsMin;
 
   //===--------------------------------------------------------------------===//
   // System parameters
   //===--------------------------------------------------------------------===//
 
   /// Whether to dump data for tracks post-processing.
-  static constexpr auto DumpData            = false;
+  static constexpr auto DumpData            =  false;
 
   //===--------------------------------------------------------------------===//
   // Constructor

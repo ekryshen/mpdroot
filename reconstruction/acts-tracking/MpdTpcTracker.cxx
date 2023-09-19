@@ -414,13 +414,8 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
   ActsExamples::WhiteBoard whiteBoard;
   ActsExamples::AlgorithmContext context(0, eventCounter, whiteBoard);
-
   fRunner->execute(hits, inputParticles, hitToParticlesMap,
                    fPerfWriter, context, fOutPath);
-
-  const auto &selectedHits =
-      context.eventStore.get<Mpd::Tpc::InputHitContainer>(
-          config.particleSelector.outputSimHits);
 
   // Convert the found track to to the MpdRoot representation.
   const auto &trajectories =
@@ -435,7 +430,7 @@ void MpdTpcTracker::Exec(Option_t *option) {
       config.PathWithTrackIds,
       fOutPath,
       eventCounter, trajectories,
-      selectedHits, fMCTracks,
+      hits, fMCTracks,
       config.OMeasurementsMin, config.OTruthMatchProbMin,
       config.OnlyCertainTracks,
       config.OPerfFilePath);
@@ -470,7 +465,7 @@ void MpdTpcTracker::Exec(Option_t *option) {
 
     // Build histograms.
     buildHistograms(statistics, nTracks, eventCounter, fOutPath);
-    plotQualityOnP(selectedHits, trajectories, eventCounter, fOutPath);
+    plotQualityOnP(hits, trajectories, eventCounter, fOutPath);
 
     // Plot the output tracks.
     std::shared_ptr<const Acts::TrackingGeometry> geometry =
@@ -494,19 +489,19 @@ void MpdTpcTracker::Exec(Option_t *option) {
         "_MC_ZY",
         grid, realAspectRatio);
 
-    plotRealTracks(6000, 6000, geometry, selectedHits, eventCounter,
+    plotRealTracks(6000, 6000, geometry, hits, eventCounter,
         fOutPath, color, lineWidth, Projection::XY,
         config.Zmin, config.Zmax, config.Rmax,
         "_hits_XY",
         grid, realAspectRatio);
 
-    plotRealTracks(6000, 6000, geometry, selectedHits, eventCounter,
+    plotRealTracks(6000, 6000, geometry, hits, eventCounter,
         fOutPath, color, lineWidth, Projection::ZY,
         config.Zmin, config.Zmax, config.Rmax,
         "_hits_ZY",
         grid, realAspectRatio);
 
-    plotOutputTracks(6000, 6000, geometry, spacePoints, selectedHits,
+    plotOutputTracks(6000, 6000, geometry, spacePoints, hits,
         trajectories, eventCounter, fOutPath,
         color, lineWidth, Projection::XY,
         "_reco");

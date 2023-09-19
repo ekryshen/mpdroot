@@ -30,12 +30,6 @@ namespace Mpd::Tpc {
       && "Missing input hit-particles map collection");
     assert(!m_config.truthSeedSelectorConfig.outputParticles.empty()
       && "Missing output truth particles collection");
-    assert(!m_config.inputSimHits.empty()
-      && "Missing input hits collection");
-    assert(!m_config.outputSimHits.empty()
-      && "Missing output hits collection");
-    assert(!m_config.outputHitsParticlesMap.empty()
-      && "Missing output hit-particles map collection");
   }
 
   // Get barcodes of particles.
@@ -138,34 +132,18 @@ namespace Mpd::Tpc {
     InputHitContainer selectedHits;
     ActsExamples::IndexMultimap<ActsFatras::Barcode> selectedMap;
 
-    const auto& hits = context.eventStore.get<InputHitContainer>(
-        m_config.inputSimHits);
-
     if (m_config.selectorEnabled) {
-      // Create prototracks for all input particles
       for (const auto& particle : inputParticles) {
         if (isValidparticle(particle)) {
           selectedParticles.insert(particle);
         }
       }
-      std::set<ActsFatras::Barcode> selectedParticleIds =
-          getParticleIds(selectedParticles);
-      auto hitMapPair = selectHitsAndHitParticlesMap(
-          hits,
-          hitParticlesMap,
-          selectedParticleIds);
-      selectedHits = std::move(hitMapPair.first);
-      selectedMap  = std::move(hitMapPair.second);
     } else {
+      // Create prototracks for all input particles
       selectedParticles = std::move(inputParticles);
-      selectedHits      = std::move(hits);
-      selectedMap       = std::move(hitParticlesMap);
     }
     context.eventStore.add(seedConfig.outputParticles,
         std::move(selectedParticles));
-    context.eventStore.add(m_config.outputSimHits,std::move(selectedHits));
-    context.eventStore.add(m_config.outputHitsParticlesMap,
-        std::move(selectedMap));
 
     return ActsExamples::ProcessCode::SUCCESS;
   }
