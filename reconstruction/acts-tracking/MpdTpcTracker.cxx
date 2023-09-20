@@ -489,6 +489,12 @@ void MpdTpcTracker::Exec(Option_t *option) {
         "_MC_ZY",
         grid, realAspectRatio);
 
+    plotRealTracks(6000, 6000, geometry, MChits, eventCounter,
+        fOutPath, color, lineWidth, Projection::ZR,
+        config.Zmin, config.Zmax, config.Rmax,
+        "_MC_ZR",
+        grid, realAspectRatio);
+
     plotRealTracks(6000, 6000, geometry, hits, eventCounter,
         fOutPath, color, lineWidth, Projection::XY,
         config.Zmin, config.Zmax, config.Rmax,
@@ -501,10 +507,21 @@ void MpdTpcTracker::Exec(Option_t *option) {
         "_hits_ZY",
         grid, realAspectRatio);
 
+    plotRealTracks(6000, 6000, geometry, hits, eventCounter,
+        fOutPath, color, lineWidth, Projection::ZR,
+        config.Zmin, config.Zmax, config.Rmax,
+        "_hits_ZR",
+        grid, realAspectRatio);
+
     plotOutputTracks(6000, 6000, geometry, spacePoints, hits,
         trajectories, eventCounter, fOutPath,
         color, lineWidth, Projection::XY,
-        "_reco");
+        "_reco_XY");
+
+    plotOutputTracks(6000, 6000, geometry, spacePoints, hits,
+        trajectories, eventCounter, fOutPath,
+        color, lineWidth, Projection::ZR,
+        "_reco_ZR");
   }
 
   if (MpdCodeTimer::Active()) {
