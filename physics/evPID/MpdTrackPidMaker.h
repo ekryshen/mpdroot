@@ -92,7 +92,23 @@ private:
    TH2F *mhECALsdPhi  = nullptr;
    TH2F *mhECALsdZed  = nullptr;
    TH2F *mhEP         = nullptr;
+   TH2F *mhEP_El      = nullptr;
+   TH2F *mhEP_Pi      = nullptr;
+   TH2F *mhEP_K       = nullptr;
+   TH2F *mhEP_P       = nullptr;
    TH2F *mhEM2        = nullptr;
+   TH2F *mhEM2_El     = nullptr;
+   TH2F *mhEM2_Pi     = nullptr;
+   TH2F *mhEM2_K      = nullptr;
+   TH2F *mhEM2_P      = nullptr;
+   TH2F *mhbeta_El    = nullptr;
+   TH2F *mhbeta_Pi    = nullptr;
+   TH2F *mhbeta_K     = nullptr;
+   TH2F *mhbeta_P     = nullptr;
+   TH2F *mhdedx_El    = nullptr;
+   TH2F *mhdedx_Pi    = nullptr;
+   TH2F *mhdedx_K     = nullptr;
+   TH2F *mhdedx_P     = nullptr;
 
    TFile *dcaFile;
 

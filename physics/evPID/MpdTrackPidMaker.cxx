@@ -1,4 +1,5 @@
 #include <iostream>
+#include "MpdMCTrack.h"
 #include "MpdTrackPidMaker.h"
 #include "MpdTrack.h"
 #include "MpdVertex.h"
@@ -39,56 +40,88 @@ void MpdTrackPidMaker::UserInit()
    fOutputList->Add(mhVertex);
    mhCentrality = new TH1F("hCentrality", "Centrality distribution", 100, 0., 100.);
    fOutputList->Add(mhCentrality);
-   mhDCAXs = new TH2F("DCAXs", "n-sigma DCAX", 100, 0., 3., 100, -10., 10.);
+   mhDCAXs = new TH2F("DCAXs", "n-sigma DCAX", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhDCAXs);
-   mhDCAYs = new TH2F("DCAYs", "n-sigma DCAY", 100, 0., 3., 100, -10., 10.);
+   mhDCAYs = new TH2F("DCAYs", "n-sigma DCAY", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhDCAYs);
-   mhDCAZs = new TH2F("DCAZs", "n-sigma DCAZ", 100, 0., 3., 100, -10., 10.);
+   mhDCAZs = new TH2F("DCAZs", "n-sigma DCAZ", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhDCAZs);
-   mhTPCEl = new TH2F("TPCEl", "n-sigma TPC e-ID", 100, 0., 3., 100, -10., 10.);
+   mhTPCEl = new TH2F("TPCEl", "n-sigma TPC e-ID", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhTPCEl);
-   mhTPCPi = new TH2F("TPCPi", "n-sigma TPC pi-ID", 100, 0., 3., 100, -10., 10.);
+   mhTPCPi = new TH2F("TPCPi", "n-sigma TPC pi-ID", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhTPCPi);
-   mhTPCK = new TH2F("TPCK", "n-sigma TPC K-ID", 100, 0., 3., 100, -10., 10.);
+   mhTPCK = new TH2F("TPCK", "n-sigma TPC K-ID", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhTPCK);
-   mhTPCP = new TH2F("TPCP", "n-sigma TPC p-ID", 100, 0., 3., 100, -10., 10.);
+   mhTPCP = new TH2F("TPCP", "n-sigma TPC p-ID", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhTPCP);
-   mhTPCDe = new TH2F("TPCDe", "n-sigma TPC d-ID", 100, 0., 3., 100, -10., 10.);
+   mhTPCDe = new TH2F("TPCDe", "n-sigma TPC d-ID", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhTPCDe);
-   mhTPCTr = new TH2F("TPCTr", "n-sigma TPC t-ID", 100, 0., 3., 100, -10., 10.);
+   mhTPCTr = new TH2F("TPCTr", "n-sigma TPC t-ID", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhTPCTr);
-   mhTPCHe3 = new TH2F("TPCHe3", "n-sigma TPC he3-ID", 100, 0., 3., 100, -10., 10.);
+   mhTPCHe3 = new TH2F("TPCHe3", "n-sigma TPC he3-ID", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhTPCHe3);
-   mhTPCHe4 = new TH2F("TPCHe4", "n-sigma TPC he4-ID", 100, 0., 3., 100, -10., 10.);
+   mhTPCHe4 = new TH2F("TPCHe4", "n-sigma TPC he4-ID", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhTPCHe4);
-   mhTOFsdPhi = new TH2F("TOFsdPhi", "n-sigma dPhi matching to TOF", 100, 0., 3., 100, -10., 10.);
+   mhTOFsdPhi = new TH2F("TOFsdPhi", "n-sigma dPhi matching to TOF", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhTOFsdPhi);
-   mhTOFsdZed = new TH2F("TOFsdZed", "n-sigma dZed matching to TOF", 100, 0., 3., 100, -10., 10.);
+   mhTOFsdZed = new TH2F("TOFsdZed", "n-sigma dZed matching to TOF", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhTOFsdZed);
-   mhTOFEl = new TH2F("TOFEl", "n-sigma TOF e-ID", 100, 0., 3., 100, -10., 10.);
+   mhTOFEl = new TH2F("TOFEl", "n-sigma TOF e-ID", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhTOFEl);
-   mhTOFPi = new TH2F("TOFPi", "n-sigma TOF pi-ID", 100, 0., 3., 100, -10., 10.);
+   mhTOFPi = new TH2F("TOFPi", "n-sigma TOF pi-ID", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhTOFPi);
-   mhTOFK = new TH2F("TOFK", "n-sigma TOF K-ID", 100, 0., 3., 100, -10., 10.);
+   mhTOFK = new TH2F("TOFK", "n-sigma TOF K-ID", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhTOFK);
-   mhTOFP = new TH2F("TOFP", "n-sigma TOF p-ID", 100, 0., 3., 100, -10., 10.);
+   mhTOFP = new TH2F("TOFP", "n-sigma TOF p-ID", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhTOFP);
-   mhTOFDe = new TH2F("TOFDe", "n-sigma TOF d-ID", 100, 0., 3., 100, -10., 10.);
+   mhTOFDe = new TH2F("TOFDe", "n-sigma TOF d-ID", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhTOFDe);
-   mhTOFTr = new TH2F("TOFTr", "n-sigma TOF t-ID", 100, 0., 3., 100, -10., 10.);
+   mhTOFTr = new TH2F("TOFTr", "n-sigma TOF t-ID", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhTOFTr);
-   mhTOFHe3 = new TH2F("TOFHe3", "n-sigma TOF he3-ID", 100, 0., 3., 100, -10., 10.);
+   mhTOFHe3 = new TH2F("TOFHe3", "n-sigma TOF he3-ID", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhTOFHe3);
-   mhTOFHe4 = new TH2F("TOFHe4", "n-sigma TOF he4-ID", 100, 0., 3., 100, -10., 10.);
+   mhTOFHe4 = new TH2F("TOFHe4", "n-sigma TOF he4-ID", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhTOFHe4);
-   mhECALsdPhi = new TH2F("ECALsdPhi", "n-sigma dPhi matching to ECAL", 100, 0., 3., 100, -10., 10.);
+   mhECALsdPhi = new TH2F("ECALsdPhi", "n-sigma dPhi matching to ECAL", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhECALsdPhi);
-   mhECALsdZed = new TH2F("ECALsdZed", "n-sigma dZed matching to ECAL", 100, 0., 3., 100, -10., 10.);
+   mhECALsdZed = new TH2F("ECALsdZed", "n-sigma dZed matching to ECAL", 450, 0., 9., 100, -10., 10.);
    fOutputList->Add(mhECALsdZed);
-   mhEP = new TH2F("EP", "E/p", 100, 0., 3., 300, 0., 3.);
+   mhEP = new TH2F("EP", "E/p", 450, 0., 9., 300, 0., 3.);
    fOutputList->Add(mhEP);
-   mhEM2 = new TH2F("EM2", "ECAL mass2", 100, 0., 3., 300, -0.5, 2.5);
+   mhEP_El = new TH2F("EP_El", "E/p for e-tracks", 450, 0., 9., 300, 0., 3.);
+   fOutputList->Add(mhEP_El);
+   mhEP_Pi = new TH2F("EP_Pi", "E/p for pi-tracks", 450, 0., 9., 300, 0., 3.);
+   fOutputList->Add(mhEP_Pi);
+   mhEP_K = new TH2F("EP_K", "E/p for K-tracks", 450, 0., 9., 300, 0., 3.);
+   fOutputList->Add(mhEP_K);
+   mhEP_P = new TH2F("EP_P", "E/p for p-tracks", 450, 0., 9., 300, 0., 3.);
+   fOutputList->Add(mhEP_P);
+   mhEM2 = new TH2F("EM2", "ECAL mass2", 450, 0., 9., 300, -0.5, 2.5);
    fOutputList->Add(mhEM2);
+   mhEM2_El = new TH2F("EM2_El", "ECAL mass2 for e-tracks", 450, 0., 9., 300, -0.5, 2.5);
+   fOutputList->Add(mhEM2_El);
+   mhEM2_Pi = new TH2F("EM2_Pi", "ECAL mass2 for pi-tracks", 450, 0., 9., 300, -0.5, 2.5);
+   fOutputList->Add(mhEM2_Pi);
+   mhEM2_K = new TH2F("EM2_K", "ECAL mass2 for K-tracks", 450, 0., 9., 300, -0.5, 2.5);
+   fOutputList->Add(mhEM2_K);
+   mhEM2_P = new TH2F("EM2_P", "ECAL mass2 for p-tracks", 450, 0., 9., 300, -0.5, 2.5);
+   fOutputList->Add(mhEM2_P);
+   mhbeta_El = new TH2F("mhbeta_El", "Beta for e-tracks", 450, 0., 9., 1000, 0.0, 1.4);
+   fOutputList->Add(mhbeta_El);
+   mhbeta_Pi = new TH2F("mhbeta_Pi", "Beta for pi-tracks", 450, 0., 9., 1000, 0.0, 1.4);
+   fOutputList->Add(mhbeta_Pi);
+   mhbeta_K = new TH2F("mhbeta_K", "Beta for K-tracks", 450, 0., 9., 1000, 0.0, 1.4);
+   fOutputList->Add(mhbeta_K);
+   mhbeta_P = new TH2F("mhbeta_P", "Beta for p-tracks", 450, 0., 9., 1000, 0.0, 1.4);
+   fOutputList->Add(mhbeta_P);
+   mhdedx_El = new TH2F("mhdedx_El", "dE/dx for e-tracks", 450, 0., 9., 2000, 0.0, 5.0);
+   fOutputList->Add(mhdedx_El);
+   mhdedx_Pi = new TH2F("mhdedx_Pi", "dE/dx for pi-tracks", 450, 0., 9., 2000, 0.0, 5.0);
+   fOutputList->Add(mhdedx_Pi);
+   mhdedx_K = new TH2F("mhdedx_K", "dE/dx for K-tracks", 450, 0., 9., 2000, 0.0, 5.0);
+   fOutputList->Add(mhdedx_K);
+   mhdedx_P = new TH2F("mhdedx_P", "dE/dx for p-tracks", 450, 0., 9., 2000, 0.0, 5.0);
+   fOutputList->Add(mhdedx_P);
 
    // DCAs
    cout << "[MpdTrackPidMaker]: Reading DCA parameterizations ... " << endl;
@@ -125,6 +158,7 @@ void MpdTrackPidMaker::ProcessEvent(MpdAnalysisEvent &event)
    TClonesArray *mKalmanTracks   = event.fTPCKalmanTrack;
    TClonesArray *mpdTofMatching  = event.fTOFMatching;
    TObjArray    *mpdEMCClusters  = event.fEMCCluster;
+   TClonesArray *mMCTracks       = event.fMCTrack;
 
    Bool_t isECAL = kTRUE;
    if (mpdEMCClusters == nullptr) {
@@ -220,6 +254,23 @@ void MpdTrackPidMaker::ProcessEvent(MpdAnalysisEvent &event)
       mhTPCHe3->Fill(pmom, mpdtrack->GetTPCNSigma(kHe3));
       mhTPCHe4->Fill(pmom, mpdtrack->GetTPCNSigma(kHe4));
 
+      long int trId = mpdtrack->GetID();
+
+      if (mpdtrack->GetNofHits() > 20) {
+         if (abs(static_cast<MpdMCTrack *>(mMCTracks->At(trId))->GetPdgCode()) == 11) {
+            mhdedx_El->Fill(pmom, log(tr->GetDedx()));
+         }
+         if (abs(static_cast<MpdMCTrack *>(mMCTracks->At(trId))->GetPdgCode()) == 211) {
+            mhdedx_Pi->Fill(pmom, log(tr->GetDedx()));
+         }
+         if (abs(static_cast<MpdMCTrack *>(mMCTracks->At(trId))->GetPdgCode()) == 321) {
+            mhdedx_K->Fill(pmom, log(tr->GetDedx()));
+         }
+         if (abs(static_cast<MpdMCTrack *>(mMCTracks->At(trId))->GetPdgCode()) == 2212) {
+            mhdedx_P->Fill(pmom, log(tr->GetDedx()));
+         }
+      }
+
       // n-sigma matching to TOF
       float tofsdPhi = -999;
       float tofsdZed = -999;
@@ -262,6 +313,22 @@ void MpdTrackPidMaker::ProcessEvent(MpdAnalysisEvent &event)
          tofsigmas[kTriton]  = Beta_sigma_Tr(mpdtrack->GetTofBeta(), pmom);
          tofsigmas[kHe3]     = Beta_sigma_He3(mpdtrack->GetTofBeta(), pmom);
          tofsigmas[kHe4]     = Beta_sigma_He4(mpdtrack->GetTofBeta(), pmom);
+
+         if (mpdtrack->GetNofHits() > 20) {
+            if (abs(static_cast<MpdMCTrack *>(mMCTracks->At(trId))->GetPdgCode()) == 11) {
+               mhbeta_El->Fill(pmom, mpdtrack->GetTofBeta());
+            }
+            if (abs(static_cast<MpdMCTrack *>(mMCTracks->At(trId))->GetPdgCode()) == 211) {
+               mhbeta_Pi->Fill(pmom, mpdtrack->GetTofBeta());
+            }
+            if (abs(static_cast<MpdMCTrack *>(mMCTracks->At(trId))->GetPdgCode()) == 321) {
+               mhbeta_K->Fill(pmom, mpdtrack->GetTofBeta());
+            }
+            if (abs(static_cast<MpdMCTrack *>(mMCTracks->At(trId))->GetPdgCode()) == 2212) {
+               mhbeta_P->Fill(pmom, mpdtrack->GetTofBeta());
+            }
+         }
+
       } // flag 2||6
 
       mpdtrack->SetTOFNSigma(tofsigmas);
@@ -293,8 +360,8 @@ void MpdTrackPidMaker::ProcessEvent(MpdAnalysisEvent &event)
 
       if (isECAL) {
          // slow procedure -> run for tracks identified as electrons in the TPC
-         // if ( fabs(mpdtrack -> GetTPCNSigma(kEl)) < 3.0 )
-         if (fabs(mpdtrack->GetTPCNSigma(kEl)) < 3.0 && fabs(mpdtrack->GetPt()) > 0.09) {
+         // if (fabs(mpdtrack->GetTPCNSigma(kEl)) < 3.0 && fabs(mpdtrack->GetPt()) > 0.09) {
+         if (fabs(mpdtrack->GetPt()) > 0.09) {
             if (fabs((*tr->GetParamAtHit())(1, 0)) < 310 && mpdEMCClusters->GetEntries() > 0) {
                MpdKalmanHit hEnd;
                hEnd.SetType(MpdKalmanHit::kFixedR);
@@ -420,16 +487,40 @@ void MpdTrackPidMaker::ProcessEvent(MpdAnalysisEvent &event)
       mpdtrack->SetTrackECALLength(LgTr);
       mpdtrack->SetTrackECALIndex(indTr);
 
+      mass2 = pmom * pmom *
+              (mpdtrack->GetTrackECALTime() * mpdtrack->GetTrackECALTime() * 30 * 30 / mpdtrack->GetTrackECALLength() /
+                  mpdtrack->GetTrackECALLength() -
+               1);
+
       if (fabs(mpdtrack->GetECALDphiSigma()) < 3.0 && fabs(mpdtrack->GetECALDzSigma()) < 3.0) {
-         if (fabs(mpdtrack->GetTOFNSigma(kEl)) < 3.0) {
+
+         if (mpdtrack->GetNofHits() > 20) {
+            if (abs(static_cast<MpdMCTrack *>(mMCTracks->At(trId))->GetPdgCode()) == 11) {
+               mhEP_El->Fill(fabs(mpdtrack->GetPt()), (mpdtrack->GetTrackECALEn()) / 0.324 / pmom);
+               mhEM2_El->Fill(fabs(mpdtrack->GetPt()), mass2);
+            }
+
+            if (abs(static_cast<MpdMCTrack *>(mMCTracks->At(trId))->GetPdgCode()) == 211) {
+               mhEP_Pi->Fill(fabs(mpdtrack->GetPt()), (mpdtrack->GetTrackECALEn()) / 0.324 / pmom);
+               mhEM2_Pi->Fill(fabs(mpdtrack->GetPt()), mass2);
+            }
+
+            if (abs(static_cast<MpdMCTrack *>(mMCTracks->At(trId))->GetPdgCode()) == 321) {
+               mhEP_K->Fill(fabs(mpdtrack->GetPt()), (mpdtrack->GetTrackECALEn()) / 0.324 / pmom);
+               mhEM2_K->Fill(fabs(mpdtrack->GetPt()), mass2);
+            }
+
+            if (abs(static_cast<MpdMCTrack *>(mMCTracks->At(trId))->GetPdgCode()) == 2212) {
+               mhEP_P->Fill(fabs(mpdtrack->GetPt()), (mpdtrack->GetTrackECALEn()) / 0.324 / pmom);
+               mhEM2_P->Fill(fabs(mpdtrack->GetPt()), mass2);
+            }
+         } // nhits > 20
+
+         if (fabs(mpdtrack->GetTOFNSigma(kEl)) < 3.0 && fabs(mpdtrack->GetTPCNSigma(kEl)) < 3.0) {
             mhEP->Fill(fabs(mpdtrack->GetPt()), (mpdtrack->GetTrackECALEn()) / 0.324 / pmom);
-            mass2 = pmom * pmom *
-                    (mpdtrack->GetTrackECALTime() * mpdtrack->GetTrackECALTime() * 30 * 30 /
-                        mpdtrack->GetTrackECALLength() / mpdtrack->GetTrackECALLength() -
-                     1);
             mhEM2->Fill(fabs(mpdtrack->GetPt()), mass2);
          }
-      }
+      } // 3sigma
 
    } // ntracks
 }
