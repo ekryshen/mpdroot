@@ -1,5 +1,6 @@
 #include <iostream> // std::cout
 #include <fstream>  // std::ifstream
+#include <sstream>
 #include <map>
 
 #include "MpdPhotonAnalysisParams.h"
@@ -31,17 +32,11 @@ void MpdPhotonAnalysisParams::ReadFromFile(std::string fname)
       return;
    }
 
-   std::string a, b;
-   while (ifs.good()) {
-      ifs >> a;
-      // if comment, skip to the enf of line
-      if (a.find_first_of('#') == 0) {
-         ifs.ignore(999, '\n');
-         continue;
-      } else {
-         ifs >> b;
-         mMap.insert({a, b});
-      }
+   std::string line, a, b;
+   while (getline(ifs, line)) {
+      stringstream(line) >> a >> b;
+      // if comment, skip the line
+      if (a.at(0) != '#') mMap.insert({a, b});
    }
    ifs.close();
 
@@ -50,31 +45,38 @@ void MpdPhotonAnalysisParams::ReadFromFile(std::string fname)
    read("mZvtxCut", mZvtxCut);
    read("mNhitsCut", mNhitsCut);
    // V0 cuts
-   read("mMinR2Cut", mMinR2Cut);
-   read("mMaxR2Cut", mMaxR2Cut);
-   read("mPIDsigM", mPIDsigM);
-   read("mPIDsigE", mPIDsigE);
-   read("mPIDenergy", mPIDenergy);
-   read("mPIDkoeff", mPIDkoeff);
-   read("mPIDgenerator", mPIDgenerator);
-   read("mPIDtracking", mPIDtracking);
-   read("mPIDparticles", mPIDparticles);
-   read("mNofHitsCut", mNofHitsCut);
-   read("mEtaCut", mEtaCut);
-   read("mPtminCut", mPtminCut);
-   read("mProbElCut", mProbElCut);
-   read("mdEdxSigmaCut", mdEdxSigmaCut);
-   read("mBetaSigmaCut", mBetaSigmaCut);
-   read("mRequireTOFpid", mRequireTOFpid);
-   read("mMassCut", mMassCut);
-   read("mDistCut", mDistCut);
-   read("mCosPsiCut", mCosPsiCut);
-   read("mAlphaCut", mAlphaCut);
-   read("mChi2Cut", mChi2Cut);
+   read("mUseBDT", mUseBDT);
+   if (mUseBDT) {
+      read("mUseBDTRegP", mUseBDTRegP);
+      read("mBDTCut", mBDTCut);
+   } else {
+      read("mMinR2Cut", mMinR2Cut);
+      read("mMaxR2Cut", mMaxR2Cut);
+      read("mPIDsigM", mPIDsigM);
+      read("mPIDsigE", mPIDsigE);
+      read("mPIDenergy", mPIDenergy);
+      read("mPIDkoeff", mPIDkoeff);
+      read("mPIDgenerator", mPIDgenerator);
+      read("mPIDtracking", mPIDtracking);
+      read("mPIDparticles", mPIDparticles);
+      read("mNofHitsCut", mNofHitsCut);
+      read("mEtaCut", mEtaCut);
+      read("mPtminCut", mPtminCut);
+      read("mProbElCut", mProbElCut);
+      read("mdEdxSigmaCut", mdEdxSigmaCut);
+      read("mBetaSigmaCut", mBetaSigmaCut);
+      read("mRequireTOFpid", mRequireTOFpid);
+      read("mMassCut", mMassCut);
+      read("mDistCut", mDistCut);
+      read("mCosPsiCut", mCosPsiCut);
+      read("mCPACut", mCPACut);
+      read("mChi2Cut", mChi2Cut);
+   }
 
    read("mCluEmin", mCluEmin);
    read("mCluMult", mCluMult);
-   read("mCluTof", mCluTof);
+   read("mCluTofMin", mCluTofMin);
+   read("mCluTofMax", mCluTofMax);
    read("mCluDisp", mCluDisp);
    read("mCluDispEmin", mCluDispEmin);
    read("mCluCPV", mCluCPV);
@@ -88,37 +90,45 @@ void MpdPhotonAnalysisParams::Print() const
    cout << "mNhitsCut " << mNhitsCut << " //  number of hits in TPC tracks used for centrality" << endl;
 
    cout << "# V0 cuts: " << endl;
-   cout << "mMinR2Cut " << mMinR2Cut << " // (cm) Minimal conversion radius (to exclude Dalitz)" << endl;
-   cout << "mMaxR2Cut " << mMaxR2Cut << " // (cm) Maximal conversion radius (to exclude poorly reconstructed tracks)"
-        << endl;
-   cout << "mPIDsigM   " << mPIDsigM << "  // dEdx PID parameters" << endl;
-   cout << "mPIDsigE   " << mPIDsigE << "  // dEdx PID parameters" << endl;
-   cout << "mPIDenergy " << mPIDenergy << "  // dEdx PID parameters" << endl;
-   cout << "mPIDkoeff  " << mPIDkoeff << "  // dEdx PID parameters" << endl;
+   if (!mUseBDT) {
+      cout << "mMinR2Cut " << mMinR2Cut << " // (cm) Minimal conversion radius (to exclude Dalitz)" << endl;
+      cout << "mMaxR2Cut " << mMaxR2Cut << " // (cm) Maximal conversion radius (to exclude poorly reconstructed tracks)"
+           << endl;
+      cout << "mPIDsigM   " << mPIDsigM << "  // dEdx PID parameters" << endl;
+      cout << "mPIDsigE   " << mPIDsigE << "  // dEdx PID parameters" << endl;
+      cout << "mPIDenergy " << mPIDenergy << "  // dEdx PID parameters" << endl;
+      cout << "mPIDkoeff  " << mPIDkoeff << "  // dEdx PID parameters" << endl;
 
-   cout << "mPIDgenerator " << mPIDgenerator << "  // dEdx PID parameters" << endl;
-   cout << "mPIDtracking  " << mPIDtracking << "  // dEdx PID parameters" << endl;
-   cout << "mPIDparticles " << mPIDparticles << "  // dEdx PID parameters" << endl;
+      cout << "mPIDgenerator " << mPIDgenerator << "  // dEdx PID parameters" << endl;
+      cout << "mPIDtracking  " << mPIDtracking << "  // dEdx PID parameters" << endl;
+      cout << "mPIDparticles " << mPIDparticles << "  // dEdx PID parameters" << endl;
 
-   cout << "mNofHitsCut  " << mNofHitsCut << "  // minimal number of hits to accept track" << endl;
-   cout << "mEtaCut      " << mEtaCut << "  // maximal pseudorapidity accepted" << endl;
-   cout << "mPtminCut   " << mPtminCut << "  // minimal pt used in analysis" << endl;
-   cout << "mNofHitsCut " << mNofHitsCut << "  // minimal number of hits to accept track" << endl;
-   cout << "mProbElCut  " << mProbElCut << "  // minimal dEdx probability for electrons" << endl;
-   cout << "mdEdxSigmaCut  " << mdEdxSigmaCut << "  // dEdx cut in sigmas" << endl;
-   cout << "mBetaSigmaCut  " << mBetaSigmaCut << "  // beta cut" << endl;
-   cout << "mRequireTOFpid  " << mRequireTOFpid << "  // mRequireTOFpid" << endl;
-   cout << "mAlphaCut  " << mAlphaCut << "  // r vs p angle" << endl;
-   cout << "mMassCut  " << mMassCut << "  // e+e- pair mass cut" << endl;
-   cout << "mDistCut  " << mDistCut << "  // maximal closest distance between daughters" << endl;
-   cout << "mCosPsiCut " << mCosPsiCut << "  // e+e- pair orientation wrt B-filed" << endl;
-   cout << "mChi2Cut  " << mChi2Cut << "  // maximal chi2 in Kalman fit" << endl;
+      cout << "mNofHitsCut  " << mNofHitsCut << "  // minimal number of hits to accept track" << endl;
+      cout << "mEtaCut      " << mEtaCut << "  // maximal pseudorapidity accepted" << endl;
+      cout << "mPtminCut   " << mPtminCut << "  // minimal pt used in analysis" << endl;
+      cout << "mNofHitsCut " << mNofHitsCut << "  // minimal number of hits to accept track" << endl;
+      cout << "mProbElCut  " << mProbElCut << "  // minimal dEdx probability for electrons" << endl;
+      cout << "mdEdxSigmaCut  " << mdEdxSigmaCut << "  // dEdx cut in sigmas" << endl;
+      cout << "mBetaSigmaCut  " << mBetaSigmaCut << "  // beta cut" << endl;
+      cout << "mRequireTOFpid  " << mRequireTOFpid << "  // mRequireTOFpid" << endl;
+      cout << "mCPACut  " << mCPACut << "  // cos(PA)" << endl;
+      cout << "mMassCut  " << mMassCut << "  // e+e- pair mass cut" << endl;
+      cout << "mDistCut  " << mDistCut << "  // maximal closest distance between daughters" << endl;
+      cout << "mCosPsiCut " << mCosPsiCut << "  // e+e- pair orientation wrt B-filed" << endl;
+      cout << "mChi2Cut  " << mChi2Cut << "  // maximal chi2 in Kalman fit" << endl;
+   } else {
+      cout << "Using BDT selection with threshold " << mBDTCut << endl;
+      if (mUseBDTRegP) {
+         cout << "Using V0 BDT momemtum correction" << endl;
+      }
+   }
 
    cout << "# Cluster cuts: " << endl;
 
    cout << "mCluEmin  " << mCluEmin << "  // (GeV) minimal cluster energy" << endl;
    cout << "mCluMult  " << mCluMult << "  // minimal number of cells in cluster" << endl;
-   cout << "mCluTof   " << mCluTof << "  // (s) maximal time wrt photon arrival" << endl;
+   cout << "mCluTofMin   " << mCluTofMin << "  // minimal time wrt photon arrival in sigmas" << endl;
+   cout << "mCluTofMax   " << mCluTofMax << "  // maximal time wrt photon arrival in sigmas" << endl;
    cout << "mCluDisp  " << mCluDisp << "  // disp cut" << endl;
    cout << "mCluDispEmin  " << mCluDispEmin << "  // Emin for disp cut" << endl;
    cout << "mCluCPV   " << mCluCPV << "  // (sigma) minimal distance to charged track extrapolation" << endl;
@@ -129,7 +139,8 @@ void MpdPhotonAnalysisParams::read(std::string name, bool &b)
 {
    auto search = mMap.find(name);
    if (search != mMap.end()) {
-      if (search->second.compare("true") == 0 || search->second.compare("TRUE") == 0) {
+      if (search->second.compare("true") == 0 || search->second.compare("TRUE") == 0 ||
+          search->second.compare("1") == 0) {
          b = true;
       } else {
          b = false;

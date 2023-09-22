@@ -54,6 +54,7 @@
 
 # Analysis
 #----------------------------------------------------------------------------------
+/physics/photons/                        @peressounko
 /core/mpdDst/MpdMiniEvent/               @gnigmat
 
 

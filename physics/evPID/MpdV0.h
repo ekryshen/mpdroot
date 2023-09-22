@@ -10,6 +10,9 @@ public:
    MpdV0(MpdV0 &v0)  = default;
    ~MpdV0() override = default;
 
+   float getBDTMom() { return mBDTmomentum; }
+   void  setBDTMomentum(float p) { mBDTmomentum = p; }
+
    void setMatched1(int matched) { mMatched1 = matched; } // First matched track index
    void setMatched2(int matched) { mMatched2 = matched; } // Second matched track index
    int  getMatched1() { return mMatched1; }
@@ -40,6 +43,9 @@ public:
       mAsym2 = asym2;
    }
 
+   void  setBDTValue(float v) { mBDTvalue = v; } // value estimated with TMVA BDT estimator
+   float getBDTValue() { return mBDTvalue; }
+
    float getChi2() const { return mChi2; } // chi2 provided by Kalman fit
    void  setChi2(float chi2) { mChi2 = chi2; }
 
@@ -49,8 +55,11 @@ public:
    float getMass() const { return mMass; } // calculated mass of the pair
    void  setMass(float m) { mMass = m; }
 
-   float getPA() const { return mPA; } // angle between momentum and direction from primary vertex to creation point
-   void  setPA(float a) { mPA = a; }
+   float getCPA() const
+   {
+      return mCPA;
+   } // cos angle between momentum and direction from primary vertex to creation point
+   void setCPA(float a) { mCPA = a; }
 
    float getCospsi() const { return mCospsi; } // Pair orientation vrt mag field
    void  setCospsi(float psi) { mCospsi = psi; }
@@ -85,7 +94,7 @@ private:
    float    mAsym1        = 0;    // Momentum asymmetry track 1
    float    mAsym2        = 0;    // Momentum asymmetry track 2
    float    mQt           = 0.;   // Armenteros-Podolansky parameters
-   float    mPA           = 0.;   // angle between momentum and direction from primary vertex to creation point
+   float    mCPA          = 0.;   // cos angle between momentum and direction from primary vertex to creation point
    float    mCospsi       = 0.;   // Pair orientation vrt mag field
    float    mChi2         = 999.; // chi2 provided by Kalman fit
    float    mDDCA         = 999.; // Minimal distance bewtween daughters
@@ -93,7 +102,9 @@ private:
    float    mX            = 0;    // Conversion position
    float    mY            = 0;    // Conversion position
    float    mZ            = 0;    // Conversion position
+   float    mBDTvalue     = 0.;   // Value estimated from TMVA BDT classificator
+   float    mBDTmomentum  = 0.;   // Momentrum estimated from BDT regression
 
-   ClassDefOverride(MpdV0, 0);
+   ClassDefOverride(MpdV0, 1);
 };
 #endif

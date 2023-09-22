@@ -10,6 +10,7 @@
 #include "MpdMCTrack.h"
 #include "TH1.h"
 #include "TH2.h"
+#include "TSystem.h"
 
 ClassImp(MpdV0Maker);
 
@@ -38,32 +39,60 @@ void MpdV0Maker::UserInit()
       const float pTmax  = 5.;
 
       // General QA
-      mhChi2 = addHist(new TH2F("hChi2", "#chi^{2};#chi^{2};p_{T} (GeV/#it{c})", 100, 0., 50., nPtbin, pTmin, pTmax));
-      mhChi2True = addHist((TH2F *)mhChi2->Clone(Form("%sTrue", mhChi2->GetName())));
-
-      mhAlpha = addHist(new TH2F("hAlpha", "#alpha distribution;#alpha (rad);p_{T} (GeV/#it{c})", 100, 0., 3.14, nPtbin,
-                                 pTmin, pTmax));
-      mhAlphaTrue = addHist((TH2F *)mhAlpha->Clone(Form("%sTrue", mhAlpha->GetName())));
-
-      mhDist = addHist(new TH2F("hDist", "track DCA;DCA (cm);p_{T} (GeV/#it{c})", 100, 0., 10., nPtbin, pTmin, pTmax));
-      mhDistTrue = addHist((TH2F *)mhDist->Clone(Form("%sTrue", mhDist->GetName())));
-
-      mhMassEE = addHist(
-         new TH2F("mEE", "m_{ee};m_{ee} (GeV/#it{c}^{2});p_{T} (GeV/#it{c})", 100, 0., 0.3, nPtbin, pTmin, pTmax));
-      mhMassEETrue = addHist((TH2F *)mhMassEE->Clone(Form("%sTrue", mhMassEE->GetName())));
-
-      mhArmPo     = addHist(new TH2F("Armenteros", "Armenteros", 100, -1, 1, 100, 0, 0.3));
-      mhArmPoTrue = addHist((TH2F *)mhArmPo->Clone(Form("%sTrue", mhArmPo->GetName())));
-
-      mhAsym = addHist(new TH2F("Asymetry", "Asymmetry;Asymmetry;p_{T} (GeV/#it{c})", 200, 0, 1, nPtbin, pTmin, pTmax));
-      mhAsymTrue = addHist((TH2F *)mhAsym->Clone(Form("%sTrue", mhAsym->GetName())));
-
-      mhCosPsi =
-         addHist(new TH2F("cosPsi", "cos(#psi);cos(#psi);p_{T} (GeV/#it{c})", 100, -1., 1., nPtbin, pTmin, pTmax));
-      mhCosPsiTrue = addHist((TH2F *)mhCosPsi->Clone(Form("%sTrue", mhCosPsi->GetName())));
 
       mhCutEff = addHist(new TH2F("hCutEff", "track cut efficiency;Cut ID;p_{T} (GeV/#it{c});Efficiency", 10, 0., 10,
                                   nPtbin, pTmin, pTmax));
+
+      mhChi2 = addHist(new TH2F("hChi2", "#chi^{2};#chi^{2};p_{T} (GeV/#it{c})", 100, 0., 50., nPtbin, pTmin, pTmax));
+      mhChi2True = addHistClone(mhChi2, "True");
+
+      mhCPA =
+         addHist(new TH2F("hCPA", "cosPA distribution; CPA;p_{T} (GeV/#it{c})", 100, -1., 1., nPtbin, pTmin, pTmax));
+      mhCPATrue = addHistClone(mhCPA, "True");
+
+      mhDist = addHist(new TH2F("hDist", "track DCA;DCA (cm);p_{T} (GeV/#it{c})", 100, 0., 10., nPtbin, pTmin, pTmax));
+      mhDistTrue = addHistClone(mhDist, "True");
+
+      mhMassEE = addHist(
+         new TH2F("mEE", "m_{ee};m_{ee} (GeV/#it{c}^{2});p_{T} (GeV/#it{c})", 100, 0., 0.3, nPtbin, pTmin, pTmax));
+      mhMassEETrue = addHistClone(mhMassEE, "True");
+
+      mhArmPo     = addHist(new TH2F("Armenteros", "Armenteros", 100, -1, 1, 100, 0, 0.3));
+      mhArmPoTrue = addHistClone(mhArmPo, "True");
+
+      mhAsym = addHist(new TH2F("Asymetry", "Asymmetry;Asymmetry;p_{T} (GeV/#it{c})", 200, 0, 1, nPtbin, pTmin, pTmax));
+      mhAsymTrue = addHistClone(mhAsym, "True");
+
+      mhCosPsi =
+         addHist(new TH2F("cosPsi", "cos(#psi);cos(#psi);p_{T} (GeV/#it{c})", 100, -1., 1., nPtbin, pTmin, pTmax));
+      mhCosPsiTrue = addHistClone(mhCosPsi, "True");
+
+      mhBDT     = addHist(new TH2F("hBDT", "BDT value;BDTv;p_{T} (GeV/#it{c})", 100, -1., 1, nPtbin, pTmin, pTmax));
+      mhBDTTrue = addHistClone(mhBDT, "True");
+   }
+
+   if (mUseBDTEstimator) {
+      cout << "[MpdV0Maker]: Creating TMVA BDT classificator " << endl;
+      mTMVAReader = new TMVA::Reader();
+      // Connect datamembers to reader
+      mTMVAReader->AddVariable("pt", &mPt);
+      mTMVAReader->AddVariable("eta", &mEta);
+      mTMVAReader->AddVariable("ncl1", &mNcl1);         //
+      mTMVAReader->AddVariable("dEdx1", &mdEdx1);       //
+      mTMVAReader->AddVariable("ncl2", &mNcl2);         //
+      mTMVAReader->AddVariable("dEdx2", &mdEdx2);       //
+      mTMVAReader->AddVariable("chi2", &mChi2);         //
+      mTMVAReader->AddVariable("cpa", &mCPA);           //
+      mTMVAReader->AddVariable("acospsi", &mCPsi);      //
+      mTMVAReader->AddVariable("alpha", &mArmentAlpha); //
+      mTMVAReader->AddVariable("qt", &mArmentQt);       //
+      mTMVAReader->AddVariable("mass", &mMee);          //
+      mTMVAReader->AddVariable("R", &mV0r);             //
+      mTMVAReader->AddVariable("Z", &mV0z);             //
+
+      // Book the MVA method
+      mTMVAReader->BookMVA("BDTclassifier", gSystem->ExpandPathName("$MPDROOT/input/V0convBDTweights.xml"));
+      mTMVAReader->BookMVA("BDTregresion", gSystem->ExpandPathName("$MPDROOT/input/V0convBDTRegweights.xml"));
    }
 
    cout << "[MpdV0Maker]: Initialization done " << endl << endl;
@@ -164,12 +193,16 @@ bool MpdV0Maker::createSelectV0(MpdTrack *tr1, MpdTpcKalmanTrack *ktr1, MpdTrack
    MpdParticle       el1(trCorK1, 0);
    el1.SetPdg(-charge1 * mDefPDG);
    el1.SetMass();
+   mNcl1  = tr1->GetNofHits();
+   mdEdx1 = tr1->GetTPCNSigma(kEl);
 
    MpdTpcKalmanTrack trCorK2(*ktr2);
    MpdHelix          helix2 = MakeHelix(trCorK2);
    MpdParticle       el2(trCorK2, 0);
    el2.SetPdg(-charge2 * mDefPDG);
    el2.SetMass();
+   mNcl2  = tr2->GetNofHits();
+   mdEdx2 = tr2->GetTPCNSigma(kEl);
 
    // pair
    mPartK.clear();
@@ -177,19 +210,10 @@ bool MpdV0Maker::createSelectV0(MpdTrack *tr1, MpdTpcKalmanTrack *ktr1, MpdTrack
    mPartK.emplace_back(&el2);
 
    MpdParticle gamEE;
-   float       chi2 = TMath::Abs(gamEE.BuildMother(mPartK));
-   v.setChi2(chi2);
+   mChi2 = TMath::Abs(gamEE.BuildMother(mPartK));
+   v.setChi2(mChi2);
    float pt = gamEE.Pt();
-   if (mFillEff) {
-      mhChi2->Fill(chi2, pt);
-      mhCutEff->Fill(0., pt);
-   }
-   if (pt < 0.005) { // to avoid fpe
-      return false;
-   }
-   if (mFillEff) {
-      mhCutEff->Fill(1., pt);
-   }
+
    bool isTrue = false; // is true conv pair?
    if (mMC) {           // same for true electrontracks
       long int matched1       = tr1->GetID();
@@ -203,10 +227,23 @@ bool MpdV0Maker::createSelectV0(MpdTrack *tr1, MpdTpcKalmanTrack *ktr1, MpdTrack
          isTrue = true;
       }
    }
-   if (isTrue && mFillEff) {
-      mhChi2True->Fill(chi2, pt);
+
+   if (mFillEff) {
+      mhChi2->Fill(mChi2, pt);
+      mhCutEff->Fill(0., pt);
    }
-   if (chi2 > mChi2Cut) {
+
+   if (pt < 0.005) { // to avoid fpe
+      return false;
+   }
+   if (mFillEff) {
+      mhCutEff->Fill(1., pt);
+   }
+
+   if (isTrue && mFillEff) {
+      mhChi2True->Fill(mChi2, pt);
+   }
+   if (!mUseBDTEstimator && mChi2 > mChi2Cut) {
       return false;
    }
    if (mFillEff) {
@@ -216,23 +253,23 @@ bool MpdV0Maker::createSelectV0(MpdTrack *tr1, MpdTpcKalmanTrack *ktr1, MpdTrack
    TVector3 v0(gamEE.Getx()(0, 0), gamEE.Getx()(1, 0), gamEE.Getx()(2, 0));
    v0 -= mPrimaryVertex;
 
-   float rConv = TMath::Sqrt(pow(gamEE.Getx()(0, 0), 2) + pow(gamEE.Getx()(1, 0), 2));
-   if (rConv < mMinR2Cut || rConv > mMaxR2Cut) {
+   mV0r = TMath::Sqrt(pow(gamEE.Getx()(0, 0), 2) + pow(gamEE.Getx()(1, 0), 2));
+   if (!mUseBDTEstimator && (mV0r < mMinR2Cut || mV0r > mMaxR2Cut)) {
       return false;
    }
    if (mFillEff) {
       mhCutEff->Fill(3., pt);
    }
 
-   float angle = v0.Angle(gamEE.Momentum3());
-   v.setPA(angle);
+   mCPA = cos(v0.Angle(gamEE.Momentum3()));
+   v.setCPA(mCPA);
    if (mFillEff) {
-      mhAlpha->Fill(angle, pt);
+      mhCPA->Fill(mCPA, pt);
       if (isTrue) { // same for true electrontracks
-         mhAlphaTrue->Fill(angle, pt);
+         mhCPATrue->Fill(mCPA, pt);
       }
    }
-   if (angle > mAlphaCut) {
+   if (!mUseBDTEstimator && mCPA > mCPACut) {
       return false;
    }
 
@@ -261,21 +298,22 @@ bool MpdV0Maker::createSelectV0(MpdTrack *tr1, MpdTpcKalmanTrack *ktr1, MpdTrack
          mhDistTrue->Fill(dist, pt);
       }
    }
-   if (dist > mDistCut) {
+   if (!mUseBDTEstimator && dist > mDistCut) {
       return false;
    }
    if (mFillEff) {
       mhCutEff->Fill(5., pt);
    }
 
-   v.setMass(gamEE.GetMass());
+   mMee = gamEE.GetMass();
+   v.setMass(mMee);
    if (mFillEff) {
-      mhMassEE->Fill(gamEE.GetMass(), pt);
+      mhMassEE->Fill(mMee, pt);
       if (isTrue) { // same for true electrontracks
-         mhMassEETrue->Fill(gamEE.GetMass(), pt);
+         mhMassEETrue->Fill(mMee, pt);
       }
    }
-   if (gamEE.GetMass() > mMassCut) {
+   if (!mUseBDTEstimator && mMee > mMassCut) {
       return false;
    }
    if (mFillEff) {
@@ -295,7 +333,7 @@ bool MpdV0Maker::createSelectV0(MpdTrack *tr1, MpdTpcKalmanTrack *ktr1, MpdTrack
    trCorK1.SetPos(trCorK1.GetPosNew());
    trCorK1.ReSetWeight();
    //  TMatrixDSym w = *trCorK1.GetWeight(); // save current weight matrix
-   mKHit.SetPos(rConv);
+   mKHit.SetPos(mV0r);
    if (!mKF->PropagateToHit(&trCorK1, &mKHit, kFALSE, kFALSE)) {
       return false;
    }
@@ -307,25 +345,24 @@ bool MpdV0Maker::createSelectV0(MpdTrack *tr1, MpdTpcKalmanTrack *ktr1, MpdTrack
    trCorK2.SetPos(trCorK2.GetPosNew());
    trCorK2.ReSetWeight();
    TMatrixDSym w = *trCorK1.GetWeight(); // save current weight matrix
-   mKHit.SetPos(rConv);
+   mKHit.SetPos(mV0r);
    if (!mKF->PropagateToHit(&trCorK2, &mKHit, kFALSE, kFALSE)) {
       return false;
    }
    //   trCorK2.SetDirection(MpdKalmanTrack::kInward);
    TVector3 m2 = trCorK2.Momentum3();
 
-   float qt, alpha;
-   ArmenterosPodolanski(m1, m2, qt, alpha);
-   v.setArmenteros(alpha, qt);
+   ArmenterosPodolanski(m1, m2, mArmentQt, mArmentAlpha);
+   v.setArmenteros(mArmentAlpha, mArmentQt);
 
    if (mFillEff) {
-      mhArmPo->Fill(alpha, qt);
+      mhArmPo->Fill(mArmentAlpha, mArmentQt);
       if (isTrue) {
-         mhArmPoTrue->Fill(alpha, qt);
+         mhArmPoTrue->Fill(mArmentAlpha, mArmentQt);
       }
    }
-   if (!ArmenterosQtCut(qt, alpha, gamEE)) {
-      // return false;
+   if (!mUseBDTEstimator && !ArmenterosQtCut(mArmentQt, mArmentAlpha, gamEE)) {
+      return false;
    }
    if (mFillEff) {
       mhCutEff->Fill(7., pt);
@@ -343,22 +380,23 @@ bool MpdV0Maker::createSelectV0(MpdTrack *tr1, MpdTpcKalmanTrack *ktr1, MpdTrack
          mhAsymTrue->Fill(asym2, pt);
       }
    }
-   if (!(AsymmetryCut(asym1, pt) && AsymmetryCut(asym2, pt))) {
-      return kFALSE;
+   if (!mUseBDTEstimator && !(AsymmetryCut(asym1, pt) && AsymmetryCut(asym2, pt))) {
+      return false;
    }
    if (mFillEff) {
       mhCutEff->Fill(8., pt);
    }
 
-   float cospsi = CosPsiPair(m1, m2);
-   v.setCospsi(cospsi);
+   double cpsi = CosPsiPair(m1, m2);
+   v.setCospsi(cpsi);
+   mCPsi = fabs(cpsi);
    if (mFillEff) {
-      mhCosPsi->Fill(cospsi, pt);
+      mhCosPsi->Fill(cpsi, pt);
       if (isTrue) { // same for true electrontracks
-         mhCosPsiTrue->Fill(cospsi, pt);
+         mhCosPsiTrue->Fill(cpsi, pt);
       }
    }
-   if (cospsi < mCosPsiCut) {
+   if (!mUseBDTEstimator && mCPsi < mCosPsiCut) {
       return false;
    }
    if (mFillEff) {
@@ -366,11 +404,31 @@ bool MpdV0Maker::createSelectV0(MpdTrack *tr1, MpdTpcKalmanTrack *ktr1, MpdTrack
    }
 
    v.setVertex(gamEE.Getx()(0, 0), gamEE.Getx()(1, 0), gamEE.Getx()(2, 0));
+   mV0z = gamEE.Getx()(2, 0);
 
    v.SetXYZT((gamEE.Pt()) * TMath::Cos(gamEE.Phi()), (gamEE.Pt()) * TMath::Sin(gamEE.Phi()),
              TMath::Sign(TMath::Sqrt(gamEE.Momentum() * gamEE.Momentum() - gamEE.Pt() * gamEE.Pt()),
                          TMath::Cos(gamEE.Theta())),
              gamEE.Momentum());
+
+   mPt  = v.Pt();
+   mEta = v.Eta();
+
+   if (mUseBDTEstimator) {
+      float bdtValue = mTMVAReader->EvaluateMVA("BDTclassifier");
+      v.setBDTValue(bdtValue);
+      float dp = (mTMVAReader->EvaluateRegression("BDTregresion"))[0];
+      v.setBDTMomentum(v.P() + dp);
+      if (mFillEff) {
+         mhBDT->Fill(bdtValue, pt);
+         if (isTrue) { // same for true electrontracks
+            mhBDTTrue->Fill(bdtValue, pt);
+         }
+      }
+      if (bdtValue < mBDTCut) {
+         return false;
+      }
+   }
 
    return true;
 }

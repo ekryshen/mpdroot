@@ -37,6 +37,6 @@ set(SRCS
 Set(HEADERS)
 Set(LINKDEF MpdEvPIDAllLinkDef.h)
 Set(LIBRARY_NAME MpdPIDAll)
-Set(DEPENDENCIES Tof tpcGeometry LHETrack)
+Set(DEPENDENCIES Tof tpcGeometry LHETrack TMVA)
 
 GENERATE_LIBRARY()

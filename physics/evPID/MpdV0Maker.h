@@ -5,6 +5,7 @@
 #include "MpdHelix.h"
 #include "MpdKalmanHit.h"
 #include "MpdKalmanFilter.h"
+#include "TMVA/Reader.h"
 
 class MpdTrack;
 class MpdTpcKalmanTrack;
@@ -23,6 +24,7 @@ public:
    void            UserInit();
    void            ProcessEvent(MpdAnalysisEvent &event);
    void            Finish();
+   void            setBDTCut(float cut = 0.9) { mBDTCut = cut; }
    static long int FindCommonParent(long int prim1, long int prim2, TClonesArray *MCTracks);
 
 protected:
@@ -47,18 +49,28 @@ protected:
       return h;
    }
 
+   template <typename T>
+   T addHistClone(T h, const char *postfix = "")
+   {
+      auto hClone = (T)h->Clone(Form("%s%s", h->GetName(), postfix));
+      fOutputList->Add(hClone);
+      return hClone;
+   }
+
 private:
-   bool                  mMC      = false;
-   bool                  mFillEff = true; // Fill QA, efficiency and other histograms
-   int                   mDefPDG  = 11;   // PDG code of particles contributing to V0 by default
-   TVector3              mPrimaryVertex;  // vertex in current event
-   vector<MpdParticle *> mPartK;          // transient list of candidates
+   bool                  mMC              = false;
+   bool                  mFillEff         = true; // Fill QA, efficiency and other histograms
+   bool                  mUseBDTEstimator = true; // Use TMVA BDT classifier to select conversion pairs
+   int                   mDefPDG          = 11;   // PDG code of particles contributing to V0 by default
+   TVector3              mPrimaryVertex;          // vertex in current event
+   vector<MpdParticle *> mPartK;                  // transient list of candidates
    TClonesArray         *mMCTracks = nullptr;
    MpdKalmanHit          mKHit;
-   MpdKalmanFilter      *mKF = nullptr;
+   MpdKalmanFilter      *mKF         = nullptr;
+   TMVA::Reader         *mTMVAReader = nullptr; // TMVA classificator
 
    int   mNofHitsCut    = 10; // Minimal number of TPC hits per track
-   float mAlphaCut      = 3.1415;
+   float mCPACut        = 0.8;
    float mCosPsiCut     = -1.;
    float mDistCut       = 10.;
    float mDedxSigmaCut  = 3.;
@@ -70,10 +82,27 @@ private:
    float mChi2Cut       = 10.;   // Maximal Kalman chi2
    float mMinR2Cut      = 1.;    // Minimal conv radius
    float mMaxR2Cut      = 150.;  // Maximal conv. radius
+   float mBDTCut        = -0.26; // BDT maximal significance
+
+   // transient values
+   float mPt          = 0.; //! V0 pt
+   float mEta         = 0.; //! V0 eta
+   float mNcl1        = 0;  //! first track number of TPC clusters, BDT requires float
+   float mdEdx1       = 0.; //! first track sigmafied dEdx vrt electron line
+   float mNcl2        = 0;  //! second track number of TPC clusters, BDT requires float
+   float mdEdx2       = 0.; //! second track sigmafied dEdx vrt electron line
+   float mChi2        = 0.; //! Kalman fit chi2
+   float mCPA         = 0.; //! Cos of Pointing angle
+   float mCPsi        = 0.; //! Cos of pair orientation angle
+   float mArmentAlpha = 0.; //! Armenteros alpha
+   float mArmentQt    = 0.; //! Armenteros Qt
+   float mMee         = 0.; //! pair mass
+   float mV0r         = 0.; //! V0 vertex
+   float mV0z         = 0.; //! V0 vertex z
 
    TH2F *mhCutEff = nullptr;
 
-   TH2F *mhAlpha  = nullptr;
+   TH2F *mhCPA    = nullptr;
    TH2F *mhChi2   = nullptr;
    TH2F *mhDist   = nullptr;
    TH2F *mhMassEE = nullptr;
@@ -81,11 +110,12 @@ private:
    TH2F *mhArmPo  = nullptr; // Armesteros-Podolanski plot
    TH2F *mhAsym   = nullptr; // electron asymmetry
    TH2F *mhConvSp = nullptr; // spectrum of converted photons
+   TH2F *mhBDT    = nullptr; // BDT decision
 
    // MCtrue
    TH2F *mhProbElTrue = nullptr; // Electron PID probability estimate for true electrons
    TH2F *mhdEdxTrue   = nullptr; // TPC dEdx for true electrons
-   TH2F *mhAlphaTrue  = nullptr;
+   TH2F *mhCPATrue    = nullptr;
    TH2F *mhChi2True   = nullptr;
    TH2F *mhDistTrue   = nullptr;
    TH2F *mhMassEETrue = nullptr;
@@ -93,6 +123,7 @@ private:
    TH2F *mhArmPoTrue  = nullptr; // Armesteros-Podolanski plot
    TH2F *mhAsymTrue   = nullptr; // electron asymmetry
    TH2F *mhConvSpTrue = nullptr; // spectrum of converted photons
+   TH2F *mhBDTTrue    = nullptr; // BDT decision
 
    ClassDef(MpdV0Maker, 1);
 };

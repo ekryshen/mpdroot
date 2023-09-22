@@ -26,10 +26,14 @@ mMassCut  0.051  // e+e- pair mass cut
 mDistCut  2.8    // maximal closest distance between daughters
 mCosPsiCut 0.275 // e+e- pair orientation wrt B-filed
 mChi2Cut  10  // maximal chi2 in Kalman fit
+mUseBDT     0    // Use Boosted Decision Tree
+mUseBDTRegP 0    // Use BDT estimate (regression) of momentum
+mBDTCut     0.17 // BDT classificator cut [-1.,1.], recomended values [-0.2,0.2]
 # Cluster cuts: 
-mCluEmin  0.05  // (GeV) minimal cluster energy
-mCluMult  2  // minimal number of cells in cluster
-mCluTof   3  // (N) maximal time wrt photon arrival divided by time resolution
-mCluDisp  2.5  // disp cut
-mCluCPV   2  // (sigma) minimal distance to charged track extrapolation
+mCluEmin    0.05 // (GeV) minimal cluster energy
+mCluMult    2    // minimal number of cells in cluster
+mCluTofMin -4.   // (N) minimal time wrt photon arrival divided by time resolution
+mCluTofMax  0.   // (N) minimal time wrt photon arrival divided by time resolution
+mCluDisp    2.5  // disp cut
+mCluCPV     2.   // (sigma) minimal distance to charged track extrapolation
 

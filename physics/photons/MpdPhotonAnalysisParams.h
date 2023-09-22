@@ -35,13 +35,17 @@ public:
    float       mMassCut       = 0.051;
    float       mDistCut       = 2.8;        // maximal closest distance between daughters
    float       mCosPsiCut     = 0.96242520; // e+e- pair orientation wrt B-filed
-   float       mAlphaCut      = 0.102;      // r vs p angle
+   float       mCPACut        = 0.95;       // Cos Pointing Angle
    float       mChi2Cut       = 10;
+   bool        mUseBDT        = true; // Use Boosted Decision Tree
+   bool        mUseBDTRegP    = true; // Use BDT estimate (regression) of P
+   float       mBDTCut        = 0.17; // BDT classificator cut [-1.,1.], recomended values [-0.2,0.2]
 
    // Cluster cuts
    float mCluEmin     = 0.05;
    int   mCluMult     = 2;
-   float mCluTof      = 5.;   // cluster time cut in sigmas
+   float mCluTofMin   = -4.;  // cluster time cut in sigmas
+   float mCluTofMax   = 0.;   // cluster time cut in sigmas
    float mCluDisp     = 6.25; // cluster disp cut in sigma squared
    float mCluDispEmin = 0.5;  // Min energy to apply Disp cut (GeV)
    float mCluCPV      = 6.25; // neutrality cut in sigma squared
