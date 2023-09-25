@@ -76,8 +76,8 @@ public:
 private:
    Int_t fDetectorID; ///< detector ID
    Int_t fFlag;       ///< flag
-   // Int_t fIndex; ///< MC point index
-   TArrayI fIndex;   ///< MC point indices
+   // Int_t fIndex; ///< ? MC point index ?
+   TArrayI fIndex;   ///< hit indices
    HitType fHitType; ///< hit type
    Int_t   fNofDim;  ///< number of measurements per point
    // Bool_t fMirror; ///< flag for mirror hit (left-right ambiguity)
