@@ -4,7 +4,7 @@
 # ${MPDROOT_BINARY_DIR} or ${CMAKE_BINARY_DIR}.
 
 # Check if cmake has the required version
-CMAKE_MINIMUM_REQUIRED(VERSION 3.0 FATAL_ERROR)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.20.0 FATAL_ERROR)
 
 # Set name of our project to "MPDROOT". Has to be done
 # after check of cmake version

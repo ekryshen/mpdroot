@@ -1,7 +1,3 @@
-# Check if cmake has the required version
-# 3.20 - cmake_path
-CMAKE_MINIMUM_REQUIRED(VERSION 3.20.0 FATAL_ERROR)
-
 cmake_policy(SET CMP0074 NEW) # allow to have _ROOT suffix in variables containing program installation roots
 
 include(cmake/CMakeListsDefaults.cmake) # preliminary check of input variables

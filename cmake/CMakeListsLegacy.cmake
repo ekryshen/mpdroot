@@ -3,8 +3,12 @@
 # or as ${CMAKE_SOURCE_DIR} and to the root binary directory of the project as
 # ${MPDROOT_BINARY_DIR} or ${CMAKE_BINARY_DIR}.
 
-# Check if cmake has the required version
-CMAKE_MINIMUM_REQUIRED(VERSION 3.0 FATAL_ERROR)
+message(FATAL_ERROR "Error, you are trying to run legacy build (using SIMPATH) of mpdroot, that has been deprecatd from v22.06.22.\
+    If you know, what you are doing remove this warning and re-run configuration step. Beware, you will have to add missing add_subdirectory\
+    commands and/or add search for the mpdroot dependencies added after 22.06.2022. See, e.g., cmake/CMakeLists.cmake for hints. This\
+    error, together with all connected cmake files (whole legacy build) will be removed in 06.2024 release. For details how to use\
+    new build approach see https://mpdroot.jinr.ru/mpdroot-installation/")
+
 enable_language(C CXX Fortran)
 
 ### CMP0025   Compiler id for Apple Clang is now AppleClang.
