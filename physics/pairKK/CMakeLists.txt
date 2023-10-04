@@ -38,6 +38,6 @@ set(SRCS
 Set(HEADERS)
 Set(LINKDEF PairKKLinkDef.h)
 Set(LIBRARY_NAME MpdPairKKTracks)
-Set(DEPENDENCIES Tof tpcGeometry)
+Set(DEPENDENCIES Tof tpcGeometry MpdPhysics MpdBase MpdGen UniGenFormat Kalman tpc QA MpdField tpcFairTpc MpdMCStack)
 
 GENERATE_LIBRARY()

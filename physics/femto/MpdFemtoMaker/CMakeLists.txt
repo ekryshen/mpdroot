@@ -63,23 +63,51 @@ Set(HEADERS
   MpdFemtoBaseTrackCut.h
   MpdFemtoBaseV0Cut.h
   MpdFemtoBaseXiCut.h
+  MpdFemtoBaseCorrFctn.h
   MpdFemtoCorrFctnCollection.h
   MpdFemtoCutMonitorCollection.h
   MpdFemtoEnumeration.h
+  MpdFemtoKink.h
+  MpdFemtoLikeSignAnalysis.h
+  MpdFemtoPair.h
+  MpdFemtoEvent.h
   MpdFemtoEventCutCollection.h
+  MpdFemtoBaseCutMonitor.h
+  MpdFemtoModelHiddenInfo.h
   MpdFemtoEventWriterCollection.h
+  MpdFemtoParticle.h
+  MpdFemtoPhysicalHelix.h
   MpdFemtoHiddenInfo.h
+  MpdFemtoBaseEventReader.h
   MpdFemtoKinkCollection.h
+  MpdFemtoManager.h
+  MpdFemtoModelManager.h
+  MpdFemtoAnalysis.h
+  MpdFemtoCutMonitorHandler.h
+  MpdFemtoHelix.h
+  MpdFemtoBaseModelFreezeOutGenerator.h
+  MpdFemtoBaseModelWeightGenerator.h
+  MpdFemtoModelWeightGeneratorLednicky.h
+  MpdFemtoModelGausLCMSFreezeOutGenerator.h
+  MpdFemtoPicoEventCollectionVectorHideAway.h
+  MpdFemtoMultiTrackCut.h
+  MpdFemtoMaker.h
   MpdFemtoPairCutCollection.h
   MpdFemtoParticleCollection.h
+  MpdFemtoPicoEvent.h
+  MpdFemtoTriplet.h
   MpdFemtoPicoEventCollection.h
   MpdFemtoPicoEventCollectionVector.h
   MpdFemtoString.h
+  MpdFemtoTrack.h
   MpdFemtoTrackCollection.h
   MpdFemtoTrackCutCollection.h
   MpdFemtoTypes.h
+  MpdFemtoV0.h
   MpdFemtoV0Collection.h
   MpdFemtoXiCollection.h
+  MpdFemtoXi.h
+  TpcLocalTransform.h
   phys_constants.h
   PhysicalConstants.h
   SystemOfUnits.h

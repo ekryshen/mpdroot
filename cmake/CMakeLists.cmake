@@ -1,4 +1,5 @@
 cmake_policy(SET CMP0074 NEW) # allow to have _ROOT suffix in variables containing program installation roots
+cmake_policy(SET CMP0144 NEW) # find_package() uses upper-case <PACKAGENAME>_ROOT variables
 
 include(cmake/CMakeListsDefaults.cmake) # preliminary check of input variables
 

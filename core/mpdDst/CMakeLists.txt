@@ -48,6 +48,6 @@ set(SRCS
 Set(HEADERS)
 Set(LINKDEF MpdDstLinkDef.h)
 Set(LIBRARY_NAME MpdDst)
-Set(DEPENDENCIES MpdMiniEvent multi)
+Set(DEPENDENCIES MpdMiniEvent multi MpdBase MpdField Tof MpdMCStack Kalman MpdGen UniGenFormat tpcPid)
 
 GENERATE_LIBRARY()

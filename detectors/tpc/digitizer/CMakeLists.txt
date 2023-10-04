@@ -44,6 +44,6 @@ Set(HEADERS
 
 Set(LINKDEF tpcDigitizerLinkDef.h)
 Set(LIBRARY_NAME tpcDigitizer)
-Set(DEPENDENCIES MpdMCStack MpdField tpc)
+Set(DEPENDENCIES MpdMCStack MpdField tpc tpcGeometry)
 
 GENERATE_LIBRARY()

@@ -1,6 +1,5 @@
 # Create a library called "libMpdBase" which includes the source files given in the array.
 # The extension is already found. Any number of sources could be listed here.
-
 set(INCLUDE_DIRECTORIES
   ${BASE_INCLUDE_DIRECTORIES}
   ${CMAKE_CURRENT_LIST_DIR}

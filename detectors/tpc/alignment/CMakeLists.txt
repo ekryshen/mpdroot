@@ -53,6 +53,6 @@ endif(ALIGNMENT_XI2)
 
 Set(LINKDEF tpcAlignmentLinkDef.h)
 Set(LIBRARY_NAME tpcAlignment)
-Set(DEPENDENCIES tpc MpdField MpdBase Minuit2)
+Set(DEPENDENCIES tpc MpdField MpdBase Minuit2 tpcGeometry)
 
 GENERATE_LIBRARY()
