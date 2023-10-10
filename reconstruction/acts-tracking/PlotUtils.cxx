@@ -450,6 +450,7 @@ void plotRealTracks(
     Double_t zmin,
     Double_t zmax,
     Double_t rmax,
+    Bool_t plotLines,
     std::string namePostfix,
     Bool_t grid,
     Bool_t realAspectRatio,
@@ -519,6 +520,79 @@ void plotRealTracks(
 
   for (auto &[trackId, hitsVector] : hitsOnTracks) {
     std::sort(hitsVector.begin(), hitsVector.end());
+  }
+
+  // Lines graphs
+  std::vector<TGraph*> linesGraphs;
+  for (Int_t i = 0; i < nHits; i++) {
+    auto &hit0 = hits.at(i);
+    PointP point0(
+        hit0.position[0],
+        hit0.position[1],
+        hit0.position[2]);
+    point0.makeProjection(projection);
+    Double_t x0 = point0.x;
+    Double_t y0 = point0.y;
+
+    for (Int_t j = 0; j < i; j++) {
+      auto &hit1 = hits.at(j);
+      PointP point1(
+          hit1.position[0],
+          hit1.position[1],
+          hit1.position[2]);
+      point1.makeProjection(projection);
+      Double_t x1 = point1.x;
+      Double_t y1 = point1.y;
+
+      // pass gorizontal or vertical lines
+      if ((x0 == x1) || (y0 == y1)) {
+        continue;
+      }
+
+      Double_t p0x;
+      Double_t p0y;
+
+      if ((fabs(x1) >= fabs(x0)) && (fabs(y1) >= fabs(y0))) {
+        p0x = x1;
+        p0y = y1;
+      } else if ((fabs(x1) <= fabs(x0)) && (fabs(y1) <= fabs(y0))) {
+        p0x = x0;
+        p0y = y0;
+      } else {
+        continue;
+      }
+
+      Double_t p1x;
+      Double_t p1y;
+
+      Double_t k = (y1 - y0) / (x1 - x0);
+      Double_t b = (y0 * x1 - y1 * x0) / (x1 - x0);
+
+      if (p0y >= 0) {
+        if (b >= 0) {
+          p1x = -b/k;
+          p1y = 0;
+        } else {
+          p1x = 0;
+          p1y = b;
+        }
+      } else if (p0y < 0) {
+        if (b >= 0) {
+          p1x = 0;
+          p1y = b;
+        } else {
+          p1x = -b/k;
+          p1y = 0;
+        }
+      }
+      auto *lineGraph = new TGraph;
+      lineGraph->SetPoint(0, p0x, p0y);
+      lineGraph->SetPoint(1, p1x, p1y);
+
+      linesGraphs.push_back(lineGraph);
+
+      multiGraph.Add(lineGraph, "AC");
+    }
   }
 
   // Text labels
@@ -623,6 +697,10 @@ void plotRealTracks(
     canvas.SetRealAspectRatio();
   }
   canvas.Print(fname.c_str());
+
+  for (auto lineGraph: linesGraphs) {
+    delete lineGraph;
+  }
   for (auto item : inputTrajectoriesGraph) {
     delete item;
   }

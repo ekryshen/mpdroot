@@ -35,6 +35,7 @@ void plotRealTracks(
     Double_t zmin,
     Double_t zmax,
     Double_t rmax,
+    Bool_t plotLines = false,
     std::string namePostfix = "",
     Bool_t grid = false,
     Bool_t realAspectRatio = false,

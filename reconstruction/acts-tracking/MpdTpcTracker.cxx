@@ -475,42 +475,43 @@ void MpdTpcTracker::Exec(Option_t *option) {
     auto color     = true;
     auto grid      = true;
     auto realAspectRatio = true;
+    auto lines     = false;
 
     auto MChits = convertTpcPoints(fPoints);
     plotRealTracks(6000, 6000, geometry, MChits, eventCounter,
         fOutPath, color, lineWidth, Projection::XY,
         config.Zmin, config.Zmax, config.Rmax,
-         "_MC_XY",
+        lines, "_MC_XY",
         grid, realAspectRatio);
 
     plotRealTracks(6000, 6000, geometry, MChits, eventCounter,
         fOutPath, color, lineWidth, Projection::ZY,
         config.Zmin, config.Zmax, config.Rmax,
-        "_MC_ZY",
+        lines, "_MC_ZY",
         grid, realAspectRatio);
 
     plotRealTracks(6000, 6000, geometry, MChits, eventCounter,
         fOutPath, color, lineWidth, Projection::ZR,
         config.Zmin, config.Zmax, config.Rmax,
-        "_MC_ZR",
+        lines, "_MC_ZR",
         grid, realAspectRatio);
 
     plotRealTracks(6000, 6000, geometry, hits, eventCounter,
         fOutPath, color, lineWidth, Projection::XY,
         config.Zmin, config.Zmax, config.Rmax,
-        "_hits_XY",
+        lines, "_hits_XY",
         grid, realAspectRatio);
 
     plotRealTracks(6000, 6000, geometry, hits, eventCounter,
         fOutPath, color, lineWidth, Projection::ZY,
         config.Zmin, config.Zmax, config.Rmax,
-        "_hits_ZY",
+        lines, "_hits_ZY",
         grid, realAspectRatio);
 
     plotRealTracks(6000, 6000, geometry, hits, eventCounter,
         fOutPath, color, lineWidth, Projection::ZR,
         config.Zmin, config.Zmax, config.Rmax,
-        "_hits_ZR",
+        lines, "_hits_ZR",
         grid, realAspectRatio);
 
     plotOutputTracks(6000, 6000, geometry, spacePoints, hits,
