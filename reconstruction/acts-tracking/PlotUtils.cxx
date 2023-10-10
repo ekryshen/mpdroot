@@ -833,11 +833,21 @@ void plotOutputTracks(
   std::vector<Int_t> colors = {kRed, kCyan, kGreen - 3, kBlue - 4,
       kMagenta, kOrange + 7, kOrange - 7};
 
+  std::map<Int_t, Int_t> hitIndexToSpIndexMap;
+
+  Int_t spacePointIndex = 0;
+  for (const auto &spacePoint : spacePoints) {
+    Int_t hitIndex = spacePoint.measurementIndex();
+    hitIndexToSpIndexMap[hitIndex] = spacePointIndex++;
+  }
+
   for (ActsExamples::ProtoTrack reconstructedTrack : trajectories) {
     trackIndex++;
 
     TGraph &outTrajectoryGraph = outTrajectoryGraphs[trackIndex];
-    outTrajectoryGraph.SetMarkerStyle(kFullDotMedium);
+//  outTrajectoryGraph.SetMarkerStyle(kFullDotMedium);
+    outTrajectoryGraph.SetMarkerStyle(49);
+    outTrajectoryGraph.SetMarkerColor(kSpring);
     outTrajectoryGraph.SetLineWidth(lineWidth);
     Int_t color = kRed;
     if (multicoloured) {
@@ -848,10 +858,11 @@ void plotOutputTracks(
 
     pIndex = 0;
     for (auto hitIndex : reconstructedTrack) {
-      auto hit = hits.at(hitIndex);
-      PointP point(hit.position[0],
-                   hit.position[1],
-                   hit.position[2]);
+      auto spacePointIndex = hitIndexToSpIndexMap.at(hitIndex);
+      auto spacePoint = spacePoints.at(spacePointIndex);
+      PointP point(spacePoint.x(),
+                   spacePoint.y(),
+                   spacePoint.z());
       point.makeProjection(projection);
       Double_t x = point.x;
       Double_t y = point.y;
@@ -872,6 +883,7 @@ void plotOutputTracks(
          )) {
         plotTxt = true;
       }
+      auto hit = hits.at(hitIndex);
       auto trackId = hit.trackId;
       if (plotTxt) {
         auto txt = new TText(x, y, std::to_string(trackId).c_str());
