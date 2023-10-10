@@ -56,7 +56,12 @@ void plotOutputTracks(
     Bool_t multicoloured,
     Int_t lineWidth,
     Projection projection,
+    Double_t zmin,
+    Double_t zmax,
+    Double_t rmax,
     std::string namePostfix = "",
+    Bool_t grid = false,
+    Bool_t realAspectRatio = false,
     Bool_t plotLabels = true,
     Int_t txtSize = 15,
     Int_t txtStep = 10);

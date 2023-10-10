@@ -517,12 +517,16 @@ void MpdTpcTracker::Exec(Option_t *option) {
     plotOutputTracks(6000, 6000, geometry, spacePoints, hits,
         trajectories, eventCounter, fOutPath,
         color, lineWidth, Projection::XY,
-        "_reco_XY");
+        config.Zmin, config.Zmax, config.Rmax,
+        "_reco_XY",
+        grid, realAspectRatio);
 
     plotOutputTracks(6000, 6000, geometry, spacePoints, hits,
         trajectories, eventCounter, fOutPath,
         color, lineWidth, Projection::ZR,
-        "_reco_ZR");
+        config.Zmin, config.Zmax, config.Rmax,
+        "_reco_ZR",
+        grid, realAspectRatio);
   }
 
   if (MpdCodeTimer::Active()) {
