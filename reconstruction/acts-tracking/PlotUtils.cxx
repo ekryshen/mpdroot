@@ -681,11 +681,14 @@ void plotRealTracks(
     multiGraph.Add(&hitsGraph, "P");
   }
 
-  if ((projection == Projection::ZY) ||
-      (projection == Projection::ZR)) {
+  if (projection == Projection::ZY) {
     multiGraph.GetXaxis()->SetLimits(zmin, zmax);
     multiGraph.SetMinimum(-rmax);
     multiGraph.SetMaximum( rmax);
+  } else if (projection == Projection::ZR) {
+    multiGraph.GetXaxis()->SetLimits(zmin, zmax);
+    multiGraph.SetMinimum(0);
+    multiGraph.SetMaximum(rmax);
   }
   multiGraph.Draw("A");
 
@@ -882,11 +885,14 @@ void plotOutputTracks(
     multiGraph.Add(&outTrajectoryGraph, "PL");
   }
 
-  if ((projection == Projection::ZY)||
-      (projection == Projection::ZR)) {
+  if (projection == Projection::ZY) {
     multiGraph.GetXaxis()->SetLimits(zmin, zmax);
     multiGraph.SetMinimum(-rmax);
     multiGraph.SetMaximum( rmax);
+  } else if (projection == Projection::ZR) {
+    multiGraph.GetXaxis()->SetLimits(zmin, zmax);
+    multiGraph.SetMinimum(0);
+    multiGraph.SetMaximum(rmax);
   }
 
   multiGraph.Draw("A");
