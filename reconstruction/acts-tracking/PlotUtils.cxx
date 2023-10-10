@@ -605,7 +605,8 @@ void plotRealTracks(
     multiGraph.Add(&hitsGraph, "P");
   }
 
-  if (projection == Projection::ZY) {
+  if ((projection == Projection::ZY) ||
+      (projection == Projection::ZR)) {
     multiGraph.GetXaxis()->SetLimits(zmin, zmax);
     multiGraph.SetMinimum(-rmax);
     multiGraph.SetMaximum( rmax);
