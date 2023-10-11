@@ -141,24 +141,58 @@ void dumpSpacePoints(
   }
 }
 
+// Return map trackId -> the number of corresponding hits.
+std::map<Int_t, Int_t> calcTrackIdToNHits(
+    const InputHitContainer &hits,
+    TClonesArray *mcTracks) {
+  std::map<Int_t, Int_t> trackIdToNHitsMap;
+  Int_t nMCTracks = mcTracks->GetEntriesFast();
+  for (Int_t trackId = 0; trackId < nMCTracks; trackId++) {
+    trackIdToNHitsMap[trackId] = 0;
+  }
+  for (const auto &hit : hits) {
+    Int_t trackId = hit.trackId;
+    trackIdToNHitsMap.at(trackId)++;
+  }
+  return trackIdToNHitsMap;
+}
+
 void dumpTrackIds(
     TClonesArray *mcTracks,
     Int_t eventNumber,
-    std::string outPath) {
+    std::string outPath,
+    const InputHitContainer &hits,
+    Bool_t dumpNHits) {
 
   auto fname = outPath + "/" +
       "event_" + std::to_string(eventNumber) + "_trackIds.txt";
   std::ofstream fout(fname);
 
-  fout << "# format: trackId, primary-1-secondary-0" << std::endl;
+  fout << "# format: trackId, primary-1-secondary-0";
+  if (dumpNHits) {
+    fout << ", nHits";
+  }
+  fout << std::endl;
+
   std::cout << fname << " has been created" << std::endl;
+
+  std::map<Int_t, Int_t> trackIdToNHitsMap;
+  if (dumpNHits) {
+    trackIdToNHitsMap = calcTrackIdToNHits(hits, mcTracks);
+  }
 
   Int_t nMC = mcTracks->GetEntriesFast();
   for (size_t trackId = 0; trackId < nMC; trackId++) {
     auto track = static_cast<MpdMCTrack*>(mcTracks->UncheckedAt(trackId));
     Int_t motherId = track->GetMotherId();
     Bool_t isPrimary = (motherId == -1) ? 1 : 0;
-    fout << trackId << ", " << isPrimary << std::endl;
+    fout << trackId << ", " << isPrimary;
+
+    if (dumpNHits) {
+      Int_t nhits = trackIdToNHitsMap.at(trackId);
+      fout << ", " << nhits;
+    }
+    fout << std::endl;
   }
 }
 

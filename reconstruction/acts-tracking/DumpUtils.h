@@ -39,5 +39,7 @@ void dumpSpacePoints(
 void dumpTrackIds(
     TClonesArray *mcTracks,
     Int_t eventNumber,
-    std::string outPath);
+    std::string outPath,
+    const InputHitContainer &hits,
+    Bool_t dumpNHits = false);
 } // namespace Mpd::Tpc

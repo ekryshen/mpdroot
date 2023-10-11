@@ -20,18 +20,6 @@
 #include <iostream>
 #include <fstream>
 
-// Dump trackIds to file.
-void uploadTrackIds(const std::vector<Int_t> &trackIds,
-                    Int_t eventNumber,
-                    std::string path) {
-  auto fname = path + "/"
-      "event_" + std::to_string(eventNumber) + "_trackIds.txt";
-  std::ofstream fout(fname);
-  for (auto trackId : trackIds) {
-    fout << trackId << std::endl;
-  }
-}
-
 // Read trackIds from file
 std::vector<Int_t> downloadTrackIds(Int_t eventNumber,
                                     std::string path) {

@@ -450,7 +450,7 @@ void MpdTpcTracker::Exec(Option_t *option) {
       allTracks);
 
   if (config.DumpData) {
-    Mpd::Tpc::dumpTrackIds(fMCTracks, eventCounter, fOutPath);
+    Mpd::Tpc::dumpTrackIds(fMCTracks, eventCounter, fOutPath, hits);
   }
 
   // Plot graphs if required.
