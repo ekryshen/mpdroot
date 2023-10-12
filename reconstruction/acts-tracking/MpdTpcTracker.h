@@ -21,7 +21,7 @@ class MpdTpcTracker final : public FairTask {
 public:
   static constexpr auto TaskTitle  = "TPC Acts-based tracker";
   static constexpr auto UseMcHits  = false;
-  static constexpr auto PlotGraphs = true;
+  static constexpr auto PlotGraphs = false;
    
   explicit MpdTpcTracker(const BaseTpcSectorGeo &secGeo,
                          std::string outPath,
