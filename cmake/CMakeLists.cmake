@@ -86,6 +86,7 @@ add_subdirectory (core/mpdPid) # INDEPENDENT
 add_subdirectory (detectors/emc) # INDEPENDENT
 add_subdirectory (detectors/etof) # INDEPENDENT
 add_subdirectory (detectors/ffd) # INDEPENDENT
+add_subdirectory (detectors/fwd) # INDEPENDENT
 # unsupported as of 12.2022 add_subdirectory (detectors/mcord)
 add_subdirectory (detectors/sts) # INDEPENDENT
 add_subdirectory (detectors/tof) # INDEPENDENT
