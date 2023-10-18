@@ -146,7 +146,7 @@ void MpdFwd::ConstructGeometry(){
   TGeoTube* sStation = new TGeoTube("sStation",stationRMin, stationRMax, stationHalfZ);
   TGeoVolume* vStation = new TGeoVolume("vStation",sStation, mAir);
   for (Int_t iStation = 0; iStation < nStations; iStation++){
-    vFwd->AddNode(vStation,0,new TGeoCombiTrans(0,0,(-(nStations-1)/2.+iStation)*stationDist,rot0));
+    vFwd->AddNode(vStation,iStation,new TGeoCombiTrans(0,0,(-(nStations-1)/2.+iStation)*stationDist,rot0));
   }
 
   // create 4 layers with different tube orientations and one sensitive plane in the middle
