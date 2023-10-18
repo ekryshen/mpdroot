@@ -1,7 +1,6 @@
 //------------------------------------------------------------------------------------------------------------------------
-/// \class MpdFwdHitProducer
-///
-/// \brief
+/// \class MpdFwdTrackProducer
+/// \brief Ideal track producer
 /// \author Evgeny Kryshen (PNPI, Gatchina)
 //------------------------------------------------------------------------------------------------------------------------
 #ifndef __HH_MPDFWDTRACKPRODUCER_H
@@ -17,6 +16,9 @@ public:
   virtual InitStatus Init();
   virtual void       Exec(Option_t *opt);
   virtual void       Finish();
+  void FindTracks();
+  void FitTracks();
+  void PrintTracks();
 private:
   TClonesArray *fMcTracks;   //!
   TClonesArray *fFwdPoints;   //!

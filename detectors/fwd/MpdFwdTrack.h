@@ -1,7 +1,6 @@
 //------------------------------------------------------------------------------------------------------------------------
-/// \class MpdFwdPoint
-///
-/// \brief
+/// \class MpdFwdTrack
+/// \brief Reconstructed track 
 /// \author Evgeny Kryshen (PNPI, Gatchina)
 //------------------------------------------------------------------------------------------------------------------------
 
@@ -19,17 +18,16 @@ public:
    void Print();
    Int_t GetNIndices() { return fHitIndices.size(); }
    Int_t GetHitIndex(Int_t i) { return fHitIndices[i]; }
-   Double_t GetPtMC() {return fPtMC;}
-   void SetPtMC(Double_t ptMC) { fPtMC = ptMC; }
-   Double_t GetPMC() {return fPMC;}
-   void SetPMC(Double_t pMC) { fPMC = pMC; }
-   Double_t GetPdgCode() {return fPdgCode;}
-   void SetPdgCode(Double_t pdgcode) { fPdgCode = pdgcode; }
+   void SetStateVector(Double_t* v) { for (Int_t i=0;i<6;i++) fV[i] = v[i]; }
+   Double_t GetZ()   { return fV[0]; }
+   Double_t GetX()   { return fV[1]; }
+   Double_t GetY()   { return fV[2]; }
+   Double_t GetTy()  { return fV[3]; }
+   Double_t GetTz()  { return fV[4]; }
+   Double_t GetQpt() { return fV[5]; }
 private:
    std::vector<Int_t> fHitIndices{};
-   Double_t fPtMC;
-   Double_t fPMC;
-   Int_t fPdgCode;
+   Double_t fV[6]; // state vector: z, x, y, ty = py/px, tz = pt/pz, q/pt
    ClassDef(MpdFwdTrack, 5)
 };
 #endif // #ifndef __MPD_FWD_HIT_H

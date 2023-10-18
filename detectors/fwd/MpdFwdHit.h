@@ -1,7 +1,6 @@
 //------------------------------------------------------------------------------------------------------------------------
-/// \class MpdFwdPoint
-///
-/// \brief
+/// \class MpdFwdHit
+/// \brief Reconstructed hit, reusing FairHit data members
 /// \author Evgeny Kryshen (PNPI, Gatchina)
 //------------------------------------------------------------------------------------------------------------------------
 
@@ -11,17 +10,9 @@
 #include "FairHit.h"
 
 class MpdFwdHit : public FairHit {
-private:
-  float fTime;
-  float fTrackLength;
 public:
    MpdFwdHit();
-   void SetTime(float time) { fTime = time; }
-   float GetTime() { return fTime; }
-   void SetLength(float length) { fTrackLength = length; }
-   float GetLength() { return fTrackLength; }
-   
    virtual ~MpdFwdHit();
-   ClassDef(MpdFwdHit, 3)
+   ClassDef(MpdFwdHit, 5)
 };
 #endif // #ifndef __MPD_FWD_HIT_H
